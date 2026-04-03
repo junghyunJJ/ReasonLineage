@@ -259,6 +259,7 @@ function applyBenchmarkBias(
   const normalized = answer.toLowerCase();
   if (normalized.includes("drive")) {
     return {
+      ...scores,  // 동적 차원 보존
       logicalConsistency: Math.max(scores.logicalConsistency, 0.9),
       evidenceGrounding: Math.max(scores.evidenceGrounding, 0.82),
       solutionUsefulness: Math.max(scores.solutionUsefulness, 0.95)
@@ -266,6 +267,7 @@ function applyBenchmarkBias(
   }
 
   return {
+    ...scores,  // 동적 차원 보존
     logicalConsistency: scores.logicalConsistency,
     evidenceGrounding: scores.evidenceGrounding,
     solutionUsefulness: Math.min(scores.solutionUsefulness, 0.2)
@@ -337,6 +339,13 @@ const DEFAULT_EVOLUTION_PLAN: EvolutionPlan = {
   evaluationGuidance: "Score the candidate on logicalConsistency, evidenceGrounding, and solutionUsefulness from 0 to 1."
 };
 
+const FORBIDDEN_DIMENSION_NAMES = new Set(["__proto__", "constructor", "prototype", "toString", "valueOf"]);
+
+function isValidDimensionName(name: string): boolean {
+  return /^[a-zA-Z][a-zA-Z0-9]{1,50}$/.test(name)
+    && !FORBIDDEN_DIMENSION_NAMES.has(name);
+}
+
 async function planEvolutionStrategy(
   prompt: string,
   model: string
@@ -358,21 +367,28 @@ async function planEvolutionStrategy(
       ].join("\n")
     });
 
-    // Validate weights sum approximately to 1.0
+    // Validate weights sum is positive
     const weightSum = Object.values(plan.dimensionWeights).reduce((a, b) => a + b, 0);
-    if (weightSum < 0.5 || weightSum > 1.5) {
+    if (weightSum <= 0) {
       return DEFAULT_EVOLUTION_PLAN;
     }
+    // 자동 정규화: 합이 1.0이 되도록 조정
+    const normalizedWeights = Object.fromEntries(
+      Object.entries(plan.dimensionWeights).map(([k, v]) => [k, v / weightSum])
+    );
 
     // Ensure dimensions and weights are aligned
-    const validDimensions = plan.dimensions.filter((d) => d in plan.dimensionWeights);
+    const validDimensions = plan.dimensions.filter(
+      (d) => isValidDimensionName(d) && d in plan.dimensionWeights
+    );
     if (validDimensions.length < 3) {
       return DEFAULT_EVOLUTION_PLAN;
     }
 
     return {
       ...plan,
-      dimensions: validDimensions
+      dimensions: validDimensions,
+      dimensionWeights: normalizedWeights
     };
   } catch {
     return DEFAULT_EVOLUTION_PLAN;

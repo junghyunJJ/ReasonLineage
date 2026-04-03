@@ -27,7 +27,7 @@ function sortPopulation(population: ScoredCandidate[], strategy?: EvolutionStrat
 function shouldTerminate(best: ScoredCandidate, input: RunReasonForgeCycleInput): boolean {
   const termination = input.strategy?.termination;
   const useFitness = termination?.useFitnessThreshold ?? true;
-  const requireBenchmark = termination?.requireBenchmarkPass ?? true;
+  const requireBenchmark = termination?.requireBenchmarkPass ?? !!input.benchmark;
 
   let met = true;
   if (useFitness) {
