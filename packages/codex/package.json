@@ -1,0 +1,17 @@
+{
+  "name": "@reasonforge/codex",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json --noEmit false"
+  },
+  "dependencies": {
+    "@openai/codex-sdk": "^0.117.0",
+    "@reasonforge/core": "workspace:*",
+    "ws": "^8.20.0"
+  }
+}

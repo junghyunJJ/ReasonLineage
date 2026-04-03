@@ -1,0 +1,107 @@
+%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "fontFamily": "Helvetica, Arial",
+      "primaryColor": "#f5f7fa",
+      "primaryBorderColor": "#c9d1d9",
+      "lineColor": "#9aa4b2",
+      "secondaryColor": "#eef2f7",
+      "tertiaryColor": "#ffffff"
+    }
+  }}%%
+
+  flowchart TB
+
+  %% ── Start ──
+  __start__([Start ReasonForge Run]):::terminal
+
+  %% ── Gen 0: Initial scoring ──
+  seed_stage["Initial Candidates<br/>(sliced to populationLimit)"]:::module
+  parallel_score["Gen 0: Score All in Parallel<br/>(Promise.all)"]:::module
+
+  subgraph score_unit ["scoreCandidate()"]
+    direction TB
+    critique_agent["Critique Candidate<br/>(find flaws and gaps)"]:::agent
+    judge_agent["Judge Candidate<br/>(logicalConsistency, evidenceGrounding,<br/>solutionUsefulness)"]:::agent
+    fitness_calc["Calculate Fitness<br/>(0.5 LC + 0.2 EG + 0.3 SU)"]:::tool
+    benchmark_eval["Benchmark Evaluation<br/>(normalizedAnswer includes expected?)"]:::tool
+    critique_agent --> judge_agent --> fitness_calc --> benchmark_eval
+  end
+
+  pick_best["Pick Best<br/>(sort by fitness)"]:::tool
+
+  %% ── Generation loop ──
+  selection_stage["Selection<br/>(top 2 survivors by fitness)"]:::module
+
+  threshold_pre{{"Threshold Check #1<br/>(pre-mutation)<br/>fitness >= 0.85<br/>AND benchmark passed?"}}:::decision
+
+  mutation_stage["Mutate Best Candidate"]:::agent
+  score_mutated["Score Mutated<br/>(scoreCandidate)"]:::agent
+
+  crossover_gate{{"Crossover?<br/>crossover exists<br/>AND survivors >= 2<br/>AND threshold not met"}}:::decision
+  crossover_stage["Crossover<br/>(top 2 survivors)"]:::agent
+  score_crossed["Score Crossed<br/>(scoreCandidate)"]:::agent
+
+  update_pop["Update Population<br/>(survivors + mutated + crossed)<br/>sort, trim to populationLimit"]:::tool
+
+  threshold_post{{"Threshold Check #2<br/>(post-mutation)<br/>fitness >= 0.85<br/>AND benchmark passed?"}}:::decision
+
+  gen_limit_check{{"Generation<br/>Limit Reached?"}}:::decision
+
+  %% ── Terminals ──
+  output_stage["Publish Final Answer<br/>(threshold_met)<br/>finalFitness, candidate events"]:::module
+  review_stage["Human Review Required<br/>(human_review_required)"]:::module
+  __end__([End]):::terminal
+
+  %% ══════════════════════════════
+  %% Edges
+  %% ══════════════════════════════
+
+  __start__ --> seed_stage
+  seed_stage --> parallel_score
+  parallel_score --> score_unit
+  benchmark_eval --> pick_best
+
+  pick_best --> selection_stage
+
+  %% Gen loop: selection -> pre-mutation threshold
+  selection_stage --> threshold_pre
+
+  threshold_pre -->|"Yes"| output_stage
+  output_stage --> __end__
+
+  threshold_pre -->|"No"| mutation_stage
+
+  %% Mutation -> score mutated
+  mutation_stage --> score_mutated
+
+  %% Crossover gate (sequential after mutation)
+  score_mutated --> crossover_gate
+
+  crossover_gate -->|"Yes"| crossover_stage
+  crossover_stage --> score_crossed
+  score_crossed --> update_pop
+
+  crossover_gate -->|"No / skip"| update_pop
+
+  %% Update population -> post-mutation threshold
+  update_pop --> threshold_post
+
+  threshold_post -->|"Yes"| output_stage
+
+  threshold_post -->|"No"| gen_limit_check
+
+  gen_limit_check -->|"No (next gen)"| selection_stage
+  gen_limit_check -->|"Yes"| review_stage
+  review_stage --> __end__
+
+  %% ══════════════════════════════
+  %% Styles
+  %% ══════════════════════════════
+  classDef module fill:#ffffff,stroke:#c9d1d9,stroke-width:1.5px,rx:12,ry:12,color:#1f2933
+  classDef decision fill:#e3f2fd,stroke:#90caf9,stroke-width:1.5px,rx:12,ry:12
+  classDef agent fill:#f4f6f8,stroke:#9aa4b2,stroke-width:2px,rx:18,ry:18
+  classDef tool fill:#eceff1,stroke:#b0bec5,stroke-width:1.2px,rx:10,ry:10
+  classDef terminal fill:#263238,color:#ffffff,stroke:#263238,stroke-width:2px,rx:15,ry:15
+
+  style score_unit fill:#fafbfc,stroke:#d0d7de,stroke-width:1.5px,stroke-dasharray:6 3,rx:8,ry:8
