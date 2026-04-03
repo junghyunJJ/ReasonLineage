@@ -5,7 +5,7 @@ import {
   type TurnOptions
 } from "@openai/codex-sdk";
 
-import { loadCodexAuth } from "./auth";
+import { loadCodexAuth } from "./auth.js";
 
 export type CodexPromptOptions = {
   model: string;

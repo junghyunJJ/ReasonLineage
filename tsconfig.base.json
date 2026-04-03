@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "paths": {
       "@reasonforge/core": ["packages/core/src/index.ts"],
-      "@reasonforge/codex": ["packages/codex/src/index.ts"]
+      "@reasonforge/codex": ["packages/codex/src/index.ts"],
+      "@reasonforge/mcp": ["packages/mcp/src/index.ts"]
     }
   }
 }

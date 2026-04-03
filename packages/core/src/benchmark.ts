@@ -1,4 +1,4 @@
-import type { BenchmarkCase, BenchmarkVerdict } from "./types";
+import type { BenchmarkCase, BenchmarkVerdict } from "./types.js";
 
 export type BenchmarkMatcher = (expected: string, answer: string) => boolean;
 

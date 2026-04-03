@@ -3,8 +3,8 @@ import { spawn, type ChildProcess } from "node:child_process";
 
 import WebSocket from "ws";
 
-import type { ModelListResponse } from "./generated/v2/ModelListResponse";
-import type { Model } from "./generated/v2/Model";
+import type { ModelListResponse } from "./generated/v2/ModelListResponse.js";
+import type { Model } from "./generated/v2/Model.js";
 
 type JsonRpcEnvelope = {
   id?: string;

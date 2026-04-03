@@ -1,4 +1,4 @@
-import type { CandidateJudgeResult, JudgeWeights } from "./types";
+import type { CandidateJudgeResult, JudgeWeights } from "./types.js";
 
 export const defaultJudgeWeights: JudgeWeights = {
   logicalConsistency: 0.5,

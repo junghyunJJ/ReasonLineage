@@ -1,5 +1,5 @@
-import { evaluateBenchmarkAnswer, getDefaultBenchmarkCase } from "./benchmark";
-import { calculateFitness } from "./scoring";
+import { evaluateBenchmarkAnswer, getDefaultBenchmarkCase } from "./benchmark.js";
+import { calculateFitness } from "./scoring.js";
 import type {
   Candidate,
   EvolutionEvent,
@@ -7,7 +7,7 @@ import type {
   RunReasonForgeCycleInput,
   RunReasonForgeCycleResult,
   ScoredCandidate
-} from "./types";
+} from "./types.js";
 
 function sortByFitness(population: ScoredCandidate[]) {
   return [...population].sort((left, right) => right.fitness - left.fitness);

@@ -1,12 +1,12 @@
-export { AppServerClient, startLocalAppServer } from "./app-server";
-export { getDefaultAuthFile, loadCodexAuth } from "./auth";
+export { AppServerClient, startLocalAppServer } from "./app-server.js";
+export { getDefaultAuthFile, loadCodexAuth } from "./auth.js";
 export {
   createLocalCodex,
   getFinalResponse,
   runCodexPrompt,
   streamCodexPrompt
-} from "./sdk";
-export type { CodexLocalAuth } from "./auth";
-export type { LocalAppServerHandle } from "./app-server";
-export type { CodexPromptOptions } from "./sdk";
-export type { Model } from "./generated/v2/Model";
+} from "./sdk.js";
+export type { CodexLocalAuth } from "./auth.js";
+export type { LocalAppServerHandle } from "./app-server.js";
+export type { CodexPromptOptions } from "./sdk.js";
+export type { Model } from "./generated/v2/Model.js";

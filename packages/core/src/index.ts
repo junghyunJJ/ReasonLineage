@@ -2,11 +2,11 @@ export {
   evaluateBenchmarkAnswer,
   getDefaultBenchmarkCase,
   defaultBenchmarkMatcher
-} from "./benchmark";
-export type { BenchmarkMatcher } from "./benchmark";
-export { calculateFitness, defaultJudgeWeights } from "./scoring";
-export { createCandidate, runReasonForgeCycle } from "./engine";
-export { DEFAULT_JUDGE_DIMENSIONS } from "./types";
+} from "./benchmark.js";
+export type { BenchmarkMatcher } from "./benchmark.js";
+export { calculateFitness, defaultJudgeWeights } from "./scoring.js";
+export { createCandidate, runReasonForgeCycle } from "./engine.js";
+export { DEFAULT_JUDGE_DIMENSIONS } from "./types.js";
 export type {
   BenchmarkCase,
   BenchmarkVerdict,
@@ -22,4 +22,4 @@ export type {
   ScoredCandidate,
   SelectionStrategy,
   TerminationCondition
-} from "./types";
+} from "./types.js";
