@@ -53,7 +53,7 @@ function getDatabase() {
   return globalDb.db;
 }
 
-export function createRun(prompt: string, model: string, benchmark: BenchmarkCase) {
+export function createRun(prompt: string, model: string, benchmark: BenchmarkCase, demoMode?: boolean) {
   const database = getDatabase();
   const createdAt = now();
   const run = createInitialRunRecord({
@@ -61,7 +61,8 @@ export function createRun(prompt: string, model: string, benchmark: BenchmarkCas
     prompt,
     benchmark,
     model,
-    createdAt
+    createdAt,
+    demoMode
   });
 
   database

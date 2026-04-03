@@ -615,14 +615,14 @@ async function judgeCandidate(prompt: string, model: string, candidate: Candidat
   };
 }
 
-async function runReasonForge(runId: string, prompt: string, model: string) {
+async function runReasonForge(runId: string, prompt: string, model: string, explicitDemoMode?: boolean) {
   emit(runId, "mode.started", { mode: "reasonforge" });
   updateMode(runId, "reasonforge", (snapshot) => ({
     ...snapshot,
     status: "running"
   }));
 
-  const demoMode = isDemoMode(prompt);
+  const demoMode = isDemoMode(prompt, explicitDemoMode);
 
   // demoMode가 아닐 때만 LLM에게 전략 플래닝 요청
   const plan = demoMode
@@ -817,7 +817,7 @@ async function runComparisonInternal(runId: string) {
   try {
     await runSimplePass(runId, run.prompt, run.model);
     await runSequentialThinking(runId, run.prompt, run.model);
-    await runReasonForge(runId, run.prompt, run.model);
+    await runReasonForge(runId, run.prompt, run.model, run.demoMode);
 
     const updated = getRun(runId);
     if (!updated) {
@@ -859,9 +859,9 @@ async function runComparisonInternal(runId: string) {
   }
 }
 
-export function startComparisonRun(prompt: string, model: string) {
+export function startComparisonRun(prompt: string, model: string, demoMode?: boolean) {
   const benchmark = getDefaultBenchmarkCase();
-  const run = createRun(prompt, model, benchmark);
+  const run = createRun(prompt, model, benchmark, demoMode);
 
   setTimeout(() => {
     void runComparisonInternal(run.id);

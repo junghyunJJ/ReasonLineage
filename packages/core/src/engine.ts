@@ -60,7 +60,7 @@ async function scoreCandidate(
   const benchmark = input.benchmark ?? getDefaultBenchmarkCase();
   const critique = await input.critique(candidate);
   const scores = await input.judge(candidate);
-  const fitness = calculateFitness(scores, input.strategy?.weights);
+  const fitness = calculateFitness(scores, input.strategy?.weights, scores as Record<string, number>);
   const benchmarkVerdict = evaluateBenchmarkAnswer(benchmark, candidate.answer);
 
   await publishEvent(

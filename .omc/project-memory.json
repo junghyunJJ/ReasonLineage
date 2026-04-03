@@ -93,21 +93,21 @@
   },
   "hotPaths": [
     {
+      "path": "apps/web/src/lib/orchestrator.ts",
+      "accessCount": 60,
+      "lastAccessed": 1775193154114,
+      "type": "file"
+    },
+    {
       "path": "",
       "accessCount": 58,
       "lastAccessed": 1775189809000,
       "type": "directory"
     },
     {
-      "path": "apps/web/src/lib/orchestrator.ts",
-      "accessCount": 55,
-      "lastAccessed": 1775189974798,
-      "type": "file"
-    },
-    {
       "path": "packages/core/src/engine.ts",
-      "accessCount": 39,
-      "lastAccessed": 1775189802984,
+      "accessCount": 42,
+      "lastAccessed": 1775193119954,
       "type": "file"
     },
     {
@@ -123,27 +123,33 @@
       "type": "file"
     },
     {
+      "path": "packages/core/src/scoring.ts",
+      "accessCount": 19,
+      "lastAccessed": 1775193114781,
+      "type": "file"
+    },
+    {
       "path": "packages/core/src/index.ts",
       "accessCount": 18,
       "lastAccessed": 1775189803483,
       "type": "file"
     },
     {
-      "path": "packages/core/src/scoring.ts",
-      "accessCount": 17,
-      "lastAccessed": 1775189809332,
-      "type": "file"
-    },
-    {
       "path": "apps/web/src/lib/types.ts",
-      "accessCount": 15,
-      "lastAccessed": 1775189940712,
+      "accessCount": 18,
+      "lastAccessed": 1775193131431,
       "type": "file"
     },
     {
       "path": "apps/web/src/lib/dashboard-presenters.test.ts",
       "accessCount": 13,
       "lastAccessed": 1775190049064,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/tests/engine.test.ts",
+      "accessCount": 12,
+      "lastAccessed": 1775193130897,
       "type": "file"
     },
     {
@@ -159,9 +165,9 @@
       "type": "file"
     },
     {
-      "path": "packages/core/tests/engine.test.ts",
+      "path": "apps/web/src/lib/db.ts",
       "accessCount": 10,
-      "lastAccessed": 1775189680477,
+      "lastAccessed": 1775193138107,
       "type": "file"
     },
     {
@@ -183,15 +189,15 @@
       "type": "file"
     },
     {
-      "path": "apps/web/src/lib/db.ts",
-      "accessCount": 7,
-      "lastAccessed": 1775186368709,
-      "type": "file"
-    },
-    {
       "path": "apps/web/src/lib/codex-runtime.ts",
       "accessCount": 6,
       "lastAccessed": 1775186369655,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/app/api/runs/route.ts",
+      "accessCount": 6,
+      "lastAccessed": 1775193161157,
       "type": "file"
     },
     {
@@ -259,12 +265,6 @@
       "accessCount": 3,
       "lastAccessed": 1775179152183,
       "type": "directory"
-    },
-    {
-      "path": "apps/web/src/app/api/runs/route.ts",
-      "accessCount": 3,
-      "lastAccessed": 1775179184680,
-      "type": "file"
     },
     {
       "path": "apps/web/src/app/api/runs/[runId]/stream/route.ts",

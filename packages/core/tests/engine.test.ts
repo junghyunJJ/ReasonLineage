@@ -268,4 +268,31 @@ describe("runReasonForgeCycle", () => {
     // The two runs should produce different final candidates because sort order differs
     expect(ascResult.finalCandidate.id).not.toBe(defaultResult.finalCandidate.id);
   });
+
+  it("computes finite fitness with custom-only dimensions", async () => {
+    const customWeights = { creativity: 0.4, efficiency: 0.3, clarity: 0.3 };
+    const judgeResult = { creativity: 0.8, efficiency: 0.9, clarity: 0.7, logicalConsistency: 0, evidenceGrounding: 0, solutionUsefulness: 0 };
+
+    const result = await runReasonForgeCycle({
+      populationLimit: 3,
+      generationLimit: 1,
+      threshold: 0.5,
+      initialPopulation: [
+        createCandidate("a", "Answer A"),
+        createCandidate("b", "Answer B")
+      ],
+      judge: async () => judgeResult,
+      critique: async () => ["test critique"],
+      mutate: async (c) => createCandidate(`${c.id}-m`, `Mutated ${c.answer}`),
+      crossover: async (l, r) => createCandidate(`${l.id}+${r.id}`, "Crossed"),
+      strategy: {
+        weights: customWeights as any
+      }
+    });
+
+    expect(result.finalFitness).toBeGreaterThan(0);
+    expect(Number.isFinite(result.finalFitness)).toBe(true);
+    // Expected: 0.4*0.8 + 0.3*0.9 + 0.3*0.7 = 0.32 + 0.27 + 0.21 = 0.80
+    expect(result.finalFitness).toBeCloseTo(0.80);
+  });
 });

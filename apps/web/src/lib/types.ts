@@ -103,6 +103,7 @@ export function createInitialRunRecord(args: {
   benchmark: BenchmarkCase;
   model: string;
   createdAt: string;
+  demoMode?: boolean;
 }): RunRecord {
   return {
     id: args.id,
@@ -110,6 +111,7 @@ export function createInitialRunRecord(args: {
     benchmark: args.benchmark,
     model: args.model,
     status: "queued",
+    demoMode: args.demoMode,
     results: {
       "simple-pass": createEmptyMode("simple-pass", "Simple Pass"),
       "sequential-thinking": createEmptyMode(
