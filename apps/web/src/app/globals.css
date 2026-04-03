@@ -401,6 +401,19 @@ select {
   box-shadow: inset 0 0 0 1px rgba(29, 107, 87, 0.22);
 }
 
+.candidate-card__scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin-top: 4px;
+}
+
+.candidate-card__score-item {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary, #6b7280);
+  white-space: nowrap;
+}
+
 .panel-note {
   margin: 12px 0 0;
   color: var(--muted);

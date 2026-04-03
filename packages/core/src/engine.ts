@@ -3,6 +3,7 @@ import { calculateFitness } from "./scoring";
 import type {
   Candidate,
   EvolutionEvent,
+  EvolutionStrategy,
   RunReasonForgeCycleInput,
   RunReasonForgeCycleResult,
   ScoredCandidate
@@ -10,6 +11,35 @@ import type {
 
 function sortByFitness(population: ScoredCandidate[]) {
   return [...population].sort((left, right) => right.fitness - left.fitness);
+}
+
+function sortPopulation(population: ScoredCandidate[], strategy?: EvolutionStrategy): ScoredCandidate[] {
+  const sortBy = strategy?.selection?.sortBy ?? "fitness-desc";
+  if (sortBy === "fitness-desc") {
+    return sortByFitness(population);
+  }
+  if (sortBy === "fitness-asc") {
+    return [...population].sort((a, b) => a.fitness - b.fitness);
+  }
+  return [...population].sort(sortBy);
+}
+
+function shouldTerminate(best: ScoredCandidate, input: RunReasonForgeCycleInput): boolean {
+  const termination = input.strategy?.termination;
+  const useFitness = termination?.useFitnessThreshold ?? true;
+  const requireBenchmark = termination?.requireBenchmarkPass ?? true;
+
+  let met = true;
+  if (useFitness) {
+    met = met && best.fitness >= input.threshold;
+  }
+  if (requireBenchmark) {
+    met = met && best.benchmarkVerdict.passed;
+  }
+  if (termination?.custom) {
+    met = met && termination.custom(best);
+  }
+  return met;
 }
 
 async function publishEvent(
@@ -26,11 +56,11 @@ async function scoreCandidate(
   generation: number,
   input: RunReasonForgeCycleInput,
   events: EvolutionEvent[]
-) {
+): Promise<ScoredCandidate> {
   const benchmark = input.benchmark ?? getDefaultBenchmarkCase();
   const critique = await input.critique(candidate);
   const scores = await input.judge(candidate);
-  const fitness = calculateFitness(scores);
+  const fitness = calculateFitness(scores, input.strategy?.weights);
   const benchmarkVerdict = evaluateBenchmarkAnswer(benchmark, candidate.answer);
 
   await publishEvent(
@@ -43,6 +73,7 @@ async function scoreCandidate(
       logicalConsistency: scores.logicalConsistency,
       evidenceGrounding: scores.evidenceGrounding,
       solutionUsefulness: scores.solutionUsefulness,
+      scores: { ...scores } as Record<string, number>,
       critique,
       benchmarkPassed: benchmarkVerdict.passed
     },
@@ -55,7 +86,8 @@ async function scoreCandidate(
     ...scores,
     critique,
     fitness,
-    benchmarkVerdict
+    benchmarkVerdict,
+    scores: { ...scores } as Record<string, number>
   } satisfies ScoredCandidate;
 }
 
@@ -82,14 +114,15 @@ export async function runReasonForgeCycle(
   );
 
   const initialPopulation = input.initialPopulation.slice(0, input.populationLimit);
-  let population = await Promise.all(
+  let population: ScoredCandidate[] = await Promise.all(
     initialPopulation.map((candidate) => scoreCandidate(candidate, 0, input, events))
   );
 
   let best = pickBest(population);
 
   for (let generation = 1; generation <= input.generationLimit; generation += 1) {
-    const survivors = sortByFitness(population).slice(0, Math.min(2, population.length));
+    const survivorCount = input.strategy?.survivorCount ?? 2;
+    const survivors = sortPopulation(population, input.strategy).slice(0, Math.min(survivorCount, population.length));
     await publishEvent(
       {
         type: "selection.completed",
@@ -103,8 +136,7 @@ export async function runReasonForgeCycle(
     const nextPopulation = [...survivors];
     if (
       input.deferThresholdUntilAfterMutation === false &&
-      best.fitness >= input.threshold &&
-      best.benchmarkVerdict.passed
+      shouldTerminate(best, input)
     ) {
       await publishEvent(
         {
@@ -137,24 +169,44 @@ export async function runReasonForgeCycle(
       };
     }
 
-    const mutated = await input.mutate(best);
-    await publishEvent(
-      {
-        type: "mutation.applied",
-        generation,
-        parentId: best.id,
-        candidateId: mutated.id
-      },
-      events,
-      input
-    );
-    nextPopulation.push(await scoreCandidate(mutated, generation, input, events));
+    const mutationTarget = input.strategy?.mutationTarget ?? "best";
+    const mutationsPerTarget = input.strategy?.mutationsPerTarget ?? 1;
 
-    if (
-      input.crossover &&
-      survivors.length > 1 &&
-      !(best.fitness >= input.threshold && best.benchmarkVerdict.passed)
-    ) {
+    let mutationTargets: ScoredCandidate[];
+    if (mutationTarget === "best") {
+      mutationTargets = [best];
+    } else if (mutationTarget === "random") {
+      mutationTargets = [survivors[Math.floor(Math.random() * survivors.length)]];
+    } else {
+      mutationTargets = survivors;
+    }
+
+    for (const target of mutationTargets) {
+      for (let m = 0; m < mutationsPerTarget; m += 1) {
+        const mutated = await input.mutate(target);
+        await publishEvent(
+          {
+            type: "mutation.applied",
+            generation,
+            parentId: target.id,
+            candidateId: mutated.id
+          },
+          events,
+          input
+        );
+        nextPopulation.push(await scoreCandidate(mutated, generation, input, events));
+      }
+    }
+
+    const crossoverPolicy = input.strategy?.crossoverPolicy ?? "when-below-threshold";
+    const crossoverAllowed =
+      crossoverPolicy === "never"
+        ? false
+        : crossoverPolicy === "always"
+          ? true
+          : !shouldTerminate(best, input);
+
+    if (input.crossover && survivors.length > 1 && crossoverAllowed) {
       const crossed = await input.crossover(survivors[0], survivors[1]);
       await publishEvent(
         {
@@ -169,10 +221,10 @@ export async function runReasonForgeCycle(
       nextPopulation.push(await scoreCandidate(crossed, generation, input, events));
     }
 
-    population = sortByFitness(nextPopulation).slice(0, input.populationLimit);
+    population = sortPopulation(nextPopulation, input.strategy).slice(0, input.populationLimit);
     best = pickBest(population);
 
-    if (best.fitness >= input.threshold && best.benchmarkVerdict.passed) {
+    if (shouldTerminate(best, input)) {
       await publishEvent(
         {
           type: "threshold.reached",

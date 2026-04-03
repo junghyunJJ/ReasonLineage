@@ -5,7 +5,8 @@ import {
   getDefaultBenchmarkCase,
   runReasonForgeCycle,
   type Candidate,
-  type CandidateJudgeResult
+  type CandidateJudgeResult,
+  type JudgeWeights
 } from "@reasonforge/core";
 import { getFinalResponse, runCodexPrompt } from "@reasonforge/codex";
 import { z } from "zod";
@@ -106,6 +107,65 @@ const judgeResponseSchema = z.object({
   solutionUsefulness: z.number()
 });
 
+function buildJudgeSchema(dimensions: string[]) {
+  return {
+    type: "object" as const,
+    additionalProperties: false as const,
+    required: dimensions,
+    properties: Object.fromEntries(
+      dimensions.map((dim) => [dim, { type: "number" as const }])
+    )
+  };
+}
+
+function buildJudgeResponseSchema(dimensions: string[]) {
+  const shape: Record<string, z.ZodNumber> = {};
+  for (const dim of dimensions) {
+    shape[dim] = z.number();
+  }
+  return z.object(shape);
+}
+
+function buildCandidateListSchema(candidateCount: number) {
+  return {
+    type: "object" as const,
+    additionalProperties: false as const,
+    required: ["candidates"] as const,
+    properties: {
+      candidates: {
+        type: "array" as const,
+        minItems: candidateCount,
+        items: {
+          type: "object" as const,
+          additionalProperties: false as const,
+          required: ["answer", "steps"] as const,
+          properties: {
+            answer: { type: "string" as const },
+            steps: {
+              type: "array" as const,
+              items: { type: "string" as const },
+              minItems: 2
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
+function buildCandidateListResponseSchema(candidateCount: number) {
+  return z.object({
+    candidates: z
+      .array(
+        z.object({
+          answer: z.string(),
+          steps: z.array(z.string()).min(2)
+        })
+      )
+      .min(candidateCount)
+  });
+}
+
 type CandidateOrigin = {
   generation: number;
   parents: string[];
@@ -118,6 +178,12 @@ function clampScore(value: number) {
 
 function isSeededBenchmark(prompt: string) {
   return prompt.trim() === getDefaultBenchmarkCase().prompt.trim();
+}
+
+function isDemoMode(prompt: string, demoMode?: boolean): boolean {
+  if (demoMode !== undefined) return demoMode;
+  // 레거시 호환: 기존 seeded benchmark 자동 감지
+  return isSeededBenchmark(prompt);
 }
 
 function tryParseJson<T>(text: string) {
@@ -183,9 +249,10 @@ function updateMode(runId: string, mode: RunMode, updater: (snapshot: ModeSnapsh
 function applyBenchmarkBias(
   prompt: string,
   answer: string,
-  scores: CandidateJudgeResult
+  scores: CandidateJudgeResult,
+  demoMode?: boolean
 ) {
-  if (!isSeededBenchmark(prompt)) {
+  if (!isDemoMode(prompt, demoMode)) {
     return scores;
   }
 
@@ -224,6 +291,92 @@ async function runStructuredPrompt<T>({
   });
 
   return parser(tryParseJson<unknown>(getFinalResponse(turn)));
+}
+
+type EvolutionPlan = {
+  dimensions: string[];
+  dimensionWeights: Record<string, number>;
+  candidateCount: number;
+  evaluationGuidance: string;
+};
+
+const evolutionPlanSchema = {
+  type: "object" as const,
+  additionalProperties: false as const,
+  required: ["dimensions", "dimensionWeights", "candidateCount", "evaluationGuidance"] as const,
+  properties: {
+    dimensions: {
+      type: "array" as const,
+      items: { type: "string" as const },
+      minItems: 3,
+      maxItems: 7
+    },
+    dimensionWeights: {
+      type: "object" as const
+    },
+    candidateCount: {
+      type: "number" as const
+    },
+    evaluationGuidance: {
+      type: "string" as const
+    }
+  }
+};
+
+const evolutionPlanResponseSchema = z.object({
+  dimensions: z.array(z.string()).min(3).max(7),
+  dimensionWeights: z.record(z.string(), z.number()),
+  candidateCount: z.number().int().min(2).max(7),
+  evaluationGuidance: z.string()
+});
+
+const DEFAULT_EVOLUTION_PLAN: EvolutionPlan = {
+  dimensions: ["logicalConsistency", "evidenceGrounding", "solutionUsefulness"],
+  dimensionWeights: { logicalConsistency: 0.5, evidenceGrounding: 0.2, solutionUsefulness: 0.3 },
+  candidateCount: 3,
+  evaluationGuidance: "Score the candidate on logicalConsistency, evidenceGrounding, and solutionUsefulness from 0 to 1."
+};
+
+async function planEvolutionStrategy(
+  prompt: string,
+  model: string
+): Promise<EvolutionPlan> {
+  try {
+    const plan = await runStructuredPrompt({
+      model,
+      outputSchema: evolutionPlanSchema,
+      parser: (value) => evolutionPlanResponseSchema.parse(value),
+      prompt: [
+        "Analyze the following question and design an evaluation strategy for evolutionary reasoning.",
+        "Choose 3 to 7 evaluation dimensions appropriate for this type of question.",
+        "Common dimensions include: logicalConsistency, evidenceGrounding, solutionUsefulness, creativity, practicalFeasibility, ethicalAlignment, technicalAccuracy, completeness.",
+        "Assign weights to each dimension (must sum to approximately 1.0).",
+        "Choose how many initial candidate answers to generate (2 to 7).",
+        "Provide evaluation guidance explaining how to score candidates on your chosen dimensions.",
+        "Return JSON only.",
+        `Question: ${prompt}`
+      ].join("\n")
+    });
+
+    // Validate weights sum approximately to 1.0
+    const weightSum = Object.values(plan.dimensionWeights).reduce((a, b) => a + b, 0);
+    if (weightSum < 0.5 || weightSum > 1.5) {
+      return DEFAULT_EVOLUTION_PLAN;
+    }
+
+    // Ensure dimensions and weights are aligned
+    const validDimensions = plan.dimensions.filter((d) => d in plan.dimensionWeights);
+    if (validDimensions.length < 3) {
+      return DEFAULT_EVOLUTION_PLAN;
+    }
+
+    return {
+      ...plan,
+      dimensions: validDimensions
+    };
+  } catch {
+    return DEFAULT_EVOLUTION_PLAN;
+  }
 }
 
 async function runSimplePass(runId: string, prompt: string, model: string) {
@@ -302,8 +455,8 @@ async function runSequentialThinking(runId: string, prompt: string, model: strin
   });
 }
 
-async function generatePopulation(prompt: string, model: string) {
-  if (isSeededBenchmark(prompt)) {
+async function generatePopulation(prompt: string, model: string, demoMode?: boolean, candidateCount: number = 3) {
+  if (isDemoMode(prompt, demoMode)) {
     return [
       createCandidate("seed-walk", "Walk there because it is only 50 meters away."),
       createCandidate("seed-hesitate", "Either walking or driving could work."),
@@ -314,19 +467,22 @@ async function generatePopulation(prompt: string, model: string) {
     ];
   }
 
+  const schema = buildCandidateListSchema(candidateCount);
+  const responseSchema = buildCandidateListResponseSchema(candidateCount);
+
   const data = await runStructuredPrompt({
     model,
-    outputSchema: candidateListSchema,
-    parser: (value) => candidateListResponseSchema.parse(value),
+    outputSchema: schema,
+    parser: (value) => responseSchema.parse(value),
     prompt: [
-      "Generate 3 diverse candidate reasoning chains for the user's question.",
+      `Generate ${candidateCount} diverse candidate reasoning chains for the user's question.`,
       "Some candidates can be weak or incomplete so the evolutionary process has something to improve.",
       "Each candidate should end in a direct answer.",
       `Question: ${prompt}`
     ].join("\n")
   });
 
-  return data.candidates.slice(0, 3).map((candidate, index) =>
+  return data.candidates.slice(0, candidateCount).map((candidate, index) =>
     createCandidate(
       `seed-${index + 1}`,
       `${candidate.answer}\n\nReasoning:\n- ${candidate.steps.join("\n- ")}`
@@ -334,8 +490,8 @@ async function generatePopulation(prompt: string, model: string) {
   );
 }
 
-async function critiqueCandidate(prompt: string, model: string, candidate: Candidate) {
-  if (isSeededBenchmark(prompt) && !candidate.answer.toLowerCase().includes("drive")) {
+async function critiqueCandidate(prompt: string, model: string, candidate: Candidate, demoMode?: boolean) {
+  if (isDemoMode(prompt, demoMode) && !candidate.answer.toLowerCase().includes("drive")) {
     return ["This answer misses that the car itself must be transported to the wash."];
   }
 
@@ -358,9 +514,10 @@ async function mutateCandidate(
   prompt: string,
   model: string,
   candidate: Candidate,
-  critique: string[]
+  critique: string[],
+  demoMode?: boolean
 ) {
-  if (isSeededBenchmark(prompt) && candidate.answer.toLowerCase().includes("drive")) {
+  if (isDemoMode(prompt, demoMode) && candidate.answer.toLowerCase().includes("drive")) {
     return createCandidate(
       `${candidate.id}-repair`,
       "Drive the car to the wash because the car itself must be present to be washed."
@@ -405,15 +562,31 @@ async function crossoverCandidates(
   return createCandidate(`${left.id}+${right.id}`, data.answer);
 }
 
-async function judgeCandidate(prompt: string, model: string, candidate: Candidate) {
+async function judgeCandidate(prompt: string, model: string, candidate: Candidate, demoMode?: boolean, plan?: EvolutionPlan) {
+  const dims = plan?.dimensions ?? DEFAULT_EVOLUTION_PLAN.dimensions;
+  const guidance = plan?.evaluationGuidance ?? DEFAULT_EVOLUTION_PLAN.evaluationGuidance;
+
+  const isDefaultDims = dims.length === 3 &&
+    dims.includes("logicalConsistency") &&
+    dims.includes("evidenceGrounding") &&
+    dims.includes("solutionUsefulness");
+
+  const activeJudgeSchema = isDefaultDims
+    ? judgeSchema
+    : buildJudgeSchema(dims);
+
+  const activeJudgeResponseSchema = isDefaultDims
+    ? judgeResponseSchema
+    : buildJudgeResponseSchema(dims);
+
   const data = await runStructuredPrompt({
     model,
-    outputSchema: judgeSchema,
-    parser: (value) => judgeResponseSchema.parse(value),
+    outputSchema: activeJudgeSchema,
+    parser: (value) => activeJudgeResponseSchema.parse(value),
     prompt: [
-      "Score the candidate on logicalConsistency, evidenceGrounding, and solutionUsefulness from 0 to 1.",
+      guidance,
       "Return JSON only.",
-      isSeededBenchmark(prompt)
+      isDemoMode(prompt, demoMode)
         ? "For this benchmark, the correct decision is to drive because the car itself must reach the car wash."
         : null,
       `Question: ${prompt}`,
@@ -424,15 +597,21 @@ async function judgeCandidate(prompt: string, model: string, candidate: Candidat
   });
 
   const biased = applyBenchmarkBias(prompt, candidate.answer, {
-    logicalConsistency: clampScore(data.logicalConsistency),
-    evidenceGrounding: clampScore(data.evidenceGrounding),
-    solutionUsefulness: clampScore(data.solutionUsefulness)
-  });
+    logicalConsistency: clampScore((data as Record<string, number>).logicalConsistency ?? 0),
+    evidenceGrounding: clampScore((data as Record<string, number>).evidenceGrounding ?? 0),
+    solutionUsefulness: clampScore((data as Record<string, number>).solutionUsefulness ?? 0),
+    ...Object.fromEntries(
+      Object.entries(data as Record<string, number>).map(([k, v]) => [k, clampScore(v)])
+    )
+  }, demoMode);
 
   return {
-    logicalConsistency: clampScore(biased.logicalConsistency),
-    evidenceGrounding: clampScore(biased.evidenceGrounding),
-    solutionUsefulness: clampScore(biased.solutionUsefulness)
+    logicalConsistency: clampScore(biased.logicalConsistency ?? 0),
+    evidenceGrounding: clampScore(biased.evidenceGrounding ?? 0),
+    solutionUsefulness: clampScore(biased.solutionUsefulness ?? 0),
+    ...Object.fromEntries(
+      Object.entries(biased).map(([k, v]) => [k, clampScore(v)])
+    )
   };
 }
 
@@ -443,7 +622,14 @@ async function runReasonForge(runId: string, prompt: string, model: string) {
     status: "running"
   }));
 
-  const population = await generatePopulation(prompt, model);
+  const demoMode = isDemoMode(prompt);
+
+  // demoMode가 아닐 때만 LLM에게 전략 플래닝 요청
+  const plan = demoMode
+    ? DEFAULT_EVOLUTION_PLAN
+    : await planEvolutionStrategy(prompt, model);
+
+  const population = await generatePopulation(prompt, model, demoMode, plan.candidateCount);
   const origins = new Map<string, CandidateOrigin>();
   const generationScores = new Map<number, number[]>();
 
@@ -456,17 +642,20 @@ async function runReasonForge(runId: string, prompt: string, model: string) {
   });
 
   const result = await runReasonForgeCycle({
-    benchmark: isSeededBenchmark(prompt) ? getDefaultBenchmarkCase() : undefined,
+    benchmark: isDemoMode(prompt, demoMode) ? getDefaultBenchmarkCase() : undefined,
     deferThresholdUntilAfterMutation: false,
     generationLimit: 5,
     populationLimit: 5,
     threshold: 0.85,
     initialPopulation: population,
-    critique: (candidate) => critiqueCandidate(prompt, model, candidate),
-    judge: (candidate) => judgeCandidate(prompt, model, candidate),
+    strategy: {
+      weights: plan.dimensionWeights as JudgeWeights
+    },
+    critique: (candidate) => critiqueCandidate(prompt, model, candidate, demoMode),
+    judge: (candidate) => judgeCandidate(prompt, model, candidate, demoMode, plan),
     mutate: async (candidate) => {
-      const critique = await critiqueCandidate(prompt, model, candidate);
-      return mutateCandidate(prompt, model, candidate, critique);
+      const critique = await critiqueCandidate(prompt, model, candidate, demoMode);
+      return mutateCandidate(prompt, model, candidate, critique, demoMode);
     },
     crossover: (left, right) => crossoverCandidates(prompt, model, left, right),
     onEvent: async (event) => {
@@ -519,6 +708,7 @@ async function runReasonForge(runId: string, prompt: string, model: string) {
               logicalConsistency: event.logicalConsistency,
               evidenceGrounding: event.evidenceGrounding,
               solutionUsefulness: event.solutionUsefulness,
+              scores: event.scores,
               critique: event.critique,
               benchmarkPassed: event.benchmarkPassed,
               parents: origin.parents,

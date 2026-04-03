@@ -8,8 +8,15 @@ export const defaultJudgeWeights: JudgeWeights = {
 
 export function calculateFitness(
   scores: CandidateJudgeResult,
-  weights: JudgeWeights = defaultJudgeWeights
+  weights: JudgeWeights = defaultJudgeWeights,
+  dynamicScores?: Record<string, number>
 ) {
+  if (dynamicScores && Object.keys(dynamicScores).length > 0) {
+    return Object.keys(weights).reduce(
+      (sum, key) => sum + (dynamicScores[key] ?? 0) * weights[key],
+      0
+    );
+  }
   return (
     scores.logicalConsistency * weights.logicalConsistency +
     scores.evidenceGrounding * weights.evidenceGrounding +

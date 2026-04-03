@@ -94,56 +94,74 @@
   "hotPaths": [
     {
       "path": "",
-      "accessCount": 56,
-      "lastAccessed": 1775186610219,
+      "accessCount": 58,
+      "lastAccessed": 1775189809000,
       "type": "directory"
     },
     {
       "path": "apps/web/src/lib/orchestrator.ts",
-      "accessCount": 30,
-      "lastAccessed": 1775186613048,
+      "accessCount": 55,
+      "lastAccessed": 1775189974798,
       "type": "file"
     },
     {
       "path": "packages/core/src/engine.ts",
-      "accessCount": 18,
-      "lastAccessed": 1775186596068,
+      "accessCount": 39,
+      "lastAccessed": 1775189802984,
       "type": "file"
     },
     {
       "path": "packages/core/src/types.ts",
-      "accessCount": 16,
-      "lastAccessed": 1775186592340,
+      "accessCount": 29,
+      "lastAccessed": 1775189802632,
       "type": "file"
     },
     {
       "path": "packages/core/src/benchmark.ts",
-      "accessCount": 15,
-      "lastAccessed": 1775186359576,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/scoring.ts",
-      "accessCount": 13,
-      "lastAccessed": 1775186597492,
+      "accessCount": 19,
+      "lastAccessed": 1775189606669,
       "type": "file"
     },
     {
       "path": "packages/core/src/index.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775186359739,
+      "accessCount": 18,
+      "lastAccessed": 1775189803483,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/src/scoring.ts",
+      "accessCount": 17,
+      "lastAccessed": 1775189809332,
       "type": "file"
     },
     {
       "path": "apps/web/src/lib/types.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775186592233,
+      "accessCount": 15,
+      "lastAccessed": 1775189940712,
       "type": "file"
     },
     {
       "path": "apps/web/src/lib/dashboard-presenters.test.ts",
+      "accessCount": 13,
+      "lastAccessed": 1775190049064,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/lib/dashboard-presenters.ts",
+      "accessCount": 11,
+      "lastAccessed": 1775190036988,
+      "type": "file"
+    },
+    {
+      "path": "apps/web/src/components/dashboard-app.tsx",
+      "accessCount": 11,
+      "lastAccessed": 1775190058836,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/tests/engine.test.ts",
       "accessCount": 10,
-      "lastAccessed": 1775186619199,
+      "lastAccessed": 1775189680477,
       "type": "file"
     },
     {
@@ -153,15 +171,15 @@
       "type": "directory"
     },
     {
-      "path": "apps/web/src/lib/dashboard-presenters.ts",
+      "path": "packages/core/tests/benchmark.test.ts",
       "accessCount": 9,
-      "lastAccessed": 1775186596509,
+      "lastAccessed": 1775189659919,
       "type": "file"
     },
     {
-      "path": "apps/web/src/components/dashboard-app.tsx",
+      "path": "packages/core/tests/scoring.test.ts",
       "accessCount": 8,
-      "lastAccessed": 1775186361981,
+      "lastAccessed": 1775189250990,
       "type": "file"
     },
     {
@@ -174,18 +192,6 @@
       "path": "apps/web/src/lib/codex-runtime.ts",
       "accessCount": 6,
       "lastAccessed": 1775186369655,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/tests/scoring.test.ts",
-      "accessCount": 6,
-      "lastAccessed": 1775186373647,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/tests/benchmark.test.ts",
-      "accessCount": 6,
-      "lastAccessed": 1775186374116,
       "type": "file"
     },
     {
@@ -207,6 +213,12 @@
       "type": "file"
     },
     {
+      "path": "apps/web/src/app/globals.css",
+      "accessCount": 5,
+      "lastAccessed": 1775190064253,
+      "type": "file"
+    },
+    {
       "path": "packages/codex/src/auth.ts",
       "accessCount": 4,
       "lastAccessed": 1775159380075,
@@ -225,16 +237,10 @@
       "type": "file"
     },
     {
-      "path": "packages/core/tests/engine.test.ts",
+      "path": "packages",
       "accessCount": 4,
-      "lastAccessed": 1775186374264,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/globals.css",
-      "accessCount": 3,
-      "lastAccessed": 1775152727304,
-      "type": "file"
+      "lastAccessed": 1775189798707,
+      "type": "directory"
     },
     {
       "path": "README.md",
@@ -331,12 +337,6 @@
       "accessCount": 2,
       "lastAccessed": 1775154418998,
       "type": "file"
-    },
-    {
-      "path": "packages",
-      "accessCount": 2,
-      "lastAccessed": 1775179281252,
-      "type": "directory"
     },
     {
       "path": "apps/web/CLAUDE.md",

@@ -13,6 +13,7 @@ import type {
   RunRecord
 } from "@/lib/types";
 import {
+  formatDimensionName,
   getGenerationPanelNote,
   getLatestEventSequence,
   getLatestScoredGeneration,
@@ -503,6 +504,15 @@ export default function DashboardApp({ bootstrap }: { bootstrap: BootstrapData }
                         <span>{candidate.source}</span>
                         <strong>{candidate.fitness.toFixed(2)}</strong>
                       </div>
+                      {candidate.scores && Object.keys(candidate.scores).length > 0 && (
+                        <div className="candidate-card__scores">
+                          {Object.entries(candidate.scores).map(([key, value]) => (
+                            <span key={key} className="candidate-card__score-item">
+                              {formatDimensionName(key)}: {(value as number).toFixed(2)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <p>{candidate.answer}</p>
                       {candidate.parents.length ? (
                         <p className="candidate-card__parents">

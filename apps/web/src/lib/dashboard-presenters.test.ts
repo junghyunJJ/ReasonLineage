@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { CandidateCard, PublicRunEvent } from "./types";
 import {
+  formatDimensionName,
   getGenerationPanelNote,
   getLatestEventSequence,
   getLatestScoredGeneration,
@@ -114,5 +115,20 @@ describe("dashboard presenters", () => {
     expect(getGenerationPanelNote(events, candidates)).toBe(
       "Threshold reached at Gen 1 before Gen 1 candidates were scored, so this panel currently stops at Gen 0."
     );
+  });
+});
+
+describe("formatDimensionName", () => {
+  it("converts camelCase to title case with spaces", () => {
+    expect(formatDimensionName("logicalConsistency")).toBe("Logical Consistency");
+  });
+
+  it("handles single word", () => {
+    expect(formatDimensionName("creativity")).toBe("Creativity");
+  });
+
+  it("handles multi-word camelCase", () => {
+    expect(formatDimensionName("evidenceGrounding")).toBe("Evidence Grounding");
+    expect(formatDimensionName("solutionUsefulness")).toBe("Solution Usefulness");
   });
 });

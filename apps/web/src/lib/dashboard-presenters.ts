@@ -119,3 +119,14 @@ export function summarizeEventPayload(payload: Record<string, unknown>): string 
     .map((key) => `${labelFor(key)}=${formatValue(payload[key])}`)
     .join(" | ");
 }
+
+/**
+ * Converts camelCase dimension keys to human-readable format.
+ * e.g., "logicalConsistency" → "Logical Consistency"
+ */
+export function formatDimensionName(key: string): string {
+  return key
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (char) => char.toUpperCase())
+    .trim();
+}

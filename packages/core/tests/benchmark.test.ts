@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   evaluateBenchmarkAnswer,
-  getDefaultBenchmarkCase
+  getDefaultBenchmarkCase,
+  type BenchmarkCase
 } from "../src/index";
 
 describe("evaluateBenchmarkAnswer", () => {
@@ -25,5 +26,18 @@ describe("evaluateBenchmarkAnswer", () => {
 
     expect(verdict.passed).toBe(true);
     expect(verdict.expectedAnswer).toBe("drive");
+  });
+
+  it("uses custom matcher when provided", () => {
+    const benchmark: BenchmarkCase = {
+      id: "test",
+      label: "Test",
+      prompt: "test",
+      expectedAnswer: "yes",
+      matcher: (expected, answer) => answer.toLowerCase() === expected.toLowerCase()
+    };
+    // exact match required - "yes indeed" should fail with custom matcher
+    expect(evaluateBenchmarkAnswer(benchmark, "yes indeed").passed).toBe(false);
+    expect(evaluateBenchmarkAnswer(benchmark, "yes").passed).toBe(true);
   });
 });

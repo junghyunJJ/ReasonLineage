@@ -33,6 +33,7 @@ export type CandidateCard = {
   logicalConsistency: number;
   evidenceGrounding: number;
   solutionUsefulness: number;
+  scores?: Record<string, number>;
   critique: string[];
   benchmarkPassed: boolean;
   parents: string[];
@@ -65,6 +66,7 @@ export type RunRecord = {
   benchmark: BenchmarkCase;
   model: string;
   status: RunStatus;
+  demoMode?: boolean;
   results: Record<RunMode, ModeSnapshot>;
   candidates: Record<string, CandidateCard>;
   trend: TrendPoint[];
