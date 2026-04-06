@@ -2,17 +2,19 @@ import {
   calculateFitness,
   evaluateBenchmarkAnswer,
   createCandidate,
-  defaultJudgeWeights,
+  resolveWeights,
+  type Candidate,
   type ScoredCandidate,
   type BenchmarkVerdict,
   type JudgeWeights,
-  type CandidateJudgeResult
+  type QuestionCategory
 } from "@reasonforge/core";
 
 import {
   createSession,
   getSession,
   updateSession,
+  touchSession,
   type SessionConfig,
   type SessionState
 } from "./session.js";
@@ -51,15 +53,14 @@ function makeBenchmarkVerdict(session: ReturnType<typeof getSession>, answer: st
 }
 
 function makeScoredCandidate(
-  candidate: { id: string; answer: string },
+  candidate: Candidate,
   scores: Record<string, number>,
   critique: string[],
   fitness: number,
   benchmarkVerdict: BenchmarkVerdict
 ): ScoredCandidate {
   return {
-    id: candidate.id,
-    answer: candidate.answer,
+    ...candidate,
     logicalConsistency: scores.logicalConsistency ?? 0,
     evidenceGrounding: scores.evidenceGrounding ?? 0,
     solutionUsefulness: scores.solutionUsefulness ?? 0,
@@ -76,15 +77,21 @@ export function handleStartSession(input: {
   threshold: number;
   populationLimit: number;
   generationLimit: number;
+  survivorCount?: number;
+  category?: string;
   weights?: Record<string, number>;
   benchmark?: { id: string; label: string; prompt: string; expectedAnswer: string };
   candidates: Array<{ id: string; answer: string }>;
 }) {
-  const weights: JudgeWeights = (input.weights ?? defaultJudgeWeights) as JudgeWeights;
+  const weights: JudgeWeights = resolveWeights({
+    weights: input.weights as JudgeWeights | undefined,
+    category: input.category as QuestionCategory | undefined
+  });
   const config: SessionConfig = {
     threshold: input.threshold,
     populationLimit: input.populationLimit,
     generationLimit: input.generationLimit,
+    survivorCount: input.survivorCount,
     weights,
     benchmark: input.benchmark
   };
@@ -110,6 +117,8 @@ export function handleStartSession(input: {
       text: JSON.stringify({
         sessionId: session.id,
         candidateCount: session.pendingCandidates.length,
+        resolvedCategory: input.weights && Object.keys(input.weights).length > 0 ? "custom" : (input.category ?? "general"),
+        weightDimensions: Object.keys(weights),
         message: `Session created. Score each candidate using reasonforge_score_candidate.`
       }, null, 2)
     }]
@@ -123,10 +132,24 @@ export function handleScoreCandidate(input: {
   critique: string[];
 }) {
   const session = getSessionOrThrow(input.sessionId);
+  touchSession(input.sessionId);
   assertNotTerminal(session);
 
-  if (session.status !== "scoring") {
-    throw new Error(`Cannot score in "${session.status}" phase. Submit mutations or crossovers first.`);
+  if (session.status !== "scoring" && session.status !== "mutating") {
+    throw new Error(`Cannot score in "${session.status}" phase. Submit mutations or crossovers first, or check next step.`);
+  }
+
+  // Auto-transition from mutating to scoring at the BEGINNING
+  if (session.status === "mutating") {
+    updateSession(input.sessionId, (s) => ({ ...s, status: "scoring" as const }));
+  }
+
+  // Validate score dimensions match session weights
+  const weightKeys = Object.keys(session.config.weights).filter(k => session.config.weights[k] != null);
+  const scoreKeys = Object.keys(input.scores);
+  const missing = weightKeys.filter(k => !scoreKeys.includes(k));
+  if (missing.length > 0) {
+    throw new Error(`Missing score dimensions: ${missing.join(", ")}. Expected all of: ${weightKeys.join(", ")}`);
   }
 
   const pendingIndex = session.pendingCandidates.findIndex((c) => c.id === input.candidateId);
@@ -139,16 +162,21 @@ export function handleScoreCandidate(input: {
     throw new Error(`Candidate ${input.candidateId} not found in pending candidates. Available: ${session.pendingCandidates.map((c) => c.id).join(", ")}`);
   }
 
+  const budget = session.config.populationLimit * session.config.generationLimit;
+  if (session.evaluationCount >= budget) {
+    throw new Error(`Evaluation budget (${budget}) exhausted for this session`);
+  }
+
   const candidate = session.pendingCandidates[pendingIndex];
-  const defaultShell: CandidateJudgeResult = { logicalConsistency: 0, evidenceGrounding: 0, solutionUsefulness: 0 };
-  const fitness = calculateFitness(defaultShell, session.config.weights, input.scores);
+  const fitness = calculateFitness(session.config.weights, input.scores);
   const benchmarkVerdict = makeBenchmarkVerdict(session, candidate.answer);
   const scored = makeScoredCandidate(candidate, input.scores, input.critique, fitness, benchmarkVerdict);
 
   updateSession(input.sessionId, (s) => ({
     ...s,
     population: [...s.population, scored],
-    pendingCandidates: s.pendingCandidates.filter((_, i) => i !== pendingIndex)
+    pendingCandidates: s.pendingCandidates.filter((_, i) => i !== pendingIndex),
+    evaluationCount: (s.evaluationCount ?? 0) + 1
   }));
 
   // Auto-transition when all pending candidates are scored
@@ -183,6 +211,7 @@ export function handleSelect(input: {
   survivorCount?: number;
 }) {
   const session = getSessionOrThrow(input.sessionId);
+  touchSession(input.sessionId);
   assertNotTerminal(session);
 
   if (session.status !== "ready_to_select") {
@@ -190,7 +219,20 @@ export function handleSelect(input: {
   }
 
   if (session.generation >= session.config.generationLimit) {
-    throw new Error(`Generation limit (${session.config.generationLimit}) reached. Session should be finalized.`);
+    updateSession(input.sessionId, (s) => ({ ...s, status: "completed" as const }));
+    const best = [...session.population].sort((a, b) => b.fitness - a.fitness)[0];
+    return {
+      content: [{
+        type: "text" as const,
+        text: JSON.stringify({
+          generation: session.generation,
+          status: "completed",
+          reason: "generation_limit_reached",
+          bestCandidate: best ? { id: best.id, fitness: Number(best.fitness.toFixed(4)) } : null,
+          message: `Generation limit (${session.config.generationLimit}) reached. Best candidate: "${best?.id ?? "none"}" with fitness ${best?.fitness.toFixed(4) ?? "N/A"}.`
+        }, null, 2)
+      }]
+    };
   }
 
   if (session.population.length === 0) {
@@ -198,7 +240,7 @@ export function handleSelect(input: {
   }
 
   const survivorCount = Math.min(
-    input.survivorCount ?? 2,
+    input.survivorCount ?? session.config.survivorCount ?? 2,
     session.population.length
   );
   const sorted = [...session.population].sort((a, b) => b.fitness - a.fitness);
@@ -232,6 +274,7 @@ export function handleMutate(input: {
   answer: string;
 }) {
   const session = getSessionOrThrow(input.sessionId);
+  touchSession(input.sessionId);
   assertNotTerminal(session);
 
   if (session.status !== "mutating") {
@@ -250,11 +293,10 @@ export function handleMutate(input: {
 
   assertUniqueCandidateId(session, input.candidateId);
 
-  const newCandidate = createCandidate(input.candidateId, input.answer);
+  const newCandidate = createCandidate(input.candidateId, input.answer, [input.parentId]);
   updateSession(input.sessionId, (s) => ({
     ...s,
-    pendingCandidates: [...s.pendingCandidates, newCandidate],
-    status: "scoring" as const
+    pendingCandidates: [...s.pendingCandidates, newCandidate]
   }));
 
   return {
@@ -276,6 +318,7 @@ export function handleCrossover(input: {
   answer: string;
 }) {
   const session = getSessionOrThrow(input.sessionId);
+  touchSession(input.sessionId);
   assertNotTerminal(session);
 
   if (session.status !== "mutating") {
@@ -296,11 +339,10 @@ export function handleCrossover(input: {
 
   assertUniqueCandidateId(session, input.candidateId);
 
-  const newCandidate = createCandidate(input.candidateId, input.answer);
+  const newCandidate = createCandidate(input.candidateId, input.answer, [...input.parentIds]);
   updateSession(input.sessionId, (s) => ({
     ...s,
-    pendingCandidates: [...s.pendingCandidates, newCandidate],
-    status: "scoring" as const
+    pendingCandidates: [...s.pendingCandidates, newCandidate]
   }));
 
   return {
@@ -317,6 +359,7 @@ export function handleCrossover(input: {
 
 export function handleNextStep(input: { sessionId: string }) {
   const session = getSessionOrThrow(input.sessionId);
+  touchSession(input.sessionId);
 
   const best = session.population.length > 0
     ? [...session.population].sort((a, b) => b.fitness - a.fitness)[0]
@@ -345,11 +388,14 @@ export function handleNextStep(input: { sessionId: string }) {
     };
   } else if (generationLimitReached && session.pendingCandidates.length === 0) {
     // Branch 2: Generation limit reached -- finalize
+    const newStatus = best ? "completed" : "failed";
     suggestion = {
       suggestedTool: null,
-      explanation: `Generation limit reached (${session.config.generationLimit}). Best answer is "${best?.id ?? "none"}" with fitness ${best?.fitness.toFixed(4) ?? "N/A"}. Consider the best answer or request human review.`
+      explanation: best
+        ? `Generation limit reached (${session.config.generationLimit}). Best answer is "${best.id}" with fitness ${best.fitness.toFixed(4)}.`
+        : `Generation limit reached with no scored candidates. Session failed.`
     };
-    updateSession(input.sessionId, (s) => ({ ...s, status: "completed" as const }));
+    updateSession(input.sessionId, (s) => ({ ...s, status: newStatus as "completed" | "failed" }));
   } else if (session.status === "scoring") {
     // Branch 3: Pending candidates need scoring
     const nextPending = session.pendingCandidates[0];
@@ -370,13 +416,15 @@ export function handleNextStep(input: { sessionId: string }) {
     };
   } else if (session.status === "mutating") {
     // Branch 5: After selection, need mutation/crossover
+    const hasPending = session.pendingCandidates.length > 0;
     suggestion = {
-      suggestedTool: "reasonforge_mutate",
-      suggestedArgs: {
-        sessionId: session.id,
-        parentId: best?.id
-      },
-      explanation: `Selection complete (Gen ${session.generation}). Submit mutations for the best candidate "${best?.id ?? ""}". Optionally use reasonforge_crossover to combine top candidates.`
+      suggestedTool: hasPending ? "reasonforge_score_candidate" : "reasonforge_mutate",
+      suggestedArgs: hasPending
+        ? { sessionId: session.id, candidateId: session.pendingCandidates[0].id }
+        : { sessionId: session.id, parentId: best?.id },
+      explanation: hasPending
+        ? `${session.pendingCandidates.length} pending candidate(s) from mutations. You can score them now or submit more mutations/crossovers first. To score, use reasonforge_score_candidate.`
+        : `Selection complete (Gen ${session.generation}). Submit mutations for the best candidate "${best?.id ?? ""}". Optionally use reasonforge_crossover to combine top candidates.`
     };
   } else {
     // Fallback (should not reach here)

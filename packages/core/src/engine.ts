@@ -1,5 +1,5 @@
 import { evaluateBenchmarkAnswer, getDefaultBenchmarkCase } from "./benchmark.js";
-import { calculateFitness } from "./scoring.js";
+import { calculateFitness, defaultJudgeWeights } from "./scoring.js";
 import type {
   Candidate,
   EvolutionEvent,
@@ -60,7 +60,7 @@ async function scoreCandidate(
   const benchmark = input.benchmark ?? getDefaultBenchmarkCase();
   const critique = await input.critique(candidate);
   const scores = await input.judge(candidate);
-  const fitness = calculateFitness(scores, input.strategy?.weights, scores as Record<string, number>);
+  const fitness = calculateFitness(input.strategy?.weights ?? defaultJudgeWeights, { ...scores } as Record<string, number>);
   const benchmarkVerdict = evaluateBenchmarkAnswer(benchmark, candidate.answer);
 
   await publishEvent(
@@ -95,8 +95,8 @@ function pickBest(population: ScoredCandidate[]) {
   return sortByFitness(population)[0];
 }
 
-export function createCandidate(id: string, answer: string): Candidate {
-  return { id, answer };
+export function createCandidate(id: string, answer: string, parentIds?: string[]): Candidate {
+  return parentIds ? { id, answer, parentIds } : { id, answer };
 }
 
 export async function runReasonForgeCycle(

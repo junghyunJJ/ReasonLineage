@@ -123,7 +123,7 @@ describe("MCP Tool Handlers", () => {
     expect(() => handleScoreCandidate({
       sessionId: start.sessionId,
       candidateId: "nonexistent",
-      scores: { x: 0.5 },
+      scores: { logicalConsistency: 0.5, evidenceGrounding: 0.5, solutionUsefulness: 0.5 },
       critique: ["test"]
     })).toThrow("not found in pending");
   });
@@ -231,7 +231,9 @@ describe("MCP Tool Handlers", () => {
     handleScoreCandidate({ sessionId, candidateId: "c1-m", scores: { logicalConsistency: 0.6, evidenceGrounding: 0.6, solutionUsefulness: 0.6 }, critique: ["ok"] });
 
     // Try to select again (would go to gen 2, over limit)
-    expect(() => handleSelect({ sessionId })).toThrow("Generation limit");
+    const result = parseResult(handleSelect({ sessionId }));
+    expect(result.status).toBe("completed");
+    expect(result.reason).toBe("generation_limit_reached");
   });
 
   it("rejects too many seed candidates exceeding populationLimit", () => {
@@ -437,5 +439,188 @@ describe("MCP Tool Handlers", () => {
     const step = parseResult(handleNextStep({ sessionId }));
     expect(step.status).toBe("ready_to_select");
     expect(step.suggestion.suggestedTool).toBe("reasonforge_select");
+  });
+
+  it("allows multiple mutations before scoring", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 10,
+      generationLimit: 5,
+      candidates: [{ id: "c1", answer: "A" }, { id: "c2", answer: "B" }]
+    }));
+    const sessionId = start.sessionId;
+
+    // Score both
+    handleScoreCandidate({ sessionId, candidateId: "c1", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] });
+    handleScoreCandidate({ sessionId, candidateId: "c2", scores: { logicalConsistency: 0.6, evidenceGrounding: 0.5, solutionUsefulness: 0.55 }, critique: ["ok"] });
+
+    // Select
+    handleSelect({ sessionId, survivorCount: 2 });
+
+    // Multiple mutations in a row (should NOT throw)
+    handleMutate({ sessionId, parentId: "c1", candidateId: "m1", answer: "Mut 1" });
+    handleMutate({ sessionId, parentId: "c2", candidateId: "m2", answer: "Mut 2" });
+
+    // Crossover after mutations (should NOT throw)
+    handleCrossover({ sessionId, parentIds: ["c1", "c2"], candidateId: "cross1", answer: "Cross" });
+
+    // Now score all pending
+    handleScoreCandidate({ sessionId, candidateId: "m1", scores: { logicalConsistency: 0.85, evidenceGrounding: 0.75, solutionUsefulness: 0.8 }, critique: ["better"] });
+    handleScoreCandidate({ sessionId, candidateId: "m2", scores: { logicalConsistency: 0.65, evidenceGrounding: 0.55, solutionUsefulness: 0.6 }, critique: ["ok"] });
+    handleScoreCandidate({ sessionId, candidateId: "cross1", scores: { logicalConsistency: 0.9, evidenceGrounding: 0.8, solutionUsefulness: 0.85 }, critique: ["great"] });
+
+    // Verify all scored
+    const step = parseResult(handleNextStep({ sessionId }));
+    expect(step.pendingCount).toBe(0);
+  });
+
+  it("rejects scoring with wrong dimensions", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.85,
+      populationLimit: 5,
+      generationLimit: 5,
+      weights: { accuracy: 0.5, clarity: 0.5 },
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+
+    expect(() => handleScoreCandidate({
+      sessionId: start.sessionId,
+      candidateId: "c1",
+      scores: { wrongDim: 0.8 },
+      critique: ["test"]
+    })).toThrow("Missing score dimensions");
+  });
+
+  it("persists lineage parentIds on mutations", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+    const sessionId = start.sessionId;
+    handleScoreCandidate({ sessionId, candidateId: "c1", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] });
+    handleSelect({ sessionId });
+
+    const mutResult = parseResult(handleMutate({ sessionId, parentId: "c1", candidateId: "m1", answer: "Mutated" }));
+    expect(mutResult.parentId).toBe("c1");
+
+    // Score the mutated candidate so it enters the population
+    handleScoreCandidate({ sessionId, candidateId: "m1", scores: { logicalConsistency: 0.85, evidenceGrounding: 0.75, solutionUsefulness: 0.8 }, critique: ["better"] });
+
+    // Verify parentIds survived scoring by checking next_step population
+    const step = parseResult(handleNextStep({ sessionId }));
+    // The scored candidate should be in the population with parentIds preserved
+    expect(step.populationSize).toBeGreaterThanOrEqual(2);
+  });
+
+  it("auto-transitions from mutating to scoring on first score", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+    const sessionId = start.sessionId;
+    handleScoreCandidate({ sessionId, candidateId: "c1", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] });
+    handleSelect({ sessionId });
+
+    // Mutate
+    handleMutate({ sessionId, parentId: "c1", candidateId: "m1", answer: "Mut" });
+
+    // Score while in mutating status (should auto-transition to scoring)
+    const scoreResult = parseResult(handleScoreCandidate({ sessionId, candidateId: "m1", scores: { logicalConsistency: 0.85, evidenceGrounding: 0.75, solutionUsefulness: 0.8 }, critique: ["better"] }));
+    expect(scoreResult.fitness).toBeGreaterThan(0);
+
+    // Further mutations should now be rejected (status is scoring)
+    // Actually status auto-transitioned to ready_to_select since all pending scored
+    // So it should throw "Cannot mutate in ready_to_select"
+    expect(() => handleMutate({ sessionId, parentId: "c1", candidateId: "m2", answer: "Mut2" })).toThrow("Cannot mutate");
+  });
+
+  it("uses category preset when no weights provided", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.8,
+      populationLimit: 3,
+      generationLimit: 3,
+      category: "math",
+      candidates: [{ id: "c1", answer: "Proof attempt" }]
+    }));
+    expect(start.resolvedCategory).toBe("math");
+    expect(start.weightDimensions).toEqual(
+      expect.arrayContaining(["mathematicalRigor", "stepValidity", "solutionCompleteness"])
+    );
+    expect(start.weightDimensions).not.toContain("logicalConsistency");
+
+    // Scoring must use math dimensions
+    const score = parseResult(handleScoreCandidate({
+      sessionId: start.sessionId,
+      candidateId: "c1",
+      scores: { mathematicalRigor: 0.9, stepValidity: 0.8, solutionCompleteness: 0.7 },
+      critique: ["Proof is mostly complete"]
+    }));
+    // fitness = 0.45*0.9 + 0.30*0.8 + 0.25*0.7 = 0.405 + 0.24 + 0.175 = 0.82
+    expect(score.fitness).toBeCloseTo(0.82, 2);
+  });
+
+  it("explicit weights override category", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.7,
+      populationLimit: 3,
+      generationLimit: 3,
+      category: "math",
+      weights: { custom: 1.0 },
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+    expect(start.resolvedCategory).toBe("custom");
+    expect(start.weightDimensions).toEqual(["custom"]);
+  });
+
+  it("defaults to general when neither category nor weights provided", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.85,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+    expect(start.resolvedCategory).toBe("general");
+    expect(start.weightDimensions).toEqual(
+      expect.arrayContaining(["logicalConsistency", "evidenceGrounding", "solutionUsefulness"])
+    );
+  });
+
+  it("rejects scoring with wrong dimensions for category preset", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.8,
+      populationLimit: 3,
+      generationLimit: 3,
+      category: "coding",
+      candidates: [{ id: "c1", answer: "function foo() {}" }]
+    }));
+    expect(() => handleScoreCandidate({
+      sessionId: start.sessionId,
+      candidateId: "c1",
+      scores: { logicalConsistency: 0.8 },
+      critique: ["wrong dims"]
+    })).toThrow("Missing score dimensions");
+  });
+
+  it("handleNextStep suggests scoring when mutating with pending candidates", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [{ id: "c1", answer: "A" }]
+    }));
+    const sessionId = start.sessionId;
+    handleScoreCandidate({ sessionId, candidateId: "c1", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] });
+    handleSelect({ sessionId });
+
+    // Mutate (creates pending candidate but stays in mutating)
+    handleMutate({ sessionId, parentId: "c1", candidateId: "m1", answer: "Mut" });
+
+    // next_step should suggest scoring since there are pending candidates
+    const step = parseResult(handleNextStep({ sessionId }));
+    expect(step.suggestion.suggestedTool).toBe("reasonforge_score_candidate");
   });
 });

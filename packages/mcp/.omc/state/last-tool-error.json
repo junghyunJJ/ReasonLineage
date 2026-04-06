@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd /Users/jungj2/Dropbox/Metadata/reasonforge && node scripts/run-carwash-demo.mjs 2>&1\",\"timeout\":30000,\"description\":\"Run demo with stderr visible\"}",
+  "error": "Exit code 1\nnode:internal/modules/package_json_reader:301\n  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);\n        ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find package '@modelcontextprotocol/sdk' imported from /Users/jungj2/Dropbox/Metadata/reasonforge/scripts/run-carwash-demo.mjs\n    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)\n    at packageResolve (node:internal/modules/esm/resolve:768:81)\n    at moduleResolve (node:internal/modules/es...",
+  "timestamp": "2026-04-03T19:52:34.846Z",
+  "retry_count": 2
+}

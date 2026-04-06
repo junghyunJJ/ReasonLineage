@@ -1,4 +1,4 @@
-import type { CandidateJudgeResult, JudgeWeights } from "./types.js";
+import type { JudgeWeights } from "./types.js";
 
 export const defaultJudgeWeights: JudgeWeights = {
   logicalConsistency: 0.5,
@@ -7,19 +7,18 @@ export const defaultJudgeWeights: JudgeWeights = {
 };
 
 export function calculateFitness(
-  scores: CandidateJudgeResult,
-  weights: JudgeWeights = defaultJudgeWeights,
-  dynamicScores?: Record<string, number>
-) {
-  if (dynamicScores && Object.keys(dynamicScores).length > 0) {
-    return Object.keys(weights).reduce(
-      (sum, key) => sum + (dynamicScores[key] ?? 0) * weights[key],
-      0
-    );
+  weights: JudgeWeights,
+  scores: Record<string, number>
+): number {
+  // Normalize weights to sum to 1.0
+  const keys = Object.keys(weights).filter(k => weights[k] != null);
+  const sum = keys.reduce((s, k) => s + (weights[k] ?? 0), 0);
+  if (sum === 0) return 0;
+
+  let total = 0;
+  for (const key of keys) {
+    const w = (weights[key] ?? 0) / sum;
+    total += (scores[key] ?? 0) * w;
   }
-  return (
-    scores.logicalConsistency * weights.logicalConsistency +
-    scores.evidenceGrounding * weights.evidenceGrounding +
-    scores.solutionUsefulness * weights.solutionUsefulness
-  );
+  return total;
 }

@@ -6,17 +6,17 @@ export const DEFAULT_JUDGE_DIMENSIONS = [
 export type DefaultJudgeDimension = typeof DEFAULT_JUDGE_DIMENSIONS[number];
 
 export type JudgeWeights = {
-  logicalConsistency: number;
-  evidenceGrounding: number;
-  solutionUsefulness: number;
-  [dimension: string]: number;
+  logicalConsistency?: number;
+  evidenceGrounding?: number;
+  solutionUsefulness?: number;
+  [dimension: string]: number | undefined;
 };
 
 export type CandidateJudgeResult = {
-  logicalConsistency: number;
-  evidenceGrounding: number;
-  solutionUsefulness: number;
-  [dimension: string]: number;
+  logicalConsistency?: number;
+  evidenceGrounding?: number;
+  solutionUsefulness?: number;
+  [dimension: string]: number | undefined;
 };
 
 export type BenchmarkCase = {
@@ -36,16 +36,20 @@ export type BenchmarkVerdict = {
 export type Candidate = {
   id: string;
   answer: string;
+  parentIds?: string[];
 };
 
 export type ScoredCandidate = Candidate & {
-  logicalConsistency: number;
-  evidenceGrounding: number;
-  solutionUsefulness: number;
   fitness: number;
   critique: string[];
   benchmarkVerdict: BenchmarkVerdict;
-  scores?: Record<string, number>;
+  scores: Record<string, number>;
+  /** @deprecated Use scores['logicalConsistency'] instead */
+  logicalConsistency?: number;
+  /** @deprecated Use scores['evidenceGrounding'] instead */
+  evidenceGrounding?: number;
+  /** @deprecated Use scores['solutionUsefulness'] instead */
+  solutionUsefulness?: number;
 };
 
 export type EvolutionEvent =
@@ -60,10 +64,10 @@ export type EvolutionEvent =
       candidateId: string;
       answer: string;
       fitness: number;
-      logicalConsistency: number;
-      evidenceGrounding: number;
-      solutionUsefulness: number;
-      scores?: Record<string, number>;
+      scores: Record<string, number>;
+      /** @deprecated */ logicalConsistency?: number;
+      /** @deprecated */ evidenceGrounding?: number;
+      /** @deprecated */ solutionUsefulness?: number;
       critique: string[];
       benchmarkPassed: boolean;
     }

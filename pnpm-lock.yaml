@@ -102,6 +102,12 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
 
+  packages/skill-runner:
+    dependencies:
+      '@reasonforge/core':
+        specifier: workspace:*
+        version: link:../core
+
 packages:
 
   /@alloc/quick-lru@5.2.0:

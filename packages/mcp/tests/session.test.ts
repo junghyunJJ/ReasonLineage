@@ -5,7 +5,8 @@ import {
   updateSession,
   deleteSession,
   clearAllSessions,
-  getSessionCount
+  getSessionCount,
+  touchSession
 } from "../src/session.js";
 import type { SessionConfig } from "../src/session.js";
 import { createCandidate, defaultJudgeWeights } from "@reasonforge/core";
@@ -63,5 +64,30 @@ describe("Session management", () => {
     updateSession(s1.id, (s) => ({ ...s, generation: 5 }));
     expect(getSession(s1.id)?.generation).toBe(5);
     expect(getSession(s2.id)?.generation).toBe(0);
+  });
+
+  it("getSession does not mutate lastAccessedAt", () => {
+    const session = createSession(defaultConfig, [createCandidate("a", "A")]);
+    const initialAccess = session.lastAccessedAt;
+
+    // Wait a tiny bit to ensure time difference
+    const before = Date.now();
+    while (Date.now() === before) {} // spin until time advances
+
+    getSession(session.id);
+    const afterGet = getSession(session.id);
+    expect(afterGet?.lastAccessedAt).toBe(initialAccess);
+  });
+
+  it("touchSession updates lastAccessedAt", () => {
+    const session = createSession(defaultConfig, [createCandidate("a", "A")]);
+    const initialAccess = session.lastAccessedAt;
+
+    const before = Date.now();
+    while (Date.now() === before) {}
+
+    touchSession(session.id);
+    const updated = getSession(session.id);
+    expect(updated?.lastAccessedAt).toBeGreaterThan(initialAccess);
   });
 });

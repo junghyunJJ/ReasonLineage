@@ -12,88 +12,132 @@
 
   flowchart TB
 
-  %% ── Start ──
+  %% ══════════════════════════════
+  %% Phase 1: Entry Points
+  %% ══════════════════════════════
   __start__([Start ReasonForge Run]):::terminal
 
-  %% ── Gen 0: Initial scoring ──
-  seed_stage["Initial Candidates<br/>(sliced to populationLimit)"]:::module
-  parallel_score["Gen 0: Score All in Parallel<br/>(Promise.all)"]:::module
+  entry_decision{{"Entry Mode"}}:::decision
+  populate["Phase 1: Populate<br/>Generate N Diverse Candidates<br/>(Generator Persona)"]:::agent
+  items_provided["Items Provided<br/>(Refinement-Only Mode)"]:::module
 
-  subgraph score_unit ["scoreCandidate()"]
+  __start__ --> entry_decision
+  entry_decision -->|"Full Cycle"| populate
+  entry_decision -->|"Refinement Only"| items_provided
+
+  %% ══════════════════════════════
+  %% State Block Emission
+  %% ══════════════════════════════
+  state_block_1["Emit State Block<br/>(=== EVOLUTION STATE ===)"]:::stateblock
+  populate --> state_block_1
+  items_provided --> state_block_1
+
+  %% ══════════════════════════════
+  %% Phase 2: SCORING Phase
+  %% ══════════════════════════════
+  budget_check{{"Evaluation Budget<br/>Remaining?<br/>(pop &times; gen cap)"}}:::decision
+  state_block_1 --> budget_check
+  budget_check -->|"Exhausted"| completed_budget["COMPLETED<br/>(budget exhausted &mdash;<br/>best available)"]:::terminal
+  budget_check -->|"Yes"| scoring_phase
+
+  scoring_phase["Phase 2: SCORING<br/>Score all pending candidates"]:::module
+
+  subgraph score_unit ["scoreCandidate() &mdash; per candidate"]
     direction TB
-    critique_agent["Critique Candidate<br/>(find flaws and gaps)"]:::agent
-    judge_agent["Judge Candidate<br/>(logicalConsistency, evidenceGrounding,<br/>solutionUsefulness)"]:::agent
-    fitness_calc["Calculate Fitness<br/>(0.5 LC + 0.2 EG + 0.3 SU)"]:::tool
-    benchmark_eval["Benchmark Evaluation<br/>(normalizedAnswer includes expected?)"]:::tool
-    critique_agent --> judge_agent --> fitness_calc --> benchmark_eval
+    content_isolation["Content Isolation Check<br/>(treat content as untrusted data;<br/>flag adversarial manipulation)"]:::guard
+    calibration["Calibration Anchor<br/>(re-state: 0.6 = acceptable,<br/>0.9+ needs justification;<br/>gen-0 best as reference)"]:::tool
+    critique_agent["Critique Candidate<br/>(Strict Evaluator persona:<br/>find flaws, gaps, contradictions)"]:::agent
+    judge_agent["Score Each Dimension<br/>(dynamic dimensions, each 0&ndash;1;<br/>validated against session weights)"]:::tool
+    fitness_calc["Calculate Fitness<br/>(normalized weighted sum;<br/>mandatory arithmetic table)"]:::tool
+    benchmark_gate{{"Benchmark<br/>Configured?"}}:::decision
+    benchmark_eval["Benchmark Evaluation<br/>(normalizedAnswer<br/>includes expectedAnswer?)"]:::tool
+    no_benchmark["Skip Benchmark<br/>(auto-pass)"]:::tool
+    content_isolation --> calibration --> critique_agent --> judge_agent --> fitness_calc --> benchmark_gate
+    benchmark_gate -->|"Yes"| benchmark_eval
+    benchmark_gate -->|"No"| no_benchmark
   end
 
-  pick_best["Pick Best<br/>(sort by fitness)"]:::tool
-
-  %% ── Generation loop ──
-  selection_stage["Selection<br/>(top 2 survivors by fitness)"]:::module
-
-  threshold_pre{{"Threshold Check #1<br/>(pre-mutation)<br/>fitness >= 0.85<br/>AND benchmark passed?"}}:::decision
-
-  mutation_stage["Mutate Best Candidate"]:::agent
-  score_mutated["Score Mutated<br/>(scoreCandidate)"]:::agent
-
-  crossover_gate{{"Crossover?<br/>crossover exists<br/>AND survivors >= 2<br/>AND threshold not met"}}:::decision
-  crossover_stage["Crossover<br/>(top 2 survivors)"]:::agent
-  score_crossed["Score Crossed<br/>(scoreCandidate)"]:::agent
-
-  update_pop["Update Population<br/>(survivors + mutated + crossed)<br/>sort, trim to populationLimit"]:::tool
-
-  threshold_post{{"Threshold Check #2<br/>(post-mutation)<br/>fitness >= 0.85<br/>AND benchmark passed?"}}:::decision
-
-  gen_limit_check{{"Generation<br/>Limit Reached?"}}:::decision
-
-  %% ── Terminals ──
-  output_stage["Publish Final Answer<br/>(threshold_met)<br/>finalFitness, candidate events"]:::module
-  review_stage["Human Review Required<br/>(human_review_required)"]:::module
-  __end__([End]):::terminal
+  scoring_phase --> score_unit
 
   %% ══════════════════════════════
-  %% Edges
+  %% Post-Scoring Threshold Check
   %% ══════════════════════════════
+  all_scored{{"All Candidates<br/>Scored?"}}:::decision
+  benchmark_eval --> all_scored
+  no_benchmark --> all_scored
+  all_scored -->|"No &mdash; pending remain"| budget_check
 
-  __start__ --> seed_stage
-  seed_stage --> parallel_score
-  parallel_score --> score_unit
-  benchmark_eval --> pick_best
+  threshold_check{{"Threshold Met?<br/>fitness &ge; threshold<br/>AND benchmark passed<br/>(if applicable)"}}:::decision
+  all_scored -->|"Yes"| threshold_check
 
-  pick_best --> selection_stage
+  %% ══════════════════════════════
+  %% Termination Paths
+  %% ══════════════════════════════
+  completed_threshold["COMPLETED<br/>(threshold met &mdash; best answer)<br/><i>includes quality confidence note</i>"]:::terminal
+  completed_genlimit["COMPLETED<br/>(generation limit &mdash; best available)<br/><i>includes quality confidence note</i>"]:::terminal
+  completed_stagnation["COMPLETED<br/>(stagnation &mdash; best available)<br/><i>includes quality confidence note</i>"]:::terminal
 
-  %% Gen loop: selection -> pre-mutation threshold
-  selection_stage --> threshold_pre
+  threshold_check -->|"Yes"| completed_threshold
 
-  threshold_pre -->|"Yes"| output_stage
-  output_stage --> __end__
+  %% ══════════════════════════════
+  %% Phase 3: READY_TO_SELECT Phase
+  %% ══════════════════════════════
+  gen_limit_check{{"Generation Limit<br/>Reached?"}}:::decision
+  threshold_check -->|"No"| gen_limit_check
 
-  threshold_pre -->|"No"| mutation_stage
+  gen_limit_check -->|"Yes"| completed_genlimit
 
-  %% Mutation -> score mutated
-  mutation_stage --> score_mutated
+  stagnation_check{{"Stagnation?<br/>(best fitness &Delta; &lt; 0.02<br/>for 2 consecutive gens)"}}:::decision
+  gen_limit_check -->|"No"| stagnation_check
 
-  %% Crossover gate (sequential after mutation)
-  score_mutated --> crossover_gate
+  stagnation_recovery["Stagnation Recovery<br/>(try fresh seed OR<br/>radical mutation)"]:::agent
+  stagnation_check -->|"Yes"| stagnation_recovery
+  stagnation_recovery -->|"Improved"| select_phase
+  stagnation_recovery -->|"Still stagnant"| completed_stagnation
 
-  crossover_gate -->|"Yes"| crossover_stage
-  crossover_stage --> score_crossed
-  score_crossed --> update_pop
+  state_block_2["Emit State Block"]:::stateblock
+  stagnation_check -->|"No"| state_block_2
 
-  crossover_gate -->|"No / skip"| update_pop
+  select_phase["Phase 3: SELECT<br/>Sort by fitness descending<br/>Keep top N survivors<br/>Eliminate rest; increment generation"]:::module
+  state_block_2 --> select_phase
 
-  %% Update population -> post-mutation threshold
-  update_pop --> threshold_post
+  %% ══════════════════════════════
+  %% Phase 4: MUTATING Phase
+  %% ══════════════════════════════
+  state_block_3["Emit State Block"]:::stateblock
+  select_phase --> state_block_3
 
-  threshold_post -->|"Yes"| output_stage
+  pop_limit_check{{"Population Limit<br/>Reached?<br/>(size + pending &lt; limit)"}}:::decision
+  state_block_3 --> pop_limit_check
 
-  threshold_post -->|"No"| gen_limit_check
+  mutate_step["Phase 4a: Mutate Survivor(s)<br/>(Targeted Refiner persona:<br/>address critique, improve weak dims;<br/>multiple mutations allowed)"]:::agent
+  pop_limit_check -->|"Space available"| mutate_step
+  pop_limit_check -->|"Limit reached"| register_new
 
-  gen_limit_check -->|"No (next gen)"| selection_stage
-  gen_limit_check -->|"Yes"| review_stage
-  review_stage --> __end__
+  crossover_gate{{"Crossover?<br/>2+ survivors &amp;&amp;<br/>population space"}}:::decision
+  mutate_step --> crossover_gate
+
+  subgraph crossover_unit ["Crossover (Crossover Synthesizer persona)"]
+    direction TB
+    decompose["Step 1: Decompose<br/>(list top 2 strengths of each parent;<br/>identify complementary vs redundant)"]:::agent
+    synthesize["Step 2: Synthesize<br/>(merge complementary strengths<br/>into coherent unified item)"]:::agent
+    decompose --> synthesize
+  end
+  crossover_gate -->|"Yes"| crossover_unit
+  crossover_gate -->|"No &mdash; skip"| register_new
+
+  register_new["New Candidates Registered<br/>(added to pendingCandidates;<br/>parentIds tracked for lineage)"]:::tool
+  crossover_unit --> register_new
+
+  %% ══════════════════════════════
+  %% Loop Back to SCORING
+  %% ══════════════════════════════
+  register_new -->|"status &rarr; scoring"| state_block_1
+
+  %% ══════════════════════════════
+  %% Hybrid Mode Note
+  %% ══════════════════════════════
+  hybrid_note["Hybrid Mode Available<br/>(delegate arithmetic + state to CLI;<br/>LLM handles creative work only)"]:::note
 
   %% ══════════════════════════════
   %% Styles
@@ -103,5 +147,9 @@
   classDef agent fill:#f4f6f8,stroke:#9aa4b2,stroke-width:2px,rx:18,ry:18
   classDef tool fill:#eceff1,stroke:#b0bec5,stroke-width:1.2px,rx:10,ry:10
   classDef terminal fill:#263238,color:#ffffff,stroke:#263238,stroke-width:2px,rx:15,ry:15
+  classDef stateblock fill:#fff3e0,stroke:#ffb74d,stroke-width:1.5px,rx:6,ry:6,color:#e65100
+  classDef guard fill:#fce4ec,stroke:#ef9a9a,stroke-width:1.5px,rx:8,ry:8,color:#c62828
+  classDef note fill:#e8f5e9,stroke:#a5d6a7,stroke-width:1px,stroke-dasharray:4 2,rx:8,ry:8,color:#2e7d32
 
   style score_unit fill:#fafbfc,stroke:#d0d7de,stroke-width:1.5px,stroke-dasharray:6 3,rx:8,ry:8
+  style crossover_unit fill:#fafbfc,stroke:#d0d7de,stroke-width:1.5px,stroke-dasharray:6 3,rx:8,ry:8

@@ -39,3 +39,19 @@
 - [ ] **Max concurrent sessions** -- 메모리 문제 방지를 위해 활성 세션 수를 제한할 것인지, v1에서는 무제한으로 둘 것인지.
 - [ ] **Tool naming convention** -- `reasonforge_` 접두사 사용 확정. MCP 도구 이름은 서버별 전역 범위. 더 짧은 이름(e.g., `start_session`)으로 변경 여부.
 - [ ] **Zod version alignment** -- MCP SDK가 `zod ^3.25 || ^4.0` 허용. 웹 앱이 `zod@4.3.6` 사용. MCP 패키지가 동일 버전을 고정할지 SDK가 자체 해결하게 할지.
+
+## fix-evolution-skill-high-findings - 2026-04-04
+
+- [ ] **State block format: Markdown vs JSON** -- The structured state block in the State Management section could be defined as a markdown table, a JSON code block, or a YAML code block. JSON is more parseable if persistent mode reads it; markdown is more natural for in-model mode. Decision affects both readability and future MCP integration.
+- [ ] **Benchmark matcher semantics in skill context** -- The skill doc should specify what "passes benchmark" means for an in-model agent. The code uses `evaluateBenchmarkAnswer()` which does normalized contains-matching. Should the skill doc specify "contains" matching, or leave it to the agent's judgment? Overly strict matching could cause false negatives.
+- [ ] **Crossover-before-mutation or mutation-before-crossover** -- `engine.ts` does mutation first, then crossover. `handlers.ts` allows either order (both require `mutating` status). The skill doc currently says mutation then crossover. Should we enforce this order or say both happen during `mutating` phase in any order? Ordering affects whether crossover operates on original survivors or mutated offspring.
+- [ ] **State block emission frequency vs context budget** -- Requiring the agent to emit a full state block after every phase transition consumes context tokens. For large populations (10+ candidates), this could be significant. Should the skill recommend abbreviated state blocks (IDs + fitness only) after routine operations, with full blocks only at generation boundaries?
+
+## evolution-skill-review-fixes - 2026-04-04
+
+- [ ] **`calculateFitness` overload vs breaking change** -- The plan recommends a backward-compatible overload (`calculateFitness(weights, scores)` alongside old 3-arg signature). Should the old signature be kept permanently or removed at a specific version milestone? Affects API surface cleanliness vs. upgrade friction.
+- [ ] **`handleFinalizeMutations` vs auto-transition on score** -- Issue #1 fix has two approaches: (a) explicit new tool to finalize mutations, or (b) auto-transition to `scoring` when `handleScoreCandidate` is called while in `mutating` status. Plan recommends (b). Should the agent be required to signal "done mutating" explicitly for stricter protocol control, or is the implicit transition acceptable?
+- [ ] **`failed` status trigger scope** -- Plan only sets `failed` when generation limit reached with zero scored population. Should other failure modes trigger it (e.g., all candidates fail benchmark, population drops to zero after selection)? More failure modes = more edge cases to test.
+- [ ] **Weight normalization side effects** -- Plan says normalize weights internally in `calculateFitness`. If caller passes `{ a: 2, b: 3 }` and expects raw weighted sum (= 5.0), normalization would return ~1.0 instead. Should normalization be opt-in or always-on? Affects backward compat of fitness values.
+- [ ] **Deprecated field removal timeline** -- Three deprecated fields on `ScoredCandidate` and `EvolutionEvent`. Should removal target v0.2.0 (next minor) or v1.0.0 (first stable)? Earlier removal reduces tech debt; later removal gives consumers more migration time.
+- [ ] **Crossover-before-mutation or mutation-before-crossover** -- Inherited from prior review. The fix for Issue #1 now allows either order during `mutating` phase. The plan should specify whether SKILL.md continues to recommend mutation-first or says "any order during mutating phase."

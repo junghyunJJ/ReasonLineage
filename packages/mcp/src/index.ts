@@ -34,7 +34,7 @@ server.registerTool(
   {
     title: "Start Evolution Session",
     description:
-      "Initialize a new evolutionary reasoning session. Provide seed candidate answers and optional configuration (threshold, weights, benchmark). Returns a session ID to use with other tools.",
+      "Initialize a new evolutionary reasoning session. Provide seed candidate answers and optional configuration (threshold, weights or category, benchmark). Use 'category' (e.g., 'math', 'science', 'creative') to auto-select appropriate scoring dimensions, or provide explicit 'weights' to override. Returns a session ID.",
     inputSchema: startSessionSchema
   },
   async (args) => handleStartSession(args)

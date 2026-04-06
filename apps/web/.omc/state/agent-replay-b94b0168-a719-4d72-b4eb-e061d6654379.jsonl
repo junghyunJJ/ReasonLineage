@@ -6,3 +6,6 @@
 {"t":0,"agent":"a575f4a","agent_type":"code-reviewer","event":"agent_stop","success":true,"duration_ms":175603}
 {"t":0,"agent":"a532ddf","agent_type":"executor","event":"agent_start","parent_mode":"none"}
 {"t":0,"agent":"a532ddf","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":86477}
+{"t":0,"agent":"system","event":"keyword_detected","keyword":"ralplan"}
+{"t":0,"agent":"adf207e","agent_type":"Explore","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"adf207e","agent_type":"Explore","event":"agent_stop","success":true,"duration_ms":64425}

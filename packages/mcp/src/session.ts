@@ -10,6 +10,7 @@ export type SessionConfig = {
   threshold: number;
   populationLimit: number;
   generationLimit: number;
+  survivorCount?: number;
   weights: JudgeWeights;
   benchmark?: BenchmarkCase;
 };
@@ -21,6 +22,7 @@ export type SessionState = {
   population: ScoredCandidate[];
   pendingCandidates: Candidate[];
   status: "scoring" | "ready_to_select" | "mutating" | "completed" | "failed";
+  evaluationCount: number;
   createdAt: number;
   lastAccessedAt: number;
 };
@@ -47,6 +49,7 @@ export function createSession(
     population: [],
     pendingCandidates: [...seedCandidates],
     status: "scoring",
+    evaluationCount: 0,
     createdAt: now,
     lastAccessedAt: now
   };
@@ -55,11 +58,14 @@ export function createSession(
 }
 
 export function getSession(sessionId: string): SessionState | null {
-  const session = sessions.get(sessionId) ?? null;
+  return sessions.get(sessionId) ?? null;
+}
+
+export function touchSession(sessionId: string): void {
+  const session = sessions.get(sessionId);
   if (session) {
     session.lastAccessedAt = Date.now();
   }
-  return session;
 }
 
 export function updateSession(

@@ -1,0 +1,6 @@
+{"t":0,"agent":"system","event":"skill_invoked","skill_name":"superpowers:brainstorming"}
+{"t":0,"agent":"a40d979","agent_type":"code-reviewer","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"ab74acc","agent_type":"architect","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a1b1255","agent_type":"langgraph-deep-agent-expert","event":"agent_start","parent_mode":"none"}
+{"t":0,"agent":"a40d979","agent_type":"code-reviewer","event":"agent_stop","success":true,"duration_ms":118387}
+{"t":0,"agent":"ab74acc","agent_type":"architect","event":"agent_stop","success":true,"duration_ms":137525}

@@ -1,0 +1,115 @@
+%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "fontFamily": "Helvetica, Arial",
+      "primaryColor": "#f5f7fa",
+      "primaryBorderColor": "#c9d1d9",
+      "lineColor": "#9aa4b2",
+      "secondaryColor": "#eef2f7",
+      "tertiaryColor": "#ffffff"
+    }
+  }}%%
+
+  flowchart TB
+
+  %% ══════════════════════════════
+  %% Entry Points
+  %% ══════════════════════════════
+  __start__([Start ReasonForge Run]):::terminal
+
+  entry_decision{{"Entry Mode"}}:::decision
+  populate["Populate: Generate N Candidates<br/>(Generator Persona)"]:::agent
+  items_provided["Items Provided<br/>(refinement-only mode)"]:::module
+
+  __start__ --> entry_decision
+  entry_decision -->|"Full Cycle"| populate
+  entry_decision -->|"Refinement Only"| items_provided
+
+  %% ══════════════════════════════
+  %% SCORING Phase
+  %% ══════════════════════════════
+  scoring_phase["SCORING<br/>Score all pending candidates"]:::module
+
+  populate --> scoring_phase
+  items_provided --> scoring_phase
+
+  subgraph score_unit ["scoreCandidate() &mdash; per candidate"]
+    direction TB
+    critique_agent["Critique Candidate<br/>(Strict Evaluator persona:<br/>find flaws, gaps, contradictions)"]:::agent
+    judge_agent["Score Each Dimension<br/>(logicalConsistency, evidenceGrounding,<br/>solutionUsefulness &mdash; each 0&ndash;1)"]:::tool
+    fitness_calc["Calculate Fitness<br/>(weighted sum of dimension scores)"]:::tool
+    benchmark_eval["Benchmark Evaluation<br/>(optional: normalizedAnswer<br/>includes expectedAnswer?)"]:::tool
+    critique_agent --> judge_agent --> fitness_calc --> benchmark_eval
+  end
+
+  scoring_phase --> score_unit
+
+  %% ══════════════════════════════
+  %% Post-Scoring Threshold Check
+  %% ══════════════════════════════
+  all_scored{{"All Candidates Scored?"}}:::decision
+  benchmark_eval --> all_scored
+  all_scored -->|"No &mdash; pending remain"| scoring_phase
+
+  threshold_check{{"Threshold Met?<br/>fitness &ge; threshold<br/>AND benchmark passed<br/>(if applicable)"}}:::decision
+  all_scored -->|"Yes"| threshold_check
+
+  %% ══════════════════════════════
+  %% Termination Paths
+  %% ══════════════════════════════
+  completed_threshold["COMPLETED<br/>(threshold met &mdash; best answer)"]:::terminal
+  completed_genlimit["COMPLETED<br/>(generation limit &mdash; best available)"]:::terminal
+  completed_stagnation["COMPLETED<br/>(stagnation &mdash; no improvement)"]:::terminal
+
+  threshold_check -->|"Yes"| completed_threshold
+
+  %% ══════════════════════════════
+  %% READY_TO_SELECT Phase
+  %% ══════════════════════════════
+  gen_limit_check{{"Generation Limit<br/>Reached?"}}:::decision
+  threshold_check -->|"No"| gen_limit_check
+
+  gen_limit_check -->|"Yes"| completed_genlimit
+
+  stagnation_check{{"Stagnation?<br/>(no fitness improvement<br/>across generations)"}}:::decision
+  gen_limit_check -->|"No"| stagnation_check
+
+  stagnation_check -->|"Yes"| completed_stagnation
+
+  select_phase["READY_TO_SELECT<br/>Select top N survivors<br/>(sort by fitness, keep best)"]:::module
+  stagnation_check -->|"No"| select_phase
+
+  %% ══════════════════════════════
+  %% MUTATING Phase
+  %% ══════════════════════════════
+  mutate_phase["MUTATING"]:::module
+  select_phase --> mutate_phase
+
+  mutate_step["Mutate Best Candidate<br/>(Targeted Refiner persona:<br/>address critique, improve weak dims)"]:::agent
+  mutate_phase --> mutate_step
+
+  crossover_gate{{"Crossover?<br/>2+ survivors available"}}:::decision
+  mutate_step --> crossover_gate
+
+  crossover_step["Crossover Top 2 Survivors<br/>(Crossover Synthesizer persona:<br/>merge strengths of both)"]:::agent
+  crossover_gate -->|"Yes"| crossover_step
+
+  register_new["New Candidates Registered<br/>(added to pendingCandidates)"]:::tool
+  crossover_gate -->|"No &mdash; skip"| register_new
+  crossover_step --> register_new
+
+  %% ══════════════════════════════
+  %% Loop Back to SCORING
+  %% ══════════════════════════════
+  register_new -->|"status &rarr; scoring"| scoring_phase
+
+  %% ══════════════════════════════
+  %% Styles
+  %% ══════════════════════════════
+  classDef module fill:#ffffff,stroke:#c9d1d9,stroke-width:1.5px,rx:12,ry:12,color:#1f2933
+  classDef decision fill:#e3f2fd,stroke:#90caf9,stroke-width:1.5px,rx:12,ry:12
+  classDef agent fill:#f4f6f8,stroke:#9aa4b2,stroke-width:2px,rx:18,ry:18
+  classDef tool fill:#eceff1,stroke:#b0bec5,stroke-width:1.2px,rx:10,ry:10
+  classDef terminal fill:#263238,color:#ffffff,stroke:#263238,stroke-width:2px,rx:15,ry:15
+
+  style score_unit fill:#fafbfc,stroke:#d0d7de,stroke-width:1.5px,stroke-dasharray:6 3,rx:8,ry:8
