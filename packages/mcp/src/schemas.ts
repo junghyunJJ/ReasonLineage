@@ -22,7 +22,9 @@ export const startSessionSchema = z.object({
   }).optional(),
   candidates: z.array(z.object({
     id: z.string(),
-    answer: z.string().max(20_000)
+    answer: z.string().max(20_000),
+    scores: z.record(z.string(), scoreValueSchema).optional(),
+    critique: z.array(z.string()).optional()
   })).min(1)
 })
 .refine(

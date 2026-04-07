@@ -6,6 +6,13 @@ import type {
   ScoredCandidate
 } from "@reasonforge/core";
 
+export type PreScoredCandidate = Candidate & {
+  scores: Record<string, number>;
+  critique: string[];
+  fitness: number;
+  benchmarkVerdict: { passed: boolean; expectedAnswer: string; normalizedAnswer: string };
+};
+
 export type SessionConfig = {
   threshold: number;
   populationLimit: number;
@@ -38,20 +45,31 @@ const sessions = new Map<string, SessionState>();
 
 export function createSession(
   config: SessionConfig,
-  seedCandidates: Candidate[]
+  seedCandidates: Candidate[],
+  preScoredCandidates?: PreScoredCandidate[]
 ): SessionState {
   if (sessions.size >= MAX_SESSIONS) {
     throw new Error(`Maximum concurrent sessions (${MAX_SESSIONS}) reached. Delete idle sessions first.`);
   }
   const id = randomUUID();
   const now = Date.now();
+  const scored: ScoredCandidate[] = (preScoredCandidates ?? []).map((c) => ({
+    id: c.id,
+    answer: c.answer,
+    parentIds: c.parentIds,
+    fitness: c.fitness,
+    critique: c.critique,
+    benchmarkVerdict: c.benchmarkVerdict,
+    scores: c.scores,
+  }));
+  const hasOnlyScored = seedCandidates.length === 0 && scored.length > 0;
   const session: SessionState = {
     id,
     config,
     generation: 0,
-    population: [],
+    population: scored,
     pendingCandidates: [...seedCandidates],
-    status: "scoring",
+    status: hasOnlyScored ? "ready_to_select" : "scoring",
     evaluationCount: 0,
     bestFitnessHistory: [],
     createdAt: now,

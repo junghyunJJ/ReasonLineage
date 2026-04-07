@@ -623,4 +623,112 @@ describe("MCP Tool Handlers", () => {
     const step = parseResult(handleNextStep({ sessionId }));
     expect(step.suggestion.suggestedTool).toBe("reasonforge_score_candidate");
   });
+
+  // --- Pre-scored candidates tests ---
+
+  it("accepts pre-scored candidates and skips scoring phase", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [
+        { id: "c1", answer: "Answer 1", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["decent"] },
+        { id: "c2", answer: "Answer 2", scores: { logicalConsistency: 0.6, evidenceGrounding: 0.5, solutionUsefulness: 0.55 }, critique: ["weak"] }
+      ]
+    }));
+    expect(start.preScoredCount).toBe(2);
+    expect(start.candidateCount).toBe(0);
+    expect(start.status).toBe("ready_to_select");
+
+    // Should be ready for selection immediately
+    const step = parseResult(handleNextStep({ sessionId: start.sessionId }));
+    expect(step.status).toBe("ready_to_select");
+    expect(step.populationSize).toBe(2);
+    expect(step.pendingCount).toBe(0);
+    expect(step.suggestion.suggestedTool).toBe("reasonforge_select");
+  });
+
+  it("mixes pre-scored and unscored candidates", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 5,
+      generationLimit: 5,
+      candidates: [
+        { id: "c1", answer: "Pre-scored", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] },
+        { id: "c2", answer: "Unscored" }
+      ]
+    }));
+    expect(start.preScoredCount).toBe(1);
+    expect(start.candidateCount).toBe(1);
+    expect(start.status).toBe("scoring");
+
+    // Score the remaining candidate
+    handleScoreCandidate({
+      sessionId: start.sessionId,
+      candidateId: "c2",
+      scores: { logicalConsistency: 0.6, evidenceGrounding: 0.5, solutionUsefulness: 0.55 },
+      critique: ["needs work"]
+    });
+
+    const step = parseResult(handleNextStep({ sessionId: start.sessionId }));
+    expect(step.populationSize).toBe(2);
+    expect(step.pendingCount).toBe(0);
+  });
+
+  it("does not count pre-scored candidates against evaluation budget", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 3,
+      generationLimit: 1, // budget = 3
+      candidates: [
+        { id: "c1", answer: "A", scores: { logicalConsistency: 0.8, evidenceGrounding: 0.7, solutionUsefulness: 0.75 }, critique: ["ok"] },
+        { id: "c2", answer: "B", scores: { logicalConsistency: 0.6, evidenceGrounding: 0.5, solutionUsefulness: 0.55 }, critique: ["ok"] }
+      ]
+    }));
+
+    // Select and mutate
+    handleSelect({ sessionId: start.sessionId, survivorCount: 2 });
+    handleMutate({ sessionId: start.sessionId, parentId: "c1", candidateId: "m1", answer: "Mut" });
+
+    // Should succeed — budget not consumed by pre-scored candidates
+    const score = parseResult(handleScoreCandidate({
+      sessionId: start.sessionId,
+      candidateId: "m1",
+      scores: { logicalConsistency: 0.85, evidenceGrounding: 0.75, solutionUsefulness: 0.8 },
+      critique: ["better"]
+    }));
+    expect(score.fitness).toBeGreaterThan(0);
+  });
+
+  // --- Budget exhaustion -> failed tests ---
+
+  it("transitions to failed status on budget exhaustion", () => {
+    const start = parseResult(handleStartSession({
+      threshold: 0.99,
+      populationLimit: 2,
+      generationLimit: 1, // budget = 2
+      candidates: [{ id: "c1", answer: "A" }, { id: "c2", answer: "B" }]
+    }));
+    const sessionId = start.sessionId;
+
+    // Use all 2 budget evaluations on initial candidates
+    handleScoreCandidate({ sessionId, candidateId: "c1", scores: { logicalConsistency: 0.5, evidenceGrounding: 0.5, solutionUsefulness: 0.5 }, critique: ["ok"] });
+    handleScoreCandidate({ sessionId, candidateId: "c2", scores: { logicalConsistency: 0.4, evidenceGrounding: 0.4, solutionUsefulness: 0.4 }, critique: ["ok"] });
+
+    // Select with survivorCount=1 to make room for mutation
+    handleSelect({ sessionId, survivorCount: 1 });
+    handleMutate({ sessionId, parentId: "c1", candidateId: "m1", answer: "Mut" });
+
+    // Budget exhausted (2 evals used, budget=2) — should throw AND mark session as failed
+    expect(() => handleScoreCandidate({
+      sessionId,
+      candidateId: "m1",
+      scores: { logicalConsistency: 0.6, evidenceGrounding: 0.6, solutionUsefulness: 0.6 },
+      critique: ["test"]
+    })).toThrow("budget");
+
+    // Verify session is now failed
+    const step = parseResult(handleNextStep({ sessionId }));
+    expect(step.status).toBe("failed");
+  });
 });

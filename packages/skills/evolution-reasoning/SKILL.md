@@ -52,10 +52,12 @@ The calling context must provide or the agent must determine:
 
 > **MCP tool mapping**: When using with the ReasonForge MCP server:
 > - Parameter names: `dimensions` → `weights`, `population_limit` → `populationLimit`, `generation_limit` → `generationLimit`, `survivor_count` → `survivorCount`
-> - Item format: `{id, answer}` instead of `{id, content, scores, critique}`
+> - Item format: `{id, answer}` instead of `{id, content, scores, critique}`. Pre-scored candidates are also supported: pass `{id, answer, scores, critique}` to skip the scoring phase for those candidates (they are placed directly into the population without consuming evaluation budget).
 > - Category shortcut: pass `category` (e.g., `"math"`) instead of `weights` to auto-select dimensions. Explicit `weights` always override `category`.
 > - Auto-transition: calling `reasonforge_score_candidate` during the `mutating` phase automatically transitions to `scoring`. You do not need to manually change the phase.
-> - Stagnation: `reasonforge_next_step` reports `stagnationDetected: true` when a fitness plateau is detected. The recovery action is your decision.
+> - Stagnation: `reasonforge_next_step` reports `stagnationDetected: true` when a fitness plateau is detected. The recovery action is your decision. Stagnation sensitivity is configurable via `stagnationThreshold` (default: 0.02, range: 0-1) and `stagnationWindow` (default: 2, range: 1-5) parameters in `reasonforge_start_session`.
+> - Answer length limit: candidate `answer` fields are capped at 20,000 characters.
+> - Session limits: sessions expire after 30 minutes of inactivity; maximum 100 concurrent sessions.
 
 > **Evaluation budget**: Total evaluations are bounded by `population_limit × generation_limit`. The defaults (3×3=9) balance quality against token cost. Maximum allowed: 10×10=100. This budget is a hard constraint — the session fails if exhausted before completion.
 

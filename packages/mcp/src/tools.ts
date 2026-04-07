@@ -16,7 +16,8 @@ import {
   updateSession,
   touchSession,
   type SessionConfig,
-  type SessionState
+  type SessionState,
+  type PreScoredCandidate
 } from "./session.js";
 import { shouldTerminate } from "./termination.js";
 
@@ -81,7 +82,7 @@ export function handleStartSession(input: {
   category?: string;
   weights?: Record<string, number>;
   benchmark?: { id: string; label: string; prompt: string; expectedAnswer: string };
-  candidates: Array<{ id: string; answer: string }>;
+  candidates: Array<{ id: string; answer: string; scores?: Record<string, number>; critique?: string[] }>;
   stagnationThreshold?: number;
   stagnationWindow?: number;
 }) {
@@ -112,18 +113,48 @@ export function handleStartSession(input: {
     seenIds.add(c.id);
   }
 
-  const seedCandidates = input.candidates.map((c) => createCandidate(c.id, c.answer));
-  const session = createSession(config, seedCandidates);
+  // Split candidates into pre-scored and unscored
+  const unscoredCandidates: Candidate[] = [];
+  const preScoredCandidates: PreScoredCandidate[] = [];
+
+  for (const c of input.candidates) {
+    if (c.scores && Object.keys(c.scores).length > 0) {
+      const fitness = calculateFitness(weights, c.scores);
+      const benchmarkVerdict = input.benchmark
+        ? evaluateBenchmarkAnswer(input.benchmark, c.answer)
+        : { passed: true, expectedAnswer: "", normalizedAnswer: "" };
+      preScoredCandidates.push({
+        id: c.id,
+        answer: c.answer,
+        scores: c.scores,
+        critique: c.critique ?? [],
+        fitness,
+        benchmarkVerdict,
+      });
+    } else {
+      unscoredCandidates.push(createCandidate(c.id, c.answer));
+    }
+  }
+
+  const session = createSession(config, unscoredCandidates, preScoredCandidates);
+
+  const pendingCount = session.pendingCandidates.length;
+  const preScoredCount = session.population.length;
+  const message = pendingCount > 0
+    ? `Session created. Score each candidate using reasonforge_score_candidate.`
+    : `Session created with ${preScoredCount} pre-scored candidate(s). Use reasonforge_next_step to check status.`;
 
   return {
     content: [{
       type: "text" as const,
       text: JSON.stringify({
         sessionId: session.id,
-        candidateCount: session.pendingCandidates.length,
+        candidateCount: pendingCount,
+        preScoredCount,
         resolvedCategory: input.weights && Object.keys(input.weights).length > 0 ? "custom" : (input.category ?? "general"),
         weightDimensions: Object.keys(weights),
-        message: `Session created. Score each candidate using reasonforge_score_candidate.`
+        status: session.status,
+        message
       }, null, 2)
     }]
   };
@@ -168,7 +199,8 @@ export function handleScoreCandidate(input: {
 
   const budget = session.config.populationLimit * session.config.generationLimit;
   if (session.evaluationCount >= budget) {
-    throw new Error(`Evaluation budget (${budget}) exhausted for this session`);
+    updateSession(input.sessionId, (s) => ({ ...s, status: "failed" as const }));
+    throw new Error(`Evaluation budget (${budget}) exhausted. Session marked as failed.`);
   }
 
   const candidate = session.pendingCandidates[pendingIndex];
@@ -465,6 +497,8 @@ export function handleNextStep(input: { sessionId: string }) {
       text: JSON.stringify({
         sessionId: current.id,
         generation: current.generation,
+        generationLimit: current.config.generationLimit,
+        threshold: current.config.threshold,
         populationSize: current.population.length,
         pendingCount: current.pendingCandidates.length,
         bestFitness: best ? Number(best.fitness.toFixed(4)) : null,
