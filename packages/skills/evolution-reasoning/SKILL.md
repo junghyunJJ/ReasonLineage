@@ -40,16 +40,20 @@ The calling context must provide or the agent must determine:
 |-----------|------|----------|---------|-------------|
 | `dimensions` | dict | YES | — | Scoring dimensions with weights. Example: `{accuracy: 0.4, clarity: 0.3, depth: 0.3}`. Weights must sum to ~1.0 |
 | `threshold` | float | NO | 0.75 | Composite fitness score target (0.0-1.0). Evolution stops when best item meets this. |
-| `population_limit` | int | NO | 5 | Maximum candidates allowed per generation (2-20). |
-| `generation_limit` | int | NO | 5 | Maximum evolution cycles before stopping (1-20). |
+| `population_limit` | int | NO | 3 | Maximum candidates allowed per generation (2-10). |
+| `generation_limit` | int | NO | 3 | Maximum evolution cycles before stopping (1-10). |
 | `survivor_count` | int | NO | 2 | How many top items survive each selection round. |
 | `benchmark` | dict | NO | — | Optional ground-truth check: `{id, label, prompt, expectedAnswer}`. When set, termination requires BOTH fitness >= threshold AND benchmark passed. |
 | `category` | string | NO | auto-classified | Question category: general, math, science, creative, ethical, coding, analytical, biomedical. Auto-selected based on question analysis. Overridden by explicit `dimensions`. |
 
-> **MCP tool mapping**: When using with the ReasonForge MCP server, `dimensions` maps to `weights`, `population_limit` to `populationLimit`, `generation_limit` to `generationLimit`, `survivor_count` to `survivorCount`, and `items` field uses `{id, answer}` instead of `{id, content, scores, critique}`.
-> **Category shortcut**: When using with the ReasonForge MCP server, you can pass `category` (e.g., `"math"`) instead of `weights` to auto-select appropriate dimensions. Explicit `weights` always override `category`.
+> **MCP tool mapping**: When using with the ReasonForge MCP server:
+> - Parameter names: `dimensions` → `weights`, `population_limit` → `populationLimit`, `generation_limit` → `generationLimit`, `survivor_count` → `survivorCount`
+> - Item format: `{id, answer}` instead of `{id, content, scores, critique}`
+> - Category shortcut: pass `category` (e.g., `"math"`) instead of `weights` to auto-select dimensions. Explicit `weights` always override `category`.
+> - Auto-transition: calling `reasonforge_score_candidate` during the `mutating` phase automatically transitions to `scoring`. You do not need to manually change the phase.
+> - Stagnation: `reasonforge_next_step` reports `stagnationDetected: true` when a fitness plateau is detected. The recovery action is your decision.
 
-> **Evaluation budget**: Total evaluations are bounded by `population_limit × generation_limit`. The recommended defaults (5×5=25) balance quality against token cost. Maximum allowed: 10×10=100.
+> **Evaluation budget**: Total evaluations are bounded by `population_limit × generation_limit`. The defaults (3×3=9) balance quality against token cost. Maximum allowed: 10×10=100. This budget is a hard constraint — the session fails if exhausted before completion.
 
 **When benchmark is useful:**
 - Verifiable-answer problems (math, logic puzzles, factual QA) where you can check if the answer contains the expected text
@@ -77,9 +81,11 @@ The protocol cycles through these statuses in a fixed order. After each operatio
                      +--[threshold met]---> COMPLETED
                      |                         ^
 SCORING ---[all scored]---> READY_TO_SELECT    |
-   ^                            |              |
-   |                     [gen limit]---------->+
-   |                            |
+   ^        |                   |              |
+   |   [budget exhausted]  [gen limit]-------->+
+   |        v                   |              |
+   |      FAILED           [stagnation?]------>+
+   |                            |         (if unrecoverable)
    |                       [select]
    |                            v
    +----[score pending]---- MUTATING
@@ -87,11 +93,11 @@ SCORING ---[all scored]---> READY_TO_SELECT    |
 
 | Status | Meaning | Next Action | Transitions To |
 |--------|---------|-------------|----------------|
-| `scoring` | Pending candidates need scores | Score each pending candidate (Phase 2) | `completed` (if threshold met after all scored) or `ready_to_select` |
-| `ready_to_select` | All candidates scored, ready for selection | Run selection (Phase 3) | `completed` (if gen limit reached) or `mutating` (after selection) |
+| `scoring` | Pending candidates need scores | Score each pending candidate (Phase 2) | `completed` (if threshold met after all scored), `ready_to_select`, or `failed` (if budget exhausted) |
+| `ready_to_select` | All candidates scored, ready for selection | Run selection (Phase 3) | `completed` (if gen limit reached or stagnation) or `mutating` (after selection) |
 | `mutating` | Survivors selected, ready for mutation/crossover | Mutate and/or crossover (Phase 4) | `scoring` |
-| `completed` | Threshold met or generation limit reached | Present result (Phase 5) | — |
-| `failed` | Generation limit reached with no scored candidates | Report failure | — |
+| `completed` | Threshold met, generation limit reached, or stagnation | Present result (Phase 5) | — |
+| `failed` | Budget exhausted with no viable candidates | Report failure | — |
 
 After each operation, check the status to determine the next action. This is the **next-step pattern**: always assess where you are in the cycle before proceeding.
 
@@ -156,7 +162,7 @@ Rationale: {1 sentence explaining why this category fits}
 
 **Step 1.2: Generate N diverse candidates**
 
-Generate `population_limit` or fewer initial candidates (default 3). Each candidate must:
+Generate `population_limit` initial candidates (default: 3, max: 10). Each candidate must:
 - Have a unique ID (format: `seed-1`, `seed-2`, `seed-3`, ...)
 - Take a genuinely different approach, perspective, or strategy
 - Include at least one unconventional or contrarian candidate to ensure diversity
@@ -241,20 +247,31 @@ Run selection when the status is `ready_to_select`. This phase picks the best ca
 
 If the current generation >= generation_limit, the session is `completed`. Go to Phase 5.
 
-**Step 3.2: Rank and select**
+**Step 3.2: Check stagnation**
+
+If best fitness has not improved by more than 0.02 for 2 consecutive generations (stagnation detected):
+- Report the plateau: "Best fitness has been ~X.XX for N generations"
+- Try ONE recovery strategy:
+  a) Generate a completely new candidate from scratch (fresh seed)
+  b) Apply a radical mutation (change the fundamental approach, not details)
+- If the fresh approach improves fitness, continue evolution. If not, the session is `completed` (stagnation). Go to Phase 5.
+
+When using the MCP server, `reasonforge_next_step` reports `stagnationDetected: true` when this condition is met. The recovery action remains an LLM decision.
+
+**Step 3.3: Rank and select**
 
 1. Sort all candidates by composite fitness descending
 2. Keep the top N as survivors (default: `survivor_count = 2`)
 3. Eliminate the rest
 
-**Step 3.3: Record selection**
+**Step 3.4: Record selection**
 
 For the evolution trace, record:
 - Which candidates survived (IDs and fitness scores)
 - Which candidates were eliminated (IDs and fitness scores)
 - Increment the generation counter
 
-**Step 3.4: Transition**
+**Step 3.5: Transition**
 
 Status becomes `mutating`. Proceed to Phase 4.
 
@@ -324,12 +341,8 @@ The evolution ends when any of these conditions is met:
 
 1. **Threshold met**: Best composite fitness >= threshold. The best candidate is the answer.
 2. **Generation limit reached**: Current generation >= generation_limit. Return the best available.
-3. **Stagnation detected** (optional early stop): Best fitness has not improved by more than 0.02 for 2 consecutive generations. When stagnation occurs:
-   - Report the plateau: "Best fitness has been ~X.XX for N generations"
-   - If generation < generation_limit, try ONE of:
-     a) Generate a completely new candidate from scratch (fresh seed)
-     b) Apply a radical mutation (change the fundamental approach, not details)
-   - If the fresh approach also does not improve, terminate and present best
+3. **Stagnation** (early stop): Detected in Phase 3 Step 3.2 — best fitness plateau for 2+ consecutive generations. Recovery attempted; if unsuccessful, return best available.
+4. **Budget exhausted**: Evaluation count >= `population_limit × generation_limit`. Return best available or report failure if no candidates were scored.
 
 **Present the result:**
 
@@ -338,7 +351,7 @@ The evolution ends when any of these conditions is met:
 1. **Best item**: The highest-scoring candidate with its full content and per-dimension scores
 2. **Fitness score**: The composite fitness value
 3. **Generations**: How many evolution cycles were run
-4. **Termination reason**: Which condition triggered the stop (threshold_met / generation_limit / stagnation)
+4. **Termination reason**: Which condition triggered the stop (threshold_met / generation_limit / stagnation / budget_exhausted)
 5. **Evolution trace**: Per-generation summary showing:
    - Generation number
    - Best fitness and candidate ID
@@ -378,7 +391,7 @@ This skill uses same-model self-critique, which has known limitations. The follo
 - Population limit must be respected -- never exceed population_limit candidates in a single generation
 - Each candidate ID must be unique across the entire session
 - For runs longer than 3 generations, summarize the evolution trace compactly at the start of each new generation: "Gen 0: best=0.62 (seed-2), Gen 1: best=0.71 (mut-gen-1-1), Gen 2: best=0.74 (cross-gen-2)" — this grounds the agent and prevents calibration drift
-- Recommended defaults for most tasks: `threshold` = 0.75, `generation_limit` = 3, `population_limit` = 3 — this balances quality improvement against token cost. Use higher values only when the task genuinely benefits from extended evolution.
+- The defaults (`threshold` = 0.75, `generation_limit` = 3, `population_limit` = 3) balance quality improvement against token cost. Use higher values (up to 10×10) only when the task genuinely benefits from extended evolution (e.g., multi-step proofs, biomedical hypotheses).
 
 ---
 
@@ -416,6 +429,7 @@ PHASE 2: CRITIQUE & SCORE          [Persona: Strict Evaluator]
 
 PHASE 3: SELECT
   Check generation limit -> if reached, COMPLETED (Phase 5)
+  Check stagnation (Δ < 0.02 for 2 gens) -> try recovery or COMPLETED
   Sort by fitness descending
   Keep top survivor_count candidates
   Eliminate the rest

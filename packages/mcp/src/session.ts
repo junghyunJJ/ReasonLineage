@@ -13,6 +13,8 @@ export type SessionConfig = {
   survivorCount?: number;
   weights: JudgeWeights;
   benchmark?: BenchmarkCase;
+  stagnationThreshold?: number;
+  stagnationWindow?: number;
 };
 
 export type SessionState = {
@@ -23,6 +25,7 @@ export type SessionState = {
   pendingCandidates: Candidate[];
   status: "scoring" | "ready_to_select" | "mutating" | "completed" | "failed";
   evaluationCount: number;
+  bestFitnessHistory: number[];
   createdAt: number;
   lastAccessedAt: number;
 };
@@ -50,6 +53,7 @@ export function createSession(
     pendingCandidates: [...seedCandidates],
     status: "scoring",
     evaluationCount: 0,
+    bestFitnessHistory: [],
     createdAt: now,
     lastAccessedAt: now
   };

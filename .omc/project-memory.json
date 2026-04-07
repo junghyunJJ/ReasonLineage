@@ -94,15 +94,33 @@
   },
   "hotPaths": [
     {
+      "path": "packages/skills/evolution-reasoning/SKILL.md",
+      "accessCount": 53,
+      "lastAccessed": 1775548483928,
+      "type": "file"
+    },
+    {
       "path": "",
       "accessCount": 42,
       "lastAccessed": 1775464514970,
       "type": "directory"
     },
     {
-      "path": "packages/skills/evolution-reasoning/SKILL.md",
-      "accessCount": 30,
-      "lastAccessed": 1775512788611,
+      "path": "packages/mcp/src/tools.ts",
+      "accessCount": 31,
+      "lastAccessed": 1775545154395,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/schemas.ts",
+      "accessCount": 26,
+      "lastAccessed": 1775545141941,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/session.ts",
+      "accessCount": 26,
+      "lastAccessed": 1775545150100,
       "type": "file"
     },
     {
@@ -112,21 +130,9 @@
       "type": "file"
     },
     {
-      "path": "packages/mcp/src/tools.ts",
-      "accessCount": 23,
-      "lastAccessed": 1775512838451,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/schemas.ts",
-      "accessCount": 23,
-      "lastAccessed": 1775512842969,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/session.ts",
-      "accessCount": 20,
-      "lastAccessed": 1775512842769,
+      "path": "docs/reasonforge-evolution-workflow.mermaid",
+      "accessCount": 18,
+      "lastAccessed": 1775546038319,
       "type": "file"
     },
     {
@@ -149,8 +155,8 @@
     },
     {
       "path": "packages/core/src/types.ts",
-      "accessCount": 13,
-      "lastAccessed": 1775512837586,
+      "accessCount": 14,
+      "lastAccessed": 1775544313751,
       "type": "file"
     },
     {
@@ -167,8 +173,8 @@
     },
     {
       "path": "packages/skills/evolution-reasoning/references/scoring_guide.md",
-      "accessCount": 10,
-      "lastAccessed": 1775512793765,
+      "accessCount": 11,
+      "lastAccessed": 1775542856730,
       "type": "file"
     },
     {
@@ -214,12 +220,6 @@
       "type": "file"
     },
     {
-      "path": "docs/reasonforge-evolution-workflow.mermaid",
-      "accessCount": 6,
-      "lastAccessed": 1775512789354,
-      "type": "file"
-    },
-    {
       "path": "packages/core/src/categories.ts",
       "accessCount": 5,
       "lastAccessed": 1775512847629,
@@ -242,6 +242,12 @@
       "accessCount": 4,
       "lastAccessed": 1775512852215,
       "type": "directory"
+    },
+    {
+      "path": "docs/reasonforge-evolution-workflow.png",
+      "accessCount": 4,
+      "lastAccessed": 1775546081830,
+      "type": "file"
     },
     {
       "path": "packages/core/tests/categories.test.ts",
@@ -310,6 +316,12 @@
       "type": "file"
     },
     {
+      "path": "The-Complete-Guide-to-Building-Skill-for-Claude.pdf",
+      "accessCount": 2,
+      "lastAccessed": 1775548028596,
+      "type": "file"
+    },
+    {
       "path": "apps/web/src/lib/db.ts",
       "accessCount": 1,
       "lastAccessed": 1775457561166,
@@ -344,12 +356,6 @@
       "accessCount": 1,
       "lastAccessed": 1775461134059,
       "type": "directory"
-    },
-    {
-      "path": "docs/reasonforge-evolution-workflow.png",
-      "accessCount": 1,
-      "lastAccessed": 1775463750044,
-      "type": "file"
     },
     {
       "path": ".claude/commands/reasonforge.md",

@@ -82,6 +82,8 @@ export function handleStartSession(input: {
   weights?: Record<string, number>;
   benchmark?: { id: string; label: string; prompt: string; expectedAnswer: string };
   candidates: Array<{ id: string; answer: string }>;
+  stagnationThreshold?: number;
+  stagnationWindow?: number;
 }) {
   const weights: JudgeWeights = resolveWeights({
     weights: input.weights as JudgeWeights | undefined,
@@ -93,7 +95,9 @@ export function handleStartSession(input: {
     generationLimit: input.generationLimit,
     survivorCount: input.survivorCount,
     weights,
-    benchmark: input.benchmark
+    benchmark: input.benchmark,
+    stagnationThreshold: input.stagnationThreshold,
+    stagnationWindow: input.stagnationWindow,
   };
 
   if (input.candidates.length > input.populationLimit) {
@@ -247,12 +251,16 @@ export function handleSelect(input: {
   const survivors = sorted.slice(0, survivorCount);
   const eliminated = sorted.slice(survivorCount);
 
-  updateSession(input.sessionId, (s) => ({
-    ...s,
-    generation: s.generation + 1,
-    population: survivors,
-    status: "mutating" as const
-  }));
+  updateSession(input.sessionId, (s) => {
+    const bestFitness = survivors[0]?.fitness ?? 0;
+    return {
+      ...s,
+      generation: s.generation + 1,
+      population: survivors,
+      status: "mutating" as const,
+      bestFitnessHistory: [...s.bestFitnessHistory, bestFitness]
+    };
+  });
 
   const updated = getSession(input.sessionId)!;
   return {
@@ -371,6 +379,17 @@ export function handleNextStep(input: { sessionId: string }) {
     : false;
   const generationLimitReached = session.generation >= session.config.generationLimit;
 
+  // Stagnation detection
+  const history = session.bestFitnessHistory;
+  const window = session.config.stagnationWindow ?? 2;
+  const stagnationThreshold = session.config.stagnationThreshold ?? 0.02;
+  let stagnationDetected = false;
+  if (history.length >= window + 1) {
+    const recent = history.slice(-window - 1);
+    const deltas = recent.slice(1).map((v, i) => v - recent[i]);
+    stagnationDetected = deltas.every(d => Math.abs(d) < stagnationThreshold);
+  }
+
   // Determine suggestion based on session phase
   let suggestion: {
     suggestedTool: string | null;
@@ -417,14 +436,17 @@ export function handleNextStep(input: { sessionId: string }) {
   } else if (session.status === "mutating") {
     // Branch 5: After selection, need mutation/crossover
     const hasPending = session.pendingCandidates.length > 0;
+    const stagnationNote = stagnationDetected
+      ? ` Stagnation detected (fitness plateau for ${window} generations). Consider a fresh seed or radical mutation.`
+      : "";
     suggestion = {
       suggestedTool: hasPending ? "reasonforge_score_candidate" : "reasonforge_mutate",
       suggestedArgs: hasPending
         ? { sessionId: session.id, candidateId: session.pendingCandidates[0].id }
         : { sessionId: session.id, parentId: best?.id },
       explanation: hasPending
-        ? `${session.pendingCandidates.length} pending candidate(s) from mutations. You can score them now or submit more mutations/crossovers first. To score, use reasonforge_score_candidate.`
-        : `Selection complete (Gen ${session.generation}). Submit mutations for the best candidate "${best?.id ?? ""}". Optionally use reasonforge_crossover to combine top candidates.`
+        ? `${session.pendingCandidates.length} pending candidate(s) from mutations. You can score them now or submit more mutations/crossovers first. To score, use reasonforge_score_candidate.${stagnationNote}`
+        : `Selection complete (Gen ${session.generation}). Submit mutations for the best candidate "${best?.id ?? ""}". Optionally use reasonforge_crossover to combine top candidates.${stagnationNote}`
     };
   } else {
     // Fallback (should not reach here)
@@ -450,6 +472,7 @@ export function handleNextStep(input: { sessionId: string }) {
         thresholdMet,
         benchmarkPassed: best && hasBenchmark ? best.benchmarkVerdict.passed : null,
         generationLimitReached,
+        stagnationDetected,
         status: current.status,
         suggestion
       }, null, 2)

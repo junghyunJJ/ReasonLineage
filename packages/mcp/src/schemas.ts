@@ -3,10 +3,12 @@ import { z } from "zod";
 const scoreValueSchema = z.number().min(0).max(1);
 
 export const startSessionSchema = z.object({
-  threshold: z.number().min(0).max(1).default(0.85),
-  populationLimit: z.number().int().min(2).max(10).default(5),
-  generationLimit: z.number().int().min(1).max(10).default(5),
+  threshold: z.number().min(0).max(1).default(0.75),
+  populationLimit: z.number().int().min(2).max(10).default(3),
+  generationLimit: z.number().int().min(1).max(10).default(3),
   survivorCount: z.number().int().min(1).max(10).optional(),
+  stagnationThreshold: z.number().min(0).max(1).default(0.02).optional(),
+  stagnationWindow: z.number().int().min(1).max(5).default(2).optional(),
   category: z.enum([
     "general", "math", "science", "creative",
     "ethical", "coding", "analytical", "biomedical"
