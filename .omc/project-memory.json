@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1775457246859,
+  "lastScanned": 1775553525571,
   "projectRoot": "/Users/jungj2/Dropbox/Metadata/reasonforge",
   "techStack": {
     "languages": [
@@ -60,16 +60,15 @@
       "path": "apps",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775457246843,
+      "lastAccessed": 1775553525550,
       "keyFiles": []
     },
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
-      "fileCount": 4,
-      "lastAccessed": 1775457246843,
+      "fileCount": 3,
+      "lastAccessed": 1775553525550,
       "keyFiles": [
-        "reasonforge-evolution-workflow copy.mermaid",
         "reasonforge-evolution-workflow.mermaid",
         "reasonforge-evolution-workflow.png",
         "reasonforge-evolution-workflow.svg"
@@ -79,14 +78,14 @@
       "path": "packages",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775457246849,
+      "lastAccessed": 1775553525561,
       "keyFiles": []
     },
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 1,
-      "lastAccessed": 1775457246849,
+      "lastAccessed": 1775553525561,
       "keyFiles": [
         "demo.mjs"
       ]
@@ -95,278 +94,176 @@
   "hotPaths": [
     {
       "path": "packages/skills/evolution-reasoning/SKILL.md",
-      "accessCount": 53,
-      "lastAccessed": 1775548483928,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 42,
-      "lastAccessed": 1775464514970,
-      "type": "directory"
-    },
-    {
-      "path": "packages/mcp/src/tools.ts",
-      "accessCount": 31,
-      "lastAccessed": 1775545154395,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/schemas.ts",
-      "accessCount": 26,
-      "lastAccessed": 1775545141941,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/session.ts",
-      "accessCount": 26,
-      "lastAccessed": 1775545150100,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/src/handlers.ts",
-      "accessCount": 23,
-      "lastAccessed": 1775465271758,
-      "type": "file"
-    },
-    {
-      "path": "docs/reasonforge-evolution-workflow.mermaid",
-      "accessCount": 18,
-      "lastAccessed": 1775546038319,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/tests/tools.test.ts",
-      "accessCount": 15,
-      "lastAccessed": 1775465258907,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/scoring.ts",
-      "accessCount": 15,
-      "lastAccessed": 1775512800829,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/engine.ts",
-      "accessCount": 14,
-      "lastAccessed": 1775512838067,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/types.ts",
-      "accessCount": 14,
-      "lastAccessed": 1775544313751,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/src/state.ts",
-      "accessCount": 12,
-      "lastAccessed": 1775465303836,
-      "type": "file"
-    },
-    {
-      "path": "packages",
-      "accessCount": 11,
-      "lastAccessed": 1775465284402,
-      "type": "directory"
-    },
-    {
-      "path": "packages/skills/evolution-reasoning/references/scoring_guide.md",
-      "accessCount": 11,
-      "lastAccessed": 1775542856730,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/termination.ts",
-      "accessCount": 9,
-      "lastAccessed": 1775512855072,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/index.ts",
       "accessCount": 8,
-      "lastAccessed": 1775512800984,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/src/index.ts",
-      "accessCount": 8,
-      "lastAccessed": 1775512803815,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/tests/handlers.test.ts",
-      "accessCount": 7,
-      "lastAccessed": 1775461780829,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/tests/scoring.test.ts",
-      "accessCount": 7,
-      "lastAccessed": 1775464908059,
-      "type": "file"
-    },
-    {
-      "path": "packages/mcp/tests/session.test.ts",
-      "accessCount": 6,
-      "lastAccessed": 1775463016369,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src/benchmark.ts",
-      "accessCount": 6,
-      "lastAccessed": 1775465254775,
+      "lastAccessed": 1775555051877,
       "type": "file"
     },
     {
       "path": "packages/core/src/categories.ts",
+      "accessCount": 6,
+      "lastAccessed": 1775556653026,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/index.ts",
       "accessCount": 5,
-      "lastAccessed": 1775512847629,
+      "lastAccessed": 1775556647357,
       "type": "file"
     },
     {
-      "path": "packages/skill-runner/src/cli.ts",
-      "accessCount": 4,
-      "lastAccessed": 1775465247955,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/src",
-      "accessCount": 4,
-      "lastAccessed": 1775512844480,
-      "type": "directory"
-    },
-    {
-      "path": "packages/mcp/src",
-      "accessCount": 4,
-      "lastAccessed": 1775512852215,
-      "type": "directory"
-    },
-    {
-      "path": "docs/reasonforge-evolution-workflow.png",
-      "accessCount": 4,
-      "lastAccessed": 1775546081830,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/tests/categories.test.ts",
-      "accessCount": 3,
-      "lastAccessed": 1775465255107,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/package.json",
-      "accessCount": 3,
-      "lastAccessed": 1775465258403,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/src",
-      "accessCount": 3,
-      "lastAccessed": 1775465263129,
-      "type": "directory"
-    },
-    {
-      "path": "packages/skill-runner",
-      "accessCount": 3,
-      "lastAccessed": 1775465303695,
-      "type": "directory"
-    },
-    {
-      "path": "packages/skills/evolution-reasoning",
-      "accessCount": 2,
-      "lastAccessed": 1775457516560,
-      "type": "directory"
-    },
-    {
-      "path": "apps/web/src/app/api/runs/route.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775460776691,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/api/runs/[runId]/stream/route.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775460777572,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/tests/engine.test.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775461491943,
-      "type": "file"
-    },
-    {
-      "path": "packages/skill-runner/src/index.ts",
-      "accessCount": 2,
-      "lastAccessed": 1775465247149,
-      "type": "file"
-    },
-    {
-      "path": "packages/core/package.json",
-      "accessCount": 2,
-      "lastAccessed": 1775465255195,
+      "path": "packages/core/src/index.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556647664,
       "type": "file"
     },
     {
       "path": "packages/mcp/package.json",
+      "accessCount": 5,
+      "lastAccessed": 1775556647937,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/schemas.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556651882,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/tools.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556652674,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/src/scoring.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556657499,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/src/types.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556657953,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/src/engine.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556658395,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/termination.ts",
+      "accessCount": 5,
+      "lastAccessed": 1775556658870,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/src/benchmark.ts",
+      "accessCount": 4,
+      "lastAccessed": 1775555027827,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src/session.ts",
+      "accessCount": 4,
+      "lastAccessed": 1775556652792,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/src",
+      "accessCount": 3,
+      "lastAccessed": 1775554354076,
+      "type": "directory"
+    },
+    {
+      "path": "packages/skills/evolution-reasoning/references/advanced_usage.md",
+      "accessCount": 3,
+      "lastAccessed": 1775555051531,
+      "type": "file"
+    },
+    {
+      "path": "packages/mcp/tests/tools.test.ts",
+      "accessCount": 3,
+      "lastAccessed": 1775555054865,
+      "type": "file"
+    },
+    {
+      "path": "packages/skills/evolution-reasoning/references/scoring_guide.md",
       "accessCount": 2,
-      "lastAccessed": 1775465258315,
+      "lastAccessed": 1775554343336,
       "type": "file"
     },
     {
-      "path": "The-Complete-Guide-to-Building-Skill-for-Claude.pdf",
+      "path": "",
       "accessCount": 2,
-      "lastAccessed": 1775548028596,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/lib/db.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775457561166,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/api/runs/[runId]/route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775457599137,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/api/runs/[runId]/review/route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775457599829,
-      "type": "file"
-    },
-    {
-      "path": "apps/web/src/app/api",
-      "accessCount": 1,
-      "lastAccessed": 1775460781511,
+      "lastAccessed": 1775556666375,
       "type": "directory"
     },
     {
-      "path": "packages/mcp",
+      "path": "packages/mcp/tests/session.test.ts",
       "accessCount": 1,
-      "lastAccessed": 1775461132413,
-      "type": "directory"
-    },
-    {
-      "path": "packages/mcp/tests",
-      "accessCount": 1,
-      "lastAccessed": 1775461134059,
-      "type": "directory"
-    },
-    {
-      "path": ".claude/commands/reasonforge.md",
-      "accessCount": 1,
-      "lastAccessed": 1775464371711,
+      "lastAccessed": 1775554192593,
       "type": "file"
     },
     {
       "path": "package.json",
       "accessCount": 1,
-      "lastAccessed": 1775465258418,
+      "lastAccessed": 1775554283472,
+      "type": "file"
+    },
+    {
+      "path": ".mcp.json",
+      "accessCount": 1,
+      "lastAccessed": 1775554388918,
+      "type": "file"
+    },
+    {
+      "path": "packages/skill-runner/src/index.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775555040979,
+      "type": "file"
+    },
+    {
+      "path": "packages/skill-runner/src/cli.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775555041150,
+      "type": "file"
+    },
+    {
+      "path": "packages/skill-runner/src/handlers.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775555041602,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1775555044664,
+      "type": "file"
+    },
+    {
+      "path": "packages/skill-runner/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1775555045385,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1775555045655,
+      "type": "file"
+    },
+    {
+      "path": "packages/core/tests/engine.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1775555048413,
+      "type": "file"
+    },
+    {
+      "path": "packages/skill-runner/README.md",
+      "accessCount": 1,
+      "lastAccessed": 1775555051188,
       "type": "file"
     }
   ],

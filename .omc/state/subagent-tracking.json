@@ -1,35 +1,44 @@
 {
   "agents": [
     {
-      "agent_id": "ac18389cf407f3881",
-      "agent_type": "oh-my-claudecode:architect",
-      "started_at": "2026-04-07T06:45:09.139Z",
+      "agent_id": "ae6b6394f9246c422",
+      "agent_type": "Explore",
+      "started_at": "2026-04-07T09:43:26.409Z",
       "parent_mode": "none",
       "status": "completed",
-      "completed_at": "2026-04-07T06:45:41.748Z",
-      "duration_ms": 32609
+      "completed_at": "2026-04-07T09:45:30.975Z",
+      "duration_ms": 124566
     },
     {
-      "agent_id": "a4cbdd0b0aed555a3",
-      "agent_type": "oh-my-claudecode:executor",
-      "started_at": "2026-04-07T06:55:23.791Z",
+      "agent_id": "a2bb4acbfd1c8f442",
+      "agent_type": "Explore",
+      "started_at": "2026-04-07T09:43:30.361Z",
       "parent_mode": "none",
       "status": "completed",
-      "completed_at": "2026-04-07T06:56:50.098Z",
-      "duration_ms": 86307
+      "completed_at": "2026-04-07T09:45:03.650Z",
+      "duration_ms": 93289
     },
     {
-      "agent_id": "a0ed0c0c58ca2d6d4",
-      "agent_type": "mermaid-diagram-publisher",
-      "started_at": "2026-04-07T07:12:56.236Z",
+      "agent_id": "ab2389625c23596c0",
+      "agent_type": "Explore",
+      "started_at": "2026-04-07T09:43:34.321Z",
       "parent_mode": "none",
       "status": "completed",
-      "completed_at": "2026-04-07T07:14:36.322Z",
-      "duration_ms": 100086
+      "completed_at": "2026-04-07T09:47:02.912Z",
+      "duration_ms": 208591
+    },
+    {
+      "agent_id": "a923a90101aecee3a",
+      "agent_type": "Plan",
+      "started_at": "2026-04-07T10:10:28.804Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-04-07T10:13:42.450Z",
+      "duration_ms": 193646
     }
   ],
-  "total_spawned": 3,
-  "total_completed": 3,
+  "total_spawned": 4,
+  "total_completed": 4,
   "total_failed": 0,
-  "last_updated": "2026-04-07T07:14:36.425Z"
+  "last_updated": "2026-04-07T10:13:42.553Z"
 }

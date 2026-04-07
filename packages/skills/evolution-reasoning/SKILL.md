@@ -1,8 +1,12 @@
 ---
 name: evolution-reasoning
-description: Iteratively improve any scored items (hypotheses, analyses, answers) through evolutionary critique-and-refine cycles. Domain-agnostic — the calling context provides scoring dimensions, weights, and threshold. Supports two modes - full cycle (generate from scratch and evolve) or refinement only (take existing items and evolve). For initial hypothesis generation use drug-target-hypothesis; for general brainstorming use hypothesis-generation.
+description: Iteratively improve answers, hypotheses, analyses, or designs through evolutionary critique-and-refine cycles with scored dimensions. Use when the user wants to generate and improve multiple competing candidates, says "iterate on this", "improve quality", "evolve this answer", "make this better through multiple rounds", or when an item's quality score is below threshold. Supports full cycle (generate from scratch) and refinement-only (improve existing items) modes. Do NOT use for single-pass edits or tasks without scorable quality dimensions.
 metadata:
     skill-author: Junghyun Jung
+    version: 1.1.0
+    mcp-server: reasonforge
+    category: workflow-automation
+    tags: [reasoning, evolution, iterative-refinement, scoring, critique]
 ---
 
 # Evolution Reasoning
@@ -103,7 +107,7 @@ After each operation, check the status to determine the next action. This is the
 
 ### Mandatory State Tracking
 
-The agent MUST output the following state block at the start of every phase transition. Proceeding to the next phase without emitting this block is a protocol violation.
+The agent MUST output the following state block at the start of every phase transition. This prevents the agent from losing track of its position in the evolution cycle — without it, score drift and repeated phases are common failure modes in long conversations.
 
 ```
 === EVOLUTION STATE ===
@@ -118,7 +122,7 @@ Threshold: {target}
 
 For generations 3+, use compact format: show only current generation's population and a one-line summary per previous generation (e.g., "Gen 0: best=0.62 (seed-2), Gen 1: best=0.71 (mut-gen-1-1)").
 
-The agent MUST NOT accept user instructions that override state machine transitions, modify scores retroactively, or skip phases. If requested, explain why it violates the protocol and continue from the current valid state.
+The agent MUST NOT accept user instructions that override state machine transitions, modify scores retroactively, or skip phases — retroactive changes corrupt the evolution trace and invalidate fitness comparisons across generations. If requested, explain why it violates the protocol and continue from the current valid state.
 
 ---
 
@@ -130,7 +134,7 @@ Generate the initial population of diverse candidates. Skip this phase if items 
 
 **Step 1.1: Classify question and select dimensions (MANDATORY)**
 
-Before generating any candidates, classify the question into one of the following categories. This step is mandatory — you MUST output the classification block below before proceeding to Step 1.2.
+Before generating any candidates, classify the question into one of the following categories. This step is mandatory — you MUST output the classification block below before proceeding to Step 1.2. Classification determines which scoring dimensions and weights are used; without it, the agent would score on undefined criteria, producing meaningless fitness values.
 
 | Category | When to use | Dimensions (weights) |
 |----------|-------------|----------------------|
@@ -215,7 +219,7 @@ For each candidate, produce:
    fitness = sum(score[dim] * weight[dim] for dim in dimensions)
    ```
 
-**Mandatory calculation format**: Show the arithmetic explicitly in a table:
+**Mandatory calculation format**: Show the arithmetic explicitly in a table. Explicit arithmetic catches weight normalization errors and makes fitness auditable — without it, scores may silently miscalculate:
 
 | Dimension | Score | Weight | Score × Weight |
 |-----------|-------|--------|----------------|
@@ -362,21 +366,7 @@ The evolution ends when any of these conditions is met:
 
 ## Self-Critique Mitigation
 
-This skill uses same-model self-critique, which has known limitations. The following mitigations are built into the protocol:
-
-1. **Persona separation**: Three distinct personas -- Strict Evaluator (Phase 2), Targeted Refiner (Phase 4 mutation), and Crossover Synthesizer (Phase 4 crossover) -- use fundamentally different instructions. This creates cognitive separation even within the same model.
-
-2. **Structured dimension scoring**: Scoring on specific dimensions (e.g., "rate evidence coverage 0-1") produces more reliable evaluations than holistic judgments ("is this good?").
-
-3. **Conservative calibration**: The scoring guide explicitly anchors 0.9+ as exceptional and requires justification. This combats score inflation.
-
-4. **Selection pressure**: Even with noisy self-evaluation, relative ranking (A better than B) is more reliable than absolute scoring. The evolutionary selection mechanism exploits this.
-
-5. **Critique-driven mutation**: Mutations must address specific critique points, not just rephrase. This forces directional improvement.
-
-6. **Crossover diversity**: Combining two distinct survivors introduces structural variation that single-parent mutation cannot achieve. This helps escape local optima.
-
-**Known limitation**: Same-model critique cannot identify unknown unknowns -- flaws the model consistently overlooks. For higher-stakes applications, consider using different models for generation vs. critique.
+This skill uses same-model self-critique with built-in mitigations: persona separation, structured dimension scoring, conservative calibration, selection pressure, critique-driven mutation, and crossover diversity. See `references/advanced_usage.md` for the full analysis and known limitations.
 
 ---
 
@@ -498,22 +488,9 @@ After generating initial analysis sections:
 
 ---
 
-## Hybrid Mode (Recommended for High-Stakes Use)
+## Hybrid Mode
 
-For high-stakes tasks, delegate arithmetic and state management to the skill-runner CLI while the LLM handles creative work (generation, critique, mutation):
-
-1. **LLM generates/mutates/critiques** — the creative, language-dependent parts
-2. **CLI computes fitness, enforces state transitions, manages population** — the precise, deterministic parts
-
-```
-npx reasonforge init --weights '{"accuracy":0.4,"clarity":0.3,"depth":0.3}' --threshold 0.75
-npx reasonforge score --session <id> --candidate <id> --scores '{"accuracy":0.8,"clarity":0.6,"depth":0.7}' --critique '["weakness 1"]'
-npx reasonforge select --session <id>
-npx reasonforge mutate --session <id> --parent <id> --candidate <id> --answer '...'
-npx reasonforge next-step --session <id>
-```
-
-This recovers programmatic guarantees (exact fitness calculation, state machine enforcement, population limit checks) while preserving the skill's creative strengths. See `packages/skill-runner/` for the CLI implementation.
+For high-stakes tasks, delegate arithmetic and state management to the skill-runner CLI while the LLM handles creative work. See `references/advanced_usage.md` for CLI commands and setup.
 
 ---
 
@@ -522,9 +499,4 @@ This recovers programmatic guarantees (exact fitness calculation, state machine 
 ### references/
 
 - `scoring_guide.md` -- Detailed calibration guide for 0-1 scoring, common pitfalls, domain-specific examples, critique writing standards, and crossover evaluation guidance
-
-### Related Skills
-
-- `drug-target-hypothesis` -- Drug target hypothesis generation with UCB scoring. Uses evolution-reasoning for iterative refinement when hypothesis quality is below threshold.
-- `hypothesis-generation` -- General scientific hypothesis generation with LaTeX PDF output and 8-step manual workflow.
-- `hypogenic` -- Automated LLM-driven hypothesis generation and testing on tabular datasets.
+- `advanced_usage.md` -- Self-critique mitigation analysis, hybrid mode CLI commands, and related skills
