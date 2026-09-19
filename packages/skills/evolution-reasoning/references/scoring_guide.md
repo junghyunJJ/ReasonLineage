@@ -183,25 +183,25 @@ A successful crossover takes the **best elements from each parent** and produces
 | Quality | Description | Expected Outcome |
 |---------|-------------|-----------------|
 | **Strong crossover** | Identifies complementary strengths, merges them into a coherent whole | Composite fitness >= best parent |
-| **Adequate crossover** | Combines some strengths but misses opportunities | Composite fitness between both parents |
+| **Adequate crossover** | Combines some strengths but misses opportunities | Composite fitness between the worst and best parent |
 | **Failed crossover** | Mechanical concatenation, internal contradictions, or lost strengths | Composite fitness < worst parent |
 
 ### Common Crossover Pitfalls
 
 1. **Mechanical concatenation**: Simply appending one parent's content to the other without integration. The result reads as two separate items stitched together. Score lower on coherence/clarity dimensions.
 
-2. **Strength dilution**: In attempting to combine both parents, the crossover weakens what each parent did well. Check whether the crossover retains the highest-scoring dimensions from each parent.
+2. **Strength dilution**: In attempting to combine all parents, the crossover weakens what each parent did well. The risk grows with the number of parents — three-way merges drift toward a vague committee answer. Check whether the crossover retains the highest-scoring dimensions from each parent.
 
 3. **Internal contradiction**: When parents take different approaches, merging them may introduce logical contradictions. Score lower on logicalConsistency or equivalent dimension.
 
-4. **Loss of specificity**: Generalizing to accommodate both parents' perspectives, losing the concrete details that made each parent strong. Score lower on specificity/depth dimensions.
+4. **Loss of specificity**: Generalizing to accommodate every parent's perspective, losing the concrete details that made each parent strong. Score lower on specificity/depth dimensions.
 
 ### Scoring Crossover Candidates
 
-When scoring a crossover candidate, explicitly compare against both parents:
+When scoring a crossover candidate, explicitly compare against its contributing parents:
 
-- For each dimension, check: does the crossover score at least as high as the better parent on this dimension?
-- If the crossover scores lower than both parents on any dimension, note this in the critique as a regression.
+- For each dimension, check: does the crossover score at least as high as the best parent on this dimension?
+- If the crossover scores lower than every parent on any dimension, note this in the critique as a regression.
 - A crossover that fails to improve on the best parent's composite fitness should receive a critique point explaining what was lost in the merge.
 - **Decomposition check**: Did the crossover candidate's generation include an explicit decomposition step (listing each parent's top strengths before writing)? If not, score lower on the weakest dimension — unstructured crossover tends to produce averaging rather than genuine synthesis.
 
