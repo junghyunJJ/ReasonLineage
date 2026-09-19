@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "reasonforge": {
-      "command": "node",
-      "args": ["./packages/mcp/dist/index.js"]
-    }
-  }
-}

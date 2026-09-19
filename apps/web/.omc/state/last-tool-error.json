@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls /Users/jungj2/Dropbox/Metadata/reasonforge/node_modules/@modelcontextprotocol/sdk/ 2>/dev/null\",\"description\":\"Check root node_modules for MCP SDK (hoisting)\"}",
-  "error": "Exit code 1",
-  "timestamp": "2026-04-03T15:29:45.294Z",
-  "retry_count": 1
-}
