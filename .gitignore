@@ -25,3 +25,12 @@ docs/
 .claude
 .gemini
 .omc
+
+# Python
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# Run outputs (smoke tests, experiments)
+runs/
