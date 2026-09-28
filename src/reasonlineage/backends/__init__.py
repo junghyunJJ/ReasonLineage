@@ -2,5 +2,15 @@
 
 from .base import BackendError, ModelBackend, ModelRequest, ModelResponse
 from .claude_cli import ClaudeCLIBackend
+from .codex_cli import CodexCLIBackend
+from .grok_cli import GrokCLIBackend
 
-__all__ = ["BackendError", "ClaudeCLIBackend", "ModelBackend", "ModelRequest", "ModelResponse"]
+__all__ = [
+    "BackendError",
+    "ClaudeCLIBackend",
+    "CodexCLIBackend",
+    "GrokCLIBackend",
+    "ModelBackend",
+    "ModelRequest",
+    "ModelResponse",
+]
