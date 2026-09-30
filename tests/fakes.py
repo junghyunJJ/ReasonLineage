@@ -44,10 +44,12 @@ class FakeModel:
     bad_first: the first N author calls leave an item out of the ranking.
     bad_when: author calls whose prompt contains this text leave an item out.
     judge_value: a fixed score for every dimension (otherwise a hash of the prompt).
+    invalid_first: the first N author calls give a confidence of 2.0, which the engine cannot use.
     fresh: add the call count to the hash, so every call answers differently.
     """
 
-    def __init__(self, name, clock=None, *, fail_roles=(), bad_first=0, bad_when=None, judge_value=None, fresh=False):
+    def __init__(self, name, clock=None, *, fail_roles=(), bad_first=0, bad_when=None, judge_value=None, fresh=False,
+                 invalid_first=0):
         self.name = name
         self.clock = clock or Clock()
         self.fail_roles = set(fail_roles)
@@ -55,6 +57,7 @@ class FakeModel:
         self.bad_when = bad_when
         self.judge_value = judge_value
         self.fresh = fresh
+        self.invalid_first = invalid_first
         self.seen: list[ModelRequest] = []
         self._author_calls = 0
 
@@ -73,6 +76,8 @@ class FakeModel:
             self._author_calls += 1
             bad = self._author_calls <= self.bad_first or (self.bad_when is not None and self.bad_when in request.prompt)
             data = self._answer(request, salt, bad)
+            if self._author_calls <= self.invalid_first:
+                data["ranking"][0]["confidence"] = 2.0
         return ModelResponse(backend=self.name, model=request.model, text=json.dumps(data), data=data, duration_s=0.01,
                              cost_usd=None, prompt_sha256=request.prompt_sha256,
                              raw={"usage": {"input_tokens": 100, "output_tokens": 50}})

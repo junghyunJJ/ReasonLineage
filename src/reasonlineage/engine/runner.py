@@ -281,8 +281,9 @@ class Runner:
         )
 
     async def _author_call(self, name: str, author: str, prompt: str) -> dict[str, Any]:
-        response = await self.recorder.call(name, author, self.backends[author], self._author_request(author, prompt))
-        try:
+        response = await self.recorder.call(name, author, self.backends[author], self._author_request(author, prompt),
+                                            check=lambda r: fmt.normalize_answer(r.data, self.task.candidates))
+        try:  # an answer recorded by another run is not checked by the recorder
             return fmt.normalize_answer(response.data, self.task.candidates)
         except ValueError as exc:
             raise WritingFailed(str(exc)) from exc
@@ -349,7 +350,8 @@ class Runner:
             timeout_s=self.protocol.timeout("judge"), max_tokens=self.protocol.max_tokens("judge"),
         )
         try:
-            response = await self.recorder.call(f"g{gen}/judge/{candidate.id}/{judge}", judge, self.backends[judge], request)
+            response = await self.recorder.call(f"g{gen}/judge/{candidate.id}/{judge}", judge, self.backends[judge], request,
+                                                check=lambda r: parse_judge(judge, r.data, self.dims))
             return parse_judge(judge, response.data, self.dims)
         except (BackendError, ValueError) as exc:
             if self.options.mode == "experiment":

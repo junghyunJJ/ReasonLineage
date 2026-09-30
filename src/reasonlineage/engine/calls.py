@@ -68,6 +68,17 @@ def _usage(raw: Any) -> dict[str, Any]:
     }
 
 
+def _unusable(check: Callable[[ModelResponse], Any] | None, response: ModelResponse) -> str | None:
+    """Why the engine cannot use this output, or None when it can."""
+    if check is None:
+        return None
+    try:
+        check(response)
+    except ValueError as exc:
+        return f"unusable output: {exc}"
+    return None
+
+
 class ReplaySource:
     """Answers recorded by another run, offered by cache key. When both runs use the same call
     name the matching call is used; otherwise identical requests are matched in order."""
@@ -102,7 +113,10 @@ class CallRecorder:
         self.replay = replay
         self.attempts = attempts
 
-    async def call(self, name: str, member: str, backend: ModelBackend, request: ModelRequest) -> ModelResponse:
+    async def call(self, name: str, member: str, backend: ModelBackend, request: ModelRequest,
+                   check: Callable[[ModelResponse], Any] | None = None) -> ModelResponse:
+        """`check` raises ValueError for output the engine cannot use; that counts as a failed attempt,
+        so it is retried with a new seed and never stored as the call's answer."""
         key = cache_key(member, request)
         if self.events.recorded_call(name) is not None:
             if self.replay is not None:
@@ -114,15 +128,19 @@ class CallRecorder:
                 response = ModelResponse(**stored["response"])
                 return self._save(name, member, request, key, response, stored["request"].get("seed"), replayed=True)
         errors = []
-        for attempt in range(self.attempts):
+        first = self.events.failed_attempts(name)  # after a resume, the attempts go on with new seeds
+        for attempt in range(first, first + self.attempts):
             seed = derive_seed(self.run_seed, name, attempt)
             try:
                 response = await backend.complete(replace(request, seed=seed))
             except BackendError as exc:
-                errors.append(str(exc))
-                self.events.append_call("call.failed", name=name, member=member, attempt=attempt, error=str(exc)[:500])
-                continue
-            return self._save(name, member, request, key, response, seed, replayed=False)
+                error = str(exc)
+            else:
+                error = _unusable(check, response)
+                if error is None:
+                    return self._save(name, member, request, key, response, seed, replayed=False)
+            errors.append(error)
+            self.events.append_call("call.failed", name=name, member=member, attempt=attempt, error=error[:500])
         raise BackendError(f"{name} failed after {self.attempts} attempt(s): {errors}")
 
     def _save(self, name: str, member: str, request: ModelRequest, key: str,

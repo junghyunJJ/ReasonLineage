@@ -88,3 +88,20 @@ def test_an_invalid_rewrite_keeps_the_earlier_answer(tmp_path):
     first = events_of(runner.run_dir, "candidate.created")[0]
     assert len(first["answer"]["ranking"]) == 3
     assert events_of(runner.run_dir, "anomaly")[0]["kind"] == "rewrite_invalid"
+
+
+def test_an_unusable_answer_is_retried_with_a_new_seed(tmp_path):
+    runner, _ = make_runner(tmp_path, generations=1, models=models(opus=FakeModel("opus", invalid_first=1)))
+    asyncio.run(runner.run())
+    (failed,) = events_of(runner.run_dir, "call.failed")
+    assert failed["name"] == "g0/write/c001/opus" and failed["error"].startswith("unusable output: confidence")
+    assert events_of(runner.run_dir, "candidate.created")[0]["author"] == "opus"
+
+
+def test_a_run_stopped_by_unusable_answers_resumes_once_the_model_answers_well(tmp_path):
+    runner, _ = make_runner(tmp_path, generations=1, models=models(opus=FakeModel("opus", invalid_first=2)))
+    with pytest.raises(RunStopped, match="unusable output"):
+        asyncio.run(runner.run())
+    resumed, _ = make_runner(tmp_path, generations=1, resume=True)
+    asyncio.run(resumed.run())
+    assert events_of(runner.run_dir, "run.completed")

@@ -114,3 +114,26 @@ def test_missing_call_file_on_resume_is_a_clear_error(tmp_path):
     again, _ = recorder(tmp_path, resume=True)
     with pytest.raises(RunCorrupted, match="g0/write/c001/opus"):
         asyncio.run(again.call("g0/write/c001/opus", "opus", Counter(), request()))
+
+
+def test_unusable_output_is_a_failed_attempt(tmp_path):
+    rec, _ = recorder(tmp_path)
+
+    def check(response):
+        if response.data["n"] < 2:
+            raise ValueError("n is too small")
+
+    assert asyncio.run(rec.call("g0/write/c001/opus", "opus", Counter(), request(), check=check)).data == {"n": 2}
+    failed, completed = read_events(tmp_path / "events.jsonl")
+    assert failed["event"] == "call.failed" and failed["error"] == "unusable output: n is too small"
+    assert completed["event"] == "call.completed" and completed["seed"] == derive_seed(7, "g0/write/c001/opus", 1)
+
+
+def test_a_resumed_call_retries_with_new_seeds(tmp_path):
+    rec, _ = recorder(tmp_path)
+    with pytest.raises(BackendError):
+        asyncio.run(rec.call("g0/write/c001/opus", "opus", Counter(fail_first=5), request()))
+    again, _ = recorder(tmp_path, resume=True)
+    backend = Counter()
+    asyncio.run(again.call("g0/write/c001/opus", "opus", backend, request()))
+    assert [r.seed for r in backend.requests] == [derive_seed(7, "g0/write/c001/opus", 2)]

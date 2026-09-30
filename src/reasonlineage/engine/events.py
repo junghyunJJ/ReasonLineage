@@ -53,6 +53,7 @@ class EventLog:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._calls: dict[str, dict[str, Any]] = {}
+        self._failed: dict[str, int] = {}
         self._expected: list[dict[str, Any]] = []
         self._cursor = 0
         if not resume:
@@ -63,6 +64,8 @@ class EventLog:
         for record in read_events(self.path):
             if record["event"] == "call.completed":
                 self._calls[record["name"]] = record
+            elif record["event"] == "call.failed":
+                self._failed[record["name"]] = self._failed.get(record["name"], 0) + 1
             elif record["event"] not in CALL_EVENTS | UNCHECKED_EVENTS:
                 self._expected.append(_plain(record))
 
@@ -78,11 +81,17 @@ class EventLog:
     def recorded_call(self, name: str) -> dict[str, Any] | None:
         return self._calls.get(name)
 
+    def failed_attempts(self, name: str) -> int:
+        """How many attempts at this call have failed so far, in this run and before a resume."""
+        return self._failed.get(name, 0)
+
     def append_call(self, event: str, **fields: Any) -> None:
         record = {"ts": _now(), "event": event, **fields}
         self._write(record)
         if event == "call.completed":
             self._calls[fields["name"]] = record
+        elif event == "call.failed":
+            self._failed[fields["name"]] = self._failed.get(fields["name"], 0) + 1
 
     def emit(self, event: str, **fields: Any) -> None:
         """Record a decision, or on resume check it against the recorded one."""
