@@ -1,0 +1,7 @@
+{
+  "id": "ipf-example",
+  "question": "Which approved drug is most promising to repurpose for idiopathic pulmonary fibrosis (IPF)? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.",
+  "candidates": ["metformin", "imatinib", "sildenafil"],
+  "category": "biomedical",
+  "data_sensitivity": "public"
+}

@@ -10,14 +10,20 @@ readme = "SKILL.md"
 requires-python = ">=3.11"
 dependencies = []
 
+[project.scripts]
+reasonlineage = "reasonlineage.cli:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+reasonlineage = ["protocol/protocol.json", "protocol/prompts/*.md"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-markers = ["live: calls the real claude CLI (run with -m live)"]
+markers = ["live: calls real models or services (run with -m live)"]
 addopts = "-m 'not live'"

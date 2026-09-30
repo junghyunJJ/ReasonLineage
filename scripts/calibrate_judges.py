@@ -32,7 +32,7 @@ DIMS = list(PRESET.weights)
 # (judge name, model id, effort). Haiku runs without an effort flag, as in the first smoke test.
 JUDGES = [
     ("opus", "claude-opus-5-5", "high"),
-    ("sonnet", "claude-sonnet-5", "high"),
+    ("sonnet", "claude-sonnet-5-5", "high"),
     ("haiku", "claude-haiku-4-5-20251001", None),
 ]
 

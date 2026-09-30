@@ -1,8 +1,8 @@
 """Generate author-balanced calibration candidates: every roster model writes one strong and
 one deliberately flawed answer to the same question, in isolated calls.
 
-    python scripts/make_candidates.py opus=claude:claude-opus-5-5:xhigh sonnet=claude:claude-sonnet-5:xhigh \
-        gpt=codex:gpt-6-sol:xhigh grok=grok:grok-4.7:xhigh
+    python scripts/make_candidates.py opus=claude:claude-opus-5-5:xhigh sonnet=claude:claude-sonnet-5-5:xhigh \
+        gpt=codex:gpt-6.1-sol:xhigh grok=grok:grok-4.7:xhigh
 
 Writes runs/calibration/candidates-<timestamp>.json. With --into FILE --only ID,ID it regenerates
 just those candidates and replaces them in FILE.

@@ -18,6 +18,10 @@ class ModelRequest:
     # When set, the response must be a JSON object matching this schema.
     json_schema: Mapping[str, Any] | None = None
     timeout_s: float = 480.0
+    # Only the HTTP backend uses these; the CLIs have no such options.
+    seed: int | None = None
+    max_tokens: int | None = None
+    top_logprobs: int | None = None
 
     @property
     def prompt_sha256(self) -> str:

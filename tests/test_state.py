@@ -2,7 +2,7 @@ import pytest
 
 from helpers import WEIGHTS, uniform
 from reasonlineage.core import Candidate, EvolutionConfig, EvolutionState, JudgeScore, Status, Termination
-from reasonlineage.core.state import ProtocolError
+from reasonlineage.core.state import ProtocolError, seeds_per_model
 
 
 def config(**overrides):
@@ -164,7 +164,27 @@ def test_config_validation(bad):
         config(**bad)
 
 
-@pytest.mark.parametrize("n, expected", [(5, (5, 3, 2)), (3, (3, 2, 2)), (2, (2, 1, 2)), (1, (3, 2, 3))])
+@pytest.mark.parametrize("n, expected", [(1, (4, 2)), (2, (4, 2)), (3, (6, 4)), (4, (4, 2)), (5, (5, 3))])
 def test_for_roster_sizing(n, expected):
     cfg = EvolutionConfig.for_roster(n, WEIGHTS)
-    assert (cfg.population_limit, cfg.survivor_count, cfg.generation_limit) == expected
+    assert (cfg.population_limit, cfg.survivor_count) == expected
+    assert cfg.new_candidate_slots == 2  # one mutation and one crossover per generation
+    assert cfg.generation_limit == 3
+    assert (cfg.tie_margin, cfg.dominance_margin, cfg.stagnation_threshold) == (0.03, 0.03, 0.03)
+
+
+@pytest.mark.parametrize("n, s", [(1, 4), (2, 2), (3, 2), (4, 1), (5, 1)])
+def test_seeds_per_model(n, s):
+    assert seeds_per_model(n) == s
+
+
+def test_stagnation_detection_can_be_turned_off():
+    state = EvolutionState(config(generation_limit=10, stagnation_recovery=False), seeds())
+    for cid, value in [("seed-1", 0.60), ("seed-2", 0.50), ("seed-3", 0.40)]:
+        score(state, cid, value)
+    for gen, value in [(1, 0.61), (2, 0.62)]:
+        state.select()
+        state.register(Candidate(f"mut-gen-{gen}-1", "x", "claude", "mutation", (state.best.id,)))
+        score(state, f"mut-gen-{gen}-1", value)
+    assert state.select() is not None  # the same history stagnates when detection is on
+    assert not state.recovery_due

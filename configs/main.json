@@ -1,0 +1,16 @@
+{
+  "panel": [
+    {"name": "opus", "backend": "claude", "model": "claude-opus-5-5", "effort": "xhigh"},
+    {"name": "gpt", "backend": "codex", "model": "gpt-6.1-sol", "effort": "xhigh"},
+    {"name": "grok", "backend": "grok", "model": "grok-4.7", "effort": "xhigh"},
+    {"name": "qwen", "backend": "http", "model": "Qwen/Qwen3.8-Flash-Next-FP8", "effort": "xhigh",
+     "base_url": "http://esplhpc-cp089:6010/v1", "family": "alibaba"}
+  ],
+  "checkers": {
+    "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY", "api_key_file": "~/.config/reasonlineage/jev.env"},
+    "deepseek": {"backend": "http", "model": "deepseek-ai/DeepSeek-V4-Flash-0731", "effort": "max",
+                 "base_url": "http://esplhpc-cp088:6018/v1", "family": "deepseek"}
+  },
+  "checker_for": {"public": "jev", "private": "deepseek"},
+  "concurrency_per_backend": 2
+}

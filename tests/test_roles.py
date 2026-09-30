@@ -1,4 +1,4 @@
-from reasonlineage.core import crossover_has_distinct_voices, judges_for, pick_crossover_synthesizer
+from reasonlineage.core import crossover_has_distinct_voices, judges_for, pick_crossover_synthesizer, rank_synthesizers
 
 ROSTER = ["claude", "codex", "gemini"]
 
@@ -33,3 +33,16 @@ def test_no_synthesizer_when_every_backend_is_a_parent():
 def test_distinct_voices():
     assert crossover_has_distinct_voices(["claude", "codex"])
     assert not crossover_has_distinct_voices(["claude", "claude"])
+
+
+def test_synthesizer_ties_rotate_to_the_least_recently_used():
+    roster = ["opus", "gpt", "grok", "qwen"]
+    # Parents by qwen and opus leave gpt and grok tied on survivors.
+    assert pick_crossover_synthesizer(["qwen", "opus"], roster, ["qwen", "opus"]) == "gpt"
+    assert pick_crossover_synthesizer(["qwen", "opus"], roster, ["qwen", "opus"], history=["gpt"]) == "grok"
+    assert pick_crossover_synthesizer(["qwen", "opus"], roster, ["qwen", "opus"], history=["grok", "gpt"]) == "grok"
+
+
+def test_rank_synthesizers_orders_every_option():
+    roster = ["opus", "gpt", "grok", "qwen"]
+    assert rank_synthesizers(roster, roster, ["opus", "opus"], history=["gpt"]) == ["grok", "qwen", "gpt", "opus"]

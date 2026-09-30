@@ -6,6 +6,7 @@ The engine drives it: register candidates, record panel scores, call select().
 This class only enforces the order, the limits, and the arithmetic.
 """
 
+import math
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Mapping, Sequence
@@ -47,6 +48,8 @@ class EvolutionConfig:
     early_stop: bool = True
     stagnation_threshold: float = 0.02
     stagnation_window: int = 2
+    # False turns stagnation detection off, so experiment runs do every planned generation.
+    stagnation_recovery: bool = True
     tie_margin: float = 0.02
     dominance_margin: float = 0.02
     author_diversity: bool = True
@@ -72,18 +75,28 @@ class EvolutionConfig:
 
     @classmethod
     def for_roster(cls, n_active: int, weights: Mapping[str, float], **overrides) -> "EvolutionConfig":
-        """Defaults sized from the live roster (SKILL.md, Runtime roster probe).
+        """Sizing from the live roster (engine spec 5.2).
 
-        N >= 2: population N, survivors min(3, N-1), 2 generations.
-        N == 1: single-model mode keeps the single-agent sizing (3 / 2 / 3).
+        Each model writes s = ceil(4 / N) first answers, the population is P = N * s, and
+        k = P - 2 survive, so every generation adds one mutation and one crossover.
         """
-        if n_active < 1:
-            raise ValueError("n_active must be at least 1")
-        if n_active == 1:
-            sizing = {"population_limit": 3, "survivor_count": 2, "generation_limit": 3}
-        else:
-            sizing = {"population_limit": n_active, "survivor_count": min(3, n_active - 1), "generation_limit": 2}
+        population = n_active * seeds_per_model(n_active)
+        sizing = {
+            "population_limit": population,
+            "survivor_count": population - 2,
+            "generation_limit": 3,
+            "tie_margin": 0.03,
+            "dominance_margin": 0.03,
+            "stagnation_threshold": 0.03,
+        }
         return cls(weights=weights, **{**sizing, **overrides})
+
+
+def seeds_per_model(n_active: int) -> int:
+    """First answers each model writes in generation 0: ceil(4 / N)."""
+    if n_active < 1:
+        raise ValueError("n_active must be at least 1")
+    return math.ceil(4 / n_active)
 
 
 def _merge_critique(judge_scores: Sequence[JudgeScore]) -> list[str]:
@@ -229,7 +242,7 @@ class EvolutionState:
             if not improved:
                 self._complete(Termination.STAGNATION)
                 return None
-        elif self._stagnated():
+        elif self.config.stagnation_recovery and self._stagnated():
             self._recovery_baseline = best_fitness
             self.recovery_due = True
 
