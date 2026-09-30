@@ -323,18 +323,22 @@ class Runner:
         jobs = [(c, judge) for c in pending for judge in judge_set(self.options.judges, c.author, self.names, self.family)]
         outcomes = await gather_all(self._judge(state.generation, c, judge, trace) for c, judge in jobs)
         panels: dict[str, list[JudgeScore]] = {c.id: [] for c in pending}
+        for (candidate, _), outcome in zip(jobs, outcomes):
+            if not isinstance(outcome, JudgeFailure):
+                panels[candidate.id].append(outcome)
+        for candidate in pending:
+            # Stop before recording any of this round, so a resume asks the judges again.
+            if not panels[candidate.id]:
+                raise RunStopped(f"no judge could score {candidate.id}")
         for (candidate, judge), outcome in zip(jobs, outcomes):
             if isinstance(outcome, JudgeFailure):
                 self.events.emit("anomaly", kind="judge_failed", candidate=candidate.id,
                                  detail=f"{judge}: {outcome.detail}", action="scored without this judge")
                 continue
-            panels[candidate.id].append(outcome)
             self.events.emit("judge.scored", candidate=candidate.id, judge=judge, author=candidate.author,
                              generation=state.generation, judges_axis=self.options.judges, context=self.options.context,
                              scores=dict(outcome.scores), critique=list(outcome.critique))
         for candidate in pending:
-            if not panels[candidate.id]:
-                raise RunStopped(f"no judge could score {candidate.id}")
             scored = state.record_score(candidate.id, panels[candidate.id])
             self.events.emit("candidate.scored", candidate=candidate.id, judges=[s.judge for s in panels[candidate.id]],
                              scores=scored.scores, fitness=scored.fitness)

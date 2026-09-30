@@ -105,3 +105,23 @@ def test_a_run_stopped_by_unusable_answers_resumes_once_the_model_answers_well(t
     resumed, _ = make_runner(tmp_path, generations=1, resume=True)
     asyncio.run(resumed.run())
     assert events_of(runner.run_dir, "run.completed")
+
+
+def test_exploration_resume_replays_a_substitution_without_calling_anyone(tmp_path):
+    runner, _ = make_runner(tmp_path, mode="exploration", generations=1,
+                            models=models(opus=FakeModel("opus", fail_roles={"author"})))
+    expected = asyncio.run(runner.run())
+    healthy = models()
+    resumed, _ = make_runner(tmp_path, mode="exploration", generations=1, models=healthy, resume=True)
+    assert asyncio.run(resumed.run())["best"] == expected["best"]
+    assert all(m.seen == [] for m in healthy.values())
+
+
+def test_exploration_resumes_after_every_judge_failed(tmp_path):
+    down = {n: FakeModel(n, fail_roles={"judge"}) for n in NAMES}
+    runner, _ = make_runner(tmp_path, mode="exploration", generations=1, models=down)
+    with pytest.raises(RunStopped, match="no judge could score"):
+        asyncio.run(runner.run())
+    resumed, _ = make_runner(tmp_path, mode="exploration", generations=1, resume=True)
+    asyncio.run(resumed.run())
+    assert events_of(runner.run_dir, "run.completed")

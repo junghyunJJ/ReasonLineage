@@ -122,6 +122,10 @@ class CallRecorder:
             if self.replay is not None:
                 self.replay.mark_used(key, name)
             return ModelResponse(**_load_call(self.run_dir, name)["response"])
+        given_up = self.events.gave_up(name)
+        if given_up is not None and self.events.replaying:
+            # The recorded decisions ahead were made with this call failing, so it fails the same way.
+            raise BackendError(given_up["error"])
         if self.replay is not None:
             stored = self.replay.take(key, name)
             if stored is not None:
@@ -141,7 +145,9 @@ class CallRecorder:
                     return self._save(name, member, request, key, response, seed, replayed=False)
             errors.append(error)
             self.events.append_call("call.failed", name=name, member=member, attempt=attempt, error=error[:500])
-        raise BackendError(f"{name} failed after {self.attempts} attempt(s): {errors}")
+        message = f"{name} failed after {self.attempts} attempt(s): {errors}"
+        self.events.append_call("call.gave_up", name=name, member=member, error=message)
+        raise BackendError(message)
 
     def _save(self, name: str, member: str, request: ModelRequest, key: str,
               response: ModelResponse, seed: int | None, replayed: bool) -> ModelResponse:

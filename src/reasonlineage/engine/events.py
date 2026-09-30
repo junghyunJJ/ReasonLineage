@@ -1,8 +1,8 @@
 """The run's event log, events.jsonl (spec 6.2, 6.3).
 
 Two kinds of lines share the file:
-- call lines (`call.completed`, `call.failed`) are a memo of model calls, written as calls
-  finish, in any order;
+- call lines (`call.completed`, `call.failed` for each failed attempt, `call.gave_up` when a
+  call's attempts ran out) are a memo of model calls, written as calls finish, in any order;
 - decision lines (everything else) come in a fixed order that depends only on the answers
   the calls returned.
 On resume the engine runs again from the start. Recorded calls come back from the memo, and
@@ -16,7 +16,7 @@ from typing import Any
 
 from .errors import ResumeMismatch
 
-CALL_EVENTS = frozenset({"call.completed", "call.failed"})
+CALL_EVENTS = frozenset({"call.completed", "call.failed", "call.gave_up"})
 # Notes about the run itself, not decisions; never checked on resume.
 UNCHECKED_EVENTS = frozenset({"run.stopped", "run.resumed"})
 
@@ -54,6 +54,7 @@ class EventLog:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._calls: dict[str, dict[str, Any]] = {}
         self._failed: dict[str, int] = {}
+        self._gave_up: dict[str, dict[str, Any]] = {}
         self._expected: list[dict[str, Any]] = []
         self._cursor = 0
         if not resume:
@@ -66,6 +67,8 @@ class EventLog:
                 self._calls[record["name"]] = record
             elif record["event"] == "call.failed":
                 self._failed[record["name"]] = self._failed.get(record["name"], 0) + 1
+            elif record["event"] == "call.gave_up":
+                self._gave_up[record["name"]] = record
             elif record["event"] not in CALL_EVENTS | UNCHECKED_EVENTS:
                 self._expected.append(_plain(record))
 
@@ -85,6 +88,15 @@ class EventLog:
         """How many attempts at this call have failed so far, in this run and before a resume."""
         return self._failed.get(name, 0)
 
+    def gave_up(self, name: str) -> dict[str, Any] | None:
+        """The latest record of this call running out of attempts, if it did."""
+        return self._gave_up.get(name)
+
+    @property
+    def replaying(self) -> bool:
+        """True while recorded decisions are still ahead: the calls made now fed decisions already in the log."""
+        return self._cursor < len(self._expected)
+
     def append_call(self, event: str, **fields: Any) -> None:
         record = {"ts": _now(), "event": event, **fields}
         self._write(record)
@@ -92,6 +104,8 @@ class EventLog:
             self._calls[fields["name"]] = record
         elif event == "call.failed":
             self._failed[fields["name"]] = self._failed.get(fields["name"], 0) + 1
+        elif event == "call.gave_up":
+            self._gave_up[fields["name"]] = record
 
     def emit(self, event: str, **fields: Any) -> None:
         """Record a decision, or on resume check it against the recorded one."""
