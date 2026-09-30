@@ -1,8 +1,7 @@
-"""Deterministic core: no model calls, no I/O except the lineage log."""
+"""Deterministic core: no model calls and no I/O."""
 
 from .categories import CATEGORY_PRESETS, CUSTOM_EMPHASIS, CategoryPreset
 from .fitness import composite_fitness, judge_spread, median_scores, normalize_weights
-from .lineage import LineageLog
 from .models import OPERATORS, Candidate, JudgeScore
 from .roles import crossover_has_distinct_voices, judges_for, pick_crossover_synthesizer, rank_synthesizers
 from .selection import SelectionResult, select_survivors
@@ -17,7 +16,6 @@ __all__ = [
     "EvolutionConfig",
     "EvolutionState",
     "JudgeScore",
-    "LineageLog",
     "SelectionResult",
     "Status",
     "Termination",
