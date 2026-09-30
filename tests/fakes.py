@@ -140,3 +140,36 @@ class FakeGate:
         if candidate_id in self.rewrite_ids and attempt == 0:
             return GateDecision(True, ("The top-ranked item has no specific argument.",))
         return GateDecision(False)
+
+
+class FakeChecker:
+    """A checker with fixed probabilities: `normal` for "a direct answer", `argued` for the top-item question."""
+
+    name = "fake"
+
+    def __init__(self, *, normal=0.9, argued=0.9, model="fake-1", pinned=None, fail=False):
+        self.pinned_version = pinned
+        self.model = model
+        self.normal = normal
+        self.argued = argued
+        self.fail = fail
+        self.asked = []
+
+    async def ask(self, state, questions):
+        from reasonlineage.checks.base import CheckAnswer, CheckerError, CheckResult
+
+        self.asked.append((state, [q.name for q in questions]))
+        if self.fail:
+            raise CheckerError("fake outage")
+        answers = {}
+        for q in questions:
+            if q.name == "answer_type":
+                probs = {"answer": self.normal, "refusal": 0.0, "meta": 0.0, "grader": round(1 - self.normal, 4)}
+            elif q.kind == "noul":
+                probs = {"yes": self.argued, "no": round(1 - self.argued, 4)}
+            elif q.kind == "score":
+                probs = {str(i): (1.0 if i == len(q.levels) - 1 else 0.0) for i in range(len(q.levels))}
+            else:
+                probs = {name: 1.0 / len(q.choices) for name, _ in q.choices}
+            answers[q.name] = CheckAnswer(q.kind, probs)
+        return CheckResult(self.model, answers)
