@@ -78,11 +78,14 @@ def normalize_answer(data: Any, candidates: Sequence[str] | None) -> dict[str, A
         if not isinstance(entry, Mapping) or not isinstance(entry.get("item"), str):
             raise ValueError(f"ranking entry is not an item object: {entry!r}")
         name = " ".join(entry["item"].split())
+        pmids = entry.get("pmids")
+        if pmids is not None and not isinstance(pmids, list):
+            raise ValueError(f"pmids must be a list of PMIDs, got {pmids!r}")
         ranking.append({
             "item": canonical.get(_key(name), name),
             "promisingness": _unit(entry.get("promisingness"), "promisingness"),
             "confidence": _unit(entry.get("confidence"), "confidence"),
-            "pmids": normalize_pmids(entry.get("pmids") or []),
+            "pmids": normalize_pmids(pmids or []),
         })
     return {"answer": data["answer"].strip(), "ranking": ranking}
 

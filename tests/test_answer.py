@@ -89,3 +89,10 @@ def test_render_for_judge_lists_the_ranking_with_pmids():
     assert top_item(data) == "metformin"
     assert ranking_line(data) == "metformin > imatinib"
     assert from_content(to_content(data)) == data
+
+
+@pytest.mark.parametrize("pmids", ["29967351", 29967351, {"pmid": "29967351"}], ids=["string", "number", "object"])
+def test_pmids_that_are_not_a_list_are_rejected(pmids):
+    data = {"answer": "metformin", "ranking": [{**entry("metformin"), "pmids": pmids}]}
+    with pytest.raises(ValueError, match="pmids"):
+        normalize_answer(data, CANDIDATES)
