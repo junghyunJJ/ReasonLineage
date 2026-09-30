@@ -4,6 +4,8 @@ import asyncio
 import json
 from collections import Counter
 
+import pytest
+
 from fakes import events_of, make_runner
 
 QUESTION_WITH_SYMBOLS = 'Which drug for IPF? Budget $5 {x} "quoted" — 한국어 질문'
@@ -91,3 +93,8 @@ def test_judge_axes_and_contexts(tmp_path):
     _, _, models = run(tmp_path / "trace", context="shared_trace", generations=1)
     first = next(r.prompt for r in models["gpt"].seen if "Candidate answer to evaluate" in r.prompt)
     assert "Current population" in first and "not scored yet" in first
+
+
+def test_invalid_run_options_fail_before_any_call(tmp_path):
+    with pytest.raises(ValueError, match="generation_limit"):
+        make_runner(tmp_path, generations=11)

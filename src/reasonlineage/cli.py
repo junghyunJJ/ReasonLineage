@@ -32,7 +32,7 @@ from .engine.errors import ResumeMismatch, RunCorrupted, RunStopped
 from .engine.events import EventLog
 from .engine.header import build_header, cli_versions, engine_commit, experiment_problems, resume_problems
 from .engine.policies import FixedPolicies
-from .engine.runner import Runner
+from .engine.runner import Runner, evolution_config
 from .protocol import ProtocolSpec, load_protocol
 
 REPO = Path(__file__).resolve().parents[2]
@@ -118,12 +118,16 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
     else:
         options = RunOptions(
             mode=args.mode, judges=args.judges, context=args.context,
-            generations=args.generations or protocol.generations,
+            generations=args.generations if args.generations is not None else protocol.generations,
             seed=args.seed if args.seed is not None else random.SystemRandom().randrange(2**31),
             gen0_from=str(args.gen0_from) if args.gen0_from else None,
         )
     checker, why = services.checker(setup, task, protocol, services.env)
     problems = verify_http_members(setup.panel, services.list_models)
+    try:
+        evolution_config(task, options, protocol, len(setup.panel))
+    except ValueError as exc:
+        problems.append(f"run options: {exc}")
     if options.mode == "experiment":
         problems += experiment_problems(setup=setup, options=options, protocol=protocol,
                                         checker_available=checker is not None, policies_fixed=True)

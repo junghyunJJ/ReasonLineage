@@ -134,3 +134,14 @@ def test_diagnose_runs_j2_and_the_pmid_check(tmp_path, capsys):
     assert (run_dir / "diagnostics" / "j2.jsonl").exists()
     summary = json.loads((run_dir / "diagnostics" / "pmid_summary.json").read_text())
     assert summary["citations"] > 0
+
+
+@pytest.mark.parametrize("mode, generations", [("experiment", "0"), ("exploration", "11")])
+def test_bad_generations_stop_before_any_call(tmp_path, capsys, mode, generations):
+    task, setup = write_files(tmp_path)
+    world = World()
+    args = ["run", task, "--config", setup, "--mode", mode, "--generations", generations, "--out", str(tmp_path / "runs")]
+    assert main(args, world.services) == 1
+    assert "generation_limit" in capsys.readouterr().err
+    assert not (tmp_path / "runs").exists()
+    assert all(m.seen == [] for m in world.models.values())

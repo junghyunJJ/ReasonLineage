@@ -54,6 +54,23 @@ async def gather_all(coros: Iterable[Awaitable]) -> list:
         raise
 
 
+def evolution_config(task: Task, options: RunOptions, protocol: ProtocolSpec, n_active: int) -> EvolutionConfig:
+    """The evolution settings for a run; ValueError when the options are out of range."""
+    experiment = options.mode == "experiment"
+    margins = protocol.margins
+    return EvolutionConfig.for_roster(
+        n_active, task.weights,
+        threshold=task.threshold,
+        generation_limit=options.generations,
+        early_stop=not experiment,
+        stagnation_recovery=not experiment,
+        tie_margin=margins["tie"],
+        dominance_margin=margins["dominance"],
+        stagnation_threshold=margins["stagnation"],
+        stagnation_window=margins["stagnation_window"],
+    )
+
+
 def parse_judge(judge: str, data: Any, dims: Sequence[str]) -> JudgeScore:
     """A judge's structured output as a JudgeScore; ValueError when it is unusable."""
     if not isinstance(data, Mapping):
@@ -92,23 +109,10 @@ class Runner:
         self.answers: dict[str, dict[str, Any]] = {}
         self._next_id = 0
         self._synthesizers: list[str] = []
+        # Built now, so out-of-range options fail before any model is called.
+        self.config = evolution_config(task, options, protocol, len(self.names))
 
     # --- setup ---
-
-    def evolution_config(self) -> EvolutionConfig:
-        experiment = self.options.mode == "experiment"
-        margins = self.protocol.margins
-        return EvolutionConfig.for_roster(
-            len(self.names), self.task.weights,
-            threshold=self.task.threshold,
-            generation_limit=self.options.generations,
-            early_stop=not experiment,
-            stagnation_recovery=not experiment,
-            tie_margin=margins["tie"],
-            dominance_margin=margins["dominance"],
-            stagnation_threshold=margins["stagnation"],
-            stagnation_window=margins["stagnation_window"],
-        )
 
     def _new_id(self) -> str:
         self._next_id += 1
@@ -165,7 +169,7 @@ class Runner:
             self._write_or_substitute(0, "write", cid, name, self._seed_prompt(approach)) for cid, name, approach in jobs
         )
         seeds = [self._record_candidate(cid, w, "seed", (), 0) for (cid, _, _), w in zip(jobs, written)]
-        return EvolutionState(self.evolution_config(), seeds)
+        return EvolutionState(self.config, seeds)
 
     async def _offspring(self, state: EvolutionState) -> None:
         gen = state.generation
