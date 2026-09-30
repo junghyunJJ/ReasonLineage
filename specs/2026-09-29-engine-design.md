@@ -13,7 +13,7 @@
 
 **이 문서의 범위 (1단계 엔진)**
 - `run`, `resume`, `diagnose` 명령
-- 패널 호출: CLI 3종(claude, codex, grok)과 로컬 vLLM HTTP
+- 패널 호출: CLI 3종(claude, codex, grok)과 OpenAI 호환 HTTP (Ollama cloud의 GLM)
 - 점검기: J1 관문, J2 진단, jev와 DeepSeek 연결
 - PMID 확인
 - 기록, 이어 돌리기, 프로토콜 버전, 실험·탐색 모드, seed와 replay
@@ -70,7 +70,7 @@
 src/reasonlineage/
   core/        지금 있는 것: categories, fitness, models, roles, selection, state
   backends/    지금 있는 것: claude_cli, codex_cli, grok_cli, roster
-               새로: http.py (vLLM OpenAI 호환)
+               새로: http.py (OpenAI 호환: Ollama cloud, vLLM)
   engine/      새로: runner(단계 진행), events(기록), replay(기록 재사용),
                header(실행 정보·프로토콜 해시), policies, conditions, config
   checks/      새로: 점검기 인터페이스, jev 클라이언트, 로컬 LLM 점검기,
@@ -91,10 +91,13 @@ src/reasonlineage/
 | opus | `claude-opus-5-5` | Anthropic | claude CLI | xhigh |
 | gpt | `gpt-6.1-sol` | OpenAI | codex CLI (0.159.2) | xhigh |
 | grok | `grok-4.7` | xAI | grok CLI | xhigh |
-| qwen | `Qwen/Qwen3.8-Flash-Next-FP8` | Alibaba | vLLM HTTP, `http://esplhpc-cp089:6010/v1` | xhigh |
+| glm | `glm-5.3` | Z.ai | Ollama cloud HTTP, `https://ollama.com/v1` | xhigh |
 
 - 네 모델의 회사가 모두 달라서, 같은 계열끼리 봐주는 효과가 섞이지 않아요.
-- Qwen은 설정값을 안 보내도 xhigh만큼 길게 추론해요. 그래서 `reasoning_effort: "xhigh"`를 항상 명시하고 기록해요. xhigh에서 답 하나에 약 3.5분이 걸려요 (2026-09-29 측정).
+- 2026-09-30에 qwen(로컬 vLLM)을 glm으로 바꿨어요. 로컬 GPU 서버를 정리하기 위해서예요. deepseek 점검기는 로컬 vLLM에 그대로 둬요 (로그확률이 필요해요, 4.2).
+- HTTP 호출은 `reasoning_effort`를 항상 명시하고 기록해요.
+- Ollama cloud는 `response_format`을 무시해요. 그래서 HTTP 백엔드가 스키마를 시스템 메시지 끝에도 붙이고, 답의 마지막 JSON 객체를 출력으로 읽어요. 붙이기 전에는 GLM이 산문 뒤에 JSON을 붙여서 형식 B가 6번 중 1번만 맞았어요 (2026-09-30).
+- Ollama 키는 `api_key_file`(`~/.config/reasonlineage/ollama.env`)을 프로그램이 직접 읽어요. Ollama cloud는 로그확률도 주지 않아요.
 - 같은 계열 조건(5.8)에서만 쓰는 추가 모델: Sonnet 5.5(`claude-sonnet-5-5`), GPT-6 luna(`gpt-6-luna`).
 
 ### 4.2 점검기: 판정만 해요 (패널 밖)
@@ -102,10 +105,11 @@ src/reasonlineage/
 | 이름 | 무엇 | 맡는 곳 |
 |---|---|---|
 | jev | TypeSafe System One, 버전 `jev-1.13.0` 고정 | 공개 데이터 과제(약물 재창출)의 J1·J2 |
-| deepseek | `deepseek-ai/DeepSeek-V4-Flash-0731`, `reasoning_effort: "max"`, vLLM HTTP `http://esplhpc-cp088:6018/v1` | 비공개 데이터 과제(CCI)의 J1·J2, E1 비교 |
+| deepseek | `deepseek-ai/DeepSeek-V4-Flash-0731`, `reasoning_effort: "max"`, vLLM HTTP `http://esplhpc-cp088:6018/v1` | 비공개 데이터 과제의 J1·J2, E1 비교 |
 
 - 과제 파일의 `data_sensitivity`로 점검기를 골라요. `public`이면 jev, `private`이면 deepseek예요.
 - `private` 과제에서는 jev를 절대 부르지 않아요. jev 클라이언트가 스스로 거부하고, 테스트로 확인해요.
+- CCI 과제도 공개 데이터셋을 써서 `public`이에요 (2026-09-30 결정). 그래서 지금은 모든 과제를 jev가 점검하고, deepseek는 E1 비교에 써요.
 - E1에서 deepseek가 jev와 같은 지표로 5%p 이내면 공개 과제도 deepseek로 바꿔요. 지표는 E1 설계에서 정하고, 바꿀 때는 구성 파일의 `checker_for`를 고쳐요.
 - 점검기는 답을 쓰지 않고, 채점하거나 고르지도 않아요. 패널 밖 모델을 쓰는 이유는 두 가지예요. 관문 판정이 다시 쓰기로 이어지니 패널 모델의 취향이 섞이면 안 되고, J2는 측정 도구라 측정 대상과 달라야 해요.
 - jev는 공개 텍스트만 받아요. API 키는 환경 변수나 파일에서 읽고 저장소에 두지 않아요. 응답의 버전이 고정 버전과 다르면 실행을 멈춰요.
@@ -300,11 +304,11 @@ runs/<실행 ID>/
 - 논문 분석은 프로토콜 해시가 같은 실행끼리만 비교해요.
 
 ### 6.5 seed와 replay
-2026-09-29에 확인한 사실:
+확인한 사실:
 
 | 모델 | seed를 주면 같은 답이 나오나 |
 |---|---|
-| Qwen (vLLM) | 예. 같은 seed면 추론까지 같고, seed가 다르면 달라요 |
+| GLM (Ollama cloud) | 아니요. 같은 seed로 두 번 불러도 답이 달랐어요 (2026-09-30) |
 | DeepSeek (vLLM) | 아니요. seed와 온도 0을 줘도 3번 모두 달랐어요 |
 | claude, codex, grok CLI | seed 옵션이 없어요 |
 | jev | seed가 없어요 |
@@ -375,8 +379,8 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
     {"name": "opus", "backend": "claude", "model": "claude-opus-5-5", "effort": "xhigh"},
     {"name": "gpt", "backend": "codex", "model": "gpt-6.1-sol", "effort": "xhigh"},
     {"name": "grok", "backend": "grok", "model": "grok-4.7", "effort": "xhigh"},
-    {"name": "qwen", "backend": "http", "model": "Qwen/Qwen3.8-Flash-Next-FP8", "effort": "xhigh",
-     "base_url": "http://esplhpc-cp089:6010/v1", "family": "alibaba"}
+    {"name": "glm", "backend": "http", "model": "glm-5.3", "effort": "xhigh",
+     "base_url": "https://ollama.com/v1", "family": "zai", "api_key_file": "~/.config/reasonlineage/ollama.env"}
   ],
   "checkers": {
     "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY", "api_key_file": "~/.config/reasonlineage/jev.env"},
@@ -388,6 +392,7 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
 }
 ```
 - `http` 백엔드는 `family`를 꼭 적어요. claude, codex, grok의 회사는 코드에 이미 있어요.
+- 키가 필요한 `http` 백엔드(Ollama cloud)는 `api_key_file`을 적어요. 파일에 키가 없으면 실행 전 점검에서 멈춰요.
 - jev 키는 `api_key_env` 환경 변수가 있으면 그 값을, 없으면 `api_key_file`을 프로그램이 직접 읽어요. 키 파일은 저장소 밖에 두고, Claude Code 설정의 읽기 금지 규칙(`Read(~/.config/reasonlineage/**)`)으로 Claude의 도구가 열지 못하게 해요.
 - 스크립트용 명단 문법(`name=backend:model[:effort]`)은 그대로 둬요.
 
@@ -412,7 +417,7 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
 8. **seed:** 호출별 seed가 실행 seed와 호출 이름만으로 정해지는지, 재시도하면 달라지는지 봐요.
 9. **답 형식과 PMID 판정:** 형식 B 검증(후보 누락·중복, 산문 불일치)을 봐요. PMID 판정은 가짜 PubMed 응답으로 확인해요.
 10. **deepseek 확률 읽기:** 추론 토큰이 섞인 로그확률 목록에서 마지막 선택지 토큰을 읽는지 봐요.
-11. **실제 호출 (`live`):** 백엔드마다 격리를 확인해요. Qwen과 deepseek의 HTTP 호출(스키마 출력, seed)도 확인하고, jev는 크레딧을 산 뒤에 확인해요.
+11. **실제 호출 (`live`):** 백엔드마다 격리를 확인해요. GLM과 deepseek의 HTTP 호출(형식 B 출력, 로그확률)도 확인하고, jev는 크레딧을 산 뒤에 확인해요.
 
 ## 10. 지금 코드에서 바뀌는 것
 
@@ -423,12 +428,11 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
 | `core/lineage.py` | `engine/events`로 옮기면서 호출 단위 사건(`call.completed`, `judge.scored`)을 더해요 |
 | `prompts.py` | `protocol/` 파일로 옮겨서 해시 대상으로 만들어요 |
 | `backends/roster.py` | 스크립트용 명단 문법은 그대로 둬요. `http` 백엔드와 `family` 지정은 구성 파일을 읽는 `engine/config.py`에서 다뤄요 |
-| `backends/http.py` | 새 파일: vLLM OpenAI 호환 호출 (`reasoning_effort` 명시, `response_format` json_schema, seed, logprobs, 도구 없음) |
+| `backends/http.py` | 새 파일: OpenAI 호환 호출 (`reasoning_effort` 명시, `response_format` json_schema와 시스템 메시지의 스키마, 마지막 JSON 객체 읽기, seed, logprobs, 도구 없음) |
 | `calibration.py` | 엔진에서는 쓰지 않아요. 논문 분석용으로 남겨요 |
 | `scripts/*` | 명단을 Sonnet 5.5와 GPT-6.1 sol로 바꾼 수정이 아직 커밋되지 않았어요 |
 
 ## 11. 이 문서 밖에서 정할 것
-- **CCI 과제의 결과 요약을 클라우드 패널(claude, codex, grok CLI)에 보내도 되는지:** CCI 실험 전에 정해요. 점검기는 이미 로컬(deepseek)로 정했어요.
 - **J1 판정 기준값과 관문을 켤지:** E1 결과로 정해요. 그 전까지는 기록만 해요.
 - **deepseek의 0/1 확률을 jev와 비교하는 방법:** E1을 설계할 때 정해요.
 - **`same_family` 조건에 쓸 패널 구성:** 실험 계획에서 정해요.

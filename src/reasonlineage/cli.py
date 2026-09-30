@@ -26,7 +26,7 @@ from .engine.calls import CallRecorder, ReplaySource, gen0_writing
 from .engine.conditions import CONTEXT_AXIS, JUDGE_AXIS, check_conditions
 from .engine.config import (
     ConfigError, Member, RunOptions, Setup, Task, build_backend, http_model_lister, load_setup, load_task,
-    setup_from_dict, task_from_dict, verify_http_members,
+    read_key_file, setup_from_dict, task_from_dict, verify_http_members,
 )
 from .engine.errors import ResumeMismatch, RunCorrupted, RunStopped
 from .engine.events import EventLog
@@ -36,16 +36,6 @@ from .engine.runner import Runner, evolution_config
 from .protocol import ProtocolSpec, load_protocol
 
 REPO = Path(__file__).resolve().parents[2]
-
-
-def read_key_file(path: str | None) -> str | None:
-    """The key stored in `path`, without surrounding whitespace; None when there is no readable file."""
-    if not path:
-        return None
-    try:
-        return Path(path).expanduser().read_text(encoding="utf-8").strip() or None
-    except OSError:
-        return None
 
 
 def build_checker(setup: Setup, task: Task, protocol: ProtocolSpec, env: Mapping[str, str]) -> tuple[Checker | None, str | None]:

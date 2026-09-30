@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -7,6 +8,7 @@ from reasonlineage.engine.config import (
     ConfigError,
     Member,
     build_backend,
+    http_model_lister,
     load_setup,
     load_task,
     setup_from_dict,
@@ -26,9 +28,10 @@ def test_main_config_holds_the_final_panel_and_checkers():
     setup = load_setup(REPO / "configs" / "main.json")
     assert [(m.name, m.model, m.effort) for m in setup.panel] == [
         ("opus", "claude-opus-5-5", "xhigh"), ("gpt", "gpt-6.1-sol", "xhigh"),
-        ("grok", "grok-4.7", "xhigh"), ("qwen", "Qwen/Qwen3.8-Flash-Next-FP8", "xhigh"),
+        ("grok", "grok-4.7", "xhigh"), ("glm", "glm-5.3", "xhigh"),
     ]
-    assert [m.family_name for m in setup.panel] == ["anthropic", "openai", "xai", "alibaba"]
+    assert [m.family_name for m in setup.panel] == ["anthropic", "openai", "xai", "zai"]
+    assert setup.panel[3].api_key_file == "~/.config/reasonlineage/ollama.env"
     assert setup.jev.version == "jev-1.13.0"
     assert setup.jev.api_key_file == "~/.config/reasonlineage/jev.env"
     assert setup.local_checkers["deepseek"].effort == "max"
@@ -83,3 +86,12 @@ def test_build_backend_turns_off_backend_retries():
     http = build_backend(Member("qwen", "http", "m", None, "http://x/v1", "alibaba"), 3)
     assert isinstance(claude, ClaudeCLIBackend) and claude.retries == 0
     assert isinstance(http, HttpBackend) and http.retries == 0 and http.base_url == "http://x/v1"
+
+
+def test_http_member_key_comes_from_its_file(tmp_path):
+    key_file = tmp_path / "ollama.env"
+    key_file.write_text("key-from-file\n")
+    glm = Member("glm", "http", "glm-5.3", "xhigh", "https://ollama.com/v1", "zai", str(key_file))
+    assert build_backend(glm, 3).api_key == "key-from-file"
+    missing = replace(glm, api_key_file=str(tmp_path / "none.env"))
+    assert verify_http_members([missing], http_model_lister) == [f"glm: no API key in {tmp_path / 'none.env'}"]

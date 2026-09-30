@@ -1,6 +1,7 @@
 """HttpBackend against a local fake server (no network, no GPU)."""
 
 import asyncio
+import json
 
 import pytest
 
@@ -32,7 +33,10 @@ def request(**overrides):
 def test_body_is_isolated_and_explicit():
     body = HttpBackend("qwen", "http://x/v1").build_body(request(effort="xhigh", seed=7, max_tokens=64000, json_schema=SCHEMA))
     assert "tools" not in body and "tool_choice" not in body
-    assert body["messages"] == [{"role": "system", "content": "You are a strict evaluator."}, {"role": "user", "content": "hello"}]
+    system, user = body["messages"]
+    assert system["role"] == "system" and user == {"role": "user", "content": "hello"}
+    assert system["content"] == ("You are a strict evaluator.\n\nReply with only a JSON object that matches this JSON schema, "
+                                 "and no other text:\n" + json.dumps(SCHEMA))
     assert body["reasoning_effort"] == "xhigh"
     assert body["seed"] == 7 and body["max_tokens"] == 64000
     assert body["response_format"]["json_schema"] == {"name": "output", "schema": SCHEMA, "strict": True}
@@ -42,6 +46,7 @@ def test_body_is_isolated_and_explicit():
 def test_logprobs_are_requested_only_when_asked():
     body = HttpBackend("deepseek", "http://x/v1").build_body(request(top_logprobs=10))
     assert body["logprobs"] is True and body["top_logprobs"] == 10
+    assert body["messages"][0] == {"role": "system", "content": "You are a strict evaluator."}
 
 
 def test_round_trip_parses_structured_output(server):
@@ -60,6 +65,16 @@ def test_think_block_and_code_fence_are_removed(server):
     response = asyncio.run(HttpBackend("qwen", server.url).complete(request(json_schema=SCHEMA)))
     assert response.data == {"score": 0.4}
     assert clean_content("plain") == "plain"
+
+
+def test_the_last_json_object_after_prose_is_the_output(server):
+    server.reply = chat_reply('Prose that mentions {"score": 0.1} in passing.\n\nFinal:\n{"score": 0.6}')
+    response = asyncio.run(HttpBackend("glm", server.url, api_key="k").complete(request(json_schema=SCHEMA)))
+    assert response.data == {"score": 0.6}
+    assert server.headers[0]["Authorization"] == "Bearer k"
+    server.reply = chat_reply("Prose only, no JSON.")
+    with pytest.raises(BackendError, match="no structured output"):
+        asyncio.run(HttpBackend("glm", server.url).complete(request(json_schema=SCHEMA)))
 
 
 def test_http_error_and_truncation_raise(server):
