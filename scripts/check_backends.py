@@ -1,6 +1,6 @@
 """Live roster check: one isolated scoring call per backend/model, reporting context size and latency.
 
-    python scripts/check_backends.py claude:claude-opus-5-5:xhigh codex:gpt-6-astra:xhigh grok:grok-4.7:xhigh
+    python scripts/check_backends.py claude:claude-opus-5-5:xhigh codex:gpt-6.1-sol:xhigh grok:grok-4.7:xhigh
 
 Input tokens are the isolation signal: a call that loaded user instructions,
 skills, or tool schemas shows a much larger context than the prompt needs.

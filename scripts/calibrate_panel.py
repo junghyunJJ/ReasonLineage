@@ -1,8 +1,8 @@
 """Author x judge calibration: every roster judge scores every candidate (its own included) in isolated calls.
 
     python scripts/calibrate_panel.py --candidates runs/calibration/candidates-XXXX.json --repeats 2 \
-        opus=claude:claude-opus-5-5:xhigh sonnet=claude:claude-sonnet-5:xhigh \
-        gpt=codex:gpt-6-sol:xhigh grok=grok:grok-4.7:xhigh
+        opus=claude:claude-opus-5-5:xhigh sonnet=claude:claude-sonnet-5-5:xhigh \
+        gpt=codex:gpt-6.1-sol:xhigh grok=grok:grok-4.7:xhigh
 
 Outputs runs/calibration/panel-<timestamp>/raw.jsonl and summary.json. The summary reports
 leniency, self- and family preference (raw and after per-judge z-scoring), within-judge
