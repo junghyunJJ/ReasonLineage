@@ -124,3 +124,19 @@ def decisions(run_dir) -> list[dict]:
 
 def events_of(run_dir, kind) -> list[dict]:
     return [r for r in read_events(Path(run_dir) / "events.jsonl") if r["event"] == kind]
+
+
+class FakeGate:
+    """A J1 gate that asks for one rewrite of the listed candidates."""
+
+    def __init__(self, rewrite_ids=()):
+        self.rewrite_ids = set(rewrite_ids)
+        self.calls = []
+
+    async def __call__(self, candidate_id, generation, author, answer, attempt):
+        from reasonlineage.engine.gating import GateDecision
+
+        self.calls.append((candidate_id, attempt))
+        if candidate_id in self.rewrite_ids and attempt == 0:
+            return GateDecision(True, ("The top-ranked item has no specific argument.",))
+        return GateDecision(False)

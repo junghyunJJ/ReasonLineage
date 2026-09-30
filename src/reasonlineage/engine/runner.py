@@ -37,6 +37,11 @@ class Written:
     anomalies: list[dict[str, Any]] = field(default_factory=list)
 
 
+@dataclass(frozen=True)
+class JudgeFailure:
+    detail: str
+
+
 async def gather_all(coros: Iterable[Awaitable]) -> list:
     """Like asyncio.gather, but cancels the other calls as soon as one raises."""
     tasks = [asyncio.ensure_future(c) for c in coros]
@@ -165,11 +170,14 @@ class Runner:
     async def _offspring(self, state: EvolutionState) -> None:
         gen = state.generation
         survivors = list(state.population)
-        parent = self.policies.mutation_parent(survivors)
+        jobs = []  # (candidate id, role, operator, author, prompt, parent ids, authors to avoid)
+        if state.recovery_due:
+            author = self.policies.recovery_author(survivors, self.names)
+            jobs.append((self._new_id(), "recover", "recovery", author, self._recovery_prompt(survivors), (), ()))
+        else:
+            parent = self.policies.mutation_parent(survivors)
+            jobs.append((self._new_id(), "mutate", "mutation", parent.author, self._mutate_prompt(parent), (parent.id,), ()))
         plan = self.policies.crossover_plan(survivors, self.names, self._synthesizers)
-        jobs = [  # (candidate id, role, operator, author, prompt, parent ids, authors to avoid)
-            (self._new_id(), "mutate", "mutation", parent.author, self._mutate_prompt(parent), (parent.id,), ()),
-        ]
         cross_id = self._new_id()
         jobs.append((cross_id, "cross", "crossover", plan.synthesizer, self._crossover_prompt(plan.parents),
                      tuple(p.id for p in plan.parents), tuple(p.author for p in plan.parents)))
@@ -201,18 +209,57 @@ class Runner:
         try:
             return await self._write(gen, role, cid, author, prompt)
         except (BackendError, WritingFailed) as exc:
-            raise RunStopped(f"{role} {cid} by {author} failed: {exc}") from exc
+            if self.options.mode == "experiment":
+                raise RunStopped(f"{role} {cid} by {author} failed: {exc}") from exc
+            first_error = f"{author}: {exc}"
+        for substitute in self._substitutes(author, avoid):
+            try:
+                written = await self._write(gen, role, cid, substitute, prompt)
+            except (BackendError, WritingFailed):
+                continue
+            written.anomalies.insert(0, {"kind": "writing_failed", "candidate": cid, "detail": first_error,
+                                         "action": f"substituted {substitute}"})
+            return written
+        raise RunStopped(f"{role} {cid}: every model failed ({first_error})")
+
+    def _substitutes(self, author: str, avoid: Sequence[str]) -> list[str]:
+        start = self.names.index(author)
+        order = self.names[start + 1:] + self.names[:start]
+        return [name for name in order if name not in avoid]
 
     async def _write(self, gen: int, role: str, cid: str, author: str, prompt: str) -> Written:
         name = f"g{gen}/{role}/{cid}/{author}"
         data = await self._author_call(name, author, prompt)
+        versions, anomalies = [name], []
         issues = fmt.validate_answer(data, self.task.candidates)
-        if issues.hard:
-            raise WritingFailed(" ".join(issues.hard))
-        anomalies = []
-        if issues.soft:
-            anomalies.append({"kind": "prose_mention", "candidate": cid, "detail": list(issues.soft), "action": "proceed"})
-        return Written(author, data, [name], anomalies)
+        if issues.hard or issues.soft:
+            fix = f"g{gen}/realign/{cid}/{author}"
+            data = await self._author_call(fix, author, self.protocol.render(
+                "realign", question=self.task.question, answer=fmt.render_for_judge(data), issues=issues.describe()))
+            versions.append(fix)
+            issues = fmt.validate_answer(data, self.task.candidates)
+            if issues.hard:
+                raise WritingFailed("still invalid after realigning: " + " ".join(issues.hard))
+            if issues.soft:
+                anomalies.append({"kind": "prose_mention", "candidate": cid, "detail": list(issues.soft), "action": "proceed"})
+        if self.gate is not None:
+            decision = await self.gate(cid, gen, author, data, 0)
+            if decision.rewrite:
+                again = f"g{gen}/rewrite/{cid}/{author}"
+                rewritten = await self._author_call(again, author, self.protocol.render(
+                    "rewrite", question=self.task.question, answer=fmt.render_for_judge(data),
+                    reasons="\n".join(f"- {r}" for r in decision.reasons)))
+                versions.append(again)
+                issues = fmt.validate_answer(rewritten, self.task.candidates)
+                if issues.hard:
+                    anomalies.append({"kind": "rewrite_invalid", "candidate": cid, "detail": list(issues.hard),
+                                      "action": "kept the answer from before the rewrite"})
+                else:
+                    data = rewritten
+                    if issues.soft:
+                        anomalies.append({"kind": "prose_mention", "candidate": cid, "detail": list(issues.soft), "action": "proceed"})
+                    await self.gate(cid, gen, author, data, 1)
+        return Written(author, data, versions, anomalies)
 
     def _author_request(self, author: str, prompt: str) -> ModelRequest:
         member = self.members[author]
@@ -254,6 +301,10 @@ class Runner:
         ]
         return self.protocol.render("crossover", question=self.task.question, parents="\n\n".join(blocks))
 
+    def _recovery_prompt(self, survivors: Sequence[Candidate]) -> str:
+        lines = [f"- fitness {c.fitness:.2f}; ranking: {fmt.ranking_line(self.answers[c.id])}" for c in survivors]
+        return self.protocol.render("recovery", question=self.task.question, population="\n".join(lines))
+
     # --- judging ---
 
     def _trace(self, state: EvolutionState) -> str:
@@ -268,16 +319,22 @@ class Runner:
         outcomes = await gather_all(self._judge(state.generation, c, judge, trace) for c, judge in jobs)
         panels: dict[str, list[JudgeScore]] = {c.id: [] for c in pending}
         for (candidate, judge), outcome in zip(jobs, outcomes):
+            if isinstance(outcome, JudgeFailure):
+                self.events.emit("anomaly", kind="judge_failed", candidate=candidate.id,
+                                 detail=f"{judge}: {outcome.detail}", action="scored without this judge")
+                continue
             panels[candidate.id].append(outcome)
             self.events.emit("judge.scored", candidate=candidate.id, judge=judge, author=candidate.author,
                              generation=state.generation, judges_axis=self.options.judges, context=self.options.context,
                              scores=dict(outcome.scores), critique=list(outcome.critique))
         for candidate in pending:
+            if not panels[candidate.id]:
+                raise RunStopped(f"no judge could score {candidate.id}")
             scored = state.record_score(candidate.id, panels[candidate.id])
             self.events.emit("candidate.scored", candidate=candidate.id, judges=[s.judge for s in panels[candidate.id]],
                              scores=scored.scores, fitness=scored.fitness)
 
-    async def _judge(self, gen: int, candidate: Candidate, judge: str, trace: str) -> JudgeScore:
+    async def _judge(self, gen: int, candidate: Candidate, judge: str, trace: str) -> JudgeScore | JudgeFailure:
         member = self.members[judge]
         context = judge_context(self.options.context, author_model=self.members[candidate.author].model, trace=trace)
         request = ModelRequest(
@@ -291,4 +348,6 @@ class Runner:
             response = await self.recorder.call(f"g{gen}/judge/{candidate.id}/{judge}", judge, self.backends[judge], request)
             return parse_judge(judge, response.data, self.dims)
         except (BackendError, ValueError) as exc:
-            raise RunStopped(f"judge {judge} on {candidate.id} failed: {exc}") from exc
+            if self.options.mode == "experiment":
+                raise RunStopped(f"judge {judge} on {candidate.id} failed: {exc}") from exc
+            return JudgeFailure(str(exc))
