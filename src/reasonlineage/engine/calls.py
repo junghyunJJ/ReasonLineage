@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ..backends.base import BackendError, ModelBackend, ModelRequest, ModelResponse
-from .errors import RunCorrupted
+from .errors import RunCorrupted, RunStopped
 from .events import EventLog, read_events
 
 
@@ -81,10 +81,15 @@ def _unusable(check: Callable[[ModelResponse], Any] | None, response: ModelRespo
 
 class ReplaySource:
     """Answers recorded by another run, offered by cache key. When both runs use the same call
-    name the matching call is used; otherwise identical requests are matched in order."""
+    name the matching call is used; otherwise identical requests are matched in order.
 
-    def __init__(self, run_dir: str | Path, keep: Callable[[str], bool] | None = None) -> None:
+    With `required`, every call that `keep` selects must come from this source (--gen0-from):
+    a missing one stops the run instead of calling the model."""
+
+    def __init__(self, run_dir: str | Path, keep: Callable[[str], bool] | None = None, required: bool = False) -> None:
         self.run_dir = Path(run_dir)
+        self.keep = keep
+        self.required = required
         self._names: dict[str, list[str]] = {}
         for record in read_events(self.run_dir / "events.jsonl"):
             if record["event"] == "call.completed" and (keep is None or keep(record["name"])):
@@ -102,6 +107,9 @@ class ReplaySource:
     def mark_used(self, key: str, name: str) -> None:
         if name in self._names.get(key, []):
             self._used.add(name)
+
+    def requires(self, name: str) -> bool:
+        return self.required and (self.keep is None or self.keep(name))
 
 
 class CallRecorder:
@@ -131,6 +139,9 @@ class CallRecorder:
             if stored is not None:
                 response = ModelResponse(**stored["response"])
                 return self._save(name, member, request, key, response, stored["request"].get("seed"), replayed=True)
+            if self.replay.requires(name):
+                raise RunStopped(f"{name} must come from {self.replay.run_dir}, which has no matching answer; "
+                                 "generation 0 is shared only between runs of the same task, protocol, and panel")
         errors = []
         first = self.events.failed_attempts(name)  # after a resume, the attempts go on with new seeds
         for attempt in range(first, first + self.attempts):

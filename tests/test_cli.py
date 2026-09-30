@@ -169,3 +169,39 @@ def test_resume_checks_the_checker_server_too(tmp_path, capsys):
     assert main(["resume", str(run_dir)], world.services) == 1
     assert "deepseek" in capsys.readouterr().err
     assert all(m.seen == [] for m in world.models.values())
+
+
+def test_gen0_from_a_missing_run_stops_before_any_call(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    world = World()
+    args = ["run", task, "--config", setup, "--gen0-from", str(tmp_path / "no-such-run"), "--out", str(tmp_path / "runs")]
+    assert main(args, world.services) == 1
+    assert "no-such-run" in capsys.readouterr().err
+    assert not (tmp_path / "runs").exists()
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_gen0_from_a_run_of_another_task_is_refused(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    main(["run", task, "--config", setup, "--generations", "1", "--out", str(tmp_path / "runs")], World().services)
+    (source,) = run_dirs(tmp_path)
+    other = json.loads((tmp_path / "task.json").read_text()) | {"question": "Which drug for a different disease?"}
+    (tmp_path / "other.json").write_text(json.dumps(other))
+    world = World()
+    args = ["run", str(tmp_path / "other.json"), "--config", setup, "--gen0-from", str(source), "--out", str(tmp_path / "runs")]
+    assert main(args, world.services) == 1
+    assert "different task" in capsys.readouterr().err
+    assert run_dirs(tmp_path) == [source]
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_gen0_from_shares_generation_0_through_the_command_line(tmp_path):
+    task, setup = write_files(tmp_path)
+    main(["run", task, "--config", setup, "--generations", "1", "--out", str(tmp_path / "runs")], World().services)
+    (source,) = run_dirs(tmp_path)
+    args = ["run", task, "--config", setup, "--judges", "all", "--generations", "1", "--gen0-from", str(source),
+            "--out", str(tmp_path / "runs")]
+    assert main(args, World().services) == 0
+    (second,) = [p for p in run_dirs(tmp_path) if p != source]
+    writes = [r for r in read_events(second / "events.jsonl") if r["event"] == "call.completed" and r["name"].startswith("g0/write/")]
+    assert len(writes) == 4 and all(r["replayed"] for r in writes)

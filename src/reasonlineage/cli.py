@@ -103,6 +103,17 @@ def _read_header(run_dir: Path) -> dict[str, Any]:
         raise ConfigError(f"{run_dir} has no readable header.json: {exc}") from None
 
 
+def gen0_source_problems(source: Path, task: Task, protocol: ProtocolSpec) -> list[str]:
+    """Why generation 0 of the run in `source` cannot be shared with a run of this task and protocol."""
+    header = _read_header(source)
+    problems = []
+    if task_from_dict(header["task"]) != task:
+        problems.append(f"--gen0-from: {source} ran a different task")
+    if header["protocol"]["hash"] != protocol.hash:
+        problems.append(f"--gen0-from: {source} used different protocol files (the hash differs)")
+    return problems
+
+
 def _new_run_dir(out: Path, task_id: str) -> Path:
     base = out / f"{datetime.now():%Y%m%d-%H%M%S}-{task_id}"
     run_dir, n = base, 1
@@ -130,6 +141,8 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
         )
     checker, why = services.checker(setup, task, protocol, services.env)
     problems = verify_http_members(servers(setup, task), services.list_models)
+    if options.gen0_from:
+        problems += gen0_source_problems(Path(options.gen0_from), task, protocol)
     try:
         evolution_config(task, options, protocol, len(setup.panel))
     except ValueError as exc:
@@ -189,7 +202,7 @@ def _execute(run_dir: Path, header: Mapping[str, Any], task: Task, setup: Setup,
     if options.replay_from:
         replay = ReplaySource(options.replay_from)
     elif options.gen0_from:
-        replay = ReplaySource(options.gen0_from, keep=gen0_writing)
+        replay = ReplaySource(options.gen0_from, keep=gen0_writing, required=True)
     else:
         replay = None
     recorder = CallRecorder(run_dir, events, options.seed, replay=replay)

@@ -9,7 +9,7 @@ import pytest
 
 from fakes import Clock, Crash, FakeModel, decisions, events_of, make_runner
 from reasonlineage.engine.calls import ReplaySource, call_file, gen0_writing
-from reasonlineage.engine.errors import ResumeMismatch
+from reasonlineage.engine.errors import ResumeMismatch, RunStopped
 from reasonlineage.protocol import ROOT, load_protocol
 
 NAMES = ("opus", "gpt", "grok", "qwen")
@@ -82,3 +82,11 @@ def test_gen0_from_shares_generation_zero_only(tmp_path):
     assert seeds_a == seeds_b
     calls = events_of(tmp_path / "b", "call.completed")
     assert all(c["replayed"] == c["name"].startswith("g0/write/") for c in calls)
+
+
+def test_generation_0_missing_from_the_gen0_source_stops_the_run_without_calling_a_model(tmp_path):
+    source = ReplaySource(tmp_path / "missing", keep=gen0_writing, required=True)
+    runner, models = make_runner(tmp_path, replay=source)
+    with pytest.raises(RunStopped, match="g0/write/c00"):
+        asyncio.run(runner.run())
+    assert all(m.seen == [] for m in models.values())
