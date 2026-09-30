@@ -21,6 +21,16 @@ class ConfigError(ValueError):
     """A task, setup, or option is invalid. The message says what to fix."""
 
 
+def read_key_file(path: str | None) -> str | None:
+    """The key stored in `path`, without surrounding whitespace; None when there is no readable file."""
+    if not path:
+        return None
+    try:
+        return Path(path).expanduser().read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
+
+
 def _read_json(path: str | Path) -> Any:
     try:
         return json.loads(Path(path).read_text(encoding="utf-8"))
@@ -97,6 +107,8 @@ class Member:
     effort: str | None = None
     base_url: str | None = None
     family: str | None = None
+    # An http member's key file, outside the repo (Ollama cloud); local vLLM servers need none.
+    api_key_file: str | None = None
 
     @property
     def family_name(self) -> str:
@@ -121,7 +133,7 @@ def member_from_dict(raw: Mapping[str, Any], where: str) -> Member:
             problems.append("an http member needs 'family' (the company that made the model)")
     if problems:
         raise ConfigError(f"{where}: " + "; ".join(problems))
-    return Member(raw["name"], backend, raw["model"], raw.get("effort"), raw.get("base_url"), raw.get("family"))
+    return Member(raw["name"], backend, raw["model"], raw.get("effort"), raw.get("base_url"), raw.get("family"), raw.get("api_key_file"))
 
 
 @dataclass(frozen=True)
@@ -203,6 +215,16 @@ class RunOptions:
         return asdict(self)
 
 
+def member_api_key(member: Member) -> str:
+    """The key for an http member: read from its key file, or a placeholder when it has none."""
+    if not member.api_key_file:
+        return "EMPTY"
+    key = read_key_file(member.api_key_file)
+    if not key:
+        raise BackendError(f"no API key in {member.api_key_file}")
+    return key
+
+
 def build_backend(member: Member, concurrency: int) -> ModelBackend:
     """The backend for a panel member. Retries stay at 0: CallRecorder retries once itself."""
     if member.backend == "claude":
@@ -211,15 +233,16 @@ def build_backend(member: Member, concurrency: int) -> ModelBackend:
         return CodexCLIBackend(name=member.name, max_concurrency=concurrency, retries=0)
     if member.backend == "grok":
         return GrokCLIBackend(name=member.name, max_concurrency=concurrency, retries=0)
-    return HttpBackend(name=member.name, base_url=member.base_url, max_concurrency=concurrency, retries=0)
+    return HttpBackend(name=member.name, base_url=member.base_url, max_concurrency=concurrency, retries=0,
+                       api_key=member_api_key(member))
 
 
 def http_model_lister(member: Member) -> list[str]:
-    return HttpBackend(member.name, member.base_url).served_models()
+    return HttpBackend(member.name, member.base_url, api_key=member_api_key(member)).served_models()
 
 
 def verify_http_members(members: Sequence[Member], list_models: Callable[[Member], list[str]]) -> list[str]:
-    """Problems with local model servers: unreachable, or not serving the configured model."""
+    """Problems with model servers: no key, unreachable, or not serving the configured model."""
     problems = []
     for member in members:
         if member.backend != "http":

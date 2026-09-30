@@ -3,8 +3,8 @@
     {"name": "opus", "backend": "claude", "model": "claude-opus-5-5", "effort": "xhigh"},
     {"name": "gpt", "backend": "codex", "model": "gpt-6.1-sol", "effort": "xhigh"},
     {"name": "grok", "backend": "grok", "model": "grok-4.7", "effort": "xhigh"},
-    {"name": "qwen", "backend": "http", "model": "Qwen/Qwen3.8-Flash-Next-FP8", "effort": "xhigh",
-     "base_url": "http://esplhpc-cp089:6010/v1", "family": "alibaba"}
+    {"name": "glm", "backend": "http", "model": "glm-5.3", "effort": "xhigh",
+     "base_url": "https://ollama.com/v1", "family": "zai", "api_key_file": "~/.config/reasonlineage/ollama.env"}
   ],
   "checkers": {
     "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY", "api_key_file": "~/.config/reasonlineage/jev.env"},

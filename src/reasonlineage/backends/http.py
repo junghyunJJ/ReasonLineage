@@ -1,8 +1,10 @@
-"""Models served by vLLM's OpenAI-compatible API (the local Qwen and DeepSeek).
+"""Models behind an OpenAI-compatible API: the local DeepSeek on vLLM, and GLM on Ollama cloud.
 
 Isolation comes from the request itself: one system message, one user message, and no
-`tools`. `reasoning_effort` is sent whenever it is set, because Qwen reasons at full length
-when it is left out (2026-09-29). A JSON schema goes through `response_format` in strict mode.
+`tools`. `reasoning_effort` is sent whenever it is set, because Qwen reasoned at full length
+when it was left out (2026-09-29). A JSON schema goes through `response_format` in strict mode,
+and also at the end of the system message: Ollama cloud ignores `response_format`, and GLM then
+wrote prose with the JSON at the end (2026-09-30). The reply's last JSON object is the output.
 """
 
 import asyncio
@@ -27,6 +29,22 @@ def clean_content(text: str) -> str:
     return fenced.group(1) if fenced else text
 
 
+def last_json_object(text: str) -> dict[str, Any] | None:
+    """The last top-level JSON object in the text, or None when there is none."""
+    decoder = json.JSONDecoder()
+    found, start = None, text.find("{")
+    while start != -1:
+        try:
+            value, end = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            start = text.find("{", start + 1)
+            continue
+        if isinstance(value, dict):
+            found = value
+        start = text.find("{", end)
+    return found
+
+
 class HttpBackend:
     def __init__(self, name: str, base_url: str, max_concurrency: int = 2, retries: int = 0, api_key: str = "EMPTY") -> None:
         self.name = name
@@ -36,10 +54,13 @@ class HttpBackend:
         self._semaphore = asyncio.Semaphore(max_concurrency)
 
     def build_body(self, request: ModelRequest) -> dict[str, Any]:
+        system = request.system
+        if request.json_schema is not None:
+            system += "\n\nReply with only a JSON object that matches this JSON schema, and no other text:\n" + json.dumps(request.json_schema)
         body: dict[str, Any] = {
             "model": request.model,
             "messages": [
-                {"role": "system", "content": request.system},
+                {"role": "system", "content": system},
                 {"role": "user", "content": request.prompt},
             ],
         }
@@ -101,7 +122,7 @@ class HttpBackend:
         if choice.get("finish_reason") == "length":
             raise BackendError("output was cut off at max_tokens")
         text = clean_content(message.get("content") or "")
-        data = structured_data(request, None, text)
+        data = structured_data(request, last_json_object(text) if request.json_schema is not None else None, text)
         raw = {
             "usage": payload.get("usage") or {},
             "reasoning": message.get("reasoning") or message.get("reasoning_content"),
