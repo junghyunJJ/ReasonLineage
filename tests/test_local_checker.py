@@ -76,3 +76,24 @@ def test_ask_maps_letters_back_to_option_names():
 def test_backend_failures_become_checker_errors():
     with pytest.raises(CheckerError, match="down"):
         asyncio.run(LocalLLMChecker(Stub(fail=True), "m", "max").ask("state", QUESTIONS))
+
+
+class Fixed:
+    """Returns the same log-probability list for every question."""
+
+    def __init__(self, logprobs):
+        self.logprobs = logprobs
+
+    async def complete(self, request):
+        return ModelResponse("deepseek", request.model, "x", None, 0.1, None, "", {"logprobs": self.logprobs})
+
+
+@pytest.mark.parametrize("logprobs", [
+    [{"token": "yes"}],
+    [{"token": "yes", "logprob": None}],
+    [{"token": "yes", "logprob": float("-inf")}],
+], ids=["no-logprob", "null-logprob", "zero-probability"])
+def test_unreadable_log_probabilities_are_checker_errors(logprobs):
+    noul = [q for q in QUESTIONS if q.kind == "noul"]
+    with pytest.raises(CheckerError):
+        asyncio.run(LocalLLMChecker(Fixed(logprobs), "m", "max").ask("state", noul))

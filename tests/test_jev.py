@@ -6,7 +6,7 @@ import pytest
 
 from fake_http import FakeServer
 from reasonlineage.checks.base import CheckerError
-from reasonlineage.checks.jev import JevChecker
+from reasonlineage.checks.jev import JevChecker, parse_jev
 from reasonlineage.checks.questions import j1_questions
 from reasonlineage.protocol import load_protocol
 
@@ -53,3 +53,13 @@ def test_errors_become_checker_errors(server):
     server.reply = {"status": 200, "body": {"model": "jev-1.13.0", "answers": {}}}
     with pytest.raises(CheckerError, match="no answer"):
         asyncio.run(JevChecker("k", "jev-1.13.0", data_sensitivity="public", base_url=server.url).ask("s", QUESTIONS))
+
+
+@pytest.mark.parametrize("answers", [
+    [],
+    {**REPLY["answers"], "answer_type": {"type": "choice", "choice": "answer"}},
+    {**REPLY["answers"], "top_item_argument": {"type": "noul", "noul": "high"}},
+], ids=["answers-not-an-object", "no-probabilities", "not-a-number"])
+def test_a_malformed_reply_is_a_checker_error(answers):
+    with pytest.raises(CheckerError, match="unexpected jev"):
+        parse_jev({"model": "jev-1.13.0", "answers": answers}, QUESTIONS)

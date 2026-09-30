@@ -54,16 +54,16 @@ class JevChecker:
 def parse_jev(payload: Mapping[str, Any], questions: Sequence[Question]) -> CheckResult:
     try:
         model, raw_answers = payload["model"], payload["answers"]
-    except (KeyError, TypeError):
+        answers = {}
+        for question in questions:
+            raw = raw_answers.get(question.name)
+            if raw is None:
+                raise CheckerError(f"jev gave no answer for {question.name}")
+            if question.kind == "noul":
+                yes = float(raw["noul"])
+                answers[question.name] = CheckAnswer("noul", {"yes": yes, "no": round(1 - yes, 4)})
+            else:
+                answers[question.name] = CheckAnswer(question.kind, {str(k): float(v) for k, v in raw["probabilities"].items()})
+    except (KeyError, TypeError, ValueError, AttributeError):
         raise CheckerError(f"unexpected jev response: {str(payload)[:300]}") from None
-    answers = {}
-    for question in questions:
-        raw = raw_answers.get(question.name)
-        if raw is None:
-            raise CheckerError(f"jev gave no answer for {question.name}")
-        if question.kind == "noul":
-            yes = float(raw["noul"])
-            answers[question.name] = CheckAnswer("noul", {"yes": yes, "no": round(1 - yes, 4)})
-        else:
-            answers[question.name] = CheckAnswer(question.kind, {str(k): float(v) for k, v in raw["probabilities"].items()})
     return CheckResult(model=model, answers=answers)

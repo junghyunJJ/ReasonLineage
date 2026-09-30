@@ -57,6 +57,8 @@ def read_probabilities(tokens: Sequence[dict[str, Any]], options: Sequence[str])
             if key in wanted:
                 totals[wanted[key]] += math.exp(alt["logprob"])
         mass = sum(totals.values())
+        if mass <= 0:
+            raise CheckerError(f"the answer token {entry['token']!r} has zero probability")
         return {option: value / mass for option, value in totals.items()}
     raise CheckerError(f"no answer token among {list(options)} in the output")
 
@@ -82,7 +84,10 @@ class LocalLLMChecker:
             except BackendError as exc:
                 raise CheckerError(str(exc)) from None
             options = options_for(question)
-            probabilities = read_probabilities(response.raw.get("logprobs") or [], options)
+            try:
+                probabilities = read_probabilities(response.raw.get("logprobs") or [], options)
+            except (KeyError, TypeError, ValueError, AttributeError) as exc:
+                raise CheckerError(f"unreadable log-probabilities for {question.name}: {exc!r}") from None
             if question.kind == "choice":
                 probabilities = {name: probabilities[letter] for letter, (name, _) in zip(options, question.choices)}
             answers[question.name] = CheckAnswer(question.kind, probabilities)
