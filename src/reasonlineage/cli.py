@@ -55,6 +55,12 @@ def build_checker(setup: Setup, task: Task, protocol: ProtocolSpec, env: Mapping
                            max_tokens=protocol.max_tokens("check"), timeout_s=protocol.timeout("check")), None
 
 
+def servers(setup: Setup, task: Task) -> list[Member]:
+    """The panel, plus the checker when this task's checker is a local model: the servers to probe before any call."""
+    choice = setup.checker_for.get(task.data_sensitivity)
+    return [*setup.panel, *([setup.local_checkers[choice]] if choice in setup.local_checkers else [])]
+
+
 @dataclass
 class Services:
     """Everything that touches the outside world, so tests can swap it out."""
@@ -123,7 +129,7 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
             gen0_from=str(args.gen0_from) if args.gen0_from else None,
         )
     checker, why = services.checker(setup, task, protocol, services.env)
-    problems = verify_http_members(setup.panel, services.list_models)
+    problems = verify_http_members(servers(setup, task), services.list_models)
     try:
         evolution_config(task, options, protocol, len(setup.panel))
     except ValueError as exc:
@@ -158,7 +164,7 @@ def cmd_resume(args: argparse.Namespace, services: Services) -> int:
     task = task_from_dict(header["task"])
     setup = setup_from_dict(header["setup"])
     options = RunOptions(**header["options"])
-    http = verify_http_members(setup.panel, services.list_models)
+    http = verify_http_members(servers(setup, task) if header.get("checker") else setup.panel, services.list_models)
     stop, warnings = resume_problems(header, protocol, services.versions(setup.panel), http)
     for warning in warnings:
         print(f"warning: {warning}", file=sys.stderr)

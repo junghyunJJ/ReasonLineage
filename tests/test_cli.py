@@ -14,12 +14,16 @@ NAMES = ("opus", "gpt", "grok", "qwen")
 FAMILY = {"opus": "anthropic", "gpt": "openai", "grok": "xai", "qwen": "alibaba"}
 
 
-def write_files(tmp_path):
+def write_files(tmp_path, *, local_checker=False):
+    checkers = {"jev": {"version": "jev-1.13.0"}}
+    if local_checker:
+        checkers["deepseek"] = {"backend": "http", "model": "model-deepseek", "effort": "max", "base_url": "http://fake-checker/v1",
+                                "family": "deepseek"}
     setup = {
         "panel": [{"name": n, "backend": "http", "model": f"model-{n}", "effort": "xhigh",
                    "base_url": "http://fake/v1", "family": FAMILY[n]} for n in NAMES],
-        "checkers": {"jev": {"version": "jev-1.13.0"}},
-        "checker_for": {"public": "jev"},
+        "checkers": checkers,
+        "checker_for": {"public": "deepseek" if local_checker else "jev"},
     }
     task = {"id": "ipf", "question": "Which drug for IPF?", "candidates": ["metformin", "imatinib", "sildenafil"],
             "category": "biomedical", "data_sensitivity": "public"}
@@ -31,13 +35,13 @@ def write_files(tmp_path):
 class World:
     """Fake outside world: models, servers, checker, and PubMed."""
 
-    def __init__(self, *, judge_fails=False, server_down=False, checker=None):
+    def __init__(self, *, judge_fails=False, server_down=False, checker=None, down=()):
         self.models = {n: FakeModel(n, Clock(), fail_roles={"judge"} if (judge_fails and n == "grok") else ())
                        for n in NAMES}
         self.checker = checker
 
         def list_models(member):
-            if server_down:
+            if server_down or member.name in down:
                 raise BackendError(f"request to {member.base_url} failed: connection refused")
             return [member.model]
 
@@ -144,4 +148,24 @@ def test_bad_generations_stop_before_any_call(tmp_path, capsys, mode, generation
     assert main(args, world.services) == 1
     assert "generation_limit" in capsys.readouterr().err
     assert not (tmp_path / "runs").exists()
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_a_down_checker_server_stops_the_run_before_any_call(tmp_path, capsys):
+    task, setup = write_files(tmp_path, local_checker=True)
+    world = World(checker=FakeChecker(), down={"deepseek"})
+    assert main(["run", task, "--config", setup, "--out", str(tmp_path / "runs")], world.services) == 1
+    assert "deepseek" in capsys.readouterr().err
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_resume_checks_the_checker_server_too(tmp_path, capsys):
+    task, setup = write_files(tmp_path, local_checker=True)
+    args = ["run", task, "--config", setup, "--seed", "7", "--generations", "1", "--out", str(tmp_path / "runs")]
+    assert main(args, World(judge_fails=True, checker=FakeChecker()).services) == 2
+    (run_dir,) = run_dirs(tmp_path)
+    capsys.readouterr()
+    world = World(checker=FakeChecker(), down={"deepseek"})
+    assert main(["resume", str(run_dir)], world.services) == 1
+    assert "deepseek" in capsys.readouterr().err
     assert all(m.seen == [] for m in world.models.values())
