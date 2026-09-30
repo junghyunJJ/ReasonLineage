@@ -7,7 +7,7 @@
      "base_url": "http://esplhpc-cp089:6010/v1", "family": "alibaba"}
   ],
   "checkers": {
-    "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY"},
+    "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY", "api_key_file": "~/.config/reasonlineage/jev.env"},
     "deepseek": {"backend": "http", "model": "deepseek-ai/DeepSeek-V4-Flash-0731", "effort": "max",
                  "base_url": "http://esplhpc-cp088:6018/v1", "family": "deepseek"}
   },

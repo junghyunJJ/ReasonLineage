@@ -30,6 +30,7 @@ def test_main_config_holds_the_final_panel_and_checkers():
     ]
     assert [m.family_name for m in setup.panel] == ["anthropic", "openai", "xai", "alibaba"]
     assert setup.jev.version == "jev-1.13.0"
+    assert setup.jev.api_key_file == "~/.config/reasonlineage/jev.env"
     assert setup.local_checkers["deepseek"].effort == "max"
     assert setup.checker_for == {"public": "jev", "private": "deepseek"}
     assert setup_from_dict(setup.to_dict()) == setup

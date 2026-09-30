@@ -129,6 +129,8 @@ class JevSettings:
     version: str
     api_key_env: str = "JEV_API_KEY"
     base_url: str = "https://api.typesafe.ai/v1"
+    # A file outside the repo that holds only the key; the program reads it, nothing prints it.
+    api_key_file: str | None = None
 
 
 @dataclass(frozen=True)
@@ -166,7 +168,8 @@ def setup_from_dict(raw: Mapping[str, Any]) -> Setup:
         if key == "jev":
             if not isinstance(value, Mapping) or not value.get("version"):
                 raise ConfigError("setup: checkers.jev needs a pinned 'version'")
-            jev = JevSettings(value["version"], value.get("api_key_env", "JEV_API_KEY"), value.get("base_url", "https://api.typesafe.ai/v1"))
+            jev = JevSettings(value["version"], value.get("api_key_env", "JEV_API_KEY"), value.get("base_url", "https://api.typesafe.ai/v1"),
+                              value.get("api_key_file"))
         else:
             local[key] = member_from_dict({**value, "name": key}, f"checkers.{key}")
     checker_for = dict(raw.get("checker_for") or {})

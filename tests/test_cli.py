@@ -6,8 +6,10 @@ import pytest
 
 from fakes import Clock, FakeChecker, FakeModel
 from reasonlineage.backends.base import BackendError
-from reasonlineage.cli import Services, main
+from reasonlineage.cli import Services, build_checker, main
+from reasonlineage.engine.config import setup_from_dict, task_from_dict
 from reasonlineage.engine.events import read_events
+from reasonlineage.protocol import load_protocol
 from diagnose_data import EFETCH_XML
 
 NAMES = ("opus", "gpt", "grok", "qwen")
@@ -205,3 +207,41 @@ def test_gen0_from_shares_generation_0_through_the_command_line(tmp_path):
     (second,) = [p for p in run_dirs(tmp_path) if p != source]
     writes = [r for r in read_events(second / "events.jsonl") if r["event"] == "call.completed" and r["name"].startswith("g0/write/")]
     assert len(writes) == 4 and all(r["replayed"] for r in writes)
+
+
+PUBLIC = task_from_dict({"id": "t", "question": "Q?", "candidates": ["a", "b"], "category": "biomedical",
+                         "data_sensitivity": "public"})
+
+
+def jev_setup(key_file):
+    return setup_from_dict({
+        "panel": [{"name": "opus", "backend": "claude", "model": "m"}],
+        "checkers": {"jev": {"version": "jev-1.13.0", "api_key_file": str(key_file)}},
+        "checker_for": {"public": "jev"},
+    })
+
+
+def test_the_jev_key_is_read_from_the_key_file(tmp_path):
+    key_file = tmp_path / "jev.key"
+    key_file.write_text("key-from-file\n")
+    checker, why = build_checker(jev_setup(key_file), PUBLIC, load_protocol(), env={})
+    assert why is None and checker.api_key == "key-from-file"
+
+
+def test_the_key_file_path_may_start_with_a_tilde(tmp_path, monkeypatch):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    (tmp_path / "jev.key").write_text("key-from-home")
+    checker, _ = build_checker(jev_setup("~/jev.key"), PUBLIC, load_protocol(), env={})
+    assert checker.api_key == "key-from-home"
+
+
+def test_an_environment_key_wins_over_the_key_file(tmp_path):
+    key_file = tmp_path / "jev.key"
+    key_file.write_text("key-from-file")
+    checker, _ = build_checker(jev_setup(key_file), PUBLIC, load_protocol(), env={"JEV_API_KEY": "key-from-env"})
+    assert checker.api_key == "key-from-env"
+
+
+def test_a_missing_key_file_skips_j1_and_names_the_file(tmp_path):
+    checker, why = build_checker(jev_setup(tmp_path / "missing.key"), PUBLIC, load_protocol(), env={})
+    assert checker is None and "missing.key" in why

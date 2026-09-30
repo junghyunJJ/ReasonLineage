@@ -38,15 +38,26 @@ from .protocol import ProtocolSpec, load_protocol
 REPO = Path(__file__).resolve().parents[2]
 
 
+def read_key_file(path: str | None) -> str | None:
+    """The key stored in `path`, without surrounding whitespace; None when there is no readable file."""
+    if not path:
+        return None
+    try:
+        return Path(path).expanduser().read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
+
+
 def build_checker(setup: Setup, task: Task, protocol: ProtocolSpec, env: Mapping[str, str]) -> tuple[Checker | None, str | None]:
     """The checker for this task's data sensitivity, or (None, the reason there is none)."""
     choice = setup.checker_for.get(task.data_sensitivity)
     if choice is None:
         return None, f"no checker is set for {task.data_sensitivity} tasks"
     if choice == "jev":
-        key = env.get(setup.jev.api_key_env)
+        key = env.get(setup.jev.api_key_env) or read_key_file(setup.jev.api_key_file)
         if not key:
-            return None, f"jev needs an API key in ${setup.jev.api_key_env}"
+            where = f"${setup.jev.api_key_env}" + (f" or {setup.jev.api_key_file}" if setup.jev.api_key_file else "")
+            return None, f"jev needs an API key in {where}"
         return JevChecker(key, setup.jev.version, data_sensitivity=task.data_sensitivity, base_url=setup.jev.base_url,
                           timeout_s=protocol.timeout("check")), None
     member = setup.local_checkers[choice]

@@ -379,7 +379,7 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
      "base_url": "http://esplhpc-cp089:6010/v1", "family": "alibaba"}
   ],
   "checkers": {
-    "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY"},
+    "jev": {"version": "jev-1.13.0", "api_key_env": "JEV_API_KEY", "api_key_file": "~/.config/reasonlineage/jev.env"},
     "deepseek": {"backend": "http", "model": "deepseek-ai/DeepSeek-V4-Flash-0731", "effort": "max",
                  "base_url": "http://esplhpc-cp088:6018/v1", "family": "deepseek"}
   },
@@ -388,6 +388,7 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
 }
 ```
 - `http` 백엔드는 `family`를 꼭 적어요. claude, codex, grok의 회사는 코드에 이미 있어요.
+- jev 키는 `api_key_env` 환경 변수가 있으면 그 값을, 없으면 `api_key_file`을 프로그램이 직접 읽어요. 키 파일은 저장소 밖에 두고, Claude Code 설정의 읽기 금지 규칙(`Read(~/.config/reasonlineage/**)`)으로 Claude의 도구가 열지 못하게 해요.
 - 스크립트용 명단 문법(`name=backend:model[:effort]`)은 그대로 둬요.
 
 ## 9. 테스트

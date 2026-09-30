@@ -8,11 +8,12 @@ import pytest
 
 from reasonlineage.backends.base import ModelRequest
 from reasonlineage.backends.http import HttpBackend
-from reasonlineage.checks.jev import JevChecker
+from reasonlineage.cli import build_checker
 from reasonlineage.checks.local import LocalLLMChecker
 from reasonlineage.checks.questions import Question
 from reasonlineage.engine.answer import answer_schema, normalize_answer, validate_answer
-from reasonlineage.engine.config import load_setup
+from reasonlineage.engine.config import Task, load_setup
+from reasonlineage.protocol import load_protocol
 
 pytestmark = pytest.mark.live
 SETUP = load_setup(Path(__file__).resolve().parents[1] / "configs" / "main.json")
@@ -45,9 +46,10 @@ def test_deepseek_checker_answers_a_plain_question():
     assert result.answers["color"].value > 0.5
 
 
-@pytest.mark.skipif(not os.environ.get("JEV_API_KEY"), reason="needs JEV_API_KEY")
 def test_jev_answers_as_the_pinned_version():
-    checker = JevChecker(os.environ["JEV_API_KEY"], SETUP.jev.version, data_sensitivity="public")
+    checker, why = build_checker(SETUP, Task("live", "Q?", None, "biomedical", "public"), load_protocol(), os.environ)
+    if checker is None:
+        pytest.skip(why)
     result = asyncio.run(checker.ask("The sky was blue this morning.", [Question("color", "noul", "Does the text name a color?")]))
     assert result.model == SETUP.jev.version
     assert result.answers["color"].value > 0.5
