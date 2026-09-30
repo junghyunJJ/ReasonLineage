@@ -74,6 +74,15 @@ def test_judges_see_the_prose_with_the_final_ranking_block(tmp_path):
     assert len(systems) == 1 and "Dimensions: evidenceCoverage, specificity, novelty, actionability." in systems.pop()
 
 
+def test_judges_see_the_rule_the_authors_had(tmp_path):
+    _, _, models = run(tmp_path, generations=1)
+    rule = "Rank exactly these items, each once, using these exact names: metformin, imatinib, sildenafil."
+    seen = [r for m in models.values() for r in m.seen]
+    judge_prompts = [r.prompt for r in seen if "Candidate answer to evaluate" in r.prompt]
+    assert all(rule in r.system for r in seen if "Candidate answer to evaluate" not in r.prompt)
+    assert judge_prompts and all(f"Rule the author had to follow: {rule}" in p for p in judge_prompts)
+
+
 def test_exploration_stops_early_once_the_threshold_is_met(tmp_path):
     from fakes import FakeModel
     names = ("opus", "gpt", "grok", "qwen")

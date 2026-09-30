@@ -265,16 +265,18 @@ class Runner:
                     await self.gate(cid, gen, author, data, 1)
         return Written(author, data, versions, anomalies)
 
+    def _item_rule(self) -> str:
+        """What the author must rank. Judges see the same sentence, so they judge within it."""
+        if self.task.candidates:
+            return "Rank exactly these items, each once, using these exact names: " + ", ".join(self.task.candidates) + "."
+        few, many = self.protocol.open_items
+        return f"Choose the items to rank yourself: between {few} and {many} items."
+
     def _author_request(self, author: str, prompt: str) -> ModelRequest:
         member = self.members[author]
         low, high = self.protocol.answer_words
-        if self.task.candidates:
-            rule = "Rank exactly these items, each once, using these exact names: " + ", ".join(self.task.candidates) + "."
-        else:
-            few, many = self.protocol.open_items
-            rule = f"Choose the items to rank yourself: between {few} and {many} items."
         return ModelRequest(
-            system=self.protocol.render("author_system", length_min=low, length_max=high, item_rule=rule),
+            system=self.protocol.render("author_system", length_min=low, length_max=high, item_rule=self._item_rule()),
             prompt=prompt, model=member.model, effort=member.effort,
             json_schema=fmt.answer_schema(self.task.candidates, self.protocol.open_items),
             timeout_s=self.protocol.timeout("write"), max_tokens=self.protocol.max_tokens("write"),
@@ -348,8 +350,9 @@ class Runner:
         context = judge_context(self.options.context, author_model=self.members[candidate.author].model, trace=trace)
         request = ModelRequest(
             system=self.protocol.render("judge_system", emphasis=self.task.emphasis, dimensions=", ".join(self.dims)),
-            prompt=self.protocol.render("judge_candidate", question=self.task.question, context=context,
-                                        candidate=fmt.render_for_judge(self.answers[candidate.id])),
+            prompt=self.protocol.render("judge_candidate", question=self.task.question,
+                                        rule=self.protocol.render("judge_rule", item_rule=self._item_rule()) + "\n\n",
+                                        context=context, candidate=fmt.render_for_judge(self.answers[candidate.id])),
             model=member.model, effort=member.effort, json_schema=score_schema(self.dims),
             timeout_s=self.protocol.timeout("judge"), max_tokens=self.protocol.max_tokens("judge"),
         )

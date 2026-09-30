@@ -20,7 +20,7 @@ Give 1-3 critique points; each names what is wrong and how to fix it."""
 
 def test_loads_version_and_values():
     protocol = load_protocol()
-    assert protocol.version == "1.0.0"
+    assert protocol.version == "1.0.1"
     assert protocol.generations == 3
     assert protocol.margins == {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2}
     assert protocol.timeout("write") == 900 and protocol.timeout("judge") == 480 and protocol.timeout("check") == 120

@@ -27,4 +27,4 @@ def score_schema(dimensions: Sequence[str]) -> dict:
 
 
 def candidate_prompt(question: str, answer: str) -> str:
-    return load_protocol().render("judge_candidate", question=question, context="", candidate=answer)
+    return load_protocol().render("judge_candidate", question=question, rule="", context="", candidate=answer)
