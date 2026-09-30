@@ -1,6 +1,7 @@
 """Shared plumbing for CLI backends: concurrency limit, retry, timeout with kill, structured output."""
 
 import asyncio
+import contextlib
 import json
 import time
 from pathlib import Path
@@ -54,6 +55,12 @@ class SubprocessBackend:
             proc.kill()
             await proc.wait()
             raise BackendError(f"timed out after {timeout_s:.0f}s") from None
+        except asyncio.CancelledError:
+            # Cancelled because another call failed, or Ctrl-C: do not leave the CLI running.
+            with contextlib.suppress(ProcessLookupError):
+                proc.kill()
+            await proc.wait()
+            raise
         if check and proc.returncode != 0:
             detail = (stderr or stdout).decode(errors="replace").strip()[-500:]
             raise BackendError(f"exit {proc.returncode}: {detail}")
