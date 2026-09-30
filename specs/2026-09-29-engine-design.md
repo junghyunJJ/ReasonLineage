@@ -80,7 +80,7 @@ src/reasonlineage/
   cli.py       새로: run, resume, diagnose
 ```
 
-`core`와 `engine`은 `checks`를 불러오지 않아요. 점검기 결과는 `engine/runner`가 `checks.gate` 함수 하나를 통해서만 받아요 (9장 테스트 4).
+`core`와 `engine`은 `checks`를 불러오지 않아요. `cli.py`가 `checks`로 관문 함수를 만들어 `engine/runner`에 넘기고, 엔진은 그 함수가 돌려주는 다시 쓰기 결정만 받아요 (9장 테스트 4).
 
 ## 4. 참여자
 
@@ -421,7 +421,7 @@ reasonlineage diagnose RUN_DIR [--gold-items GOLD.json]
 | `core/roles.py` | `pick_crossover_synthesizer`의 동률 처리를 "최근에 교차를 맡지 않은 모델 → 명단 순서"로 바꿔요 |
 | `core/lineage.py` | `engine/events`로 옮기면서 호출 단위 사건(`call.completed`, `judge.scored`)을 더해요 |
 | `prompts.py` | `protocol/` 파일로 옮겨서 해시 대상으로 만들어요 |
-| `backends/roster.py` | `http` 백엔드와 `family` 지정을 더해요 |
+| `backends/roster.py` | 스크립트용 명단 문법은 그대로 둬요. `http` 백엔드와 `family` 지정은 구성 파일을 읽는 `engine/config.py`에서 다뤄요 |
 | `backends/http.py` | 새 파일: vLLM OpenAI 호환 호출 (`reasoning_effort` 명시, `response_format` json_schema, seed, logprobs, 도구 없음) |
 | `calibration.py` | 엔진에서는 쓰지 않아요. 논문 분석용으로 남겨요 |
 | `scripts/*` | 명단을 Sonnet 5.5와 GPT-6.1 sol로 바꾼 수정이 아직 커밋되지 않았어요 |
