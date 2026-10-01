@@ -106,9 +106,14 @@ def _endpoint(text: Any) -> dict[str, Any] | None:
 
 
 def _comparison(entry: dict[str, Any]) -> tuple[str, str, str] | None:
-    """The one (tested arm, MET or NOT MET, comparator) of an entry, or None."""
+    """The one (tested arm, MET or NOT MET, comparator) of an entry, or None.
+
+    An entry that pools several arms (CT Open's `no_distinguishable_arm`) is MET when any of them met, but its
+    tuple names only the first of them, so it has no one comparison.
+    """
     tuples = entry["list_of_tuples"] or []
-    if len(tuples) != 1 or len(tuples[0]) != 3 or tuples[0][1] not in ("MET", "NOT MET"):
+    if (entry.get("meta_label") == "no_distinguishable_arm" or len(tuples) != 1 or len(tuples[0]) != 3
+            or tuples[0][1] not in ("MET", "NOT MET")):
         return None
     return tuple(tuples[0])
 
@@ -179,10 +184,14 @@ def check_review(review: dict[str, Any], found: list[dict[str, Any]]) -> list[st
             elif nct in seen:
                 problems.append(f"{nct}: reviewed twice")
             seen.add(nct)
-            if not item.get("why"):
+            if not str(item.get("why") or "").strip():
                 problems.append(f"{nct}: needs a reason ('why')")
-            if kind == "keep" and not item.get("display_name"):
+            name = item.get("display_name")
+            if kind == "keep" and not name:
                 problems.append(f"{nct}: a kept trial needs a display_name")
+            elif kind == "keep" and name != " ".join(str(name).split()).lower():
+                # The engine collapses spaces in candidate names, and grouping compares names exactly.
+                problems.append(f"{nct}: display_name {name!r} must be lowercase with single spaces")
     problems += [f"{nct}: not reviewed; keep or drop it" for nct in sorted(known - seen)]
     return problems
 

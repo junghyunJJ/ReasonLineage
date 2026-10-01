@@ -91,9 +91,10 @@ AFTER = "2026-07-01"
 
 
 def entry(*, arm="Edrug 10 mg", label="MET", comparator="Placebo", outcome_type="primaryOutcomes",
-          dates=("2026-07-02",), tested=(("DRUG", "Edrug 10 mg"),), tuples=None, measure="Change in score"):
+          dates=("2026-07-02",), tested=(("DRUG", "Edrug 10 mg"),), tuples=None, measure="Change in score",
+          meta_label="single_arm"):
     endpoint = str({"measure": measure, "description": "", "timeFrame": "12 weeks", "outcome_type": outcome_type})
-    return {"brief_title": "A trial", "endpoint": endpoint,
+    return {"brief_title": "A trial", "endpoint": endpoint, "meta_label": meta_label,
             "arms": [{"label": arm, "type": "EXPERIMENTAL", "interventions": [{"type": t, "name": n} for t, n in tested]},
                      {"label": comparator, "type": "PLACEBO_COMPARATOR", "interventions": [{"type": "DRUG", "name": "Placebo"}]}],
             "list_of_tuples": [[arm, label, comparator]] if tuples is None else tuples,
@@ -126,6 +127,7 @@ def test_the_date_itself_counts():
     {"tested": (("DRUG", "Zdrug"),)},                                        # not an approved drug
     {"tested": (("DRUG", "Edrug"), ("DRUG", "Adrug"))},                      # two drugs tested together
     {"tuples": [["Another arm", "MET", "Placebo"]]},                         # the tested arm is not among the arms
+    {"meta_label": "no_distinguishable_arm"},                                # pooled arms; the tuple names only the first
 ])
 def test_trials_that_are_left_out(changed):
     assert select(("NCT00000001", entry(**changed))) == []
@@ -222,6 +224,9 @@ def reviewed(change):
     (lambda r: r["drop"].append({"nct": "NCT00000001", "why": "x"}), "NCT00000001: reviewed twice"),
     (lambda r: r["keep"][0].update(why=""), "NCT00000001: needs a reason"),
     (lambda r: r["keep"][1].pop("display_name"), "NCT00000002: a kept trial needs a display_name"),
+    (lambda r: r["keep"][0].update(why="   "), "NCT00000001: needs a reason"),
+    (lambda r: r["keep"][0].update(display_name="Disease A"), "NCT00000001: display_name 'Disease A' must be lowercase"),
+    (lambda r: r["keep"][0].update(display_name="disease a "), "NCT00000001: display_name 'disease a ' must be lowercase"),
 ])
 def test_review_rules_are_enforced(tmp_path, change, message):
     review = reviewed(change)
