@@ -1,4 +1,4 @@
-"""The two gold-set scripts: building task files from a curation record, and the level-1 run script."""
+"""The gold-set scripts: building repoDB task files from a curation record, and the level-1 run script."""
 
 import json
 import os
@@ -38,14 +38,14 @@ def test_build_step_refuses_a_broken_curation(tmp_path):
 
 
 def test_run_script_is_valid_bash():
-    assert subprocess.run(["bash", "-n", str(ROOT / "scripts" / "run_gold_dev.sh")]).returncode == 0
+    assert subprocess.run(["bash", "-n", str(ROOT / "scripts" / "run_gold.sh")]).returncode == 0
 
 
 def script_copy(tmp_path):
     """The run script in a fresh checkout with two tasks, and a fake `python` that only logs its calls."""
     root = tmp_path / "repo"
     (root / "scripts").mkdir(parents=True)
-    shutil.copy(ROOT / "scripts" / "run_gold_dev.sh", root / "scripts")
+    shutil.copy(ROOT / "scripts" / "run_gold.sh", root / "scripts")
     tasks = root / "tasks" / "repodb-dev"
     tasks.mkdir(parents=True)
     for name in ("repodb-a", "repodb-b"):
@@ -57,8 +57,8 @@ def script_copy(tmp_path):
     return root, log, {**os.environ, "PATH": f"{bin_dir}:{os.environ['PATH']}"}
 
 
-def run_script(root, out, env):
-    return subprocess.run(["bash", str(root / "scripts" / "run_gold_dev.sh"), str(out)], capture_output=True, text=True, env=env)
+def run_script(root, env, *args):
+    return subprocess.run(["bash", str(root / "scripts" / "run_gold.sh"), *map(str, args)], capture_output=True, text=True, env=env)
 
 
 def test_run_script_skips_finished_tasks_and_runs_this_checkouts_code(tmp_path):
@@ -67,12 +67,13 @@ def test_run_script_skips_finished_tasks_and_runs_this_checkouts_code(tmp_path):
     done.mkdir(parents=True)
     (done / "header.json").write_text("{}")
     (done / "result.json").write_text("{}")
-    result = run_script(root, tmp_path / "out", env)
+    result = run_script(root, env, "repodb-dev", tmp_path / "out")
     assert result.returncode == 0, result.stderr
     assert "skip repodb-a" in result.stdout
     calls = [line.split("|") for line in log.read_text().splitlines()]
     assert [args.split()[:3] for _, args in calls] == [["-m", "reasonlineage", "run"], ["-m", "reasonlineage", "gold"]]
     assert "repodb-b.json" in calls[0][1] and {path for path, _ in calls} == {str(root / "src")}
+    assert f"--gold {root}/gold/repodb-dev/gold.json" in calls[1][1]
 
 
 def test_run_script_stops_at_a_run_that_did_not_finish(tmp_path):
@@ -80,6 +81,21 @@ def test_run_script_stops_at_a_run_that_did_not_finish(tmp_path):
     stopped = tmp_path / "out" / "20260930-120000-repodb-a"
     stopped.mkdir(parents=True)
     (stopped / "header.json").write_text("{}")
-    result = run_script(root, tmp_path / "out", env)
+    result = run_script(root, env, "repodb-dev", tmp_path / "out")
     assert result.returncode == 1 and "resume" in result.stderr and "repodb-a" in result.stderr
+    assert not log.exists()
+
+
+def test_run_script_writes_to_runs_gold_set_by_default(tmp_path):
+    root, log, env = script_copy(tmp_path)
+    result = run_script(root, env, "repodb-dev")
+    assert result.returncode == 0, result.stderr
+    run_call = log.read_text().splitlines()[0]
+    assert f"--out {root}/runs/gold-repodb-dev" in run_call
+
+
+def test_run_script_stops_on_a_set_without_task_files(tmp_path):
+    root, log, env = script_copy(tmp_path)
+    result = run_script(root, env, "ctopen-nope")
+    assert result.returncode == 1 and "no task files in tasks/ctopen-nope" in result.stderr
     assert not log.exists()
