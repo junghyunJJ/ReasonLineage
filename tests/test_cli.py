@@ -286,3 +286,27 @@ def test_python_dash_m_runs_the_command_line():
     result = subprocess.run([sys.executable, "-m", "reasonlineage", "--help"], capture_output=True, text=True,
                             env={**os.environ, "PYTHONPATH": str(src)})
     assert result.returncode == 0 and "run" in result.stdout and "resume" in result.stdout
+
+
+def test_gold_scores_runs_and_writes_the_report(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    for seed in ("1", "2"):
+        main(["run", task, "--config", setup, "--seed", seed, "--generations", "0", "--out", str(tmp_path / "runs")], World().services)
+    gold = tmp_path / "gold.json"
+    gold.write_text(json.dumps({"tasks": {"ipf": {"approved": ["metformin"], "failed": ["imatinib", "sildenafil"]}}}))
+    (tmp_path / "runs" / "notes.txt").write_text("not a run")
+    report = tmp_path / "report.json"
+    paths = [str(p) for p in sorted((tmp_path / "runs").iterdir())]
+    capsys.readouterr()
+    assert main(["gold", "--gold", str(gold), *paths, "--out", str(report)], World().services) == 0
+    out = capsys.readouterr()
+    assert "Level 1 (generation 0): 8 answers" in out.out and "more than one run" in out.out
+    assert "notes.txt: not a run folder" in out.err
+    saved = json.loads(report.read_text())
+    assert saved["runs"] == {"scored": 2, "not_a_run": 1} and saved["level1"]["answers"] == 8
+    assert all((d / "diagnostics" / "gold.jsonl").exists() for d in run_dirs(tmp_path))
+
+
+def test_gold_needs_a_readable_gold_file(tmp_path, capsys):
+    assert main(["gold", "--gold", str(tmp_path / "missing.json"), str(tmp_path)], World().services) == 1
+    assert "gold file" in capsys.readouterr().err

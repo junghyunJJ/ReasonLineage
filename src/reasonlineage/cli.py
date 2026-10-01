@@ -1,4 +1,4 @@
-"""Command line (spec 8): `reasonlineage run | resume | diagnose`.
+"""Command line (spec 8): `reasonlineage run | resume | diagnose | gold`.
 
 This is the one place that wires the engine to the checks package.
 """
@@ -20,6 +20,7 @@ from .checks.base import Checker
 from .checks.gate import Gate
 from .checks.jev import JevChecker
 from .checks.local import LocalLLMChecker
+from .diagnose.gold import format_report, score_run, summarize
 from .diagnose.j2 import load_gold_items, run_j2
 from .diagnose.pmid import efetch, run_pmid_check
 from .engine.calls import CallRecorder, ReplaySource, gen0_writing
@@ -94,6 +95,10 @@ def build_parser() -> argparse.ArgumentParser:
     diagnose = sub.add_parser("diagnose", help="J2 diagnostics and the PMID check for a finished run")
     diagnose.add_argument("run_dir")
     diagnose.add_argument("--gold-items", help="JSON file: {\"items\": [{\"item\": ..., \"outcome_date\": ...}]}")
+    gold = sub.add_parser("gold", help="score finished runs against a gold file (gold design 5.4)")
+    gold.add_argument("run_dirs", nargs="+", metavar="RUN_DIR")
+    gold.add_argument("--gold", required=True, help="JSON file: {\"tasks\": {task id: {\"approved\": [...], \"failed\": [...]}}}")
+    gold.add_argument("--out", help="also write the summary to this JSON file")
     return parser
 
 
@@ -246,9 +251,33 @@ def cmd_diagnose(args: argparse.Namespace, services: Services) -> int:
     return 0
 
 
+LEFT_OUT = {
+    "not_a_run": "not a run folder",
+    "no_gold": "its task is not in the gold file",
+    "mismatch": "its candidates differ from the gold drugs",
+    "incomplete": "the run did not finish",
+}
+
+
+def cmd_gold(args: argparse.Namespace, services: Services) -> int:
+    try:
+        gold = json.loads(Path(args.gold).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ConfigError(f"gold file {args.gold}: {exc}") from None
+    runs = [score_run(Path(d), gold) for d in args.run_dirs]
+    for run in runs:
+        if run["status"] in LEFT_OUT:
+            print(f"warning: {run['run']}: {LEFT_OUT[run['status']]}; left out", file=sys.stderr)
+    report = summarize(runs)
+    print(format_report(report))
+    if args.out:
+        Path(args.out).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None, services: Services | None = None) -> int:
     args = build_parser().parse_args(argv)
-    commands = {"run": cmd_run, "resume": cmd_resume, "diagnose": cmd_diagnose}
+    commands = {"run": cmd_run, "resume": cmd_resume, "diagnose": cmd_diagnose, "gold": cmd_gold}
     try:
         return commands[args.command](args, services or Services())
     except ConfigError as exc:
