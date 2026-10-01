@@ -23,6 +23,7 @@ class Model:
     name: str
     formula: str
     f: Callable[..., np.ndarray]
+    params: tuple[str, ...]  # names of f's parameters after x, as generation.json records them
 
 
 @dataclass(frozen=True)
@@ -32,7 +33,6 @@ class Family:
     columns: tuple[str, ...]  # table headers: the x columns, then the measured value
     unit: str  # unit of the measured value, for the error SD
     x: np.ndarray  # shape (n,) or (columns - 1, n)
-    params: tuple[str, ...]
     models: tuple[Model, Model, Model]
     sample: Callable[[np.random.Generator, int], tuple[float, ...]]  # true parameters for model i
     starts: Callable[[np.ndarray, np.ndarray], list[tuple[float, ...]]]  # fit starting points from the data
@@ -72,11 +72,10 @@ DOSE = Family(
     context="Cultured cells were exposed to a drug at 10 concentrations, and the drug effect was measured as a "
             "percentage of the maximal possible effect.",
     columns=("concentration (µM)", "effect (% of maximum)"), unit="%",
-    x=np.logspace(-2, 2, 10),
-    params=("Emax", "EC50"),
-    models=(Model("Hyperbolic Emax model", "E = Emax·C/(EC50 + C)", hyperbolic),
-            Model("Sigmoid Emax model (Hill coefficient 2)", "E = Emax·C²/(EC50² + C²)", sigmoid),
-            Model("Log-linear model", "E = m·ln(C/C0)", loglinear)),
+    x=np.array([float(f"{c:.3g}") for c in np.logspace(-2, 2, 10)]),  # as the table shows them
+    models=(Model("Hyperbolic Emax model", "E = Emax·C/(EC50 + C)", hyperbolic, ("Emax", "EC50")),
+            Model("Sigmoid Emax model (Hill coefficient 2)", "E = Emax·C²/(EC50² + C²)", sigmoid, ("Emax", "EC50")),
+            Model("Log-linear model", "E = m·ln(C/C0)", loglinear, ("m", "C0"))),
     sample=_dose_sample, starts=_dose_starts)
 
 
@@ -117,10 +116,10 @@ ENZYME = Family(
             f"inhibitor and with an inhibitor at {INHIBITOR:g} µM.",
     columns=("substrate (µM)", "inhibitor (µM)", "initial velocity (µM/min)"), unit="µM/min",
     x=np.vstack([np.tile(_S, 2), np.repeat([0.0, INHIBITOR], len(_S))]),
-    params=("Vmax", "Km", "Ki"),
-    models=(Model("Competitive inhibition", "v = Vmax·S/(Km·(1 + I/Ki) + S)", competitive),
-            Model("Noncompetitive inhibition", "v = Vmax·S/((Km + S)·(1 + I/Ki))", noncompetitive),
-            Model("Uncompetitive inhibition", "v = Vmax·S/(Km + S·(1 + I/Ki))", uncompetitive)),
+    models=(Model("Competitive inhibition", "v = Vmax·S/(Km·(1 + I/Ki) + S)", competitive, ("Vmax", "Km", "Ki")),
+            Model("Noncompetitive inhibition", "v = Vmax·S/((Km + S)·(1 + I/Ki))", noncompetitive,
+                  ("Vmax", "Km", "Ki")),
+            Model("Uncompetitive inhibition", "v = Vmax·S/(Km + S·(1 + I/Ki))", uncompetitive, ("Vmax", "Km", "Ki"))),
     sample=_enzyme_sample, starts=_enzyme_starts)
 
 
@@ -155,10 +154,9 @@ GROWTH = Family(
     context="A bacterial culture was grown in batch, and its optical density (OD600) was measured every 4 hours.",
     columns=("time (h)", "OD600"), unit="OD units",
     x=np.arange(0.0, 48.0, 4.0),
-    params=("N0", "r", "K"),
-    models=(Model("Logistic growth", "N = K/(1 + ((K − N0)/N0)·e^(−r·t))", logistic),
-            Model("Gompertz growth", "N = K·exp(ln(N0/K)·e^(−r·t))", gompertz),
-            Model("Monomolecular growth", "N = K − (K − N0)·e^(−r·t)", monomolecular)),
+    models=(Model("Logistic growth", "N = K/(1 + ((K − N0)/N0)·e^(−r·t))", logistic, ("N0", "r", "K")),
+            Model("Gompertz growth", "N = K·exp(ln(N0/K)·e^(−r·t))", gompertz, ("N0", "r", "K")),
+            Model("Monomolecular growth", "N = K − (K − N0)·e^(−r·t)", monomolecular, ("N0", "r", "K"))),
     sample=_growth_sample, starts=_growth_starts)
 
 
@@ -196,10 +194,9 @@ ELIMINATION = Family(
     context="After a single intravenous bolus dose of a drug, its plasma concentration was measured at 10 time points.",
     columns=("time (h)", "plasma concentration (mg/L)"), unit="mg/L",
     x=np.array([0.5, 1, 1.5, 2, 3, 4, 6, 8, 10, 12.0]),
-    params=("C0", "k"),
-    models=(Model("First-order elimination", "C = C0·e^(−k·t)", first_order),
-            Model("Zero-order elimination", "C = max(C0 − k0·t, 0)", zero_order),
-            Model("Second-order elimination", "C = C0/(1 + C0·k2·t)", second_order)),
+    models=(Model("First-order elimination", "C = C0·e^(−k·t)", first_order, ("C0", "k")),
+            Model("Zero-order elimination", "C = max(C0 − k0·t, 0)", zero_order, ("C0", "k0")),
+            Model("Second-order elimination", "C = C0/(1 + C0·k2·t)", second_order, ("C0", "k2"))),
     sample=_elimination_sample, starts=_elimination_starts)
 
 
@@ -283,9 +280,8 @@ def draw(family: Family, truth: int, band: str, rng: np.random.Generator) -> dic
     params = family.sample(rng, truth)
     clean = family.models[truth].f(family.x, *params)
     sigma = float(f"{rng.uniform(0.02, 0.10) * float(np.max(clean)):.3g}")
+    # Readings below zero stay: dropping them would make the error near zero half-normal, not the stated Gaussian.
     y = round3(clean + rng.normal(0.0, sigma, size=np.shape(clean)))
-    if np.any(y < 0):
-        return None
     fits = posteriors(family, y, sigma)
     if fits is None or band_of(fits[truth]["posterior"]) != band:
         return None
@@ -326,8 +322,9 @@ def make_task(set_name: str, index: int, band: str) -> dict[str, Any]:
     body = {"id": task_id, "question": question(family, drawn["y"], drawn["sigma"], order), "candidates": order,
             "category": "analytical", "data_sensitivity": "public"}
     gold = {"approved": [names[truth]], "failed": sorted(n for i, n in enumerate(names) if i != truth)}
-    record = {"family": family.key, "truth": names[truth], "params": dict(zip(family.params, drawn["params"])),
-              "sigma": drawn["sigma"], "tries": tries, "fits": drawn["fits"]}
+    params = dict(zip(family.models[truth].params, drawn["params"]))
+    record = {"family": family.key, "truth": names[truth], "params": params, "sigma": drawn["sigma"], "tries": tries,
+              "fits": drawn["fits"]}
     return {"task": body, "gold": gold, "record": record}
 
 

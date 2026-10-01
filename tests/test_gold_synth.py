@@ -93,7 +93,7 @@ def test_a_task_shows_the_data_and_candidates_and_its_truth_is_in_the_band():
     lines = [line for line in question.splitlines() if line.startswith("- ")]
     assert lines == [f"- {name}: {next(m.formula for m in synth.DOSE.models if m.name == name)}" for name in task["candidates"]]
     values = [float(row.split("|")[2]) for row in question.splitlines() if row.startswith("| ") and "µM" not in row and "---" not in row]
-    assert len(values) == 10 and min(values) >= 0
+    assert len(values) == 10
 
 
 def test_the_same_set_gives_the_same_task_and_another_set_other_data():
@@ -149,3 +149,34 @@ def test_the_symbols_in_a_question_survive_the_task_file(tmp_path):
     (path, _) = synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
     question = load_task(path).question
     assert "µM" in question and "C²/(EC50² + C²)" in question and "Emax·C" in question
+
+
+class Rigged:
+    """An rng that takes the middle of every range and pushes only the first reading 3 SD down."""
+
+    def uniform(self, low, high):
+        return (low + high) / 2
+
+    def normal(self, loc, scale, size):
+        noise = np.zeros(size)
+        noise[0] = -3 * scale
+        return noise
+
+
+def test_a_reading_below_zero_is_kept_because_the_error_is_gaussian():
+    # Dropping such draws would make the error near zero half-normal, not the Gaussian the question states.
+    drawn = [synth.draw(synth.DOSE, 1, band, Rigged()) for band in synth.BANDS]
+    kept = [d for d in drawn if d is not None]
+    assert len(kept) == 1 and kept[0]["y"][0] < 0
+
+
+@pytest.mark.parametrize("family", synth.FAMILIES, ids=lambda f: f.key)
+def test_the_fit_uses_the_x_values_the_table_shows(family):
+    # The gold is computed on what the models read (design 4.2), so x holds no more digits than the table shows.
+    assert np.array_equal(family.x, synth.round3(family.x))
+
+
+@pytest.mark.parametrize("index, names", [(8, {"m", "C0"}), (7, {"C0", "k0"}), (0, {"Emax", "EC50"})])
+def test_the_record_names_the_true_models_own_parameters(index, names):
+    # Task 9 is dose with the log-linear truth, task 8 elimination with the zero-order truth.
+    assert set(synth.make_task("synth-test", index, "easy")["record"]["params"]) == names
