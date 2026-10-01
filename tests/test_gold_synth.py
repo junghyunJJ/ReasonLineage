@@ -1,5 +1,6 @@
 """The synthetic hidden-law gold set (gold synth design 4): models, fits, bands, tasks and files."""
 
+import json
 from collections import Counter
 
 import numpy as np
@@ -7,6 +8,8 @@ import pytest
 
 pytest.importorskip("scipy")  # the gold extra; the base suite runs without it (design 8)
 
+from reasonlineage.diagnose.gold import correctness  # noqa: E402
+from reasonlineage.engine.config import load_task  # noqa: E402
 from reasonlineage.gold import synth  # noqa: E402
 
 
@@ -104,3 +107,45 @@ def test_a_band_that_cannot_be_filled_stops_with_the_count(monkeypatch):
     monkeypatch.setattr(synth, "draw", lambda *args: None)
     with pytest.raises(synth.SynthError, match="synth-test-01: no dose data .* band 'hard' after 3 draws"):
         synth.make_task("synth-test", 0, "hard")
+
+
+def test_build_writes_loadable_tasks_the_gold_file_and_the_generation_record(tmp_path):
+    paths = synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    assert [p.name for p in paths] == ["synth-test-01.json", "synth-test-02.json"]
+    gold = json.loads((tmp_path / "gold" / "gold.json").read_text())
+    record = json.loads((tmp_path / "gold" / "generation.json").read_text())
+    assert gold["source"] == record["source"] == {"generator": "reasonlineage.gold.synth", "set": "synth-test", "band": "easy"}
+    for path in paths:
+        task = load_task(path)
+        truth = gold["tasks"][task.id]
+        assert set(task.candidates) == {*truth["approved"], *truth["failed"]}  # what score_run checks
+        assert correctness([*truth["approved"], *truth["failed"]], truth) == 1.0
+        assert record["tasks"][task.id]["truth"] == truth["approved"][0]
+    assert record["tasks"]["synth-test-02"]["family"] == "enzyme"
+
+
+def test_build_refuses_files_it_does_not_make_and_writes_nothing(tmp_path):
+    (tmp_path / "tasks").mkdir()
+    (tmp_path / "tasks" / "synth-test-03.json").write_text("{}")
+    with pytest.raises(synth.SynthError, match="synth-test-03.json is not built by this set"):
+        synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    assert not (tmp_path / "gold").exists()
+
+
+def test_build_refuses_an_unknown_band(tmp_path):
+    with pytest.raises(synth.SynthError, match="unknown band 'medium-hard'"):
+        synth.build("synth-test", "medium-hard", 2, tmp_path / "tasks", tmp_path / "gold")
+
+
+def test_building_the_same_set_again_gives_the_same_bytes(tmp_path):
+    synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    before = {p.name: p.read_bytes() for p in [*(tmp_path / "tasks").iterdir(), *(tmp_path / "gold").iterdir()]}
+    synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    after = {p.name: p.read_bytes() for p in [*(tmp_path / "tasks").iterdir(), *(tmp_path / "gold").iterdir()]}
+    assert after == before
+
+
+def test_the_symbols_in_a_question_survive_the_task_file(tmp_path):
+    (path, _) = synth.build("synth-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    question = load_task(path).question
+    assert "µM" in question and "C²/(EC50² + C²)" in question and "Emax·C" in question

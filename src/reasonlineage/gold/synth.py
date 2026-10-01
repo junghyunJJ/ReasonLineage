@@ -6,8 +6,10 @@ model: its posterior among the three candidates, fitted to the data the models s
 """
 
 import hashlib
+import json
 import warnings
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
@@ -327,3 +329,30 @@ def make_task(set_name: str, index: int, band: str) -> dict[str, Any]:
     record = {"family": family.key, "truth": names[truth], "params": dict(zip(family.params, drawn["params"])),
               "sigma": drawn["sigma"], "tries": tries, "fits": drawn["fits"]}
     return {"task": body, "gold": gold, "record": record}
+
+
+def build(set_name: str, band: str, count: int, tasks_dir: str | Path, gold_dir: str | Path) -> list[Path]:
+    """Write `count` task files, gold.json and generation.json; nothing is written if a task cannot be made
+    or the task folder holds files this build does not make (design 4.4, 7)."""
+    if band not in BANDS:
+        raise SynthError(f"unknown band {band!r}; use one of {sorted(BANDS)}")
+    tasks_dir, gold_dir = Path(tasks_dir), Path(gold_dir)
+    ids = [f"{set_name}-{i + 1:02d}" for i in range(count)]
+    stale = [f"{path} is not built by this set; delete it, then build again"
+             for path in sorted(tasks_dir.glob("*.json")) if path.stem not in ids]
+    if stale:
+        raise SynthError("; ".join(stale))
+    made = [make_task(set_name, i, band) for i in range(count)]
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    gold_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    for task in made:
+        path = tasks_dir / f"{task['task']['id']}.json"
+        path.write_text(json.dumps(task["task"], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+    source = {"generator": "reasonlineage.gold.synth", "set": set_name, "band": band}
+    gold = {"source": source, "tasks": {t["task"]["id"]: t["gold"] for t in made}}
+    generation = {"source": source, "tasks": {t["task"]["id"]: t["record"] for t in made}}
+    for name, body in (("gold.json", gold), ("generation.json", generation)):
+        (gold_dir / name).write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return written
