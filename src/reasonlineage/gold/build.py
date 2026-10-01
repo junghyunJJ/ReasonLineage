@@ -18,7 +18,7 @@ QUESTION = ("Which of these drugs is most promising for treating {name}? Rank th
 
 
 class CurationError(ValueError):
-    """The curation record breaks a rule of gold design 4.5."""
+    """The curation record breaks a rule of gold design 4.5, or the task folder holds files it does not build."""
 
 
 def task_id(display_name: str) -> str:
@@ -71,11 +71,17 @@ def check_curation(curation: Mapping[str, Any], pool: Sequence[Mapping[str, Any]
 
 def build(curation: Mapping[str, Any], pool: Sequence[Mapping[str, Any]], tasks_dir: str | Path,
           gold_path: str | Path) -> list[Path]:
-    """Write one task file per curated task and the gold file; nothing is written if the curation breaks a rule."""
+    """Write one task file per curated task and the gold file; nothing is written if the curation breaks a rule.
+
+    The task folder must hold only the files this curation builds: the run script runs every file in it.
+    """
     problems = check_curation(curation, pool)
+    tasks_dir, gold_path = Path(tasks_dir), Path(gold_path)
+    built = {f"{task['id']}.json" for task in curation["tasks"]}
+    problems += [f"{path} is not built by this curation; delete it, then build again"
+                 for path in sorted(tasks_dir.glob("*.json")) if path.name not in built]
     if problems:
         raise CurationError("; ".join(problems))
-    tasks_dir, gold_path = Path(tasks_dir), Path(gold_path)
     tasks_dir.mkdir(parents=True, exist_ok=True)
     gold = {"source": {"repo": "zietzm/repoDB", "commit": repodb.COMMIT, "path": "data/repoDB.csv", "sha256": repodb.SHA256},
             "tasks": {}}

@@ -88,3 +88,14 @@ def test_two_tasks_may_not_share_an_id(tmp_path):
     with pytest.raises(CurationError, match="same id"):
         build({"tasks": [CURATION["tasks"][0], twin], "dropped": []}, pool, tmp_path / "tasks", tmp_path / "gold.json")
     assert not (tmp_path / "gold.json").exists()
+
+
+def test_build_refuses_task_files_the_curation_does_not_build(tmp_path):
+    # The run script runs every task file in the folder, so a file left from an earlier curation would be paid for.
+    build(CURATION, POOL, tmp_path / "tasks", tmp_path / "gold.json")
+    renamed = copy.deepcopy(CURATION)
+    renamed["tasks"][0].update(id="repodb-disease-x-adult", display_name="disease X, adult")
+    with pytest.raises(CurationError, match="repodb-disease-x.json is not built by this curation"):
+        build(renamed, POOL, tmp_path / "tasks", tmp_path / "gold2.json")
+    assert [p.name for p in (tmp_path / "tasks").iterdir()] == ["repodb-disease-x.json"]
+    assert not (tmp_path / "gold2.json").exists()
