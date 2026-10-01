@@ -300,10 +300,10 @@ def test_gold_scores_runs_and_writes_the_report(tmp_path, capsys):
     capsys.readouterr()
     assert main(["gold", "--gold", str(gold), *paths, "--out", str(report)], World().services) == 0
     out = capsys.readouterr()
-    assert "Level 1 (generation 0): 8 answers" in out.out and "more than one run" in out.out
+    assert "Level 1 (generation 0): 4 answers" in out.out and "more than one run" in out.out and "set aside" in out.out
     assert "notes.txt: not a run folder" in out.err
     saved = json.loads(report.read_text())
-    assert saved["runs"] == {"scored": 2, "not_a_run": 1} and saved["level1"]["answers"] == 8
+    assert saved["runs"] == {"scored": 2, "not_a_run": 1} and saved["level1"]["answers"] == 4
     assert all((d / "diagnostics" / "gold.jsonl").exists() for d in run_dirs(tmp_path))
 
 

@@ -98,7 +98,16 @@ def sign_test(concordant: int, discordant: int) -> float | None:
 
 
 def level1(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
-    """Does generation-0 fitness follow correctness? The verdict follows gold design 6.2 in order."""
+    """Does generation-0 fitness follow correctness? The verdict follows gold design 6.2 in order.
+
+    Each task counts once (gold design 6.2: its four generation-0 answers). When a task has several runs,
+    for example a replay that continues it, the earliest run folder by name counts; the rest are set aside.
+    """
+    kept: dict[str, Mapping[str, Any]] = {}
+    for run in sorted(runs, key=lambda r: r["run"]):
+        kept.setdefault(run["task"], run)
+    set_aside = sorted(run["run"] for run in runs if kept[run["task"]] is not run)
+    runs = list(kept.values())
     groups = [[a for a in run["answers"] if a["generation"] == 0 and a["correctness"] is not None] for run in runs]
     answers = [a for group in groups for a in group]
     unscorable = sum(1 for run in runs for a in run["answers"] if a["generation"] == 0 and a["correctness"] is None)
@@ -123,7 +132,7 @@ def level1(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     return {"tasks": len(runs), "answers": len(answers), "unscorable": unscorable, "share_correct": share,
             "pairs": pairs, "concordance": rate, "verdict": verdict, "sign_test_p": sign_test(concordant, discordant),
             "by_judge": by_judge, "by_model": {m: sum(v) / len(v) for m, v in authors.items()},
-            "rules": {"ceiling": CEILING, "min_pairs": MIN_PAIRS, "signal": SIGNAL}}
+            "set_aside": set_aside, "rules": {"ceiling": CEILING, "min_pairs": MIN_PAIRS, "signal": SIGNAL}}
 
 
 def borda(rankings: Sequence[Sequence[str]], candidates: Sequence[str]) -> list[str]:
@@ -182,6 +191,8 @@ def format_report(report: Mapping[str, Any]) -> str:
         rate = "n/a" if one["concordance"] is None else f"{one['concordance']:.2f}"
         lines.append(f"Level 1 (generation 0): {one['answers']} answers, {one['share_correct']:.0%} fully correct, "
                      f"{one['pairs']} pairs with different correctness, concordance {rate} -> {one['verdict']}")
+        if one["set_aside"]:
+            lines.append("  one run per task counts; set aside: " + ", ".join(one["set_aside"]))
         if one["unscorable"]:
             lines.append(f"  {one['unscorable']} answer(s) left out a gold drug and were not scored")
         if one["sign_test_p"] is not None:

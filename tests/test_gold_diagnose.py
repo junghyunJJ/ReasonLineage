@@ -139,8 +139,17 @@ def test_runs_without_gold_unfinished_changed_or_not_runs_are_reported(tmp_path)
 
 
 def test_summarize_counts_runs_and_flags_a_task_run_twice(tmp_path):
-    runs = scored(tmp_path, [aligned(), aligned()]) + [score_run(write_run(tmp_path, "again", "t1", aligned()), GOLD)]
+    runs = scored(tmp_path, [aligned(), aligned()]) + [score_run(write_run(tmp_path, "zz-again", "t1", aligned()), GOLD)]
     runs.append(score_run(write_run(tmp_path, "x", "not-in-gold", aligned()), GOLD))
     report = summarize(runs)
     assert report["runs"] == {"scored": 3, "no_gold": 1} and report["duplicate_tasks"] == ["t1"]
-    assert report["level1"]["answers"] == 12 and report["level2"] is None
+    assert report["level1"]["answers"] == 8 and report["level1"]["set_aside"] == ["zz-again"] and report["level2"] is None
+
+
+def test_level1_counts_each_task_once_and_names_the_runs_set_aside(tmp_path):
+    # A replay continues a generation-0 run with the same answers; counting both would double the pairs.
+    first = scored(tmp_path, [aligned(), aligned(), aligned()])
+    again = [score_run(write_run(tmp_path, f"zz-again{i}", f"t{i}", aligned()), GOLD) for i in (1, 2, 3)]
+    report = level1(first + again)
+    assert (report["tasks"], report["answers"], report["pairs"]) == (3, 12, 15)
+    assert report["set_aside"] == ["zz-again1", "zz-again2", "zz-again3"]
