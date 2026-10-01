@@ -1,7 +1,7 @@
 # 정답지 개발용 세트 (repoDB) 설계
 
 - 날짜: 2026-09-30
-- 상태: 설계 1/4 · 2/4 · 3/4 · 4/4 승인, 문서 검토 대기
+- 상태: 승인. 같은 날 검수 가능성을 확인한 뒤, 실패한 약을 ClinicalTrials.gov 검색으로 보충하기로 했어요 (4.3, 사용자 결정).
 - 기반: `specs/2026-09-29-engine-design.md` (엔진 1단계, 프로토콜 1.0.1, 패널 opus · gpt · grok · glm)
 - 브랜치: `worktree-gold-standard-v0`
 
@@ -13,10 +13,10 @@
 2. 진화가 정답률을 올리는가
 3. 심사 조건에 따라 "점수는 오르는데 정답률은 제자리"인 간극이 달라지는가 (심사 편향 논문)
 
-1단계가 안 되면 2·3단계는 해석할 수 없어서, 1단계부터 해요. 데이터는 repoDB로 만든 개발용 세트예요. 모델이 결과를 알고 있을 가능성이 커서 논문의 주 결과로는 쓰지 않아요. 보조 분석으로 쓰려면 지식 탐침(모델이 그 결과를 아는지 직접 묻기), 사람의 검수 확인, 사전 등록이 필요해요. 예를 들면 정답을 아는 조건(repoDB)과 모르는 조건(정답지 v0)에서 심사 편향이 다르게 나타나는지 비교하는 분석이에요. 이번에는 도구와 절차를 맞춰 보는 리허설로 써요. 논문의 주 결과는 모든 모델의 학습 컷오프 이후에 결과가 나온 정답지 v0로 따로 만들어요.
+1단계가 안 되면 2·3단계는 해석할 수 없어서, 1단계부터 해요. 데이터는 repoDB로 만들고, 모자란 실패한 약은 ClinicalTrials.gov 검색으로 보충한 개발용 세트예요. 모델이 결과를 알고 있을 가능성이 커서 논문의 주 결과로는 쓰지 않아요. 보조 분석으로 쓰려면 지식 탐침(모델이 그 결과를 아는지 직접 묻기), 사람의 검수 확인, 사전 등록이 필요해요. 예를 들면 정답을 아는 조건(repoDB)과 모르는 조건(정답지 v0)에서 심사 편향이 다르게 나타나는지 비교하는 분석이에요. 이번에는 도구와 절차를 맞춰 보는 리허설로 써요. 논문의 주 결과는 모든 모델의 학습 컷오프 이후에 결과가 나온 정답지 v0로 따로 만들어요.
 
 **이 문서의 범위**
-- repoDB에서 후보 뽑기, ClinicalTrials.gov 임상 기록 받기, 검수 기록, 과제·정답 파일 만들기
+- repoDB에서 후보 뽑기, ClinicalTrials.gov 검색으로 실패한 약 보충, 임상 기록 받기, 검수 기록, 과제·정답 파일 만들기
 - 엔진 변경: `--generations 0`, `--replay`와 `--generations` 함께 쓰기, `--replay`의 과제 확인, `python -m reasonlineage`
 - `reasonlineage gold` 명령: 모든 세대의 모든 답을 정답으로 채점하고, 1단계 판정과 2단계 비교를 계산
 - 과제 10개로 1단계 실측
@@ -29,7 +29,7 @@
 
 ## 2. 성공 기준
 
-1. 과제 파일, 정답 파일, 검수 기록이 저장소에 있고, 같은 입력(고정한 repoDB 파일, 저장한 임상 기록, 검수 기록)에서 같은 파일이 다시 만들어져요.
+1. 후보 파일, 임상 기록, 검수 기록, 과제 파일, 정답 파일이 저장소에 있고, 저장한 후보 파일과 검수 기록에서 같은 과제·정답 파일이 다시 만들어져요. 검색 결과는 날마다 달라질 수 있어서 후보 파일을 저장해 둬요.
 2. 엔진은 정답 파일을 읽지 않아요. `engine/`과 `checks/`는 `gold`와 `diagnose.gold`를 import하지 않아요 (테스트로 확인).
 3. `--generations 0` 실행은 1세대 작성과 심사가 끝나면 멈춰요. `--replay … --generations 3`은 기록된 1세대를 모델 호출 없이 재사용해요 (테스트로 확인).
 4. `reasonlineage gold`가 6.2의 규칙대로 1단계 판정을 내요 (테스트로 확인).
@@ -42,14 +42,14 @@
 | 새 파일 | 하는 일 |
 |---|---|
 | `src/reasonlineage/gold/__init__.py` | 정답지 도구 패키지 |
-| `src/reasonlineage/gold/repodb.py` | repoDB 파일을 받아 체크섬을 확인하고, 후보 적응증을 뽑아요 |
-| `src/reasonlineage/gold/trials.py` | ClinicalTrials.gov에서 임상 기록을 받아 저장해요 |
+| `src/reasonlineage/gold/repodb.py` | repoDB 파일을 받아 체크섬을 확인하고, 후보 적응증을 뽑아요. 검색한 임상에서 실패한 약을 골라 합쳐요 |
+| `src/reasonlineage/gold/trials.py` | ClinicalTrials.gov에서 적응증마다 중단된 임상을 검색하고, 임상 기록을 받아 저장해요 |
 | `src/reasonlineage/gold/build.py` | 검수 기록으로 과제 파일과 정답 파일을 만들어요 |
 | `src/reasonlineage/diagnose/gold.py` | 답을 정답으로 채점하고, 1단계 판정과 2단계 비교를 계산해요 |
 | `src/reasonlineage/__main__.py` | `python -m reasonlineage` |
-| `scripts/build_repodb_dev.py` | 후보 뽑기 → 임상 기록 → (검수) → 파일 만들기를 순서대로 실행해요 |
+| `scripts/build_repodb_dev.py` | 후보 뽑기와 검색 → 임상 기록 → (검수) → 파일 만들기를 순서대로 실행해요 |
 | `scripts/run_gold_dev.sh` | 과제 10개를 순서대로 돌리고 `reasonlineage gold`로 요약해요 |
-| `gold/repodb-dev/candidates.json` | 후보 적응증과 실패 쌍 (자동) |
+| `gold/repodb-dev/candidates.json` | 후보 적응증과 실패 쌍, 실패 쌍마다 출처 repodb 또는 ctgov (자동) |
 | `gold/repodb-dev/trials.json` | 실패 쌍의 임상 기록 (자동) |
 | `gold/repodb-dev/curation.json` | 검수 결정과 이유 (Claude가 쓰고 사용자가 확인) |
 | `gold/repodb-dev/gold.json` | 과제별 정답과 출처 (자동) |
@@ -58,7 +58,10 @@
 **흐름**
 
 ```
-repoDB 파일 (고정한 사본) ─ repodb.py ─> candidates.json ─ trials.py ─> trials.json
+repoDB 파일 (고정한 사본) ─ repodb.py ─> 기본 후보 (적응증 39개)
+                                              │ 적응증마다 trials.py 검색 → repodb.py가 실패한 약을 골라 합침
+                                              ▼
+                                       candidates.json ─ trials.py ─> trials.json
                                                                           │
                                                    검수 (Claude) ─> curation.json
                                                                           │
@@ -86,21 +89,42 @@ runs/gold-dev/* + gold.json ─ reasonlineage gold ─> <실행>/diagnostics/gol
     - 효능: `efficac|futil|no (significant )?(benefit|effect|difference)|not effective|ineffective|lack of (clinical )?(benefit|response|activity)|did not (meet|show|demonstrate)|primary (end ?point|outcome)|interim analysis|unlikely to (meet|succeed|show)|insufficient (activity|response|benefit)`
     - 안전성: `safety|adverse|toxicit|side effect|serious`
   - 그 적응증에 승인된 약이 아님
-- 승인된 약이 1개 이상이고 실패한 약이 2개 이상인 적응증만 남겨요. 2026-09-30 기준 21개예요.
-- 결과: `candidates.json`. 적응증마다 승인된 약 목록과 실패 쌍 목록(약, NCT, 상태, 단계, 중단 사유)이 들어가요.
+- 기본 후보: 승인된 약이 1개 이상이고, repoDB에 실패한 약이 1개 이상인 적응증이에요. 2026-09-30 기준 39개예요.
+- 기본 후보에 4.3의 검색 결과를 합친 뒤, 실패한 약이 2개 이상인 적응증만 남겨요. 2026-09-30 기준 35개예요 (검색에서 온 실패 쌍 173개, 임상 기록 215개).
+- 결과: `candidates.json`. 적응증마다 승인된 약 목록과 실패 쌍 목록(약, NCT, 상태, 단계, 중단 사유, 출처)이 들어가요.
 
-### 4.3 임상 기록 받기 (`trials.py`)
-- 주소: `https://clinicaltrials.gov/api/v2/studies/{NCT}?fields=NCTId,BriefTitle,OverallStatus,WhyStopped,InterventionName,Phase,Condition`
-- 실패 쌍의 NCT마다 제목, 상태, 중단 사유, 투여 약, 단계, 질환을 `trials.json`에 저장해요. 이미 저장된 NCT는 다시 받지 않아요.
+### 4.3 검색으로 실패한 약 보충 (`trials.py`, `repodb.py`)
+- 이유: repoDB의 실패 쌍 96개(임상 43개)를 검수 조건(4.5)으로 읽어 보니, 조건을 통과한 실패한 약이 2개 이상인 적응증이 3개뿐이었어요 (2026-09-30). 그중 둘(비소세포폐암, 폐의 악성 종양)은 같은 병이에요.
+- 검색: 기본 후보의 적응증마다 `https://clinicaltrials.gov/api/v2/studies`를 불러요.
+  - 조건: `query.cond`=적응증 이름, `filter.overallStatus=TERMINATED,WITHDRAWN,SUSPENDED`, `filter.advanced=AREA[StudyType]INTERVENTIONAL`, `pageSize=1000`
+  - 다음 쪽이 없을 때까지 받아요. 받는 칸은 4.4와 같아요.
+- 실패한 약으로 남기는 임상 (모두 만족)
+  - 중단 사유가 4.2의 효능 또는 안전성 패턴에 맞아요.
+  - 시험 약이 repoDB의 약 하나예요.
+    - 시험 약: 종류가 `DRUG`나 `BIOLOGICAL`이고, 이름이 위약 패턴(`placebo|saline|vehicle|sham|standard (of )?care|usual care|best supportive care`, 대소문자 무시)에 맞지 않는 중재예요.
+    - 시험 약 이름마다 repoDB 약 이름을 찾아요. repoDB에서 어느 적응증에든 `Approved`인 약 이름이 단어로 들어 있으면 그 약이에요 (대소문자 무시, 긴 이름 먼저).
+    - 모든 시험 약에서 찾은 약이 하나뿐이어야 해요. 용량만 다른 여러 군은 괜찮아요. 이름을 찾지 못한 시험 약이 하나라도 있거나, 약이 둘 이상이면 빼요.
+  - 그 약이 그 적응증에 승인된 약이 아니에요.
+- 실패 쌍에는 출처를 적어요. repoDB에서 온 것은 `"source": "repodb"`, 검색에서 온 것은 `"source": "ctgov"`예요. repoDB에 이미 있는 약과 NCT 쌍은 다시 넣지 않아요.
+- 검색 한 쪽이 실패하면 한 번 다시 부르고, 그래도 실패하면 후보 뽑기를 멈춰요. 후보 뽑기는 처음부터 다시 돌리면 돼요.
+- 검색에는 최근 임상도 섞여 있어서, 모델이 결과를 모를 수 있어요. repoDB를 보조 분석에 쓸 때는 출처로 나눠 봐요.
+
+### 4.4 임상 기록 받기 (`trials.py`)
+- 주소: `https://clinicaltrials.gov/api/v2/studies/{NCT}?fields=NCTId,BriefTitle,OverallStatus,WhyStopped,InterventionName,InterventionType,Phase,Condition`
+- 실패 쌍의 NCT마다 NCT, 제목, 상태, 중단 사유, 중재(이름과 종류), 단계, 질환을 `trials.json`에 저장해요. 이미 저장된 NCT는 다시 받지 않아요.
 - 실패하면 한 번 다시 받고, 그래도 실패하면 그 NCT에 오류를 적어 두고 검수에서 판단해요.
 
-### 4.4 검수 (`curation.json`)
-- 실패한 약으로 인정하는 조건 (모두 만족)
+### 4.5 검수 (`curation.json`)
+- 실패한 약으로 인정하는 조건 (모두 만족, 두 출처 모두 같음)
   1. 그 약이 그 임상의 시험 약이에요. 병용 요법의 배경 약이 아니에요.
   2. 그 질환 자체를 치료하려는 임상이에요. 다른 증상이나 합병증(예: 암 환자의 우울증)을 위한 임상이 아니에요.
   3. 효능 부족(무익, 1차 평가변수 미달 포함)이나 안전성 때문에 멈췄어요.
-- 승인된 약은 그 적응증에 승인된 약(repoDB `Approved`) 가운데 하나를 골라요. 대안이 있으면 가장 널리 쓰이는 1차 치료제는 피해요 (천장 효과를 줄이려고).
+- 승인된 약은 그 적응증에 승인된 약(repoDB `Approved`) 가운데, 그 질환 자체를 치료하는 약에서 골라요 (보조 치료제와 진단약은 빼요). 대안이 있으면 가장 널리 쓰이는 1차 치료제는 피하고 (천장 효과를 줄이려고), 남은 약 가운데 이름의 알파벳 순서로 첫 약을 골라요.
 - 과제 하나는 승인된 약 1개와 실패한 약 2개로, 모두 다른 약이에요. 적응증 하나에서 과제는 하나만 만들어요.
+- 인정한 실패한 약이 셋 이상이면 repoDB에서 온 약을 먼저, 그다음 이름의 알파벳 순서로 둘을 골라요.
+- 같은 병을 가리키는 적응증(예: 비소세포폐암과 폐의 악성 종양)은 먼저 검토한 쪽만 과제로 만들어요.
+- 질문 하나로 묻기 어려운 넓은 적응증(예: 통증, 여러 장기의 편평세포암)은 이유를 적고 빼요.
+- 적응증은 `ind_id` 순서로 검토하고, 과제가 10개가 되면 멈춰요. 검토한 적응증은 과제가 되거나 `dropped`에 이유와 함께 남아요. 결과를 보고 고르지 않으려는 규칙이에요.
 - 형식:
 
 ```json
@@ -117,7 +141,7 @@ runs/gold-dev/* + gold.json ─ reasonlineage gold ─> <실행>/diagnostics/gol
 
 - 검수는 Claude가 하고, 사용자는 이 파일로 결정과 이유를 확인해요. 과제가 10개가 안 되면 몇 개인지 보고하고, 기준 완화 여부를 사용자와 정해요.
 
-### 4.5 과제·정답 파일 (`build.py`)
+### 4.6 과제·정답 파일 (`build.py`)
 - 과제 파일: `tasks/repodb-dev/<id>.json`, 엔진 과제 형식(엔진 설계 5.1)이에요.
   - `id`: `repodb-` + `display_name`을 소문자·하이픈으로 바꾼 것
   - `question`: `Which of these drugs is most promising for treating {display_name}? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.`
@@ -150,6 +174,7 @@ runs/gold-dev/* + gold.json ─ reasonlineage gold ─> <실행>/diagnostics/gol
 
 ### 5.3 `python -m reasonlineage`
 - `src/reasonlineage/__main__.py`가 `cli.main`을 불러요. 설치된 `reasonlineage` 명령은 설치한 폴더의 코드를 가리키므로, 워크트리 코드로 돌릴 때 써요.
+- 편집 가능 설치(`pip install -e`)는 원래 체크아웃의 `src`를 가리켜요. 그래서 워크트리에서는 `PYTHONPATH=src`를 함께 줘야 워크트리 코드가 돌아요. 두 스크립트(`build_repodb_dev.py`, `run_gold_dev.sh`)는 이 경로를 스스로 설정해요.
 
 ### 5.4 `reasonlineage gold`
 
@@ -199,7 +224,8 @@ reasonlineage gold --gold GOLD.json RUN_DIR [RUN_DIR ...] [--out REPORT.json]
 - 정답 파일에 없는 과제의 실행: 경고하고 건너뛰어요.
 - 끝나지 않은 실행: "미완료"로 표시하고 계산에서 빼요. 개수는 요약에 보고해요.
 - repoDB 체크섬이 다름: 파일 만들기 단계에서 멈춰요.
-- ClinicalTrials.gov 호출 실패: 한 번 다시 받고, 그래도 실패하면 오류를 기록해 둬요 (4.3).
+- ClinicalTrials.gov 검색 실패: 한 번 다시 부르고, 그래도 실패하면 후보 뽑기를 멈춰요 (4.3).
+- ClinicalTrials.gov 임상 기록 받기 실패: 한 번 다시 받고, 그래도 실패하면 오류를 기록해 둬요 (4.4).
 
 ## 7. 실측 계획
 - `scripts/run_gold_dev.sh`
@@ -219,7 +245,9 @@ reasonlineage gold --gold GOLD.json RUN_DIR [RUN_DIR ...] [--out REPORT.json]
 - **1단계 판정:** 가짜 실행 폴더로 일치율, 적합도 동점 0.5, 천장 판정, 쌍 부족 판정을 확인해요.
 - **참고 지표와 2단계:** 심사자별 일치율, Borda 다수결(동점 처리 포함), 모델별 정답률, 세대별 평균을 확인해요.
 - **`reasonlineage gold`:** 정답 파일에 없는 과제, 미완료 실행, `gold.jsonl`과 `--out` 파일을 확인해요.
-- **repoDB 추출:** 작은 가짜 CSV로 상태·사유 필터, 승인된 약 제외, 2개 이상 조건, 체크섬 불일치 멈춤을 확인해요.
+- **repoDB 추출:** 작은 가짜 CSV로 상태·사유 필터, 승인된 약 제외, 2개 이상 조건, 출처 표시, 체크섬 불일치 멈춤을 확인해요.
+- **검색:** 가짜 서버로 검색 조건, 쪽 넘김, 한 번 다시 부르기, 두 번 실패하면 멈춤을 확인해요.
+- **검색한 임상에서 실패한 약 고르기:** 중단 사유, 위약 제외, 용량만 다른 군, 약이 둘인 임상, 이름을 못 찾은 약, 그 적응증에 승인된 약, 단어 단위와 긴 이름 먼저 찾기를 확인해요. 두 출처를 합칠 때 중복을 빼고, 합친 뒤 2개 이상 조건을 적용하는지도 봐요.
 - **임상 기록:** 가짜 서버로 응답 해석, 이미 저장된 NCT 건너뛰기, 실패 기록을 확인해요.
 - **파일 만들기:** 같은 id면 같은 순서로 섞이는지, 질문 문장, 정답 파일 형식을 확인해요.
 - **엔진:**
@@ -242,5 +270,5 @@ reasonlineage gold --gold GOLD.json RUN_DIR [RUN_DIR ...] [--out REPORT.json]
 ## 10. 이 문서 밖에서 정할 것
 - 2단계 판정 기준: 1단계 결과를 본 뒤, 2단계를 돌리기 전에 정해요.
 - 정답지 v0: 모든 패널 모델의 학습 컷오프 이후 결과로 만든 논문용 시험 세트. 출처는 CT Open 2026 기간, openFDA 효능 추가 승인, Open Targets 변경분이에요 (엔진 설계 11장).
-- 검수 뒤 과제가 10개가 안 될 때의 기준 완화
+- 검색으로 보충해도 검수 뒤 과제가 10개가 안 될 때의 다음 단계
 - repoDB를 논문의 보조 분석으로 쓸지와 지식 탐침: 1단계 결과를 보고 정해요. 천장이 나오면 모델이 대부분 안다는 뜻이라 보조 분석으로서의 가치도 낮아요.
