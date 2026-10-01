@@ -5,10 +5,12 @@ The data are drawn afresh, so the answer is written nowhere. A task is kept only
 model: its posterior among the three candidates, fitted to the data the models see, lies in the chosen band.
 """
 
+import warnings
 from dataclasses import dataclass
-from typing import Callable
+from typing import Any, Callable
 
 import numpy as np
+from scipy.optimize import OptimizeWarning, curve_fit
 
 
 @dataclass(frozen=True)
@@ -197,3 +199,59 @@ ELIMINATION = Family(
 
 
 FAMILIES: tuple[Family, ...] = (DOSE, ENZYME, GROWTH, ELIMINATION)
+# The true model's posterior for each band (gold synth design 4.3): low bound inclusive, high bound exclusive.
+BANDS: dict[str, tuple[float, float]] = {"easy": (0.999, 1.01), "medium": (0.97, 0.999), "hard": (0.90, 0.97)}
+FIT_FROM = 8  # starting points refined per model
+
+
+def round3(values: np.ndarray) -> np.ndarray:
+    """Values rounded to 3 significant digits, as the task shows them."""
+    return np.array([float(f"{v:.3g}") for v in np.ravel(values)]).reshape(np.shape(values))
+
+
+def fit(model: Model, family: Family, y: np.ndarray) -> tuple[float, tuple[float, ...]] | None:
+    """The least residual sum of squares of `model` on the data, with its parameters.
+
+    Refines the FIT_FROM starting points with the lowest residuals; parameters stay positive. None when no start
+    converges.
+    """
+    def rss(p):
+        with np.errstate(all="ignore"):
+            return float(np.sum((model.f(family.x, *p) - y) ** 2))
+
+    scored = sorted((r, p0) for p0 in family.starts(family.x, y) if np.isfinite(r := rss(p0)))
+    best = None
+    for _, p0 in scored[:FIT_FROM]:
+        try:
+            with warnings.catch_warnings(), np.errstate(all="ignore"):
+                warnings.simplefilter("ignore", OptimizeWarning)
+                p, _ = curve_fit(model.f, family.x, y, p0=p0, bounds=(1e-9, np.inf), maxfev=5000)
+        except (RuntimeError, ValueError):
+            continue
+        r = rss(p)
+        if np.isfinite(r) and (best is None or r < best[0]):
+            best = (r, tuple(float(v) for v in p))
+    return best
+
+
+def posteriors(family: Family, y: np.ndarray, sigma: float) -> list[dict[str, Any]] | None:
+    """Each candidate's fit and posterior, in the family's model order; None when any fit fails.
+
+    The three models have the same number of parameters, so the BIC weights reduce to exp(−RSS/2σ²) (design 4.3).
+    """
+    fits = [fit(model, family, y) for model in family.models]
+    if any(f is None for f in fits):
+        return None
+    rss = np.array([f[0] for f in fits])
+    logw = -(rss - rss.min()) / (2 * sigma**2)
+    w = np.exp(logw) / np.exp(logw).sum()
+    return [{"model": m.name, "rss": round(f[0], 6), "posterior": float(p), "params": [round(v, 6) for v in f[1]]}
+            for m, f, p in zip(family.models, fits, w)]
+
+
+def band_of(posterior: float) -> str | None:
+    for band, (low, high) in BANDS.items():
+        if low <= posterior < high:
+            return band
+    return None
+
