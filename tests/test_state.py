@@ -156,7 +156,8 @@ def test_prescored_only_start_is_ready_to_select():
 @pytest.mark.parametrize("bad", [
     {"survivor_count": 3},  # no new-candidate slot left
     {"population_limit": 1, "survivor_count": 1},
-    {"generation_limit": 0},
+    {"generation_limit": -1},
+    {"generation_limit": 11},
     {"threshold": 1.5},
 ])
 def test_config_validation(bad):
@@ -188,3 +189,12 @@ def test_stagnation_detection_can_be_turned_off():
         score(state, f"mut-gen-{gen}-1", value)
     assert state.select() is not None  # the same history stagnates when detection is on
     assert not state.recovery_due
+
+
+def test_generation_limit_zero_stops_after_generation_zero_is_scored():
+    state = EvolutionState(config(generation_limit=0), seeds())
+    for cid, value in [("seed-1", 0.5), ("seed-2", 0.6), ("seed-3", 0.4)]:
+        score(state, cid, value)
+    assert state.select() is None
+    assert state.status == Status.COMPLETED and state.termination == Termination.GENERATION_LIMIT
+    assert state.generation == 0

@@ -142,7 +142,7 @@ def test_diagnose_runs_j2_and_the_pmid_check(tmp_path, capsys):
     assert summary["citations"] > 0
 
 
-@pytest.mark.parametrize("mode, generations", [("experiment", "0"), ("exploration", "11")])
+@pytest.mark.parametrize("mode, generations", [("experiment", "-1"), ("exploration", "11")])
 def test_bad_generations_stop_before_any_call(tmp_path, capsys, mode, generations):
     task, setup = write_files(tmp_path)
     world = World()

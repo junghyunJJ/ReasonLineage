@@ -107,3 +107,11 @@ def test_judge_axes_and_contexts(tmp_path):
 def test_invalid_run_options_fail_before_any_call(tmp_path):
     with pytest.raises(ValueError, match="generation_limit"):
         make_runner(tmp_path, generations=11)
+
+
+def test_generations_zero_writes_and_judges_generation_zero_only(tmp_path):
+    run_dir, summary, models = run(tmp_path, generations=0)
+    assert sum(len(m.seen) for m in models.values()) == 16  # 4 answers + 12 judge calls
+    assert [c["generation"] for c in events_of(run_dir, "candidate.created")] == [0, 0, 0, 0]
+    assert events_of(run_dir, "selection") == []
+    assert summary["termination"] == "generation_limit" and summary["generations"] == 0
