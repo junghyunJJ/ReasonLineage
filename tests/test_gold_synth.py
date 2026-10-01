@@ -1,5 +1,7 @@
 """The synthetic hidden-law gold set (gold synth design 4): models, fits, bands, tasks and files."""
 
+from collections import Counter
+
 import numpy as np
 import pytest
 
@@ -63,3 +65,42 @@ def test_bands_split_the_true_models_posterior(posterior, band):
 
 def test_shown_values_have_three_significant_digits():
     assert synth.round3(np.array([123.456, 0.0012345, -9.8765])).tolist() == [123.0, 0.00123, -9.88]
+
+
+def test_tasks_rotate_families_and_true_models():
+    picks = [synth.assignment(i) for i in range(10)]
+    assert Counter(f.key for f, _ in picks) == {"dose": 3, "enzyme": 3, "growth": 2, "elimination": 2}
+    assert [t for f, t in picks if f.key == "dose"] == [0, 1, 2]
+    assert [t for f, t in picks if f.key == "growth"] == [0, 1]
+
+
+def test_a_task_shows_the_data_and_candidates_and_its_truth_is_in_the_band():
+    made = synth.make_task("synth-test", 0, "easy")
+    task, gold, record = made["task"], made["gold"], made["record"]
+    names = [m.name for m in synth.DOSE.models]
+    assert task["id"] == "synth-test-01" and sorted(task["candidates"]) == sorted(names)
+    assert (task["category"], task["data_sensitivity"]) == ("analytical", "public")
+    assert gold == {"approved": ["Hyperbolic Emax model"], "failed": sorted(names[1:])}
+    assert record["family"] == "dose" and record["truth"] == "Hyperbolic Emax model"
+    posterior = {f["model"]: f["posterior"] for f in record["fits"]}
+    assert synth.band_of(posterior["Hyperbolic Emax model"]) == "easy"
+    question = task["question"]
+    assert f"Measurement error is Gaussian with SD {record['sigma']:.3g} %." in question
+    assert "| concentration (µM) | effect (% of maximum) |" in question
+    lines = [line for line in question.splitlines() if line.startswith("- ")]
+    assert lines == [f"- {name}: {next(m.formula for m in synth.DOSE.models if m.name == name)}" for name in task["candidates"]]
+    values = [float(row.split("|")[2]) for row in question.splitlines() if row.startswith("| ") and "µM" not in row and "---" not in row]
+    assert len(values) == 10 and min(values) >= 0
+
+
+def test_the_same_set_gives_the_same_task_and_another_set_other_data():
+    first, again = synth.make_task("synth-test", 1, "easy"), synth.make_task("synth-test", 1, "easy")
+    assert first == again
+    assert synth.make_task("synth-other", 1, "easy")["task"]["question"] != first["task"]["question"]
+
+
+def test_a_band_that_cannot_be_filled_stops_with_the_count(monkeypatch):
+    monkeypatch.setattr(synth, "MAX_TRIES", 3)
+    monkeypatch.setattr(synth, "draw", lambda *args: None)
+    with pytest.raises(synth.SynthError, match="synth-test-01: no dose data .* band 'hard' after 3 draws"):
+        synth.make_task("synth-test", 0, "hard")

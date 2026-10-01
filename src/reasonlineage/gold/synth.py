@@ -5,12 +5,15 @@ The data are drawn afresh, so the answer is written nowhere. A task is kept only
 model: its posterior among the three candidates, fitted to the data the models see, lies in the chosen band.
 """
 
+import hashlib
 import warnings
 from dataclasses import dataclass
 from typing import Any, Callable
 
 import numpy as np
 from scipy.optimize import OptimizeWarning, curve_fit
+
+from .build import shuffled
 
 
 @dataclass(frozen=True)
@@ -255,3 +258,72 @@ def band_of(posterior: float) -> str | None:
             return band
     return None
 
+
+class SynthError(RuntimeError):
+    """A set could not be built: a band could not be filled, or the task folder holds files it does not build."""
+
+
+MAX_TRIES = 2000  # draws per task before giving up (design 7)
+
+
+def _rng(set_name: str, index: int) -> np.random.Generator:
+    return np.random.default_rng(int(hashlib.sha256(f"{set_name}:{index}".encode("utf-8")).hexdigest()[:16], 16))
+
+
+def assignment(index: int) -> tuple[Family, int]:
+    """Task `index`'s family and true model: families in turn, and each family's true models in turn (design 4.4)."""
+    family = FAMILIES[index % len(FAMILIES)]
+    return family, (index // len(FAMILIES)) % 3
+
+
+def draw(family: Family, truth: int, band: str, rng: np.random.Generator) -> dict[str, Any] | None:
+    """One draw of data from the true model; None when it is discarded (design 4.2, 4.3)."""
+    params = family.sample(rng, truth)
+    clean = family.models[truth].f(family.x, *params)
+    sigma = float(f"{rng.uniform(0.02, 0.10) * float(np.max(clean)):.3g}")
+    y = round3(clean + rng.normal(0.0, sigma, size=np.shape(clean)))
+    if np.any(y < 0):
+        return None
+    fits = posteriors(family, y, sigma)
+    if fits is None or band_of(fits[truth]["posterior"]) != band:
+        return None
+    return {"params": [float(v) for v in params], "sigma": sigma, "y": y, "fits": fits}
+
+
+def _number(v: float) -> str:
+    return f"{v:.3g}"
+
+
+def question(family: Family, y: np.ndarray, sigma: float, order: list[str]) -> str:
+    formulas = {m.name: m.formula for m in family.models}
+    xs = family.x if family.x.ndim == 2 else family.x[None, :]
+    rows = ["| " + " | ".join(family.columns) + " |", "|" + " --- |" * len(family.columns)]
+    rows += ["| " + " | ".join([*(_number(x[j]) for x in xs), _number(y[j])]) + " |" for j in range(len(y))]
+    lines = [f"{family.context} Measurement error is Gaussian with SD {_number(sigma)} {family.unit}.", "Data:", *rows,
+             "Candidate models (parameters unknown, all positive):", *(f"- {name}: {formulas[name]}" for name in order),
+             "Which candidate model most likely generated these data? Rank the candidates, and give the features of "
+             "the data that decide it, the key evidence, and one further measurement that would best confirm the "
+             "top pick."]
+    return "\n".join(lines)
+
+
+def make_task(set_name: str, index: int, band: str) -> dict[str, Any]:
+    """Task `index` of the set: its task file body, gold entry and generation record (design 4.2–4.4)."""
+    family, truth = assignment(index)
+    rng = _rng(set_name, index)
+    task_id = f"{set_name}-{index + 1:02d}"
+    for tries in range(1, MAX_TRIES + 1):
+        drawn = draw(family, truth, band, rng)
+        if drawn is not None:
+            break
+    else:
+        raise SynthError(f"{task_id}: no {family.key} data with the true model's posterior in band {band!r} "
+                         f"after {MAX_TRIES} draws")
+    names = [m.name for m in family.models]
+    order = shuffled(names, task_id)
+    body = {"id": task_id, "question": question(family, drawn["y"], drawn["sigma"], order), "candidates": order,
+            "category": "analytical", "data_sensitivity": "public"}
+    gold = {"approved": [names[truth]], "failed": sorted(n for i, n in enumerate(names) if i != truth)}
+    record = {"family": family.key, "truth": names[truth], "params": dict(zip(family.params, drawn["params"])),
+              "sigma": drawn["sigma"], "tries": tries, "fits": drawn["fits"]}
+    return {"task": body, "gold": gold, "record": record}
