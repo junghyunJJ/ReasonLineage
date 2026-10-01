@@ -8,6 +8,7 @@ trials that test an already approved drug and were first reported after every pa
 import ast
 import hashlib
 import io
+import json
 import pickle
 import re
 import urllib.request
@@ -16,6 +17,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from . import repodb
+from .build import shuffled
 
 REPO = "ClinicalTrial-OpenChallenge/CT_Open"
 COMMIT_2025 = "cc78ff33e90cc8da01f9db4e3b3d35dcc9ce4539"
@@ -29,10 +31,16 @@ SETS: dict[str, dict[str, str]] = {
 CACHE = Path.home() / ".cache" / "reasonlineage" / "ctopen"
 FIELDS = ("endpoint", "list_of_tuples", "arms", "reported_results")
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
+QUESTION = ("Which of these three clinical trials is most likely to meet its primary endpoint? Rank the candidates, "
+            "and give the mechanism, the key evidence, and a validation experiment for the top pick.")
 
 
 class SourceError(RuntimeError):
     """A CT Open file could not be fetched, is not the pinned file, or does not hold the expected plain data."""
+
+
+class ReviewError(ValueError):
+    """The review record breaks a rule of gold v0 design 4.3, or the task folder holds files it does not build."""
 
 
 class _PlainOnly(pickle.Unpickler):
@@ -156,3 +164,100 @@ def attach(found: list[dict[str, Any]], records: dict[str, dict[str, Any]]) -> l
         out.append({**candidate, "conditions": record.get("conditions") or [], "phases": record.get("phases") or [],
                     **({"fetch_error": record["error"]} if "error" in record else {})})
     return out
+
+
+def check_review(review: dict[str, Any], found: list[dict[str, Any]]) -> list[str]:
+    """What breaks the rules of gold v0 design 4.3 in the review record; empty when usable."""
+    known = {candidate["nct"] for candidate in found}
+    problems: list[str] = []
+    seen: set[str] = set()
+    for kind in ("keep", "drop"):
+        for item in review.get(kind, []):
+            nct = item.get("nct")
+            if nct not in known:
+                problems.append(f"{nct}: not among the candidates")
+            elif nct in seen:
+                problems.append(f"{nct}: reviewed twice")
+            seen.add(nct)
+            if not item.get("why"):
+                problems.append(f"{nct}: needs a reason ('why')")
+            if kind == "keep" and not item.get("display_name"):
+                problems.append(f"{nct}: a kept trial needs a display_name")
+    problems += [f"{nct}: not reviewed; keep or drop it" for nct in sorted(known - seen)]
+    return problems
+
+
+def group(kept: list[dict[str, Any]], set_name: str) -> list[tuple[dict[str, Any], ...]]:
+    """(MET, NOT MET, NOT MET) groups with three different diseases, in an order fixed by the set name.
+
+    MET and NOT MET trials are each sorted by NCT and shuffled by a seed from the set name; each MET trial
+    takes the first two unused NOT MET trials whose diseases differ from its own and from each other.
+    """
+    met = {t["nct"]: t for t in kept if t["label"] == "MET"}
+    not_met = {t["nct"]: t for t in kept if t["label"] == "NOT MET"}
+    pool = shuffled(sorted(not_met), f"ctopen-{set_name}-not-met")
+    used: set[str] = set()
+    groups = []
+    for nct in shuffled(sorted(met), f"ctopen-{set_name}-met"):
+        diseases = {met[nct]["display_name"]}
+        picks = []
+        for other in pool:
+            if other not in used and not_met[other]["display_name"] not in diseases:
+                picks.append(other)
+                diseases.add(not_met[other]["display_name"])
+                if len(picks) == 2:
+                    break
+        if len(picks) == 2:
+            used.update(picks)
+            groups.append((met[nct], not_met[picks[0]], not_met[picks[1]]))
+    return groups
+
+
+def _phase(phases: list[str]) -> str:
+    names = [p.replace("EARLY_PHASE", "early phase ").replace("PHASE", "phase ") for p in phases if p != "NA"]
+    return "/".join(names) or "phase not reported"
+
+
+def build(found: list[dict[str, Any]], review: dict[str, Any], set_name: str, tasks_dir: str | Path,
+          gold_path: str | Path, items_dir: str | Path) -> list[Path]:
+    """Write one task file per group, the gold file, and one items file per task (gold v0 design 4.4).
+
+    Nothing is written when the review breaks a rule or the task folder holds files this review does not build.
+    """
+    problems = check_review(review, found)
+    if problems:
+        raise ReviewError("; ".join(problems))
+    by_nct = {candidate["nct"]: candidate for candidate in found}
+    kept = [by_nct[item["nct"]] | {"display_name": item["display_name"]} for item in review.get("keep", [])]
+    groups = group(kept, set_name)
+    ids = [f"ctopen-{set_name}-{i:02d}" for i in range(1, len(groups) + 1)]
+    tasks_dir, gold_path, items_dir = Path(tasks_dir), Path(gold_path), Path(items_dir)
+    stale = [f"{path} is not built by this review; delete it, then build again"
+             for path in sorted(tasks_dir.glob("*.json")) if path.stem not in ids]
+    if stale:
+        raise ReviewError("; ".join(stale))
+    pin = SETS[set_name]
+    gold = {"source": {"repo": REPO, "commit": pin["commit"], "path": f"datasets/{pin['file']}", "sha256": pin["sha256"],
+                       "after": pin["after"]},
+            "tasks": {}}
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    items_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    for task_id, trials in zip(ids, groups):
+        names = {f"{t['drug']} for {t['display_name']}": t for t in trials}
+        order = shuffled(list(names), task_id)
+        lines = [f"- {name}: {names[name]['arm']} vs {names[name]['comparator']}, {_phase(names[name]['phases'])}; "
+                 f"primary endpoint: {names[name]['endpoint']['measure']} ({names[name]['endpoint']['timeFrame']})"
+                 for name in order]
+        body = {"id": task_id, "question": QUESTION + "\n" + "\n".join(lines), "candidates": order,
+                "category": "biomedical", "data_sensitivity": "public"}
+        path = tasks_dir / f"{task_id}.json"
+        path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+        met, *failed = list(names)
+        gold["tasks"][task_id] = {"approved": [met], "failed": sorted(failed)}
+        items = {"items": [{"item": name, "outcome_date": t["first_report"]} for name, t in names.items()]}
+        (items_dir / f"{task_id}.json").write_text(json.dumps(items, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    gold_path.parent.mkdir(parents=True, exist_ok=True)
+    gold_path.write_text(json.dumps(gold, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return written

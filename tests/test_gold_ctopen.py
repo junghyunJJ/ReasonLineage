@@ -1,10 +1,15 @@
 """CT Open as the source of gold v0 (gold v0 design 4): safe loading, trial selection, review, grouping, files."""
 
+import copy
 import hashlib
+import json
 import pickle
 
 import pytest
 
+from reasonlineage.diagnose.gold import correctness
+from reasonlineage.diagnose.j2 import load_gold_items
+from reasonlineage.engine.config import load_task
 from reasonlineage.gold import ctopen, repodb
 
 FIRED = []
@@ -162,3 +167,92 @@ def test_attach_adds_conditions_and_phases_and_marks_fetch_errors():
     first, second = ctopen.attach(found, records)
     assert (first["conditions"], first["phases"], "fetch_error" in first) == (["Disease X"], ["PHASE2"], False)
     assert (second["conditions"], second["phases"], second["fetch_error"]) == ([], [], "HTTP Error 404")
+
+
+def cand(nct, label, drug, phases=("PHASE2",)):
+    return {"nct": nct, "title": "A trial", "drug": drug, "arm": f"{drug} 10 mg", "comparator": "Placebo",
+            "endpoint": {"measure": "Change in score", "timeFrame": "12 weeks"}, "label": label,
+            "first_report": "2026-07-02", "conditions": ["Disease"], "phases": list(phases)}
+
+
+CANDS = [cand("NCT00000001", "MET", "Edrug"), cand("NCT00000002", "NOT MET", "Adrug"), cand("NCT00000003", "NOT MET", "Fdrug")]
+REVIEW = {"keep": [{"nct": "NCT00000001", "display_name": "disease a", "why": "new indication"},
+                   {"nct": "NCT00000002", "display_name": "disease b", "why": "new indication"},
+                   {"nct": "NCT00000003", "display_name": "disease c", "why": "new indication"}],
+          "drop": []}
+
+
+def build(tmp_path, found=CANDS, review=REVIEW):
+    return ctopen.build(found, review, "summer-2025", tmp_path / "tasks", tmp_path / "gold.json", tmp_path / "items")
+
+
+def test_build_writes_tasks_the_gold_file_and_items(tmp_path):
+    (path,) = build(tmp_path)
+    task = load_task(path)
+    assert task.id == "ctopen-summer-2025-01"
+    assert sorted(task.candidates) == ["Adrug for disease b", "Edrug for disease a", "Fdrug for disease c"]
+    assert task.question.startswith(ctopen.QUESTION) and (task.category, task.data_sensitivity) == ("biomedical", "public")
+    assert "- Edrug for disease a: Edrug 10 mg vs Placebo, phase 2; primary endpoint: Change in score (12 weeks)" in task.question
+    gold = json.loads((tmp_path / "gold.json").read_text())
+    truth = gold["tasks"]["ctopen-summer-2025-01"]
+    assert truth == {"approved": ["Edrug for disease a"], "failed": ["Adrug for disease b", "Fdrug for disease c"]}
+    pin = ctopen.SETS["summer-2025"]
+    assert gold["source"] == {"repo": ctopen.REPO, "commit": pin["commit"], "path": "datasets/Summer_2025.pickle",
+                              "sha256": pin["sha256"], "after": "2025-09-01"}
+    assert correctness(["Edrug for disease a", "Adrug for disease b", "Fdrug for disease c"], truth) == 1.0
+    items = load_gold_items(tmp_path / "items" / "ctopen-summer-2025-01.json")
+    assert sorted(i["item"] for i in items) == sorted(task.candidates) and {i["outcome_date"] for i in items} == {"2026-07-02"}
+
+
+def test_a_trial_without_a_trial_record_still_builds(tmp_path):
+    found = [CANDS[0] | {"phases": [], "conditions": [], "fetch_error": "HTTP Error 404"}, *CANDS[1:]]
+    (path,) = build(tmp_path, found)
+    assert "Edrug 10 mg vs Placebo, phase not reported;" in load_task(path).question
+
+
+def reviewed(change):
+    review = copy.deepcopy(REVIEW)
+    change(review)
+    return review
+
+
+@pytest.mark.parametrize("change, message", [
+    (lambda r: r["keep"].pop(), "NCT00000003: not reviewed"),
+    (lambda r: r["drop"].append({"nct": "NCT00000099", "why": "x"}), "NCT00000099: not among the candidates"),
+    (lambda r: r["drop"].append({"nct": "NCT00000001", "why": "x"}), "NCT00000001: reviewed twice"),
+    (lambda r: r["keep"][0].update(why=""), "NCT00000001: needs a reason"),
+    (lambda r: r["keep"][1].pop("display_name"), "NCT00000002: a kept trial needs a display_name"),
+])
+def test_review_rules_are_enforced(tmp_path, change, message):
+    review = reviewed(change)
+    assert any(message in p for p in ctopen.check_review(review, CANDS))
+    with pytest.raises(ctopen.ReviewError, match=message):
+        build(tmp_path, review=review)
+    assert not (tmp_path / "gold.json").exists() and not (tmp_path / "tasks").exists()
+
+
+def test_build_refuses_task_files_the_review_does_not_build(tmp_path):
+    build(tmp_path)
+    stale = tmp_path / "tasks" / "ctopen-summer-2025-02.json"
+    stale.write_text("{}")
+    with pytest.raises(ctopen.ReviewError, match="ctopen-summer-2025-02.json is not built by this review"):
+        build(tmp_path)
+
+
+def kept(nct, label, disease):
+    return cand(nct, label, "Edrug") | {"display_name": disease}
+
+
+def test_each_met_trial_gets_two_not_met_trials_of_other_diseases():
+    trials = [kept("NCT00000001", "MET", "a"), kept("NCT00000002", "MET", "b"),
+              *(kept(f"NCT0000001{i}", "NOT MET", d) for i, d in enumerate("cdef"))]
+    groups = ctopen.group(trials, "summer-2025")
+    assert groups == ctopen.group(list(reversed(trials)), "summer-2025")  # the order is fixed by the set, not the input
+    assert len(groups) == 2 and all(len({t["display_name"] for t in g}) == 3 for g in groups)
+    assert sorted(t["nct"] for g in groups for t in g[1:]) == [f"NCT0000001{i}" for i in range(4)]
+
+
+def test_a_met_trial_without_two_other_diseases_is_left_out():
+    trials = [kept("NCT00000001", "MET", "a"), kept("NCT00000002", "NOT MET", "a"), kept("NCT00000003", "NOT MET", "a"),
+              kept("NCT00000004", "NOT MET", "b")]
+    assert ctopen.group(trials, "summer-2025") == []
