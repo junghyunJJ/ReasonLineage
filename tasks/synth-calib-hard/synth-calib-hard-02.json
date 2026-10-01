@@ -1,0 +1,11 @@
+{
+  "id": "synth-calib-hard-02",
+  "question": "The initial velocity of a purified enzyme was measured at 8 substrate concentrations, without inhibitor and with an inhibitor at 10 µM. Measurement error is Gaussian with SD 1.96 µM/min.\nData:\n| substrate (µM) | inhibitor (µM) | initial velocity (µM/min) |\n| --- | --- | --- |\n| 1 | 0 | 2.56 |\n| 2.1 | 0 | 3.22 |\n| 4.5 | 0 | 5.18 |\n| 9.7 | 0 | 8.89 |\n| 20.6 | 0 | 12.9 |\n| 44 | 0 | 26.5 |\n| 93.8 | 0 | 22.3 |\n| 200 | 0 | 24.8 |\n| 1 | 10 | 0.367 |\n| 2.1 | 10 | 1.74 |\n| 4.5 | 10 | 3.56 |\n| 9.7 | 10 | 3.47 |\n| 20.6 | 10 | 9.6 |\n| 44 | 10 | 11 |\n| 93.8 | 10 | 21.3 |\n| 200 | 10 | 21.5 |\nCandidate models (parameters unknown, all positive):\n- Competitive inhibition: v = Vmax·S/(Km·(1 + I/Ki) + S)\n- Uncompetitive inhibition: v = Vmax·S/(Km + S·(1 + I/Ki))\n- Noncompetitive inhibition: v = Vmax·S/((Km + S)·(1 + I/Ki))\nWhich candidate model most likely generated these data? Rank the candidates, and give the features of the data that decide it, the key evidence, and one further measurement that would best confirm the top pick.",
+  "candidates": [
+    "Competitive inhibition",
+    "Uncompetitive inhibition",
+    "Noncompetitive inhibition"
+  ],
+  "category": "analytical",
+  "data_sensitivity": "public"
+}

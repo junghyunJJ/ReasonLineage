@@ -1,0 +1,91 @@
+{
+  "source": {
+    "generator": "reasonlineage.gold.synth",
+    "set": "synth-calib-easy",
+    "band": "easy"
+  },
+  "tasks": {
+    "synth-calib-easy-01": {
+      "family": "dose",
+      "truth": "Hyperbolic Emax model",
+      "params": {
+        "Emax": 94.13020674950906,
+        "EC50": 0.35016548156164623
+      },
+      "sigma": 4.15,
+      "tries": 1,
+      "fits": [
+        {
+          "model": "Hyperbolic Emax model",
+          "rss": 203.43872,
+          "posterior": 0.9999997226270992,
+          "params": [
+            93.610216,
+            0.310581
+          ]
+        },
+        {
+          "model": "Sigmoid Emax model (Hill coefficient 2)",
+          "rss": 723.486472,
+          "posterior": 2.773689423956737e-07,
+          "params": [
+            88.83003,
+            0.304351
+          ]
+        },
+        {
+          "model": "Log-linear model",
+          "rss": 1107.79889,
+          "posterior": 3.958346861812559e-12,
+          "params": [
+            11.017893,
+            0.00507
+          ]
+        }
+      ]
+    },
+    "synth-calib-easy-02": {
+      "family": "enzyme",
+      "truth": "Competitive inhibition",
+      "params": {
+        "Vmax": 44.85871681993658,
+        "Km": 22.452177173546147,
+        "Ki": 12.05552040983232
+      },
+      "sigma": 0.974,
+      "tries": 6,
+      "fits": [
+        {
+          "model": "Competitive inhibition",
+          "rss": 18.23145,
+          "posterior": 0.9999983937524389,
+          "params": [
+            45.095838,
+            21.305508,
+            10.491465
+          ]
+        },
+        {
+          "model": "Noncompetitive inhibition",
+          "rss": 43.545196,
+          "posterior": 1.6062317927783897e-06,
+          "params": [
+            48.237008,
+            27.635748,
+            47.312586
+          ]
+        },
+        {
+          "model": "Uncompetitive inhibition",
+          "rss": 65.424333,
+          "posterior": 1.576819860218067e-11,
+          "params": [
+            48.607709,
+            30.119539,
+            41.943424
+          ]
+        }
+      ]
+    }
+  }
+}
