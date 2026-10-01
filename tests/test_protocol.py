@@ -20,11 +20,11 @@ Give 1-3 critique points; each names what is wrong and how to fix it."""
 
 def test_loads_version_and_values():
     protocol = load_protocol()
-    assert protocol.version == "1.0.1"
+    assert protocol.version == "1.0.2"
     assert protocol.generations == 3
     assert protocol.margins == {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2}
-    assert protocol.timeout("write") == 900 and protocol.timeout("judge") == 480 and protocol.timeout("check") == 120
-    assert protocol.max_tokens("write") == 64000 and protocol.max_tokens("check") == 8000
+    assert protocol.timeout("write") == 900 and protocol.timeout("judge") == 900 and protocol.timeout("check") == 120
+    assert protocol.max_tokens("write") == 128000 and protocol.max_tokens("judge") == 128000 and protocol.max_tokens("check") == 8000
     assert protocol.answer_words == (400, 800)
     assert protocol.j1["enforce"] is False
 
