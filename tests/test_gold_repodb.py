@@ -128,3 +128,12 @@ def test_a_failed_download_is_a_source_error(tmp_path):
 
     with pytest.raises(repodb.SourceError, match="could not fetch"):
         repodb.load_rows(cache=tmp_path, download=down)
+
+
+def test_tested_drug_is_the_one_repodb_drug_every_tested_intervention_names():
+    name_drugs = repodb.drug_namer(rows())
+    assert name_drugs("Edrug 10 mg plus Adrug") == {"Edrug", "Adrug"}
+    assert repodb.tested_drug([{"type": "DRUG", "name": "Edrug 5 mg"}, {"type": "DRUG", "name": "Placebo"}], name_drugs) == "Edrug"
+    assert repodb.tested_drug([{"type": "DRUG", "name": "Edrug"}, {"type": "BIOLOGICAL", "name": "Adrug"}], name_drugs) is None
+    assert repodb.tested_drug([{"type": "DRUG", "name": "Zdrug"}], name_drugs) is None
+    assert repodb.tested_drug([{"type": "PROCEDURE", "name": "Edrug infusion"}], name_drugs) is None

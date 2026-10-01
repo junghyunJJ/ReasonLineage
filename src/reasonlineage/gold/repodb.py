@@ -104,25 +104,38 @@ def _drug_pattern(names: Iterable[str]) -> re.Pattern[str]:
     return re.compile(rf"(?<![a-z0-9])(?:{alternatives})(?![a-z0-9])")
 
 
+def drug_namer(rows: Sequence[dict[str, str]]) -> Callable[[str], set[str]]:
+    """A function giving the repoDB drugs, approved for some indication, that a text names as whole words."""
+    names = {row["drug_name"].lower(): row["drug_name"] for row in rows if row["status"] == "Approved"}
+    pattern = _drug_pattern(names)
+    return lambda text: {names[m] for m in pattern.findall((text or "").lower())}
+
+
+def tested_drug(interventions: Iterable[dict[str, Any]], name_drugs: Callable[[str], set[str]]) -> str | None:
+    """The one repoDB drug that every tested intervention names, or None.
+
+    Tested interventions are drugs or biologicals that are not a placebo; one that names no repoDB drug,
+    or a second drug, gives None.
+    """
+    tested = [i.get("name") or "" for i in interventions
+              if i.get("type") in TESTED and not PLACEBO.search(i.get("name") or "")]
+    drugs = [name_drugs(name) for name in tested]
+    named = set().union(*drugs)
+    return named.pop() if drugs and all(drugs) and len(named) == 1 else None
+
+
 def searched_failures(rows: Sequence[dict[str, str]], ind_id: str, records: Iterable[dict[str, Any]]) -> list[dict[str, str]]:
     """Failed drugs from searched trials of one indication (gold design 4.3): the trial stopped for efficacy
     or safety, and its tested drugs are all one repoDB drug that is approved for something, but not for this.
-
-    Tested drugs are drug or biological interventions that are not a placebo; a tested drug whose name
-    holds no repoDB drug, or a second drug, leaves the trial out.
     """
-    names = {row["drug_name"].lower(): row["drug_name"] for row in rows if row["status"] == "Approved"}
+    name_drugs = drug_namer(rows)
     approved = {row["drug_name"] for row in rows if row["ind_id"] == ind_id and row["status"] == "Approved"}
-    pattern = _drug_pattern(names)
     found = []
     for record in records:
         reason = stop_reason(record["why_stopped"])
-        tested = [i["name"] or "" for i in record["interventions"]
-                  if i["type"] in TESTED and not PLACEBO.search(i["name"] or "")]
-        drugs = [{names[m] for m in pattern.findall(name.lower())} for name in tested]
-        named = set().union(*drugs)
-        if reason and drugs and all(drugs) and len(named) == 1 and not named & approved:
-            found.append({"drug": named.pop(), "nct": record["nct"], "status": record["status"].title(),
+        drug = tested_drug(record["interventions"], name_drugs)
+        if reason and drug and drug not in approved:
+            found.append({"drug": drug, "nct": record["nct"], "status": record["status"].title(),
                           "phase": "/".join(record["phases"]), "reason": reason, "detail": record["why_stopped"],
                           "source": "ctgov"})
     return found
