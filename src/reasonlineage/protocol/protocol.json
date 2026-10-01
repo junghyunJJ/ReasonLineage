@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.4",
   "generations": 3,
   "margins": {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2},
   "answer": {"length_words": [400, 800], "open_question_items": [3, 10]},

@@ -20,7 +20,7 @@ Give 1-3 critique points; each names what is wrong and how to fix it."""
 
 def test_loads_version_and_values():
     protocol = load_protocol()
-    assert protocol.version == "1.0.3"
+    assert protocol.version == "1.0.4"
     assert protocol.generations == 3
     assert protocol.margins == {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2}
     assert protocol.timeout("write") == 900 and protocol.timeout("judge") == 900 and protocol.timeout("check") == 120
@@ -53,6 +53,13 @@ def test_evaluator_text_is_the_calibration_text_plus_the_no_tools_line():
     # Protocol 1.0.3: without this line Grok skipped the arithmetic on the synthetic gold set's data tables.
     no_tools = "You have no tools. Do every calculation you need in your own reasoning before you answer."
     assert strict_evaluator_system(["a", "b"], "EMPHASIS") == CALIBRATION_EVALUATOR + "\n" + no_tools
+
+
+def test_authors_are_told_they_have_no_tools():
+    # Protocol 1.0.4: without this line Grok stated least-squares fits it never computed on the synthetic data tables.
+    no_tools = "You have no tools. Do every calculation you need in your own reasoning before you answer."
+    text = load_protocol().render("author_system", length_min=400, length_max=800, item_rule="RULE")
+    assert text.splitlines()[-1] == no_tools
 
 
 def test_candidate_prompt_is_unchanged():
