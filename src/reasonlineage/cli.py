@@ -83,10 +83,10 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--mode", choices=["experiment", "exploration"], default="experiment")
     run.add_argument("--judges", choices=JUDGE_AXIS, default="recuse")
     run.add_argument("--context", choices=CONTEXT_AXIS, default="isolated")
-    run.add_argument("--generations", type=int, help="default: protocol.json (3)")
+    run.add_argument("--generations", type=int, help="default: protocol.json (3); with --replay, the replayed run's count")
     run.add_argument("--seed", type=int, help="default: a random seed, recorded in header.json")
     reuse = run.add_mutually_exclusive_group()
-    reuse.add_argument("--replay", metavar="RUN_DIR", help="reuse every answer recorded by RUN_DIR")
+    reuse.add_argument("--replay", metavar="RUN_DIR", help="reuse every answer recorded by RUN_DIR, with its seed and conditions")
     reuse.add_argument("--gen0-from", metavar="RUN_DIR", help="reuse generation 0 of RUN_DIR")
     run.add_argument("--out", default="runs", help="folder for run folders")
     resume = sub.add_parser("resume", help="continue a stopped or interrupted run")
@@ -128,11 +128,13 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
     protocol = load_protocol()
     task = load_task(args.task)
     setup = load_setup(args.config)
-    if args.replay:
-        source = _read_header(Path(args.replay))["options"]
+    replay_header = _read_header(Path(args.replay)) if args.replay else None
+    if replay_header is not None:
+        source = replay_header["options"]
+        generations = args.generations if args.generations is not None else source["generations"]
         options = RunOptions(mode=source["mode"], judges=source["judges"], context=source["context"],
-                             generations=source["generations"], seed=source["seed"], replay_from=str(args.replay))
-        print(f"--replay: using the seed and conditions of {args.replay}")
+                             generations=generations, seed=source["seed"], replay_from=str(args.replay))
+        print(f"--replay: using the seed and conditions of {args.replay}, with {generations} generation(s)")
     else:
         options = RunOptions(
             mode=args.mode, judges=args.judges, context=args.context,
@@ -142,6 +144,8 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
         )
     checker, why = services.checker(setup, task, protocol, services.env)
     problems = verify_http_members(servers(setup, task), services.list_models)
+    if replay_header is not None and task_from_dict(replay_header["task"]) != task:
+        problems.append(f"--replay: {args.replay} ran a different task")
     if options.gen0_from:
         problems += gen0_source_problems(Path(options.gen0_from), task, protocol)
     try:

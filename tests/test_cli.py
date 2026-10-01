@@ -1,6 +1,10 @@
 """The command line with fake models, fake servers, and fake PubMed (no network)."""
 
 import json
+import os
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -245,3 +249,40 @@ def test_an_environment_key_wins_over_the_key_file(tmp_path):
 def test_a_missing_key_file_skips_j1_and_names_the_file(tmp_path):
     checker, why = build_checker(jev_setup(tmp_path / "missing.key"), PUBLIC, load_protocol(), env={})
     assert checker is None and "missing.key" in why
+
+
+def test_replay_can_add_generations_to_a_generation_zero_run(tmp_path):
+    task, setup = write_files(tmp_path)
+    main(["run", task, "--config", setup, "--seed", "5", "--generations", "0", "--out", str(tmp_path / "runs")], World().services)
+    (first,) = run_dirs(tmp_path)
+    world = World()
+    args = ["run", task, "--config", setup, "--replay", str(first), "--generations", "2", "--out", str(tmp_path / "runs")]
+    assert main(args, world.services) == 0
+    (second,) = [p for p in run_dirs(tmp_path) if p != first]
+    options = json.loads((second / "header.json").read_text())["options"]
+    assert options["generations"] == 2 and options["seed"] == 5 and options["replay_from"] == str(first)
+    calls = [r for r in read_events(second / "events.jsonl") if r["event"] == "call.completed"]
+    assert {r["name"].split("/")[0] for r in calls} == {"g0", "g1", "g2"}
+    assert all(r["replayed"] == r["name"].startswith("g0/") for r in calls)
+    assert sum(len(m.seen) for m in world.models.values()) == sum(not r["replayed"] for r in calls)
+
+
+def test_replay_refuses_a_run_of_another_task(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    main(["run", task, "--config", setup, "--generations", "0", "--out", str(tmp_path / "runs")], World().services)
+    (source,) = run_dirs(tmp_path)
+    other = json.loads((tmp_path / "task.json").read_text()) | {"question": "Which drug for a different disease?"}
+    (tmp_path / "other.json").write_text(json.dumps(other))
+    world = World()
+    args = ["run", str(tmp_path / "other.json"), "--config", setup, "--replay", str(source), "--out", str(tmp_path / "runs")]
+    assert main(args, world.services) == 1
+    assert "different task" in capsys.readouterr().err
+    assert run_dirs(tmp_path) == [source]
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_python_dash_m_runs_the_command_line():
+    src = Path(__file__).resolve().parents[1] / "src"
+    result = subprocess.run([sys.executable, "-m", "reasonlineage", "--help"], capture_output=True, text=True,
+                            env={**os.environ, "PYTHONPATH": str(src)})
+    assert result.returncode == 0 and "run" in result.stdout and "resume" in result.stdout
