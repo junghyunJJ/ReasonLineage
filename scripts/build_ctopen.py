@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Build a gold v0 set from CT Open (gold v0 design 4).
 
-    python scripts/build_ctopen.py candidates SET   # gold/ctopen-SET/candidates.json and trials.json
-    (Claude writes gold/ctopen-SET/review.json by the rules in gold v0 design 4.3)
+    python scripts/build_ctopen.py candidates SET   # gold/ctopen-SET/candidates.json, trials.json and review_sheet.md
+    (Claude reads only review_sheet.md, which hides the answers, and writes gold/ctopen-SET/review.json by the
+     rules in gold v0 design 4.3)
     python scripts/build_ctopen.py build SET        # tasks/ctopen-SET/*.json, gold.json and items/*.json
 """
 
@@ -29,6 +30,7 @@ def cmd_candidates(args: argparse.Namespace) -> int:
     records = trials.fetch_trials([c["nct"] for c in found], args.gold_dir / "trials.json")
     found = ctopen.attach(found, records)
     (args.gold_dir / "candidates.json").write_text(json.dumps(found, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    (args.gold_dir / "review_sheet.md").write_text(ctopen.review_sheet(found), encoding="utf-8")
     met = sum(c["label"] == "MET" for c in found)
     missing = sorted(c["nct"] for c in found if "fetch_error" in c)
     print(f"{len(found)} candidate trials ({met} MET, {len(found) - met} NOT MET)"

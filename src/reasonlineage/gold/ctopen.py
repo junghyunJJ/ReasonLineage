@@ -31,8 +31,10 @@ SETS: dict[str, dict[str, str]] = {
 CACHE = Path.home() / ".cache" / "reasonlineage" / "ctopen"
 FIELDS = ("endpoint", "list_of_tuples", "arms", "reported_results")
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
-QUESTION = ("Which of these three clinical trials is most likely to meet its primary endpoint? Rank the candidates, "
-            "and give the mechanism, the key evidence, and a validation experiment for the top pick.")
+# CT Open's MET means the tested arm improved significantly over its comparator (gold v0 design 4.4).
+QUESTION = ("Which of these three clinical trials is most likely to show a statistically significant improvement of the "
+            "tested arm over its comparator on the primary endpoint? Rank the candidates, and give the mechanism, the "
+            "key evidence, and a validation experiment for the top pick.")
 
 
 class SourceError(RuntimeError):
@@ -154,8 +156,14 @@ def candidates(entries: dict, after: str, name_drugs: Callable[[str], set[str]])
         found.append({"nct": nct, "title": entry.get("brief_title"), "drug": drug, "arm": arm_label,
                       "comparator": comparator, "endpoint": {"measure": endpoint.get("measure"),
                                                             "timeFrame": endpoint.get("timeFrame")},
-                      "label": label, "first_report": first[nct]})
+                      "label": label, "first_report": first[nct], "arms": [_arm(a) for a in entry["arms"]]})
     return found
+
+
+def _arm(arm: dict[str, Any]) -> dict[str, Any]:
+    """What the review needs to know about one arm (gold v0 design 4.3)."""
+    return {"label": arm.get("label"), "type": arm.get("type"), "description": arm.get("description"),
+            "interventions": [i.get("name") for i in arm.get("interventions") or []]}
 
 
 def attach(found: list[dict[str, Any]], records: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
@@ -169,6 +177,24 @@ def attach(found: list[dict[str, Any]], records: dict[str, dict[str, Any]]) -> l
         out.append({**candidate, "conditions": record.get("conditions") or [], "phases": record.get("phases") or [],
                     **({"fetch_error": record["error"]} if "error" in record else {})})
     return out
+
+
+def review_sheet(found: list[dict[str, Any]]) -> str:
+    """The candidates as the review sees them (gold v0 design 4.3): everything but the answers, so that what is kept
+    or dropped cannot follow the results."""
+    lines = ["# Review sheet", "", "Keep or drop every trial in review.json by gold v0 design 4.3. The answers are hidden.", ""]
+    for c in found:
+        lines += [f"## {c['nct']}: {c['drug']}",
+                  f"- title: {c['title']}",
+                  f"- comparison: {c['arm']} vs {c['comparator']}; {_phase(c['phases'])}",
+                  f"- primary endpoint: {c['endpoint']['measure']} ({c['endpoint']['timeFrame']})",
+                  f"- conditions: {', '.join(c['conditions']) or 'none recorded'}"]
+        lines += [f"- arm '{a['label']}' ({a['type']}): {a['description'] or 'no description'}; "
+                  f"interventions: {', '.join(n or '?' for n in a['interventions']) or 'none'}" for a in c.get("arms", [])]
+        if "fetch_error" in c:
+            lines.append(f"- no ClinicalTrials.gov record: {c['fetch_error']}")
+        lines.append("")
+    return "\n".join(lines)
 
 
 def check_review(review: dict[str, Any], found: list[dict[str, Any]]) -> list[str]:
@@ -192,6 +218,9 @@ def check_review(review: dict[str, Any], found: list[dict[str, Any]]) -> list[st
             elif kind == "keep" and name != " ".join(str(name).split()).lower():
                 # The engine collapses spaces in candidate names, and grouping compares names exactly.
                 problems.append(f"{nct}: display_name {name!r} must be lowercase with single spaces")
+            comparison = item.get("comparison")
+            if kind == "keep" and comparison is not None and not (isinstance(comparison, str) and comparison.strip()):
+                problems.append(f"{nct}: comparison must be a short text such as 'drug vs placebo', or be left out")
     problems += [f"{nct}: not reviewed; keep or drop it" for nct in sorted(known - seen)]
     return problems
 
@@ -237,7 +266,8 @@ def build(found: list[dict[str, Any]], review: dict[str, Any], set_name: str, ta
     if problems:
         raise ReviewError("; ".join(problems))
     by_nct = {candidate["nct"]: candidate for candidate in found}
-    kept = [by_nct[item["nct"]] | {"display_name": item["display_name"]} for item in review.get("keep", [])]
+    kept = [by_nct[item["nct"]] | {"display_name": item["display_name"], "comparison": item.get("comparison")}
+            for item in review.get("keep", [])]
     groups = group(kept, set_name)
     ids = [f"ctopen-{set_name}-{i:02d}" for i in range(1, len(groups) + 1)]
     tasks_dir, gold_path, items_dir = Path(tasks_dir), Path(gold_path), Path(items_dir)
@@ -255,9 +285,13 @@ def build(found: list[dict[str, Any]], review: dict[str, Any], set_name: str, ta
     for task_id, trials in zip(ids, groups):
         names = {f"{t['drug']} for {t['display_name']}": t for t in trials}
         order = shuffled(list(names), task_id)
-        lines = [f"- {name}: {names[name]['arm']} vs {names[name]['comparator']}, {_phase(names[name]['phases'])}; "
-                 f"primary endpoint: {names[name]['endpoint']['measure']} ({names[name]['endpoint']['timeFrame']})"
-                 for name in order]
+        lines = []
+        for name in order:
+            trial = names[name]
+            # The review may describe the comparison when the arm labels do not (gold v0 design 4.3).
+            comparison = (trial.get("comparison") or "").strip() or f"{trial['arm']} vs {trial['comparator']}"
+            lines.append(f"- {name}: {comparison}, {_phase(trial['phases'])}; "
+                         f"primary endpoint: {trial['endpoint']['measure']} ({trial['endpoint']['timeFrame']})")
         body = {"id": task_id, "question": QUESTION + "\n" + "\n".join(lines), "candidates": order,
                 "category": "biomedical", "data_sensitivity": "public"}
         path = tasks_dir / f"{task_id}.json"

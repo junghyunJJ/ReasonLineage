@@ -4,6 +4,7 @@ import copy
 import hashlib
 import json
 import pickle
+import re
 
 import pytest
 
@@ -95,8 +96,10 @@ def entry(*, arm="Edrug 10 mg", label="MET", comparator="Placebo", outcome_type=
           meta_label="single_arm"):
     endpoint = str({"measure": measure, "description": "", "timeFrame": "12 weeks", "outcome_type": outcome_type})
     return {"brief_title": "A trial", "endpoint": endpoint, "meta_label": meta_label,
-            "arms": [{"label": arm, "type": "EXPERIMENTAL", "interventions": [{"type": t, "name": n} for t, n in tested]},
-                     {"label": comparator, "type": "PLACEBO_COMPARATOR", "interventions": [{"type": "DRUG", "name": "Placebo"}]}],
+            "arms": [{"label": arm, "type": "EXPERIMENTAL", "description": "Edrug once daily",
+                      "interventions": [{"type": t, "name": n} for t, n in tested]},
+                     {"label": comparator, "type": "PLACEBO_COMPARATOR", "description": "Matching placebo",
+                      "interventions": [{"type": "DRUG", "name": "Placebo"}]}],
             "list_of_tuples": [[arm, label, comparator]] if tuples is None else tuples,
             "reported_results": {f"https://example.org/{i}": {"date": d, "results": ["reported"]} for i, d in enumerate(dates)}}
 
@@ -110,7 +113,11 @@ def test_a_primary_result_first_reported_after_the_date_is_kept():
     (found,) = select(("NCT00000001", entry()))
     assert found == {"nct": "NCT00000001", "title": "A trial", "drug": "Edrug", "arm": "Edrug 10 mg", "comparator": "Placebo",
                      "endpoint": {"measure": "Change in score", "timeFrame": "12 weeks"}, "label": "MET",
-                     "first_report": "2026-07-02"}
+                     "first_report": "2026-07-02",
+                     "arms": [{"label": "Edrug 10 mg", "type": "EXPERIMENTAL", "description": "Edrug once daily",
+                               "interventions": ["Edrug 10 mg"]},
+                              {"label": "Placebo", "type": "PLACEBO_COMPARATOR", "description": "Matching placebo",
+                               "interventions": ["Placebo"]}]}
 
 
 def test_the_date_itself_counts():
@@ -227,6 +234,7 @@ def reviewed(change):
     (lambda r: r["keep"][0].update(why="   "), "NCT00000001: needs a reason"),
     (lambda r: r["keep"][0].update(display_name="Disease A"), "NCT00000001: display_name 'Disease A' must be lowercase"),
     (lambda r: r["keep"][0].update(display_name="disease a "), "NCT00000001: display_name 'disease a ' must be lowercase"),
+    (lambda r: r["keep"][0].update(comparison=" "), "NCT00000001: comparison must be a short text"),
 ])
 def test_review_rules_are_enforced(tmp_path, change, message):
     review = reviewed(change)
@@ -261,3 +269,22 @@ def test_a_met_trial_without_two_other_diseases_is_left_out():
     trials = [kept("NCT00000001", "MET", "a"), kept("NCT00000002", "NOT MET", "a"), kept("NCT00000003", "NOT MET", "a"),
               kept("NCT00000004", "NOT MET", "b")]
     assert ctopen.group(trials, "summer-2025") == []
+
+
+def test_the_question_asks_what_ct_open_labels():
+    """CT Open's MET means the tested arm improved significantly over its comparator (gold v0 design 4.4)."""
+    assert "statistically significant improvement of the tested arm over its comparator" in ctopen.QUESTION
+
+
+def test_the_review_sheet_shows_the_arms_but_not_the_answers():
+    found = ctopen.attach(select(("NCT00000001", entry()), ("NCT00000002", entry(label="NOT MET"))), {})
+    sheet = ctopen.review_sheet(found)
+    assert "NCT00000001" in sheet and "NCT00000002" in sheet and "Matching placebo" in sheet
+    assert re.search(r"\bMET\b", sheet) is None
+
+
+def test_a_comparison_from_the_review_replaces_the_arm_labels(tmp_path):
+    (path,) = build(tmp_path, review=reviewed(lambda r: r["keep"][0].update(comparison="Edrug vs placebo")))
+    question = load_task(path).question
+    assert "- Edrug for disease a: Edrug vs placebo, phase 2;" in question
+    assert "- Adrug for disease b: Adrug 10 mg vs Placebo, phase 2;" in question

@@ -1,7 +1,7 @@
 # 정답지 v0 (CT Open) 설계
 
 - 날짜: 2026-09-30
-- 상태: 설계 1/3 · 2/3 · 3/3 승인, 문서 검토 대기
+- 상태: 승인. 2026-10-01 리허설 뒤 질문 문구, 검토 방식과 기준을 고침(4.2–4.4, 사용자 승인)
 - 기반: `specs/2026-09-30-gold-dev-design.md` (개발용 세트와 1단계 판정 규칙), `specs/2026-09-29-engine-design.md`
 - 브랜치: `gold-v0`
 
@@ -11,7 +11,7 @@
 
 정답지 v0는 모든 패널 모델의 학습 컷오프 이후에 결과가 처음 공개된 임상으로 1단계를 다시 재요. 신호가 나오면 같은 세트로 2·3단계를 하고, 심사 편향 논문의 주 결과로 써요.
 
-**기준일: 2026-07-01.** 이날 이후에 처음 보도된 결과만 써요.
+**기준일: 2026-07-01.** 이날이나 그 뒤에 처음 보도된 결과만 써요.
 
 | 모델 | 학습 컷오프 |
 |---|---|
@@ -99,7 +99,7 @@ runs/.../<실행>/ ── reasonlineage diagnose --gold-items items/<과제 id>.
 ### 4.2 임상 고르기 (`candidates`, 자동)
 CT Open 항목 하나는 (NCT, 평가변수) 쌍이에요. 다음을 모두 만족하는 항목만 써요.
 1. 평가변수의 `outcome_type`이 `primaryOutcomes`예요.
-2. `list_of_tuples`가 하나이고, 가운데 값이 `MET` 또는 `NOT MET`예요. 튜플은 (시험 군, 정답, 대조 군)이에요.
+2. `list_of_tuples`가 하나이고, 가운데 값이 `MET` 또는 `NOT MET`예요. 튜플은 (시험 군, 정답, 대조 군)이에요. 여러 군을 묶은 항목(`meta_label`이 `no_distinguishable_arm`)은 그중 한 군만 이겨도 `MET`인데 튜플에는 첫 군만 적혀 있어서 쓰지 않아요.
 3. 첫 보도일이 기준일과 같거나 그 뒤예요. 첫 보도일은 그 임상의 모든 항목(1차·2차 평가변수)의 `reported_results` 날짜 중 가장 이른 날이에요. 다른 평가변수 결과가 먼저 보도됐다면 그 임상의 결과는 이미 공개된 것이기 때문이에요. `YYYY-MM-DD` 형식이 아닌 날짜는 무시하고, 남는 날짜가 없으면 빼요.
 4. 시험 군의 시험 약이 repoDB에서 어느 적응증에든 승인된 약 하나로 찾아져요. 시험 약은 종류가 `DRUG`나 `BIOLOGICAL`이고 위약이 아닌 중재예요(개발용 설계 4.3과 같은 규칙).
 
@@ -107,24 +107,30 @@ CT Open 항목 하나는 (NCT, 평가변수) 쌍이에요. 다음을 모두 만�
 
 남은 임상마다 CT.gov 기록(질병, 단계)을 받아 `trials.json`에 저장해요(개발용 설계 4.4와 같아요).
 
-`candidates.json`에는 임상마다 NCT, 제목, 시험 약(repoDB 이름), 시험 군과 대조 군 이름, 1차 평가변수(측정, 기간), 정답, 첫 보도일, 질병, 단계가 들어가요.
+`candidates.json`에는 임상마다 NCT, 제목, 시험 약(repoDB 이름), 시험 군과 대조 군 이름, 각 군의 종류·설명·중재, 1차 평가변수(측정, 기간), 정답, 첫 보도일, 질병, 단계가 들어가요. 같은 폴더에 정답만 뺀 검토표 `review_sheet.md`도 만들어요(4.3).
 
-2026-09-30에 2025 세트로 어림한 값(검토 전)은 겨울 38개 임상(MET 20, NOT MET 18), 여름 30개 임상(MET 17, NOT MET 13)이에요. 한 기간에서 과제가 5개 안팎 나올 것으로 봐요.
+2026-09-30에 2025 세트로 어림한 값(검토 전)은 겨울 38개 임상(MET 20, NOT MET 18), 여름 30개 임상(MET 17, NOT MET 13)이에요. 리허설에서는 여름 세트로 과제 3개가 나왔어요(7장).
 
 ### 4.3 검토 (`review.json`)
 - Claude가 후보 임상을 순서대로 모두 검토해요. 결과를 보고 고르지 않기 위한 규칙이에요.
+- 검토는 정답(MET/NOT MET)을 가린 `review_sheet.md`만 보고 해요. `candidates.json`은 열지 않아요.
 - 남기는 조건(모두 만족)
   1. 그 약이 그 임상의 시험 약이에요. 병용 요법의 배경 약이 아니에요.
   2. 그 병에 이미 승인된 약이 아니에요. 새 적응증이어야 해요.
-- 남기는 임상에는 질문에 들어갈 영어 소문자 병명(`display_name`)을 적어요. 같은 병은 같은 이름으로 적어요. 묶을 때 이 이름으로 병이 겹치는지 보기 때문이에요.
+- 판단 기준 (2026-10-01, 리허설 뒤 정함)
+  - 승인: 어느 나라에서든 승인됐으면 승인된 약으로 봐요.
+  - 같은 병: 이미 승인된 병과 같은 병이면 빼요. 중증도, 병기, 치료 시점, 투여 경로, 제형이 다르거나 예방 목적이어도 같은 병이에요.
+  - 병명: 환자 집단(예: 신장 이식 환자)이 아니라 치료하려는 병을 적어요.
+- 남기는 임상에는 질문에 들어갈 영어 소문자 병명(`display_name`)을 적어요. 단어 사이는 공백 하나예요. 같은 병은 같은 이름으로 적어요. 묶을 때 이 이름으로 병이 겹치는지 보기 때문이에요.
+- 군 이름에 약이 드러나지 않으면(예: `Group A vs Group B`) 남기는 임상에 짧은 비교(`comparison`, 예: `bazedoxifene vs placebo`)를 적어요. 질문에는 군 이름 대신 이 비교가 들어가요. 필요할 때만 적어요.
 - 형식:
 
 ```json
-{"keep": [{"nct": "NCT…", "display_name": "…", "why": "…"}],
+{"keep": [{"nct": "NCT…", "display_name": "…", "why": "…", "comparison": "…"}],
  "drop": [{"nct": "NCT…", "why": "…"}]}
 ```
 
-- 다음 경우 `build`가 멈춰요: 검토하지 않은 후보가 있을 때, 후보에 없는 NCT가 있을 때, 같은 NCT가 두 번 나올 때, 이유가 비어 있을 때.
+- 다음 경우 `build`가 멈춰요: 검토하지 않은 후보가 있을 때, 후보에 없는 NCT가 있을 때, 같은 NCT가 두 번 나올 때, 이유가 비어 있을 때, 병명이 소문자·공백 하나 형식이 아닐 때, 비교가 비어 있을 때.
 
 ### 4.4 묶기와 파일 (`build`)
 - 남긴 임상을 MET와 NOT MET로 나눠요. 각각 NCT 순서로 정렬한 뒤, `ctopen-<기간>`을 열쇠로 한 고정 seed로 섞어요(개발용 설계 4.6의 섞기와 같은 방식).
@@ -134,10 +140,13 @@ CT Open 항목 하나는 (NCT, 평가변수) 쌍이에요. 다음을 모두 만�
 - 질문(후보 순서대로 설명을 붙여요):
 
 ```
-Which of these three clinical trials is most likely to meet its primary endpoint? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.
-- <후보>: <시험 군> vs <대조 군>, <단계>; primary endpoint: <측정> (<기간>)
+Which of these three clinical trials is most likely to show a statistically significant improvement of the tested arm over its comparator on the primary endpoint? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.
+- <후보>: <비교>, <단계>; primary endpoint: <측정> (<기간>)
 - …
 ```
+
+- 질문은 CT Open 정답의 뜻("시험 군이 대조 군보다 통계적으로 유의하게 좋아졌다")에 맞춰요. 그래서 비열등성 임상도 같은 뜻으로 물어요.
+- `<비교>`는 검토 기록의 `comparison`이 있으면 그것이고, 없으면 `<시험 군> vs <대조 군>`이에요.
 
 - 과제 파일은 엔진 과제 형식이에요(`category: biomedical`, `data_sensitivity: public`).
 - 정답 파일 `gold.json`은 개발용 세트와 같은 형식이에요. MET 후보를 `approved` 자리에, NOT MET 둘을 `failed` 자리에 둬서 `reasonlineage gold`를 그대로 써요. `source`에는 저장소, 커밋, 파일, sha256, 기준일을 적어요.
@@ -168,6 +177,7 @@ Which of these three clinical trials is most likely to meet its primary endpoint
   - summer-2025로 `candidates` → 검토 → `build`를 끝까지 돌리고 과제 수를 보고해요.
   - winter-2025는 `candidates`까지만 돌려 개수를 봐요.
   - 모델은 부르지 않아요. 리허설 파일은 저장소 밖 임시 폴더에 두고 커밋하지 않아요.
+  - 결과(2026-10-01): summer-2025 후보 30개 중 검토에서 14개(MET 8, NOT MET 6)를 남겼고, 과제 3개가 나왔어요. NOT MET 임상이 모자라서예요. 4.3의 판단 기준을 정한 뒤 같은 세트를 다시 검토했더니 과제가 2개였어요. 그래서 2026 세트도 한 기간만으로는 7개가 안 될 가능성이 커요.
 - **2026:**
   - CT Open이 2026 세트를 공개하면 원본을 고정하고 같은 절차를 밟아요. 여름 세트(CT Open 기준일 2026-06-01)는 우리 기준일(2026-07-01) 전에 보도된 임상이 빠져요. 가을 세트(기준일 2026-09-01)는 12월쯤 공개될 것으로 봐요.
   - 과제가 7개 미만이면 다음 세트와 합칠지, 승인 약 조건이나 과제 모양(예: MET 2 + NOT MET 1)을 넓힐지 사용자와 정해요.
@@ -176,7 +186,7 @@ Which of these three clinical trials is most likely to meet its primary endpoint
 ## 8. 테스트
 - **안전한 읽기:** 기본 자료형 pickle은 읽어요. 클래스가 든 pickle은 거부하고, 그 클래스의 코드가 실행되지 않는지 확인해요. sha256이 다르면 멈추고, 파일은 한 번만 받아요.
 - **임상 고르기:** 1차 평가변수, 튜플 하나, MET/NOT MET, 기준일 경계(같은 날은 포함), 날짜 없음, 날짜 형식 오류, 승인 약 하나, 1차 평가변수 여럿(정답이 같을 때와 섞였을 때), 필드가 없으면 멈춤을 확인해요.
-- **검토 기록 검사:** 검토하지 않은 후보, 모르는 NCT, 중복, 이유 없음을 확인해요.
+- **검토 기록 검사:** 검토하지 않은 후보, 모르는 NCT, 중복, 이유 없음, 병명 형식, 빈 비교를 확인해요. 검토표에 정답이 보이지 않는지도 확인해요.
 - **묶기:** 같은 입력이면 같은 과제가 나오는지, 질병이 겹치지 않는지, 남는 임상을 어떻게 처리하는지 확인해요.
 - **파일:** 엔진이 과제를 읽는지(`load_task`), `score_run`이 정답으로 채점하는지, 항목 파일을 `load_gold_items`가 읽는지, 이전 파일이 있으면 멈추는지 확인해요.
 - **스크립트:** `build_ctopen.py`의 두 단계와, `run_gold.sh SET`이 세트 경로와 `PYTHONPATH`를 제대로 쓰는지(가짜 python으로) 확인해요.

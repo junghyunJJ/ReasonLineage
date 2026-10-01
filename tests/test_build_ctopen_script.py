@@ -1,6 +1,7 @@
 """The CT Open build script (gold v0 design 3, 4.4): the build step from saved candidates and a review record."""
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -46,3 +47,27 @@ def test_an_unknown_set_is_refused_before_anything_runs(tmp_path):
     result = subprocess.run([sys.executable, str(SCRIPT), "build", "spring-2031", "--gold-dir", str(tmp_path)],
                             capture_output=True, text=True)
     assert result.returncode == 2 and "invalid choice" in result.stderr
+
+
+ENDPOINT = str({"measure": "Change in score", "timeFrame": "12 weeks", "outcome_type": "primaryOutcomes"})
+ENTRY = {"brief_title": "A trial", "meta_label": "single_arm", "endpoint": ENDPOINT,
+         "arms": [{"label": "Edrug arm", "type": "EXPERIMENTAL", "description": "Edrug daily",
+                   "interventions": [{"type": "DRUG", "name": "Edrug"}]},
+                  {"label": "Placebo arm", "type": "PLACEBO_COMPARATOR", "description": "Placebo daily",
+                   "interventions": [{"type": "DRUG", "name": "Placebo"}]}],
+         "list_of_tuples": [["Edrug arm", "MET", "Placebo arm"]],
+         "reported_results": {"https://example.org/1": {"date": "2025-09-02", "results": ["reported"]}}}
+
+
+def test_candidates_step_writes_the_candidates_and_a_review_sheet_without_answers(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "scripts"))
+    import build_ctopen
+
+    monkeypatch.setattr(build_ctopen.ctopen, "load_set", lambda name, cache: {("NCT00000001", ENDPOINT): ENTRY})
+    monkeypatch.setattr(build_ctopen.repodb, "load_rows", lambda cache: [{"drug_name": "Edrug", "status": "Approved"}])
+    monkeypatch.setattr(build_ctopen.trials, "fetch_trials",
+                        lambda ncts, path: {nct: {"conditions": ["Disease"], "phases": ["PHASE2"]} for nct in ncts})
+    assert build_ctopen.main(["candidates", "summer-2025", "--gold-dir", str(tmp_path)]) == 0
+    assert [c["label"] for c in json.loads((tmp_path / "candidates.json").read_text())] == ["MET"]
+    sheet = (tmp_path / "review_sheet.md").read_text()
+    assert "NCT00000001" in sheet and "Placebo daily" in sheet and re.search(r"\bMET\b", sheet) is None
