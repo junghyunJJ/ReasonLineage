@@ -62,8 +62,9 @@ class EvolutionConfig:
             raise ValueError("threshold must be in [0, 1]")
         if not 2 <= self.population_limit <= 10:
             raise ValueError("population_limit must be in [2, 10]")
-        if not 1 <= self.generation_limit <= 10:
-            raise ValueError("generation_limit must be in [1, 10]")
+        # 0 scores generation 0 and stops (gold design 5.1).
+        if not 0 <= self.generation_limit <= 10:
+            raise ValueError("generation_limit must be in [0, 10]")
         if not 1 <= self.survivor_count < self.population_limit:
             raise ValueError("survivor_count must be at least 1 and leave one new-candidate slot")
         if self.stagnation_window < 1:

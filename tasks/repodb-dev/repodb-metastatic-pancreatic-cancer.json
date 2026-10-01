@@ -1,0 +1,11 @@
+{
+  "id": "repodb-metastatic-pancreatic-cancer",
+  "question": "Which of these drugs is most promising for treating metastatic pancreatic cancer? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.",
+  "candidates": [
+    "Dasatinib",
+    "Pemetrexed",
+    "Irinotecan"
+  ],
+  "category": "biomedical",
+  "data_sensitivity": "public"
+}

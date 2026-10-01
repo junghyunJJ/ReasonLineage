@@ -1,4 +1,4 @@
-"""Command line (spec 8): `reasonlineage run | resume | diagnose`.
+"""Command line (spec 8): `reasonlineage run | resume | diagnose | gold`.
 
 This is the one place that wires the engine to the checks package.
 """
@@ -20,6 +20,7 @@ from .checks.base import Checker
 from .checks.gate import Gate
 from .checks.jev import JevChecker
 from .checks.local import LocalLLMChecker
+from .diagnose.gold import format_report, score_run, summarize
 from .diagnose.j2 import load_gold_items, run_j2
 from .diagnose.pmid import efetch, run_pmid_check
 from .engine.calls import CallRecorder, ReplaySource, gen0_writing
@@ -83,10 +84,10 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--mode", choices=["experiment", "exploration"], default="experiment")
     run.add_argument("--judges", choices=JUDGE_AXIS, default="recuse")
     run.add_argument("--context", choices=CONTEXT_AXIS, default="isolated")
-    run.add_argument("--generations", type=int, help="default: protocol.json (3)")
+    run.add_argument("--generations", type=int, help="default: protocol.json (3); with --replay, the replayed run's count")
     run.add_argument("--seed", type=int, help="default: a random seed, recorded in header.json")
     reuse = run.add_mutually_exclusive_group()
-    reuse.add_argument("--replay", metavar="RUN_DIR", help="reuse every answer recorded by RUN_DIR")
+    reuse.add_argument("--replay", metavar="RUN_DIR", help="reuse every answer recorded by RUN_DIR, with its seed and conditions")
     reuse.add_argument("--gen0-from", metavar="RUN_DIR", help="reuse generation 0 of RUN_DIR")
     run.add_argument("--out", default="runs", help="folder for run folders")
     resume = sub.add_parser("resume", help="continue a stopped or interrupted run")
@@ -94,6 +95,10 @@ def build_parser() -> argparse.ArgumentParser:
     diagnose = sub.add_parser("diagnose", help="J2 diagnostics and the PMID check for a finished run")
     diagnose.add_argument("run_dir")
     diagnose.add_argument("--gold-items", help="JSON file: {\"items\": [{\"item\": ..., \"outcome_date\": ...}]}")
+    gold = sub.add_parser("gold", help="score finished runs against a gold file (gold design 5.4)")
+    gold.add_argument("run_dirs", nargs="+", metavar="RUN_DIR")
+    gold.add_argument("--gold", required=True, help="JSON file: {\"tasks\": {task id: {\"approved\": [...], \"failed\": [...]}}}")
+    gold.add_argument("--out", help="also write the summary to this JSON file")
     return parser
 
 
@@ -128,11 +133,13 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
     protocol = load_protocol()
     task = load_task(args.task)
     setup = load_setup(args.config)
-    if args.replay:
-        source = _read_header(Path(args.replay))["options"]
+    replay_header = _read_header(Path(args.replay)) if args.replay else None
+    if replay_header is not None:
+        source = replay_header["options"]
+        generations = args.generations if args.generations is not None else source["generations"]
         options = RunOptions(mode=source["mode"], judges=source["judges"], context=source["context"],
-                             generations=source["generations"], seed=source["seed"], replay_from=str(args.replay))
-        print(f"--replay: using the seed and conditions of {args.replay}")
+                             generations=generations, seed=source["seed"], replay_from=str(args.replay))
+        print(f"--replay: using the seed and conditions of {args.replay}, with {generations} generation(s)")
     else:
         options = RunOptions(
             mode=args.mode, judges=args.judges, context=args.context,
@@ -142,6 +149,8 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
         )
     checker, why = services.checker(setup, task, protocol, services.env)
     problems = verify_http_members(servers(setup, task), services.list_models)
+    if replay_header is not None and task_from_dict(replay_header["task"]) != task:
+        problems.append(f"--replay: {args.replay} ran a different task")
     if options.gen0_from:
         problems += gen0_source_problems(Path(options.gen0_from), task, protocol)
     try:
@@ -242,9 +251,33 @@ def cmd_diagnose(args: argparse.Namespace, services: Services) -> int:
     return 0
 
 
+LEFT_OUT = {
+    "not_a_run": "not a run folder",
+    "no_gold": "its task is not in the gold file",
+    "mismatch": "its candidates differ from the gold drugs",
+    "incomplete": "the run did not finish",
+}
+
+
+def cmd_gold(args: argparse.Namespace, services: Services) -> int:
+    try:
+        gold = json.loads(Path(args.gold).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ConfigError(f"gold file {args.gold}: {exc}") from None
+    runs = [score_run(Path(d), gold) for d in args.run_dirs]
+    for run in runs:
+        if run["status"] in LEFT_OUT:
+            print(f"warning: {run['run']}: {LEFT_OUT[run['status']]}; left out", file=sys.stderr)
+    report = summarize(runs)
+    print(format_report(report))
+    if args.out:
+        Path(args.out).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None, services: Services | None = None) -> int:
     args = build_parser().parse_args(argv)
-    commands = {"run": cmd_run, "resume": cmd_resume, "diagnose": cmd_diagnose}
+    commands = {"run": cmd_run, "resume": cmd_resume, "diagnose": cmd_diagnose, "gold": cmd_gold}
     try:
         return commands[args.command](args, services or Services())
     except ConfigError as exc:

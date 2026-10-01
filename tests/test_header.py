@@ -21,11 +21,15 @@ def test_the_main_setup_can_start_an_experiment():
 
 def test_experiment_refuses_aliases_open_generations_and_impossible_axes():
     aliased = replace(SETUP, panel=(Member("gpt", "codex", "gpt-latest"),), jev=JevSettings("jev-latest"))
-    found = problems(setup=aliased, options=RunOptions(generations=0, judges="same_family"), fixed=False)
+    found = problems(setup=aliased, options=RunOptions(generations=-1, judges="same_family"), fixed=False)
     assert any("fixed policies" in p for p in found)
     assert any("generations" in p for p in found)
     assert any("gpt-latest" in p for p in found) and any("jev-latest" in p for p in found)
     assert any("same_family" in p for p in found)
+
+
+def test_an_experiment_may_score_generation_zero_only():
+    assert problems(options=RunOptions(generations=0)) == []
 
 
 def test_an_enforced_gate_needs_a_checker():

@@ -1,0 +1,5191 @@
+{
+ "NCT00000372": {
+  "conditions": [
+   "Schizophrenia"
+  ],
+  "interventions": [
+   {
+    "name": "D-cycloserine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Glycine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Clozapine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00000372",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Glycine and D-Cycloserine in Schizophrenia",
+  "why_stopped": "Pairing D-Cycloserine with Clozapine was found to worsen negative side effects in patients with Schizophrenia, so the study was suspended."
+ },
+ "NCT00034788": {
+  "conditions": [
+   "Foot Ulcer",
+   "Diabetic Foot",
+   "Skin Ulcer",
+   "Diabetic Neuropathies"
+  ],
+  "interventions": [
+   {
+    "name": "Becaplermin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00034788",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study on the Efficacy and Safety of Long-Term Treatment and Re-Treatment of Lower Extremity Diabetic Ulcers With REGRANEX",
+  "why_stopped": "Slow recruitment; Study did not address safety concern raised by European Medicines Agency"
+ },
+ "NCT00046813": {
+  "conditions": [
+   "Tobacco Use Disorder"
+  ],
+  "interventions": [
+   {
+    "name": "Nicotine patch",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00046813",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Nicotine Patch for Nicotine Dependence in Individuals With Schizophrenia or Schizoaffective Disorder - 1",
+  "why_stopped": "Interim data analysis showed no effect between treatment groups"
+ },
+ "NCT00076726": {
+  "conditions": [
+   "Giant Cell Arteritis"
+  ],
+  "interventions": [
+   {
+    "name": "Infliximab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00076726",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of the Safety and Effectiveness of Infliximab (Remicade) in Patients With Giant Cell Arteritis",
+  "why_stopped": "Interim analysis, infliximab did not reduce number of first relapses in GCA or cumulative glucocorticosteroid dosage"
+ },
+ "NCT00080119": {
+  "conditions": [
+   "HIV Infection",
+   "Tuberculosis",
+   "Pneumocystis Jiroveci Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Isoniazid (INH)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Trimethoprim/Sulfamethoxazole (TMP/SMX)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Isoniazid Placebo (PL)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00080119",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Daily Isoniazid to Prevent Tuberculosis in Infants Born to Mothers With HIV",
+  "why_stopped": "Data Safety Monitoring Board (DSMB) recommended stopping study due to futility"
+ },
+ "NCT00083980": {
+  "conditions": [
+   "Anxiety Disorders"
+  ],
+  "interventions": [
+   {
+    "name": "Venlafaxine ER",
+    "type": "DRUG"
+   },
+   {
+    "name": "Sugar pill",
+    "type": "DRUG"
+   },
+   {
+    "name": "Kava",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00083980",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Kava Kava for the Treatment of Generalized Anxiety Disorder (GAD)",
+  "why_stopped": "European reports of liver toxicity from kava meant that the study had to stop"
+ },
+ "NCT00085761": {
+  "conditions": [
+   "HIV Infections",
+   "Peripheral Nervous System Diseases",
+   "Pain"
+  ],
+  "interventions": [
+   {
+    "name": "Capsaicin Dermal Patch",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00085761",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of NGX-4010 for Treatment of Painful HIV-Associated Neuropathy",
+  "why_stopped": "Terminated in view of the C107 findings demonstrating efficacy at doses of 90 and 30 minutes"
+ },
+ "NCT00086684": {
+  "conditions": [
+   "Interstitial Cystitis"
+  ],
+  "interventions": [
+   {
+    "name": "Pentosan polysulfate sodium 100 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Pentosan polysulfate sodium 100 mg",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00086684",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Effectiveness and Safety Study of Pentosan Polysulfate Sodium for the Treatment of Interstitial Cystitis",
+  "why_stopped": "Interim Analysis showed that study continuation was futile. No safety concerns were raised during the trial."
+ },
+ "NCT00109772": {
+  "conditions": [
+   "Complex Regional Pain Syndrome, Type I"
+  ],
+  "interventions": [
+   {
+    "name": "lenalidomide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00109772",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study to Evaluate the Efficacy and Safety of Lenalidomide in the Treatment of Complex Regional Pain Syndrome Type 1",
+  "why_stopped": "Interim analysis showed the primary outcome was not reached"
+ },
+ "NCT00136591": {
+  "conditions": [
+   "Follicular Lymphoma"
+  ],
+  "interventions": [
+   {
+    "name": "Bortezomib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Bortezomib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00136591",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Phase 2 Study of Velcade™ in Subjects With Relapsed or Refractory Follicular B-Cell Lymphoma",
+  "why_stopped": "An arm closed due to lack of efficacy"
+ },
+ "NCT00142168": {
+  "conditions": [
+   "Waldenstrom's Macroglobulinemia"
+  ],
+  "interventions": [
+   {
+    "name": "CC-5103 (lenalidomide)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Rituximab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00142168",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "CC-5013 (Lenalidomide) and Rituximab in Waldenstrom's Macroglobulinemia",
+  "why_stopped": "Toxicity"
+ },
+ "NCT00220831": {
+  "conditions": [
+   "Diabetes",
+   "Myocardial Infarction",
+   "Cardiovascular Disease"
+  ],
+  "interventions": [
+   {
+    "name": "Natural source Vitamin E 400IU/day",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00220831",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Prevention of Cardiovascular Complications in Diabetic Patients With Vitamin E Treatment",
+  "why_stopped": "interim analysis showed significant differences between two treatment groups"
+ },
+ "NCT00308620": {
+  "conditions": [
+   "HIV Infections"
+  ],
+  "interventions": [
+   {
+    "name": "chloroquine phosphate",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00308620",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Investigating the Anti-Human Immunodeficiency Virus (HIV) & Anti-inflammatory Effect of Chloroquine",
+  "why_stopped": "Insufficient financial support; lack of efficacy for primary endpoint"
+ },
+ "NCT00337259": {
+  "conditions": [
+   "Non-Hodgkin's Lymphoma",
+   "Marginal Zone Lymphoma"
+  ],
+  "interventions": [
+   {
+    "name": "gemcitabine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00337259",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Gemcitabine for Marginal Zone Lymphoma",
+  "why_stopped": "poor accrual and response less than expected on interim analysis"
+ },
+ "NCT00353808": {
+  "conditions": [
+   "Pain"
+  ],
+  "interventions": [
+   {
+    "name": "[S,S]-Reboxetine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00353808",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Trial Assessing The Long Term Safety And Tolerability Of [S,S]-Reboxetine In Patients With Post-Shingles Pain.",
+  "why_stopped": "This study has been terminated early as the esreboxetine development program is being discontinued. There are no safety or efficacy concerns."
+ },
+ "NCT00361257": {
+  "conditions": [
+   "HIV Infections"
+  ],
+  "interventions": [
+   {
+    "name": "Minocycline",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo (Tetracycline)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00361257",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Minocycline for the Treatment of Decreased Mental Function in HIV-Infected Adults",
+  "why_stopped": "This study was terminated early due to futility."
+ },
+ "NCT00363883": {
+  "conditions": [
+   "Localized Transitional Cell Cancer of the Renal Pelvis and Ureter",
+   "Metastatic Transitional Cell Cancer of the Renal Pelvis and Ureter",
+   "Recurrent Transitional Cell Cancer of the Renal Pelvis and Ureter",
+   "Regional Transitional Cell Cancer of the Renal Pelvis and Ureter",
+   "Transitional Cell Carcinoma of the Bladder"
+  ],
+  "interventions": [
+   {
+    "name": "vorinostat",
+    "type": "DRUG"
+   },
+   {
+    "name": "laboratory biomarker analysis",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT00363883",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Vorinostat in Treating Patients With Locally Recurrent or Metastatic Cancer of the Urothelium",
+  "why_stopped": "Trial stopped early for futility"
+ },
+ "NCT00372528": {
+  "conditions": [
+   "Epilepsy"
+  ],
+  "interventions": [
+   {
+    "name": "pregabalin (LYRICA)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00372528",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "An Open-Label Study Of Pregabalin In Subjects With Refractory Partial Seizures",
+  "why_stopped": "This study was terminated on April 8, 2011 as Pfizer Canada could no longer supply study drug. No efficacy or safety concerns factored into this decision."
+ },
+ "NCT00387348": {
+  "conditions": [
+   "Colorectal Cancer",
+   "Depression",
+   "Esophageal Cancer",
+   "Extrahepatic Bile Duct Cancer",
+   "Fatigue",
+   "Gallbladder Cancer",
+   "Gastric Cancer",
+   "Liver Cancer",
+   "Lung Cancer",
+   "Pancreatic Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "escitalopram oxalate",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00387348",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Escitalopram in Treating Depression in Patients With Advanced Lung or Gastrointestinal Cancer",
+  "why_stopped": "DSMB stopped study because placebo arm had more adverse events"
+ },
+ "NCT00393380": {
+  "conditions": [
+   "Leukemia, Myeloid, Chronic",
+   "Anemia, Aplastic",
+   "Myelofibrosis",
+   "Lymphoma",
+   "Hodgkin Disease",
+   "Leukemia, Lymphocytic, Chronic",
+   "Leukemia, Myelocytic, Acute",
+   "Leukemia, Lymphocytic, Acute"
+  ],
+  "interventions": [
+   {
+    "name": "Parathyroid Hormone (teriparatide)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00393380",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Parathyroid Hormone Following Sequential Cord Blood Transplantation From an Unrelated Donor",
+  "why_stopped": "Study stopped because of toxicity concerns."
+ },
+ "NCT00400205": {
+  "conditions": [
+   "Squamous Cell Carcinoma",
+   "Oral Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Docetaxel",
+    "type": "DRUG"
+   },
+   {
+    "name": "Cisplatin",
+    "type": "DRUG"
+   },
+   {
+    "name": "5-fluorouracil",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00400205",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Induction Docetaxel, Cisplatin and 5-Fluorouracil",
+  "why_stopped": "Safety reasons"
+ },
+ "NCT00402883": {
+  "conditions": [
+   "Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Bevacizumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Pemetrexed",
+    "type": "DRUG"
+   },
+   {
+    "name": "Radiotherapy",
+    "type": "PROCEDURE"
+   },
+   {
+    "name": "Folic Acid",
+    "type": "OTHER"
+   },
+   {
+    "name": "vitamin B12",
+    "type": "OTHER"
+   },
+   {
+    "name": "carboplatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00402883",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Chemotherapy, Radiotherapy and Bevacizumab in Patients With Unresectable Stage III Non-Small-Cell Lung Cancer",
+  "why_stopped": "Terminated due to bevacizumab and chemoradiotherapy toxicity"
+ },
+ "NCT00403234": {
+  "conditions": [
+   "Postoperative Pain"
+  ],
+  "interventions": [
+   {
+    "name": "Buprenorphine transdermal patch",
+    "type": "DRUG"
+   },
+   {
+    "name": "Buprenorphine transdermal patch",
+    "type": "DRUG"
+   },
+   {
+    "name": "Buprenorphine transdermal patch",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo BTDS",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00403234",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety of Buprenorphine Transdermal System (BTDS) in Subjects With Acute Postoperative Pain After Total Knee Replacement",
+  "why_stopped": "due to administrative reasons not related to efficacy or safety."
+ },
+ "NCT00404703": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "bevacizumab [Avastin]",
+    "type": "DRUG"
+   },
+   {
+    "name": "Platinum-based chemotherapy",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00404703",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Avastin (Bevacizumab) in Combination With Platinum-Based Chemotherapy in Patients With Advanced or Recurrent Squamous Non-Small Cell Lung Cancer",
+  "why_stopped": "Primary (safety) endpoint reached"
+ },
+ "NCT00406276": {
+  "conditions": [
+   "Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "RAD001",
+    "type": "DRUG"
+   },
+   {
+    "name": "Docetaxel",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00406276",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase I/II Trial of RAD001 Plus Docetaxel in Patients With Metastatic or Recurrent Non-Small Cell Lung Cancer",
+  "why_stopped": "data analysis showed insufficient drug efficacy"
+ },
+ "NCT00412919": {
+  "conditions": [
+   "Multiple Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "Azacitidine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00412919",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Azacitidine to Treat Relapsed or Refractory Multiple Myeloma",
+  "why_stopped": "Lack of efficacy"
+ },
+ "NCT00417248": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Cisplatin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Etoposide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Radiotherapy",
+    "type": "PROCEDURE"
+   },
+   {
+    "name": "Sorafenib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00417248",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Cisplatin/Etoposide/Radiotherapy Followed by Consolidation Sorafenib for Inoperable Stage III Non-Small Cell Lung Cancer",
+  "why_stopped": "Negative sorafenib results from ESCAPE trial and safety concerns of regimen"
+ },
+ "NCT00421967": {
+  "conditions": [
+   "Arthroplasty, Replacement, Knee"
+  ],
+  "interventions": [
+   {
+    "name": "Ropivacaine, Ketorolac, adrenaline",
+    "type": "DRUG"
+   },
+   {
+    "name": "Ropivacaine Ketorolac",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00421967",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Postoperative Analgesia After Total Knee Arthroplasty",
+  "why_stopped": "Interim analysis"
+ },
+ "NCT00423176": {
+  "conditions": [
+   "Sinusitis"
+  ],
+  "interventions": [
+   {
+    "name": "MFNS and antibiotic",
+    "type": "DRUG"
+   },
+   {
+    "name": "Matching Placebo nasal spray plus antibiotic",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00423176",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The Study of Nasonex® Compared With Placebo for the Relief of Symptoms Associated With Acute Bacterial Sinusitis When Used With Antibiotics (Study P04824AM3)",
+  "why_stopped": "Based on business priorities. Not related to any safety or efficacy issue \\& took place before data were unblinded or analyzed"
+ },
+ "NCT00428168": {
+  "conditions": [
+   "Weight Gain"
+  ],
+  "interventions": [
+   {
+    "name": "Betahistine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00428168",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study to Examine the Effect of Betahistine on Body Weight Gain Due to Olanzapine Treatment",
+  "why_stopped": "Interim Analysis result indicated the study will not show a significant benefit of the study medication on the primary endpoint."
+ },
+ "NCT00430677": {
+  "conditions": [
+   "Systemic Lupus Erythematosus"
+  ],
+  "interventions": [
+   {
+    "name": "Corticosteroids (prednisone or prednisolone)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Abatacept",
+    "type": "DRUG"
+   },
+   {
+    "name": "Abatacept",
+    "type": "DRUG"
+   },
+   {
+    "name": "Mycophenolate mofetil (MMF)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Abatacept",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00430677",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety Study of Abatacept to Treat Lupus Nephritis",
+  "why_stopped": "Terminated due to failure to meet the primary efficacy endpoint in the Short-term Period"
+ },
+ "NCT00431340": {
+  "conditions": [
+   "Multiple Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "PXD101",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00431340",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Phase II Study of Belinostat in Combination With Bortezomib in Patients With Relapsed, Refractory Multiple Myeloma",
+  "why_stopped": "Terminated due to dose limiting toxicity"
+ },
+ "NCT00451867": {
+  "conditions": [
+   "Interstitial Cystitis",
+   "Painful Bladder Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Mycophenolate Mofetil",
+    "type": "DRUG"
+   },
+   {
+    "name": "Mycofenolate Mofetil (MMF)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00451867",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Randomized Multicenter Double-Blind CT to Evaluate the Efficacy and Safety of Mycophenolate Mofetil . . .",
+  "why_stopped": "The major and primary reason for the study termination is the observed reduced efficacy of CellCept compared to placebo."
+ },
+ "NCT00460317": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "AMG 706",
+    "type": "DRUG"
+   },
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "paclitaxel",
+    "type": "DRUG"
+   },
+   {
+    "name": "carboplatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00460317",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "MONET1-MOtesanib NSCLC Efficacy and Tolerability Study",
+  "why_stopped": "Amgen discontinued the development of AMG706 because 20050201 did not meet its primary objective."
+ },
+ "NCT00527943": {
+  "conditions": [
+   "Atherosclerosis",
+   "Myocardial Ischemia",
+   "Myocardial Infarction"
+  ],
+  "interventions": [
+   {
+    "name": "Vorapaxar",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00527943",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Trial to Assess the Effects of Vorapaxar (SCH 530348; MK-5348) in Preventing Heart Attack and Stroke in Particpants With Acute Coronary Syndrome (TRA•CER) (Study P04736)",
+  "why_stopped": "The trial was terminated at the request of the Data and Safety Monitoring Board."
+ },
+ "NCT00531076": {
+  "conditions": [
+   "Toxicity"
+  ],
+  "interventions": [
+   {
+    "name": "bevacizumab",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT00531076",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety Study of Bevacizumab (Avastin) With Thoracic Radiation in Non-small Cell Cell Lung Cancer",
+  "why_stopped": "Study terminated due to toxicity"
+ },
+ "NCT00538291": {
+  "conditions": [
+   "Colorectal Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "cetuximab",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "capecitabine",
+    "type": "DRUG"
+   },
+   {
+    "name": "gene expression analysis",
+    "type": "GENETIC"
+   },
+   {
+    "name": "microarray analysis",
+    "type": "GENETIC"
+   },
+   {
+    "name": "polymorphism analysis",
+    "type": "GENETIC"
+   },
+   {
+    "name": "reverse transcriptase-polymerase chain reaction",
+    "type": "GENETIC"
+   },
+   {
+    "name": "immunohistochemistry staining method",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT00538291",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Cetuximab and Capecitabine in Treating Patients With Metastatic Colorectal Cancer That Failed Irinotecan Treatment",
+  "why_stopped": "Study was terminated early due to lack of efficacy."
+ },
+ "NCT00544908": {
+  "conditions": [
+   "Pancreatic Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "dasatinib",
+    "type": "DRUG"
+   },
+   {
+    "name": "immunoenzyme technique",
+    "type": "OTHER"
+   },
+   {
+    "name": "immunohistochemistry staining method",
+    "type": "OTHER"
+   },
+   {
+    "name": "laboratory biomarker analysis",
+    "type": "OTHER"
+   },
+   {
+    "name": "quality-of-life assessment",
+    "type": "PROCEDURE"
+   }
+  ],
+  "nct": "NCT00544908",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Dasatinib in Treating Patients With Stage IV Pancreatic Cancer",
+  "why_stopped": "Toxicity"
+ },
+ "NCT00549757": {
+  "conditions": [
+   "Type 2 Diabetes Mellitus",
+   "Cardiovascular Disease"
+  ],
+  "interventions": [
+   {
+    "name": "Aliskiren",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00549757",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Aliskiren Trial in Type 2 Diabetes Using Cardiovascular and Renal Disease Endpoints (Core and Extension Phases)",
+  "why_stopped": "Lack of benefit and safety concern"
+ },
+ "NCT00556205": {
+  "conditions": [
+   "Renal Cell Carcinoma"
+  ],
+  "interventions": [
+   {
+    "name": "Sunitinib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Bevacizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00556205",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Bevacizumab With or Without Sunitinib in Sunitinib-Refractory Renal Cell Carcinoma",
+  "why_stopped": "Toxicity of combination from other trials"
+ },
+ "NCT00563459": {
+  "conditions": [
+   "Epilepsy",
+   "Seizures"
+  ],
+  "interventions": [
+   {
+    "name": "carisbamate",
+    "type": "DRUG"
+   },
+   {
+    "name": "topiramate",
+    "type": "DRUG"
+   },
+   {
+    "name": "levetiracetam",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00563459",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Carisbamate Retention Study (CaReS): Comparative Study on the Long Term Effectiveness, Safety and Tolerability of Carisbamate Compared to Two Other Frequently Prescribed Anti-epileptic Drugs (AEDs) in Patients With Epilepsy.",
+  "why_stopped": "Carisbamate partial onset seizures studies lacked consistent efficacy data so trials in this indication were terminated."
+ },
+ "NCT00573131": {
+  "conditions": [
+   "Esophageal Cancer",
+   "Adenocarcinoma of the Esophagus",
+   "Squamous Cell Carcinoma"
+  ],
+  "interventions": [
+   {
+    "name": "OncoGel (Paclitaxel gel)",
+    "type": "DRUG"
+   },
+   {
+    "name": "cisplatin",
+    "type": "DRUG"
+   },
+   {
+    "name": "5-FU",
+    "type": "DRUG"
+   },
+   {
+    "name": "radiation therapy",
+    "type": "RADIATION"
+   },
+   {
+    "name": "esophageal resection",
+    "type": "PROCEDURE"
+   }
+  ],
+  "nct": "NCT00573131",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety of OncoGel™ Added to Chemotherapy and Radiation Before Surgery in Subjects With Esophageal Cancer",
+  "why_stopped": "OncoGel did not show any impact on overall tumor response"
+ },
+ "NCT00573664": {
+  "conditions": [
+   "Pain"
+  ],
+  "interventions": [
+   {
+    "name": "Gabapentin",
+    "type": "DRUG"
+   },
+   {
+    "name": "lactose",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT00573664",
+  "phases": [
+   "NA"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The Effectiveness and Safety of Gabapentin for Post-operative Pain After Cesarean Section",
+  "why_stopped": "Interim analysis showed a significant reduction in the pain scores"
+ },
+ "NCT00583557": {
+  "conditions": [
+   "Rheumatoid Arthritis"
+  ],
+  "interventions": [
+   {
+    "name": "belimumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00583557",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Continuation Trial for Subjects With Rheumatoid Arthritis That Have Completed Protocol LBRA01",
+  "why_stopped": "Sponsor decision - not related to safety"
+ },
+ "NCT00622687": {
+  "conditions": [
+   "Systemic Sclerosis"
+  ],
+  "interventions": [
+   {
+    "name": "iloprost",
+    "type": "DRUG"
+   },
+   {
+    "name": "iloprost low dose",
+    "type": "DRUG"
+   },
+   {
+    "name": "iloprost therapy up to 2 ng/kg x min",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00622687",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Effect of Different Iloprost Doses on Symptoms in Systemic Sclerosis",
+  "why_stopped": "sufficient number to reach the primary endpoint and as planned"
+ },
+ "NCT00625833": {
+  "conditions": [
+   "Diabetic Neuropathies"
+  ],
+  "interventions": [
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "[S,S]-Reboxetine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00625833",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Trial Of [S,S]-Reboxetine In Patients With Chronic Painful Diabetic Peripheral Neuropathy.",
+  "why_stopped": "Study was terminated for futility following the planned interim analysis."
+ },
+ "NCT00637494": {
+  "conditions": [
+   "Psychotic Depression",
+   "Severe Major Depression With Psychotic Features",
+   "Psychosis"
+  ],
+  "interventions": [
+   {
+    "name": "mifepristone",
+    "type": "DRUG"
+   },
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00637494",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Mifepristone vs. Placebo in the Treatment of Patients With Major Depression With Psychotic Features",
+  "why_stopped": "DRC recommended stopping study as it had missed its primary endpoint"
+ },
+ "NCT00650637": {
+  "conditions": [
+   "Diarrhea"
+  ],
+  "interventions": [
+   {
+    "name": "Calcium Carbonate",
+    "type": "DRUG"
+   },
+   {
+    "name": "nelfinavir",
+    "type": "DRUG"
+   },
+   {
+    "name": "lamivudine",
+    "type": "DRUG"
+   },
+   {
+    "name": "loperamide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Calcium carbonate not administered",
+    "type": "OTHER"
+   },
+   {
+    "name": "nelfinavir",
+    "type": "DRUG"
+   },
+   {
+    "name": "lamivudine + zidovudine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00650637",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study to Determine Effective Prophylaxis and Treatment of Nelfinavir-Associated Diarrhea",
+  "why_stopped": "The study was prematurely discontinued due to administrative reasons on August 18, 2003. There were no safety concerns that led to the decision to terminate."
+ },
+ "NCT00660036": {
+  "conditions": [
+   "Acute Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Gemtuzumab ozogamicin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Mitoxantrone",
+    "type": "DRUG"
+   },
+   {
+    "name": "Etoposide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00660036",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase I/II Study of Mitoxantrone, Etoposide and Gemtuzumab Ozogamicin for Acute Myeloid Leukemia",
+  "why_stopped": "due to new safety information"
+ },
+ "NCT00667277": {
+  "conditions": [
+   "Myelofibrosis"
+  ],
+  "interventions": [
+   {
+    "name": "bevacizumab (Avastin)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00667277",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase II Study of Bevacizumab (Avastin®) in Myelofibrosis",
+  "why_stopped": "lack of response activity in the setting of an unacceptable toxicity profile"
+ },
+ "NCT00675428": {
+  "conditions": [
+   "Multiple Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "BG00002 (natalizumab)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00675428",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Natalizumab in Relapsed/Refractory Multiple Myeloma",
+  "why_stopped": "Sponsor decision due to low enrollment and not safety concerns."
+ },
+ "NCT00690118": {
+  "conditions": [
+   "Amyotrophic Lateral Sclerosis"
+  ],
+  "interventions": [
+   {
+    "name": "pioglitazone",
+    "type": "DRUG"
+   },
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00690118",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Pioglitazone in Patients With Amyotrophic Lateral Sclerosis",
+  "why_stopped": "The interim analysis showed no tendency in favour of the verum group. Therefore it was decided to stop the study prematurely."
+ },
+ "NCT00701935": {
+  "conditions": [
+   "Diabetes Mellitus"
+  ],
+  "interventions": [
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "exenatide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00701935",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Effect of Exenatide on Abdominal Fat Distribution in Patients With Type 2 Diabetes Pretreated With Metformin",
+  "why_stopped": "Enrollment was much slower than anticipated, leading to a decision to terminate the study early for enrollment futility."
+ },
+ "NCT00704691": {
+  "conditions": [
+   "Peripheral T-cell Lymphomas",
+   "Adult T-cell Leukemia",
+   "Adult T-cell Lymphoma",
+   "Peripheral T-cell Lymphoma Unspecified",
+   "Angioimmunoblastic T-cell Lymphoma",
+   "Anaplastic Large Cell Lymphoma",
+   "T/Null Cell Systemic Type",
+   "Cutaneous t-Cell Lymphoma With Nodal/Visceral Disease"
+  ],
+  "interventions": [
+   {
+    "name": "Lenalidomide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00704691",
+  "phases": [
+   "EARLY_PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Lenalidomide Therapy for Patients With Relapsed and/or Refractory, Peripheral T-Cell Lymphomas",
+  "why_stopped": "Closed due to futility with only 1 patient accrued"
+ },
+ "NCT00723203": {
+  "conditions": [
+   "Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "panobinostat",
+    "type": "DRUG"
+   },
+   {
+    "name": "gene expression analysis",
+    "type": "GENETIC"
+   },
+   {
+    "name": "reverse transcriptase-polymerase chain reaction",
+    "type": "GENETIC"
+   },
+   {
+    "name": "laboratory biomarker analysis",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT00723203",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Panobinostat in Treating Patients With Relapsed or Refractory Acute Lymphoblastic Leukemia or Acute Myeloid Leukemia",
+  "why_stopped": "Terminated early due to a lack of efficacy"
+ },
+ "NCT00735878": {
+  "conditions": [
+   "Non Small Cell Lung Cancer",
+   "Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "ABT-751 and Carboplatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00735878",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pharmacokinetic & Pharmacodynamic Study of ABT-751 With Carboplatin in Patients With Advanced Lung Cancer",
+  "why_stopped": "data from a similar did not show efficacy."
+ },
+ "NCT00746941": {
+  "conditions": [
+   "Progressive Multifocal Leukoencephalopathy"
+  ],
+  "interventions": [
+   {
+    "name": "mefloquine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00746941",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study to Explore the Effect of Mefloquine in Participants With Progressive Multifocal Leukoencephalopathy (PML)",
+  "why_stopped": "Primary endpoint not achieved"
+ },
+ "NCT00746980": {
+  "conditions": [
+   "Alopecia Totalis"
+  ],
+  "interventions": [
+   {
+    "name": "efalizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00746980",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Efalizumab in the Treatment of Alopecia, Phase II",
+  "why_stopped": "Newly identified safety concerns have changed the risk and benefit considerations"
+ },
+ "NCT00759720": {
+  "conditions": [
+   "Diabetes Mellitus"
+  ],
+  "interventions": [
+   {
+    "name": "TAK-559 and glyburide",
+    "type": "DRUG"
+   },
+   {
+    "name": "TAK-559 and glyburide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Glyburide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00759720",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety of TAK-559 Combined With Glyburide in Treating Subjects With Type 2 Diabetes Mellitus.",
+  "why_stopped": "Potential hepatic safety signal"
+ },
+ "NCT00762957": {
+  "conditions": [
+   "Diabetes Mellitus"
+  ],
+  "interventions": [
+   {
+    "name": "TAK-559 and metformin",
+    "type": "DRUG"
+   },
+   {
+    "name": "TAK-559 and metformin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Metformin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00762957",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety and Efficacy of TAK-559 in Combination With Metformin in Patients With Type 2 Diabetes Mellitus.",
+  "why_stopped": "Hepatic Safety Signal Identified."
+ },
+ "NCT00768482": {
+  "conditions": [
+   "Opioid Dependence"
+  ],
+  "interventions": [
+   {
+    "name": "Probuphine (buprenorphine implant)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Sublingual Buprenorphine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00768482",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Bioavailability and Safety Study of Probuphine Versus Sublingual Buprenorphine in Patients With Opioid Dependence",
+  "why_stopped": "This study was terminated for reasons not related to efficacy or safety"
+ },
+ "NCT00772785": {
+  "conditions": [
+   "Opioid Dependency"
+  ],
+  "interventions": [
+   {
+    "name": "Probuphine (buprenorphine implant)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00772785",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Probuphine in Patients With Opioid Dependence",
+  "why_stopped": "This study was terminated for reasons not related to efficacy or safety"
+ },
+ "NCT00790855": {
+  "conditions": [
+   "Acute Myeloid Leukemia",
+   "Myelodysplastic Syndrome",
+   "Acute Lymphoblastic Leukemia",
+   "Chronic Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Bendamustine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00790855",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Bendamustine in Acute Leukemia and MDS",
+  "why_stopped": "Lack of Response"
+ },
+ "NCT00806351": {
+  "conditions": [
+   "Fungemia",
+   "Neutropenia",
+   "Candidiasis"
+  ],
+  "interventions": [
+   {
+    "name": "Active Anidulafungin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Active Caspofungin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00806351",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "An Evaluation Of The Effectiveness And Safety Of Anidulafungin Compared To Caspofungin For The Treatment Of Serious Fungal Infection Due To Candida In Patients With A Dysfunctional Immune System",
+  "why_stopped": "The study was prematurely terminated on May 18, 2012 due to slow enrollment. The study was not terminate due to any safety issues or concerns."
+ },
+ "NCT00826449": {
+  "conditions": [
+   "Lung Cancer",
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Dasatinib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Erlotinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00826449",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "COMPLETED",
+  "title": "Dasatinib and Erlotinib in Non-Small Cell Lung Cancer (NSCLC)",
+  "why_stopped": null
+ },
+ "NCT00839059": {
+  "conditions": [
+   "Acute Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "lenalidomide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00839059",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Lenalidomide In Patients With Acute Myeloid Leukemia",
+  "why_stopped": "Results of an interim analysis and a hardly ongoing enrolment in the last 10 months in all six participating centres"
+ },
+ "NCT00848107": {
+  "conditions": [
+   "Systemic Sclerosis"
+  ],
+  "interventions": [
+   {
+    "name": "treprostinil diethanolamine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00848107",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Open-Label Study of Oral Treprostinil in Digital Ulcers",
+  "why_stopped": "The TDE-DU-202 extension study was discontinued after the randomized, placebo-controlled TDE-DU-201 study did not meet its primary efficacy objective."
+ },
+ "NCT00855062": {
+  "conditions": [
+   "HIV-associated Cognitive Impairment",
+   "HIV Infections"
+  ],
+  "interventions": [
+   {
+    "name": "minocycline",
+    "type": "DRUG"
+   },
+   {
+    "name": "minocycline placebo capsule",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00855062",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Minocycline for HIV+ Cognitive Impairment in Uganda",
+  "why_stopped": "The Neurologic AIDS Research Consortium Data Safety and Monitoring Board committee recommended to terminate the study early due to futility on 11/6/2009."
+ },
+ "NCT00858754": {
+  "conditions": [
+   "Opioid-Induced Constipation"
+  ],
+  "interventions": [
+   {
+    "name": "methylnaltrexone",
+    "type": "DRUG"
+   },
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00858754",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Study Evaluating Safety & Efficacy of Subcutaneous Methylnaltrexone on Opioid-Induced Constipation in Cancer Subjects",
+  "why_stopped": "Withdrawn \\[This study was terminated early by Wyeth, prior to dosing any subjects, for business reasons not related to safety."
+ },
+ "NCT00862134": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "PR104",
+    "type": "DRUG"
+   },
+   {
+    "name": "docetaxel",
+    "type": "DRUG"
+   },
+   {
+    "name": "docetaxel",
+    "type": "DRUG"
+   },
+   {
+    "name": "Granulocyte colony-stimulating factor",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00862134",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Randomized, Multi-center, Open-label, Study of PR104 Versus PR104/Docetaxel in Non-Small Cell Lung Cancer (NSCLC)",
+  "why_stopped": "Interim analysis indicated low probability of clinically significant result"
+ },
+ "NCT00864513": {
+  "conditions": [
+   "Pancreas Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "pemetrexed",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00864513",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Pemetrexed for Second-Line Pancreas Cancer",
+  "why_stopped": "At interim analysis the study did not meet the response criteria to continue"
+ },
+ "NCT00902525": {
+  "conditions": [
+   "Diffuse Large B-Cell Lymphoma"
+  ],
+  "interventions": [
+   {
+    "name": "90Y-Ibritumomab Tiuxetan",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00902525",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Zevalin Twice in Aggressive Non-Hodgkin Lymphoma",
+  "why_stopped": "After enrolling 25 patients an interim analysis was done.The study was discontinued in the absence of the minimum number of 6 patients free of events"
+ },
+ "NCT00904345": {
+  "conditions": [
+   "Head and Neck Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Cetuximab",
+    "type": "DRUG"
+   },
+   {
+    "name": "50-60 Gy and 70 Gy",
+    "type": "RADIATION"
+   }
+  ],
+  "nct": "NCT00904345",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Radiation (RT) Concurrent With Cetuximab in Patients With Advanced Head and Neck Squamous Cell Carcinoma (SCC)",
+  "why_stopped": "Stopped early for funding and efficacy reasons."
+ },
+ "NCT00905437": {
+  "conditions": [
+   "Pain, Perioperative"
+  ],
+  "interventions": [
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Pregabalin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00905437",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study To Investigate The Effectiveness Of Pregabalin For Management Of Patients Undergoing Total Hip Replacement",
+  "why_stopped": "The Study was terminated on May 24th 2012 due to a slow recruitment rate. The study was not terminated for reasons of safety or efficacy."
+ },
+ "NCT00947167": {
+  "conditions": [
+   "Neuroendocrine Tumors",
+   "Carcinoid Tumors",
+   "Adrenal Gland Tumors",
+   "Neuroblastoma",
+   "Pancreatic Neuroendocrine Tumors",
+   "Multiple Endocrine Neoplasia"
+  ],
+  "interventions": [
+   {
+    "name": "pertuzumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "erlotinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00947167",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Phase II Study of Pertuzumab and Erlotinib for Metastatic or Unresectable Neuroendocrine Tumors",
+  "why_stopped": "Extreme toxicity of Pertuzumab and Erlotinib combination"
+ },
+ "NCT00958776": {
+  "conditions": [
+   "Cough",
+   "Sore Throat",
+   "Nasal Congestion",
+   "Headache",
+   "Fever",
+   "Seasonal Influenza"
+  ],
+  "interventions": [
+   {
+    "name": "Peramivir+SOC",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo+SOC",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00958776",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study to Evaluate the Efficacy and Safety of IV Peramivir in Addition to Standard of Care Compared to Standard of Care Alone in Adults and Adolescents Who Are Hospitalized Due to Influenza",
+  "why_stopped": "This study was terminated for futility"
+ },
+ "NCT00975806": {
+  "conditions": [
+   "Renal Cell Carcinoma"
+  ],
+  "interventions": [
+   {
+    "name": "Lenalidomide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Sunitinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT00975806",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Lenalidomide in Combination With Sunitinib to Evaluate the Safety and Efficacy in Patients With Renal Cell Carcinoma",
+  "why_stopped": "MTD determined sub-optimal as efficacious treatment for renal cell carcinoma."
+ },
+ "NCT01006369": {
+  "conditions": [
+   "Colorectal Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "hydroxychloroquine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01006369",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "COMPLETED",
+  "title": "Hydroxychloroquine, Capecitabine, Oxaliplatin, and Bevacizumab in Treating Patients With Metastatic Colorectal Cancer",
+  "why_stopped": null
+ },
+ "NCT01016860": {
+  "conditions": [
+   "Colorectal Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "OSI-906",
+    "type": "DRUG"
+   },
+   {
+    "name": "irinotecan",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01016860",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "OSI-906 and Irinotecan in Patients With Advanced Cancer",
+  "why_stopped": "This study was discontinued due to a shown lack of efficacy in the investigational agent"
+ },
+ "NCT01021423": {
+  "conditions": [
+   "Mantle Cell Lymphoma",
+   "Non-Hodgkin's Lymphoma"
+  ],
+  "interventions": [
+   {
+    "name": "Lenalidomide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT01021423",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study to Evaluate the Efficacy of Lenalidomide as Maintenance Therapy After Completion of First-line Combination Chemotherapy in Patients With Mantle Cell Lymphoma (MCL).",
+  "why_stopped": "Terminated by sponsor due to new unpublished data that rendered the current design of the study no longer clinically relevant. There were no safety concerns."
+ },
+ "NCT01032291": {
+  "conditions": [
+   "Colorectal Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "cetuximab",
+    "type": "DRUG"
+   },
+   {
+    "name": "lenalidomide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01032291",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study to Assess the Efficacy and Safety of Lenalidomide in Combination With Cetuximab in Pre-treated Patients With KRAS Mutant Colorectal Cancer",
+  "why_stopped": "A business decision not to continue with Phase 2b based on non-safety observations during proof of concept phase."
+ },
+ "NCT01057758": {
+  "conditions": [
+   "Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "SIMVASTATIN",
+    "type": "DRUG"
+   },
+   {
+    "name": "PLACEBO",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01057758",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "STATIN-VAP STATIN-VAP - STATINs and Ventilator-Associated Pneumonia",
+  "why_stopped": "stopped for futility"
+ },
+ "NCT01059305": {
+  "conditions": [
+   "Skin Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Erlotinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01059305",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase II Trial of Erlotinib, Prior to Surgery or Radiation in Patients With Squamous Cell Cancers (SCC) of the Skin",
+  "why_stopped": "Lack of primary outcome efficacy."
+ },
+ "NCT01061996": {
+  "conditions": [
+   "Ulcerative Colitis"
+  ],
+  "interventions": [
+   {
+    "name": "Basiliximab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01061996",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Basiliximab Maintenance in Ulcerative Colitis",
+  "why_stopped": "lack of efficacy"
+ },
+ "NCT01092832": {
+  "conditions": [
+   "Candidiasis"
+  ],
+  "interventions": [
+   {
+    "name": "voriconazole",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01092832",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study Of The Safety, Tolerability And Effective Of Voriconazole For The Treatment Of Serious Candida Infection And Candida Infection Of The Throat In Pediatric Patients",
+  "why_stopped": "This protocol terminated prematurely on July 8, 2013 due to slow enrollment, not because of any safety issues or concerns."
+ },
+ "NCT01117051": {
+  "conditions": [
+   "Non-cancer Pain",
+   "Opioid Induced Constipation"
+  ],
+  "interventions": [
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "prucalopride",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01117051",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Prucalopride Effects on Subjects With Chronic Non-cancer Pain Suffering From Opioid Induced Constipation",
+  "why_stopped": "The study was stopped by the sponsor based on a non-safety related business priority decision"
+ },
+ "NCT01133678": {
+  "conditions": [
+   "Head and Neck Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Everolimus",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01133678",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study in Locally Advanced Squamous Cell Carcinoma of Head and Neck",
+  "why_stopped": "Primary endpoint reached futility boundary"
+ },
+ "NCT01187992": {
+  "conditions": [
+   "Acute Coronary Syndrome",
+   "Coronary Artery Disease"
+  ],
+  "interventions": [
+   {
+    "name": "Atorvastatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01187992",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Full-dose Atorvastatin After Acute Coronary Syndrome (ACS) in Non-revascularisable Coronary Artery Disease",
+  "why_stopped": "Interim analysis showed significant effect in favour of full-dose atorvastatin."
+ },
+ "NCT01212887": {
+  "conditions": [
+   "Breast Cancer",
+   "Colorectal Cancer",
+   "Gastric Cancer",
+   "Lung Cancer",
+   "Ovarian Cancer",
+   "Pancreatic Cancer",
+   "Unspecified Adult Solid Tumor, Protocol Specific"
+  ],
+  "interventions": [
+   {
+    "name": "MFE23 scFv-expressing autologous anti-CEA MFEz T lymphocytes",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "aldesleukin",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "cyclophosphamide",
+    "type": "DRUG"
+   },
+   {
+    "name": "fludarabine phosphate",
+    "type": "DRUG"
+   },
+   {
+    "name": "laboratory biomarker analysis",
+    "type": "OTHER"
+   },
+   {
+    "name": "pharmacological study",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT01212887",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Treated Blood Cells, Cyclophosphamide, Fludarabine Phosphate, and Aldesleukin in Treating Patients With Cancer",
+  "why_stopped": "due to safety concerns and lack of efficacy"
+ },
+ "NCT01275248": {
+  "conditions": [
+   "Obsessive-compulsive Disorder"
+  ],
+  "interventions": [
+   {
+    "name": "Ondansetron",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01275248",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety Study of Low-Dose Ondansetron For Adjunctive Therapy In Adult Patients With Obsessive-Compulsive Disorder",
+  "why_stopped": "lack of efficacy"
+ },
+ "NCT01276782": {
+  "conditions": [
+   "Systemic Lupus Erythematosus"
+  ],
+  "interventions": [
+   {
+    "name": "Levothyroxine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01276782",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Levothyroxine in Pregnant SLE Patients",
+  "why_stopped": "Withdraw the study because further analysis showed that it would be futile."
+ },
+ "NCT01283178": {
+  "conditions": [
+   "Salivary Gland Squamous Cell Carcinoma",
+   "Stage II Salivary Gland Cancer",
+   "Stage II Squamous Cell Carcinoma of the Hypopharynx",
+   "Stage II Squamous Cell Carcinoma of the Lip and Oral Cavity",
+   "Stage II Squamous Cell Carcinoma of the Oropharynx",
+   "Stage II Verrucous Carcinoma of the Oral Cavity",
+   "Stage III Salivary Gland Cancer",
+   "Stage III Squamous Cell Carcinoma of the Hypopharynx",
+   "Stage III Squamous Cell Carcinoma of the Lip and Oral Cavity",
+   "Stage III Squamous Cell Carcinoma of the Oropharynx",
+   "Stage III Verrucous Carcinoma of the Oral Cavity",
+   "Stage IV Salivary Gland Cancer",
+   "Stage IV Squamous Cell Carcinoma of the Hypopharynx",
+   "Stage IV Squamous Cell Carcinoma of the Lip and Oral Cavity",
+   "Stage IV Squamous Cell Carcinoma of the Oropharynx",
+   "Stage IV Verrucous Carcinoma of the Oral Cavity"
+  ],
+  "interventions": [
+   {
+    "name": "intensity-modulated radiation therapy",
+    "type": "RADIATION"
+   },
+   {
+    "name": "cisplatin",
+    "type": "DRUG"
+   },
+   {
+    "name": "image-guided adaptive radiation therapy",
+    "type": "RADIATION"
+   },
+   {
+    "name": "3'-deoxy-3'-[18F]fluorothymidine",
+    "type": "OTHER"
+   },
+   {
+    "name": "positron emission tomography/computed tomography",
+    "type": "PROCEDURE"
+   },
+   {
+    "name": "fludeoxyglucose F 18",
+    "type": "RADIATION"
+   }
+  ],
+  "nct": "NCT01283178",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase I Study of IMRT and Molecular-Image Guided Adaptive Radiation Therapy for Advanced HNSCC",
+  "why_stopped": "The study was terminated. The data analysis was futile with only 3 accruals. PI opted to terminate with IRB and withdraw FDA IND."
+ },
+ "NCT01285310": {
+  "conditions": [
+   "Rheumatoid Arthritis"
+  ],
+  "interventions": [
+   {
+    "name": "Apremilast 30 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Apremilast 20 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01285310",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Apremilast to Evaluate the Safety and Effectiveness for Patients With Rheumatoid Arthritis",
+  "why_stopped": "Study is terminated due to lack of efficacy"
+ },
+ "NCT01292265": {
+  "conditions": [
+   "Rheumatoid Arthritis"
+  ],
+  "interventions": [
+   {
+    "name": "Certolizumab Pegol",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT01292265",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A 12 Week Study to Assess Changes in Joint Inflammation Using Ultrasonography in Patients With Rheumatoid Arthritis (RA)",
+  "why_stopped": "Termination of study due to low enrollment. There were no safety issues."
+ },
+ "NCT01309412": {
+  "conditions": [
+   "Multiple Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "Siltuximab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01309412",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Phase 1 Study of CNTO 328 (Siltuximab) in Relapsed or Refractory Multiple Myeloma",
+  "why_stopped": "Protocol was stopped due to the safety issue in Global"
+ },
+ "NCT01337154": {
+  "conditions": [
+   "Stage IIIB Non-small Cell Lung Cancer With Pleural Effusion",
+   "Stage IV Non-small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Tamibarotene",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01337154",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "First Line Study of Tamibarotene in Combination for Advanced Non-Small Cell Lung Cancer",
+  "why_stopped": "Interim analysis showed that the primary endpoint would not be met."
+ },
+ "NCT01349673": {
+  "conditions": [
+   "Proctitis",
+   "Proctosigmoiditis"
+  ],
+  "interventions": [
+   {
+    "name": "Budesonide Foam",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01349673",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The Safety and Tolerability of Budesonide Foam in Participants With Active Ulcerative Proctitis or Proctosigmoiditis",
+  "why_stopped": "Terminated for non-safety reasons when Sponsor felt that sufficient long-term safety data was obtained."
+ },
+ "NCT01364389": {
+  "conditions": [
+   "Polymyalgia Rheumatica",
+   "Inflammatory Diseases"
+  ],
+  "interventions": [
+   {
+    "name": "AIN457",
+    "type": "DRUG"
+   },
+   {
+    "name": "ACZ885",
+    "type": "DRUG"
+   },
+   {
+    "name": "Prednisone",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01364389",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A 3-arm Proof of Concept Study of AIN457, ACZ885 or Corticosteroids in Patients With Polymyalgia Rheumatica",
+  "why_stopped": "Data did not show that the two biologic treatments impacted PMR disease activity to the same degree as steroid treatment within a 2-week treatment period."
+ },
+ "NCT01375816": {
+  "conditions": [
+   "Colorectal Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "FOLFIRI 1-Bevacizumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "fluorouracil",
+    "type": "DRUG"
+   },
+   {
+    "name": "irinotecan hydrochloride",
+    "type": "DRUG"
+   },
+   {
+    "name": "leucovorin calcium",
+    "type": "DRUG"
+   },
+   {
+    "name": "liposome-encapsulated irinotecan hydrochloride PEP02",
+    "type": "DRUG"
+   },
+   {
+    "name": "Bevacizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01375816",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Liposome-encapsulated Irinotecan Hydrochloride PEP02 or Irinotecan Hydrochloride, Leucovorin Calcium, and Fluorouracil as Second-Line Therapy in Treating Patients With Metastatic Colorectal Cancer",
+  "why_stopped": "efficacy interim analysis as per protocol"
+ },
+ "NCT01386372": {
+  "conditions": [
+   "Hyponatremia"
+  ],
+  "interventions": [
+   {
+    "name": "Tolvaptan",
+    "type": "DRUG"
+   },
+   {
+    "name": "Standard therapy",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT01386372",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Tolvaptan for In-hospital Hyponatremia",
+  "why_stopped": "futility"
+ },
+ "NCT01394848": {
+  "conditions": [
+   "Stable Angina"
+  ],
+  "interventions": [
+   {
+    "name": "Endothelial cell capture stent with 1 month clopidogrel",
+    "type": "DEVICE"
+   },
+   {
+    "name": "Everolimus eluting stent with 12 month clopidogrel",
+    "type": "DEVICE"
+   },
+   {
+    "name": "Atorvastatin 20mg loading",
+    "type": "DRUG"
+   },
+   {
+    "name": "Atorvastatin 80mg loading",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01394848",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety and Efficacy Study of Endothelial Progenitor Cell Capture Stent With 1 Months Dual Antiplatelet Therapy",
+  "why_stopped": "Previous other study including EPC capture stent raised the issue of safety (significant high incidence of instent restenosis)"
+ },
+ "NCT01433328": {
+  "conditions": [
+   "Pulmonary Arterial Hypertension"
+  ],
+  "interventions": [
+   {
+    "name": "Lidocaine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01433328",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Lidocaine Subcutaneous Infusion for Control of Treprostinil Related Site Pain",
+  "why_stopped": "Safety considerations"
+ },
+ "NCT01444118": {
+  "conditions": [
+   "Carcinoma, Non-Small-Cell Lung"
+  ],
+  "interventions": [
+   {
+    "name": "Therapeutic EGF Vaccine (Cyclophosphamide and the recombinant human rEGF-P64K/Montanide ISA 51 vaccine)",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT01444118",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Randomized Trial to Study the Safety and Efficacy of EGF Cancer Vaccination in Late-stage (IIIB/IV) Non-small Cell Lung Cancer Patients",
+  "why_stopped": "The early termination is not related to safety/toxicity but to initiate new Phase III with biomarker to enrich population \\& to further strengthen OS benefit"
+ },
+ "NCT01485094": {
+  "conditions": [
+   "Neuralgia"
+  ],
+  "interventions": [
+   {
+    "name": "GRT6010",
+    "type": "DRUG"
+   },
+   {
+    "name": "Pregabalin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Matching Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01485094",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study to Assess the Safety and Efficacy of 7 Days Treatment With a Novel Analgesic in Subjects With Peripheral Neuropathic Pain",
+  "why_stopped": "The trial was early terminated after it was concluded that there was no added benefit from exposing further participants after an unblinded interim analysis."
+ },
+ "NCT01496430": {
+  "conditions": [
+   "Hypertension",
+   "Diabetes"
+  ],
+  "interventions": [
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Azilsartan medoxomil",
+    "type": "DRUG"
+   },
+   {
+    "name": "Azilsartan medoxomil",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01496430",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety of Azilsartan Medoxomil Used in Combination With Metformin in Participants With Hypertension and Diabetes",
+  "why_stopped": "Business Decision; No Safety Or Efficacy Concerns. (See below)"
+ },
+ "NCT01514864": {
+  "conditions": [
+   "Carcinoma, Non-small Cell Lung"
+  ],
+  "interventions": [
+   {
+    "name": "Dasatinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01514864",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Trial of Dasatinib in Patients With Advanced Cancers Harboring DDR2 Mutation or Inactivating B-RAF Mutation",
+  "why_stopped": "Lack of efficacy and slow accrual"
+ },
+ "NCT01537861": {
+  "conditions": [
+   "Multiple Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "Filgrastim",
+    "type": "DRUG"
+   },
+   {
+    "name": "Bortezomib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Carfilzomib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Dexamethasone",
+    "type": "DRUG"
+   },
+   {
+    "name": "Cyclophosphamide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Thalidomide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Lenalidomide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Pomalidomide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01537861",
+  "phases": [
+   "EARLY_PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Filgrastim in Treating Patients With Bortezomib-, Carfilzomib-, or IMID-Refractory Multiple Myeloma",
+  "why_stopped": "Unexpected toxicity (2 early deaths)"
+ },
+ "NCT01538251": {
+  "conditions": [
+   "Ulcerative Colitis"
+  ],
+  "interventions": [
+   {
+    "name": "Propionyl-L-Carnitine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01538251",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy, Safety and Tolerability of Propionyl-L-Carnitine Hydrochloride in Patients With Mild Ulcerative Colitis",
+  "why_stopped": "Evidence of very low probability to success. No safety issues."
+ },
+ "NCT01545427": {
+  "conditions": [
+   "Scleroderma"
+  ],
+  "interventions": [
+   {
+    "name": "Imatinib mesylate",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT01545427",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Proof of Concept Trial of Gleevec (Imatinib) in Active Diffuse Scleroderma",
+  "why_stopped": "Frequent adverse events occurred early in treatment with poor tolerability."
+ },
+ "NCT01567956": {
+  "conditions": [
+   "Ulcerative Colitis"
+  ],
+  "interventions": [
+   {
+    "name": "Propionyl-L-Carnitine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01567956",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Propionyl-L-Carnitine Hydrochloride in Patients With Mild Ulcerative Colitis; Efficacy, Safety and Tolerability Study",
+  "why_stopped": "Evidence of very low probability to success. No safety issues"
+ },
+ "NCT01600053": {
+  "conditions": [
+   "Chronic Lymphocytic Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Lenalidomide",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01600053",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Revlimid® as Consolidation Treatment Chronic Lymphocytic Leukemia",
+  "why_stopped": "interim analysis showed that the trial will not meet the interim endpoint."
+ },
+ "NCT01611506": {
+  "conditions": [
+   "Gastric Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Cetuximab",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "Capecitabine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Cisplatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01611506",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Combination Chemotherapy, Cetuximab and Radiation for Patients With Localized Gastric Cancer",
+  "why_stopped": "Outcome of EXPAND study (no benefit from adding cetuximab to the first-line chemotherapy in advanced gastric cancer in the overall patient population)"
+ },
+ "NCT01612975": {
+  "conditions": [
+   "Pleural Effusion",
+   "Pleural Effusion Malignant"
+  ],
+  "interventions": [
+   {
+    "name": "Naproxen",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01612975",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The Effect of Non-Steroidal Anti-Inflammatory Drug Naproxen on Pleural Effusion Formation After Lung Resection",
+  "why_stopped": "Recruitment futile"
+ },
+ "NCT01641575": {
+  "conditions": [
+   "Solid Tumor",
+   "Non-small-cell Lung Cancer",
+   "Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "CO-1.01 and Cisplatin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01641575",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Dose Ascending Study of Gemcitabine Elaidate (CO-101) in Combination With Cisplatin",
+  "why_stopped": "Registrational study did not meet endpoint so entire program (including CO-101-011) was terminated."
+ },
+ "NCT01646580": {
+  "conditions": [
+   "Dermatomycoses"
+  ],
+  "interventions": [
+   {
+    "name": "ciclopirox",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01646580",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety Study of Ciclopirox Olamine Cream for Dermatomycoses in Children",
+  "why_stopped": "Low recruitment rate. with the final sample primary endpoint could be assessed."
+ },
+ "NCT01646762": {
+  "conditions": [
+   "Refractory Plasma Cell Myeloma"
+  ],
+  "interventions": [
+   {
+    "name": "Paclitaxel Albumin-Stabilized Nanoparticle Formulation",
+    "type": "DRUG"
+   },
+   {
+    "name": "Laboratory Biomarker Analysis",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT01646762",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Paclitaxel Albumin-Stabilized Nanoparticle Formulation in Treating Patients With Relapsed or Refractory Multiple Myeloma",
+  "why_stopped": "Did not pass the Stage 1 interim analysis."
+ },
+ "NCT01738698": {
+  "conditions": [
+   "Schizophrenia"
+  ],
+  "interventions": [
+   {
+    "name": "SPD489 40mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "SPD489 100mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "SPD489 160mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01738698",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Adjunctive SPD489 to Antipsychotic Medication in Clinically Stable Adults With Persistent Predominant Negative Symptoms of Schizophrenia",
+  "why_stopped": "Study was discontinued due to non-safety related business prioritization decisions. No subjects were randomized."
+ },
+ "NCT01760889": {
+  "conditions": [
+   "Schizophrenia"
+  ],
+  "interventions": [
+   {
+    "name": "SPD489 low dose range (40mg, 80mg, and 100mg)",
+    "type": "DRUG"
+   },
+   {
+    "name": "SPD489 high dose range (120mg, 140mg and 160mg)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01760889",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "SPD489 Low Dose and High Dose Ranges When Added to Stable Doses of Antipsychotic Medications in Clinically Stable Adults With Negative Symptoms of Schizophrenia",
+  "why_stopped": "Study was discontinued due to non-safety related business prioritization decisions. No subjects were randomized"
+ },
+ "NCT01761747": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer, Head and Neck Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "ponatinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01761747",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Ponatinib for Squamous Cell Lung and Head and Neck Cancers",
+  "why_stopped": "FDA hold and toxicity associated with study drug"
+ },
+ "NCT01771198": {
+  "conditions": [
+   "Rhinosinusitis"
+  ],
+  "interventions": [
+   {
+    "name": "SIMVASTATIN",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01771198",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy Study of SIMVASTATIN to Treat Chronic Rhinosinusitis After Failure of Optimal Treatment",
+  "why_stopped": "Lack of efficacy with one month of treatement"
+ },
+ "NCT01863719": {
+  "conditions": [
+   "Pathogen Resistance",
+   "Pneumococcal Infection",
+   "Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Colistimethate sodium",
+    "type": "DRUG"
+   },
+   {
+    "name": "Colistimethate sodium",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01863719",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Aerosolized and Intravenous Colistin in Healthy Adults",
+  "why_stopped": "Completion of cohort 3, safety concerns"
+ },
+ "NCT01944943": {
+  "conditions": [
+   "Diffuse Large B-cell Lymphoma",
+   "Indolent Non-hodgkin Lymphoma",
+   "Primary Central Nervous System Lymphoma",
+   "Chronic Lymphocytic Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Vismodegib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01944943",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase II Study of Vismodegib in Patients With Refractory or Relapsed B-cell Lymphoma or Chronic Lymphocytic Leukemia",
+  "why_stopped": "lack of efficacy"
+ },
+ "NCT01956812": {
+  "conditions": [
+   "Metastatic Pancreatic Cancer",
+   "Pancreatic Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "IMMU-107",
+    "type": "DRUG"
+   },
+   {
+    "name": "placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Gemcitabine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT01956812",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase 3 Trial of 90Y-Clivatuzumab Tetraxetan & Gemcitabine vs Placebo & Gemcitabine in Metastatic Pancreatic Cancer",
+  "why_stopped": "The DSMB conducted an interim analysis on overall survival, which showed that the treatment arm did not demonstrate a sufficient improvement in OS vs. placebo."
+ },
+ "NCT02020616": {
+  "conditions": [
+   "Type 2 Diabetes Mellitus"
+  ],
+  "interventions": [
+   {
+    "name": "LY3053102",
+    "type": "DRUG"
+   },
+   {
+    "name": "Exenatide ER",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Metformin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02020616",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of the Safety and Effectiveness of LY3053102 in Participants With Type 2 Diabetes",
+  "why_stopped": "Lack of Efficacy"
+ },
+ "NCT02023047": {
+  "conditions": [
+   "Anal Fissure"
+  ],
+  "interventions": [
+   {
+    "name": "Nifedipine 12 mg coated suppositories",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02023047",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "An Open Label Multi-Dose Study to Examine the Effect of Coated Nifedipine Suppository on Anal Fissure Pain and Healing",
+  "why_stopped": "Met primary endpoint"
+ },
+ "NCT02066311": {
+  "conditions": [
+   "Systemic Lupus Erythematosus"
+  ],
+  "interventions": [
+   {
+    "name": "Nelfinavir",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02066311",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Nelfinavir in Systemic Lupus Erythematosus",
+  "why_stopped": "Stage 1 terminated 6/1/18 prior to completion of Stage 1 due to low enrollment and efficacy"
+ },
+ "NCT02093962": {
+  "conditions": [
+   "Non-small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "TH-302 combination with pemetrexed",
+    "type": "DRUG"
+   },
+   {
+    "name": "Matched placebo in combination with pemetrexed",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02093962",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of TH-302 or Placebo in Combination With Pemetrexed in Patients With Non-squamous Non-small Cell Lung Cancer",
+  "why_stopped": "At the interim analysis, the futility boundary was not met and the study was stopped due to insufficient efficacy."
+ },
+ "NCT02137343": {
+  "conditions": [
+   "Gastric Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Rilotumumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Cisplatin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Capecitabine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02137343",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Phase 3 Study of Rilotumumab (AMG 102) With Cisplatin and Capecitabine (CX) as First-line Therapy in Gastric Cancer",
+  "why_stopped": "All Amgen sponsored AMG102 clinical studies were terminated following a pre-planned Data Monitoring Committee safety review of study 20070622."
+ },
+ "NCT02138825": {
+  "conditions": [
+   "Idiopathic Interstitial Pneumonias / Hypertension,Pulmonary"
+  ],
+  "interventions": [
+   {
+    "name": "Riociguat (Adempas, BAY63-2521)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02138825",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety of Riociguat in Patients With Symptomatic Pulmonary Hypertension (PH) Associated With Idiopathic Interstitial Pneumonias (IIP)",
+  "why_stopped": "Study terminated per recommendation of iDMC. On iDMC request, protocol amended to include 4-month safety follow-up for patients after withdrawal of riociguat."
+ },
+ "NCT02172755": {
+  "conditions": [
+   "Epilepsy"
+  ],
+  "interventions": [
+   {
+    "name": "BIA 2-093",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02172755",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "COMPLETED",
+  "title": "Single-dose and Steady-state Pharmacokinetics of BIA 2-093 and Its Metabolites",
+  "why_stopped": null
+ },
+ "NCT02176486": {
+  "conditions": [
+   "Lupus Nephritis"
+  ],
+  "interventions": [
+   {
+    "name": "Ixazomib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02176486",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety, Tolerability and Pharmacokinetics of Multiple Rising Doses of Ixazomib in Lupus Nephritis (LN)",
+  "why_stopped": "Insufficient enrollment, no safety or efficacy concerns"
+ },
+ "NCT02337478": {
+  "conditions": [
+   "Recurrent Adult Acute Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Vincristine Sulfate Liposome",
+    "type": "DRUG"
+   },
+   {
+    "name": "Laboratory Biomarker Analysis",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT02337478",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Vincristine Sulfate Liposome in Treating Patients With Relapsed or Refractory Acute Myeloid Leukemia",
+  "why_stopped": "The study was stopped early due to futility."
+ },
+ "NCT02358642": {
+  "conditions": [
+   "Pneumonia",
+   "Neurological Dysphagia"
+  ],
+  "interventions": [
+   {
+    "name": "Angiotensin converting enzyme inhibitor (Lisinopril)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02358642",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Drug to Prevent Pneumonia in the Tube Fed",
+  "why_stopped": "The interim analysis suggested that low dose lisinopril given to be tube fed older patients with neuroligical dysphagia had increased mortality."
+ },
+ "NCT02413489": {
+  "conditions": [
+   "Lymphoma, Mantle-Cell",
+   "Lymphoma, Large B-Cell, Diffuse",
+   "Lymphoma, Follicular"
+  ],
+  "interventions": [
+   {
+    "name": "Daratumumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02413489",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "An Efficacy and Safety Proof of Concept Study of Daratumumab in Relapsed/Refractory Mantle Cell Lymphoma, Diffuse Large B-Cell Lymphoma, and Follicular Lymphoma",
+  "why_stopped": "DLBCL and FL cohorts met the pre-specified futility criteria and will not proceed. The MCL cohort was terminated due to slow recruitment and aggressive disease."
+ },
+ "NCT02429934": {
+  "conditions": [
+   "Systemic Lupus Erythematosus Arthritis"
+  ],
+  "interventions": [
+   {
+    "name": "abatacept also known as Orencia also known as CTLA4-Ig",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02429934",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Abatacept for SLE Arthritis (IM101-330)",
+  "why_stopped": "Response rate in placebo group for primary outcome was 100% on interim analysis."
+ },
+ "NCT02462421": {
+  "conditions": [
+   "Diabetes Mellitus",
+   "Gout",
+   "Hyperuricemia"
+  ],
+  "interventions": [
+   {
+    "name": "Canagliflozin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02462421",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pharmacogenetics of SGLT2 Inhibitors",
+  "why_stopped": "Did not meet recruitment targets."
+ },
+ "NCT02473445": {
+  "conditions": [
+   "Mitochondrial Diseases"
+  ],
+  "interventions": [
+   {
+    "name": "Cysteamine Bitartrate",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02473445",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Long-term Extension of Study RP103-MITO-001 (NCT02023866) to Assess Cysteamine Bitartrate Delayed-release Capsules (RP103) in Children With Inherited Mitochondrial Disease",
+  "why_stopped": "Sponsor decision to end development of RP103 for mitochondrial disease due to lack of efficacy demonstrated in base study RP103-MITO-001."
+ },
+ "NCT02499952": {
+  "conditions": [
+   "Germ Cell Neoplasms",
+   "Testicular Neoplasms",
+   "Non Seminomatous Germ Cell Tumors",
+   "Mediastinal Neoplasms",
+   "Genital Neoplasms, Male",
+   "Genital Neoplasms, Female",
+   "Ovarian Neoplasms"
+  ],
+  "interventions": [
+   {
+    "name": "Pembrolizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02499952",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pembrolizumab in Subjects With Incurable Platinum-Refractory Germ Cell Tumors",
+  "why_stopped": "Lack of Efficacy"
+ },
+ "NCT02517996": {
+  "conditions": [
+   "Interstitial Cystitis",
+   "Painful Bladder Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Lidocaine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02517996",
+  "phases": [
+   "NA"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Use of Preemptive Pudendal Nerve Block Prior to Hydrodistention for the Treatment of Interstitial Cystitis/Painful Bladder Syndrome (IC/PBS)",
+  "why_stopped": "Preliminary results were promising when interim analysis performed but terminated due to primary investigators left recruitment site."
+ },
+ "NCT02750930": {
+  "conditions": [
+   "Diabetes Mellitus, Type 2"
+  ],
+  "interventions": [
+   {
+    "name": "Albiglutide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Auto-injector",
+    "type": "DEVICE"
+   }
+  ],
+  "nct": "NCT02750930",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Extension to Study 200952 to Evaluate the Long-term Safety, Tolerability and Pharmacodynamics of Albiglutide Liquid Drug Product in Type 2 Diabetes Mellitus Subjects",
+  "why_stopped": "The termination was result of GSK business considerations and not due to quality, safety or efficacy concerns with any albiglutide formulations or study conduct"
+ },
+ "NCT02767934": {
+  "conditions": [
+   "B Acute Lymphoblastic Leukemia",
+   "Minimal Residual Disease",
+   "Recurrent Acute Lymphoblastic Leukemia",
+   "T Acute Lymphoblastic Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Laboratory Biomarker Analysis",
+    "type": "OTHER"
+   },
+   {
+    "name": "Pembrolizumab",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT02767934",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pembrolizumab in Treating Minimal Residual Disease in Patients With Acute Lymphoblastic Leukemia",
+  "why_stopped": "Terminated due to lack of efficacy"
+ },
+ "NCT02790957": {
+  "conditions": [
+   "Diabetes",
+   "Wounds",
+   "Critical Limb Ischemia"
+  ],
+  "interventions": [
+   {
+    "name": "Plerixafor",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02790957",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Plerixafor in Diabetic Wound Healing",
+  "why_stopped": "Safety reasons"
+ },
+ "NCT02820519": {
+  "conditions": [
+   "Neuropathic Pain"
+  ],
+  "interventions": [
+   {
+    "name": "Loxapine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02820519",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Tolerability and Analgesic Efficacy of Loxapine in Patients With Refractory, Chemotherapy-induced Neuropathic Pain",
+  "why_stopped": "Intolerable high amount of adverse events"
+ },
+ "NCT02825342": {
+  "conditions": [
+   "Chest Pain Rule Out Myocardial Infarction"
+  ],
+  "interventions": [
+   {
+    "name": "Citalopram",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02825342",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "PPI's and SSRI's Therapy for the Management of NCCP",
+  "why_stopped": "Primary endpoint was reached."
+ },
+ "NCT02884180": {
+  "conditions": [
+   "Pain, Postoperative"
+  ],
+  "interventions": [
+   {
+    "name": "Dexamethasone",
+    "type": "DRUG"
+   },
+   {
+    "name": "Saline isotonic",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02884180",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "DEXRAR: DEXamethasone in Revision ARthroplasty",
+  "why_stopped": "The study had met its original objectives for the primary endpoint. A transition to a new regulatory system would have introduced additional costs and delays. Therefore, a strategic decision was made to stop before final enrollment."
+ },
+ "NCT02932475": {
+  "conditions": [
+   "Diabetes",
+   "Pregnancy"
+  ],
+  "interventions": [
+   {
+    "name": "Metformin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT02932475",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Medical Optimization of Management of Type 2 Diabetes Complicating Pregnancy (MOMPOD)",
+  "why_stopped": "Recommendation by the DSMB that the study be stopped for futility"
+ },
+ "NCT03042325": {
+  "conditions": [
+   "Diabetes Mellitus, Type 2"
+  ],
+  "interventions": [
+   {
+    "name": "Alogliptin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03042325",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Safety and Efficacy of Alogliptin in Indian Participants With Type 2 Diabetes Mellitus",
+  "why_stopped": "Business decision, no safety or efficacy concerns"
+ },
+ "NCT03067571": {
+  "conditions": [
+   "High Risk Myelodysplastic Syndrome",
+   "Recurrent Acute Myeloid Leukemia",
+   "Refractory Acute Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Daratumumab",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT03067571",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Daratumumab in Treating Patients With Relapsed or Refractory Acute Myeloid Leukemia or High-Risk Myelodysplastic Syndrome",
+  "why_stopped": "Study terminated early because of lack of efficacy"
+ },
+ "NCT03093831": {
+  "conditions": [
+   "Lymphoma, B-Cell, Marginal Zone"
+  ],
+  "interventions": [
+   {
+    "name": "Ibrutinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03093831",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase II Study of Ibrutinib in Patients With Relapsed or Refractory Marginal Zone Lymphoma",
+  "why_stopped": "Study did not meet the objectives and terminated early on 17 Jul 2020 due to poor recruitment"
+ },
+ "NCT03151057": {
+  "conditions": [
+   "B Cells-Tumors",
+   "B Cell Chronic Lymphocytic Leukemia",
+   "Follicular Lymphoma",
+   "Mantle Cell Lymphoma",
+   "Large B-Cell Diffuse Lymphoma of Bone (Diagnosis)"
+  ],
+  "interventions": [
+   {
+    "name": "Idelalisib 100 MG",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo Oral Tablet",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03151057",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Idelalisib Post Allogeneic Hematopoietic Stem Cell Transplant (HSCT) in B Cell Derived Malignancies",
+  "why_stopped": "Safety endpointreached"
+ },
+ "NCT03192995": {
+  "conditions": [
+   "Cocaine Use Disorder"
+  ],
+  "interventions": [
+   {
+    "name": "lorcaserin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo Oral Tablet",
+    "type": "DRUG"
+   },
+   {
+    "name": "Substance use counseling",
+    "type": "BEHAVIORAL"
+   },
+   {
+    "name": "ACASI",
+    "type": "BEHAVIORAL"
+   },
+   {
+    "name": "Cocaine metabolites",
+    "type": "DIAGNOSTIC_TEST"
+   },
+   {
+    "name": "Ecological Momentary Assessment (EMA)",
+    "type": "BEHAVIORAL"
+   },
+   {
+    "name": "Balloon Analogue Risk Task (BART)",
+    "type": "BEHAVIORAL"
+   },
+   {
+    "name": "Qualitative Exit Interview",
+    "type": "BEHAVIORAL"
+   }
+  ],
+  "nct": "NCT03192995",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Treatment With Lorcaserin for Cocaine Use: The TLC Study",
+  "why_stopped": "FDA alert regarding study drug safety"
+ },
+ "NCT03357224": {
+  "conditions": [
+   "Lymphoma, T-Cell, Cutaneous",
+   "Mycosis Fungoides/Sezary Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Atezolizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03357224",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "PARCT: Trial of Atezolizumab in Relapsed/Refractory Cutaneous T Cell Lymphoma (CTCL)",
+  "why_stopped": "Following an urgent safety measure due to toxicity recruitment has been closed prematurely."
+ },
+ "NCT03428945": {
+  "conditions": [
+   "Type1 Diabetes Mellitus"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03428945",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Hydroxychloroquine in Individuals At-risk for Type 1 Diabetes Mellitus",
+  "why_stopped": "This trial has undergone a prespecified interim analysis which determined that this treatment provides no statistically significant delay in the onset of abnormal glucose tolerance or Type 1 Diabetes."
+ },
+ "NCT03431337": {
+  "conditions": [
+   "Sinusitis, Acute"
+  ],
+  "interventions": [
+   {
+    "name": "Amoxicillin 875 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo (lactase)",
+    "type": "DIETARY_SUPPLEMENT"
+   }
+  ],
+  "nct": "NCT03431337",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Treatment of Acute Sinusitis With High-Dose vs. Standard-Dose Amoxicillin/Clavulanate",
+  "why_stopped": "Futility found by interim analysis"
+ },
+ "NCT03445533": {
+  "conditions": [
+   "Metastatic Melanoma"
+  ],
+  "interventions": [
+   {
+    "name": "Ipilimumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Tilsotolimod with Ipilimumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03445533",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Tilsotolimod in Combo With Ipilimumab vs Ipilimumab Alone in Subjects With Anti-PD-1 Refractory Melanoma",
+  "why_stopped": "Lack of Efficacy"
+ },
+ "NCT03447769": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Canakinumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03447769",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Brief Title: Study of Efficacy and Safety of Canakinumab as Adjuvant Therapy in Adult Subjects With Stages AJCC/UICC v. 8 II-IIIA and IIIB (T>5cm N2) Completely Resected Non-small Cell Lung Cancer Acronym: CANOPY-A",
+  "why_stopped": "Upon review of the primary analysis results, the benefit-risk was assessed by the Steering Committee Members with the decision that the study will be closed. No new safety signals were observed for canakinumab."
+ },
+ "NCT03452137": {
+  "conditions": [
+   "Locally Advanced Squamous Cell Carcinoma of the Head and Neck (SCCHN)"
+  ],
+  "interventions": [
+   {
+    "name": "Atezolizumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03452137",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Atezolizumab (Anti-PD-L1 Antibody) as Adjuvant Therapy After Definitive Local Therapy in Patients With High-Risk Locally Advanced Squamous Cell Carcinoma of the Head and Neck",
+  "why_stopped": "Decision to terminate the study as its primary endpoint of investigator-assessed event free survival (INV-EFS) was not met at its final EFS analysis. No new safety signals were identified."
+ },
+ "NCT03517722": {
+  "conditions": [
+   "Lupus Erythematosus, Systemic"
+  ],
+  "interventions": [
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Ustekinumab (approximately 6 mg/kg)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Ustekinumab 90 mg",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03517722",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Ustekinumab in Participants With Active Systemic Lupus Erythematosus",
+  "why_stopped": "Study terminated early as a result of the outcome of the pre-planned Interim Analysis"
+ },
+ "NCT03720717": {
+  "conditions": [
+   "Pain"
+  ],
+  "interventions": [
+   {
+    "name": "Baclofen 10mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT03720717",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Baclofen as a Perioperative Analgesic Adjuvant",
+  "why_stopped": "Futility analysis at midpoint analysis"
+ },
+ "NCT03760666": {
+  "conditions": [
+   "Acute Myeloid Leukemia"
+  ],
+  "interventions": [
+   {
+    "name": "Brequinar/Brequinar + Ribavirin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03760666",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Brequinar in Subjects With Relapsed/Refractory Acute Myeloid Leukemia",
+  "why_stopped": "No efficacy observed, COVID-19 caused sites to shut down"
+ },
+ "NCT03796650": {
+  "conditions": [
+   "Clostridium Difficile Infection"
+  ],
+  "interventions": [
+   {
+    "name": "Fecal microbiota transplantation",
+    "type": "OTHER"
+   },
+   {
+    "name": "Vancomycin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03796650",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Fecal Transplantation for Primary Clostridium Difficile Infection",
+  "why_stopped": "Pre-specified non-inferiority criterion met at interim analysis."
+ },
+ "NCT03833167": {
+  "conditions": [
+   "Carcinoma, Squamous Cell"
+  ],
+  "interventions": [
+   {
+    "name": "Pembrolizumab",
+    "type": "BIOLOGICAL"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03833167",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pembrolizumab (MK-3475) Versus Placebo Following Surgery and Radiation in Participants With Locally Advanced Cutaneous Squamous Cell Carcinoma (MK-3475-630/KEYNOTE-630)",
+  "why_stopped": "The study stopped due to futility"
+ },
+ "NCT03848403": {
+  "conditions": [
+   "Healthy"
+  ],
+  "interventions": [
+   {
+    "name": "Ixekizumab",
+    "type": "BIOLOGICAL"
+   }
+  ],
+  "nct": "NCT03848403",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Ixekizumab in Healthy Participants",
+  "why_stopped": "At the protocol-specified interim analysis, the sponsor decided to stop the trial."
+ },
+ "NCT03948178": {
+  "conditions": [
+   "Amyotrophic Lateral Sclerosis"
+  ],
+  "interventions": [
+   {
+    "name": "Levosimendan",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT03948178",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Effects of Oral Levosimendan on Respiratory Function in Patients With Amyotrophic Lateral Sclerosis (ALS): Open-Label Extension",
+  "why_stopped": "This was an open label extension for patients completing the REFALS study (3119002; NCT03505021). Study 3119002 showed lack of efficacy of ODM109 so the sponsor decided to terminate this study"
+ },
+ "NCT04039347": {
+  "conditions": [
+   "Bronchiolitis Obliterans",
+   "Obliterative Bronchiolitis",
+   "Bronchiolitis Obliterans Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Liposomal Cyclosporine A 5 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Liposomal Cyclosporine A 10 mg",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04039347",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Extension Trial on Efficacy / Safety of L-CsA + SoC in Treating BOS in Post Single or Double Lung Transplant (BOSTON-3)",
+  "why_stopped": "Study was terminated for business reasons. The earlier study end is not related to any safety concerns or data issues identified at any site or within the overall study data collected to date."
+ },
+ "NCT04060888": {
+  "conditions": [
+   "Lupus Erythematosus, Systemic"
+  ],
+  "interventions": [
+   {
+    "name": "Ustekinumab (approximately 6 mg/kg)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Ustekinumab 90 milligram (mg)",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04060888",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "A Study of Ustekinumab in Chinese Participants With Active Systemic Lupus Erythematosus",
+  "why_stopped": "Pre-planned IA (global study) showed lack of efficacy in this indication. No new safety signals observed, findings consistent with known profile."
+ },
+ "NCT04107675": {
+  "conditions": [
+   "Bronchiolitis Obliterans Syndrome (BOS)",
+   "GVHD, Chronic",
+   "Stem Cell Transplant Complications"
+  ],
+  "interventions": [
+   {
+    "name": "Liposomal Cyclosporine A",
+    "type": "DRUG"
+   },
+   {
+    "name": "Liposomal Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04107675",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Safety Study of Liposomal Cyclosporine A to Treat Bronchiolitis After Hematopoietic Transplant (BOSTON-4)",
+  "why_stopped": "Due to the low number of patients recruited and the slow enrollment pace of patients, on 18 March 2022, the sponsor decided to terminate the BOSTON-4 safety and tolerability trial ahead of time."
+ },
+ "NCT04115059": {
+  "conditions": [
+   "Waldenstrom Macroglobulinemia",
+   "DASATINIB"
+  ],
+  "interventions": [
+   {
+    "name": "Dasatinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04115059",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Dasatinib In Waldenström Macroglobulinemia",
+  "why_stopped": "Lack of efficacy"
+ },
+ "NCT04181762": {
+  "conditions": [
+   "Lupus Nephritis"
+  ],
+  "interventions": [
+   {
+    "name": "secukinumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04181762",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of Safety, Efficacy and Tolerability of Secukinumab Versus Placebo, in Combination With SoC Therapy, in Patients With Active Lupus Nephritis",
+  "why_stopped": "Study terminated by sponsor due to futility analysis"
+ },
+ "NCT04251065": {
+  "conditions": [
+   "Refractory T-Cell Lymphoma",
+   "Relapsed T-Cell Lymphoma"
+  ],
+  "interventions": [
+   {
+    "name": "Daratumumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04251065",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Daratumumab Plus Gemcitabine, Dexamethasone, Cisplatin in pt R/R CD38+ PTCL-NOS, AITL and TFH",
+  "why_stopped": "The enrolment was prematurely terminated after the planned monitoring of the first 5 patients because of an unacceptable level of relevant toxicities, according to statistical stopping rules and the DSMB recommendation."
+ },
+ "NCT04329923": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine Sulfate 400 mg twice a day",
+    "type": "DRUG"
+   },
+   {
+    "name": "Hydroxychloroquine Sulfate 600 mg twice a day",
+    "type": "DRUG"
+   },
+   {
+    "name": "Hydroxychloroquine Sulfate 600 mg once a day",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo oral tablet",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04329923",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The PATCH Trial (Prevention And Treatment of COVID-19 With Hydroxychloroquine)",
+  "why_stopped": "Cohort 1: slow accrual Cohort 2: Other studies showed no benefit Cohort 3: Study met pre-specificied futility analysis at planned second interim analysis"
+ },
+ "NCT04331665": {
+  "conditions": [
+   "COVID-19",
+   "Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Ruxolitinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04331665",
+  "phases": [
+   "NA"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Study of the Efficacy and Safety of Ruxolitinib to Treat COVID-19 Pneumonia",
+  "why_stopped": "A Phase III RUXCOVID study evaluating ruxolitinib on top of standard of care (SoC) therapy compared to SoC treatment alone in patients with COVID-19 did not meet its primary endpoint. With this news, recruitment was stopped for this study."
+ },
+ "NCT04332107": {
+  "conditions": [
+   "COVID-19",
+   "SARS-CoV-2"
+  ],
+  "interventions": [
+   {
+    "name": "Azithromycin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebos",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04332107",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Azithromycin for COVID-19 Treatment in Outpatients Nationwide",
+  "why_stopped": "Futility"
+ },
+ "NCT04336332": {
+  "conditions": [
+   "SARS-CoV-2",
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine Sulfate + Azithromycin",
+    "type": "COMBINATION_PRODUCT"
+   },
+   {
+    "name": "Hydroxychloroquine Sulfate",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04336332",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Randomized Comparison of Combination Azithromycin and Hydroxychloroquine vs. Hydroxychloroquine Alone for the Treatment of Confirmed COVID-19",
+  "why_stopped": "Ineffectiveness of treatment"
+ },
+ "NCT04341441": {
+  "conditions": [
+   "COVID-19",
+   "Coronavirus",
+   "Coronavirus Infections",
+   "SARS-CoV 2"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine - Daily Dosing",
+    "type": "DRUG"
+   },
+   {
+    "name": "Hydroxychloroquine - Weekly Dosing",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo oral tablet",
+    "type": "OTHER"
+   },
+   {
+    "name": "Monitoring Visit - Baseline",
+    "type": "DIAGNOSTIC_TEST"
+   },
+   {
+    "name": "Monitoring Visit - Week 4",
+    "type": "DIAGNOSTIC_TEST"
+   },
+   {
+    "name": "Monitoring Visit - Week 8",
+    "type": "DIAGNOSTIC_TEST"
+   },
+   {
+    "name": "Weekly Assessment",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT04341441",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Will Hydroxychloroquine Impede or Prevent COVID-19",
+  "why_stopped": "Interim analysis did not reveal any safety concerns by the DSMB, but unblinded data did not provide support to continue. Event rate did not meet projected magnitude; given low recruitment potential, it is unlikely that a positive result will occur."
+ },
+ "NCT04342156": {
+  "conditions": [
+   "Coronavirus Infection",
+   "Hydroxychloroquine Adverse Reaction"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine Sulfate 200 milligram (mg) Tab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04342156",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Safety And Efficacy Of Hydroxychloroquine For At Risk Population (SHARP) Against COVID-19",
+  "why_stopped": "The number of patients with COVID-19 in Singapore was coming down for the community and the concerns about the potential side effects particularly when the baseline ECG and serum electrolytes was not proposed."
+ },
+ "NCT04344951": {
+  "conditions": [
+   "Pneumonia, Viral",
+   "Covid-19"
+  ],
+  "interventions": [
+   {
+    "name": "UNIKINON (Chloroquine phosphate) 200mg tablets",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04344951",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Chloroquine Phosphate Against Infection by the Novel Coronavirus SARS-CoV-2 (COVID-19): The HOPE Open-Label, Non Randomized Clinical Trial",
+  "why_stopped": "No clinical efficacy against SARS-CoV-2 recorded"
+ },
+ "NCT04345692": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04345692",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Randomized Controlled Clinical Trial: Hydroxychloroquine for the Treatment of COVID-19 in Hospitalized Patients",
+  "why_stopped": "RECOVERY Trial results - no efficacy"
+ },
+ "NCT04346355": {
+  "conditions": [
+   "COVID-19 Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Tocilizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04346355",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy of Early Administration of Tocilizumab in COVID-19 Patients",
+  "why_stopped": "Based on interim analysis for futility and given an enrolment rate almost nil"
+ },
+ "NCT04347889": {
+  "conditions": [
+   "Covid-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Vitamin C",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT04347889",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Preventing COVID-19 in Healthcare Workers With HCQ: A RCT",
+  "why_stopped": "Evidence that HCQ ineffective, loss of HCW interest,"
+ },
+ "NCT04371926": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine Sulfate",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04371926",
+  "phases": [
+   "NA"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Prophylactic Benefit of Hydroxychloroquine in COVID-19 Cases With Mild to Moderate Symptoms and in Healthcare Workers With High Exposure Risk",
+  "why_stopped": "Concerned about the adverse effects of HCQ"
+ },
+ "NCT04374942": {
+  "conditions": [
+   "Pre-Exposure Prophylaxis",
+   "Coronavirus",
+   "SARS-CoV 2"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo oral tablet",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04374942",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Does Hydroxychloroquine Before & During Patient Exposure Protect Healthcare Workers From Coronavirus?",
+  "why_stopped": "Due to unproven issues associated with hydroxychloroquine use and safety, further complicated by media and political misinformation which in effect rendered all global studies on HCQ to stop enrolling participants."
+ },
+ "NCT04377659": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Tocilizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04377659",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Tocilizumab for Prevention of Respiratory Failure in Patients With Severe COVID-19 Infection",
+  "why_stopped": "Based on two large, multicenter, randomized trials showed no benefit to tocilizumab in this setting and study has been closed."
+ },
+ "NCT04400799": {
+  "conditions": [
+   "COVID-19",
+   "Pulmonary Embolism, Deep Vein Thrombosis"
+  ],
+  "interventions": [
+   {
+    "name": "Enoxaparin 40Mg/0.4Ml Inj Syringe 0.4Ml",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04400799",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Enoxaparin for Primary Thromboprophylaxis in Ambulatory Patients With COVID-19",
+  "why_stopped": "due to results from interim analysis"
+ },
+ "NCT04403685": {
+  "conditions": [
+   "COVID",
+   "SARS Pneumonia",
+   "Cytokine Release Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Tocilizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04403685",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety and Efficacy of Tocilizumab in Moderate to Severe COVID-19 With Inflammatory Markers",
+  "why_stopped": "Safety"
+ },
+ "NCT04414631": {
+  "conditions": [
+   "Coronavirus Infections"
+  ],
+  "interventions": [
+   {
+    "name": "Conestat alfa",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04414631",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Conestat Alfa in the Prevention of Severe SARS-CoV-2 Infection in Hospitalized Patients With COVID-19",
+  "why_stopped": "Aim to enroll 120 patients deemed not sufficient to show a difference in the primary outcome measure. Standard of care treatment recently changed in Switzerland adding further heterogeneity to trial population when including future participants."
+ },
+ "NCT04415151": {
+  "conditions": [
+   "COVID-19 Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Tofacitinib 10 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04415151",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Tofacitinib for Treatment of Moderate COVID-19",
+  "why_stopped": "Study terminated due to lack of enrollment reflecting the decrease in number of COVID infections. There were no safety and/or efficacy concerns involved in the decision to stop enrollment."
+ },
+ "NCT04428268": {
+  "conditions": [
+   "COVID-19 Pneumonia"
+  ],
+  "interventions": [
+   {
+    "name": "Chloroquine Phosphate Tablets",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04428268",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "WITHDRAWN",
+  "title": "Chloroquine + Losartan Compared to Chloroquine Alone for the Treatment of COVID-19 Pneumonia",
+  "why_stopped": "evidence showed chloroquine is not effective against COVID-19"
+ },
+ "NCT04435717": {
+  "conditions": [
+   "Covid19"
+  ],
+  "interventions": [
+   {
+    "name": "Tocilizumab 20 MG/ML Intravenous Solution [ACTEMRA]_#1",
+    "type": "DRUG"
+   },
+   {
+    "name": "Tocilizumab 20 MG/ML Intravenous Solution [ACTEMRA]_#1 (2 doses)",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04435717",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy of Tocilizumab in Modifying the Inflammatory Parameters of Patients With COVID-19 (COVITOZ-01)",
+  "why_stopped": "Futility"
+ },
+ "NCT04435808": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Hydroxychloroquine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04435808",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy of Hydroxychloroquine Prophylaxis for Health Care Workers at High Risk for COVID-19",
+  "why_stopped": "Stopped for futility by DSMB"
+ },
+ "NCT04438902": {
+  "conditions": [
+   "Non Small Cell Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "osimertinib mesylate tablets and anlotinib hydrochloride capsules",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04438902",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Osimertinib Combined With Anlotinib in EGFR T790M Mutated NSCLC Patients With Progression on Osimertinib Treatment",
+  "why_stopped": "Many patients can't tolerate the combination treatment due to adverse events."
+ },
+ "NCT04470622": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Aprepitant injectable emulsion",
+    "type": "DRUG"
+   },
+   {
+    "name": "Saline Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04470622",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Aprepitant Injectable Emulsion in Patients With COVID-19 (GUARDS-1)",
+  "why_stopped": "Study was terminated early by Heron, and was not terminated for safety reasons."
+ },
+ "NCT04492254": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Enoxaparin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04492254",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Early Prophylactic Low-molecular-weight Heparin (LMWH) in Symptomatic COVID-19 Positive Patients",
+  "why_stopped": "Average event rate (end point) was much lower than expected. A larger sample size would have been required to maintain same statistical power, which was not achievable in a feasible time scale. No safety concerns were identified with bleeding."
+ },
+ "NCT04495894": {
+  "conditions": [
+   "Non-small Cell Lung Cancer",
+   "Renal Cell Carcinoma"
+  ],
+  "interventions": [
+   {
+    "name": "Preoperative Ketorolac",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04495894",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Pre-Incisional Ketorolac for Patients Undergoing Surgery for Non-Small Cell Lung Cancer and Renal Cell Carcinoma",
+  "why_stopped": "This study was terminated after interim analyses showed no benefits."
+ },
+ "NCT04523090": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Nitazoxanide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04523090",
+  "phases": [
+   "PHASE2",
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Catalysing the Containment of COVID-19",
+  "why_stopped": "Signal of futility at interim analysis"
+ },
+ "NCT04549428": {
+  "conditions": [
+   "NSCLC Stage IV"
+  ],
+  "interventions": [
+   {
+    "name": "Atezolizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04549428",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Atezolizumab Plus 8 Gy Single-fraction Radiotherapy for Advanced Oligoprogressive NSCLC",
+  "why_stopped": "Terminated for futility, as determined by an interim data analysis."
+ },
+ "NCT04572243": {
+  "conditions": [
+   "Epilepsies, Myoclonic"
+  ],
+  "interventions": [
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Lorcaserin",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04572243",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "A Study of Lorcaserin as Adjunctive Treatment in Participants With Dravet Syndrome",
+  "why_stopped": "The study was terminated by Sponsor and the decision was not due to any safety or efficacy reasons."
+ },
+ "NCT04601077": {
+  "conditions": [
+   "COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Nitric Oxide lozenges, 30 mg",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04601077",
+  "phases": [
+   "PHASE1",
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "The Evaluation of Nitric Oxide Generating Lozenges on Outcome in Newly Diagnosed COVID-19 Patient of African American and Hispanic Origin",
+  "why_stopped": "The study stopped due to futility."
+ },
+ "NCT04794088": {
+  "conditions": [
+   "ARDS",
+   "Acute Respiratory Distress Syndrome",
+   "Covid19",
+   "Endothelial Dysfunction",
+   "Pulmonary Edema"
+  ],
+  "interventions": [
+   {
+    "name": "Imatinib Mesylate intravenous solution",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04794088",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Intravenous Imatinib in Mechanically Ventilated COVID-19 Patients",
+  "why_stopped": "Due to the decline of COVID-19 patients on Dutch ICUs. A sample size reestimation based on blinded study data of 66 patients was furthermore favorable, indicating sufficient power to detect a difference in primary endpoint between groups."
+ },
+ "NCT04854512": {
+  "conditions": [
+   "Diabetes Mellitus, Type 2"
+  ],
+  "interventions": [
+   {
+    "name": "Metformin DR",
+    "type": "DRUG"
+   },
+   {
+    "name": "Metformin IR",
+    "type": "DRUG"
+   },
+   {
+    "name": "Metformin DR Placebo",
+    "type": "DRUG"
+   },
+   {
+    "name": "Metformin IR placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04854512",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "SUSPENDED",
+  "title": "Investigational Study of Delayed Release Metformin",
+  "why_stopped": "Strategic company decision - not related to a safety concern"
+ },
+ "NCT04858425": {
+  "conditions": [
+   "Covid19"
+  ],
+  "interventions": [
+   {
+    "name": "Niclosamide",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04858425",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Safety and Efficacy of Niclosamide in Patients With COVID-19 With Gastrointestinal Infection",
+  "why_stopped": "The termination of the study was a decision based on topline data analysis (no efficacy as per Day 43) of the study data."
+ },
+ "NCT04908956": {
+  "conditions": [
+   "NSCLC Stage IV",
+   "EGFR Gene Mutation"
+  ],
+  "interventions": [
+   {
+    "name": "Osimertinib",
+    "type": "DRUG"
+   },
+   {
+    "name": "Stereotactic Body Radiation Therapy (SBRT)",
+    "type": "RADIATION"
+   }
+  ],
+  "nct": "NCT04908956",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Osimertinib and Locally Ablative Radiotherapy in Patients With Synchronous Oligo-metastatic EGFR Mutant NSCLC (STEREO)",
+  "why_stopped": "The trial struggled with low activation due to the COVID pandemic. The Steering Committee took the decision to close the accrual in the STEREO trial as of 31 October 2023. It is important to note that no safety concerns have led to this decision."
+ },
+ "NCT04952519": {
+  "conditions": [
+   "Patients With Moderate or Severe COVID-19"
+  ],
+  "interventions": [
+   {
+    "name": "Amantadine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT04952519",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy of Amantadine Treatment in COVID-19 Patients",
+  "why_stopped": "The annual analysis did not show the efficacy of the investigational medicinal product in this application, therefore the study was not continued."
+ },
+ "NCT05215951": {
+  "conditions": [
+   "Lung Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "osimertinib",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05215951",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Osimertinib Plus Chemotherapy in Uncommon EGFRm NSCLC",
+  "why_stopped": "Enrollment delay study timeline seriously."
+ },
+ "NCT05232864": {
+  "conditions": [
+   "Lupus Nephritis"
+  ],
+  "interventions": [
+   {
+    "name": "Secukinumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05232864",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Open-label Extension Study of Efficacy, Safety and Tolerability of Secukinumab in Patients With Active Lupus Nephritis",
+  "why_stopped": "Study terminated by sponsor based on a futility analysis of the core study CAIN457Q12301"
+ },
+ "NCT05339087": {
+  "conditions": [
+   "Pulmonary Vascular Disorder",
+   "Primary Pulmonary Hypertension",
+   "Systemic Sclerosis",
+   "Other Systemic Involvement of Connective Tissue"
+  ],
+  "interventions": [
+   {
+    "name": "Riociguat Oral Tablet",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT05339087",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Efficacy and Safety of Riociguat in Incipient Pulmonary Vascular Disease as an Indicator for Early PAH",
+  "why_stopped": "Strategic re-prioritization by the IMP supplier. Decision not safety-related."
+ },
+ "NCT05435053": {
+  "conditions": [
+   "Pancreas Cancer"
+  ],
+  "interventions": [
+   {
+    "name": "Nivolumab",
+    "type": "DRUG"
+   },
+   {
+    "name": "Irreversible electroporation (IRE)",
+    "type": "DEVICE"
+   }
+  ],
+  "nct": "NCT05435053",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Irreversible Electroporation + Nivolumab for Patients With Metastatic Pancreatic Cancer",
+  "why_stopped": "The study was terminated on the basis on an evaluation of the safety and efficacy of the 9 included patients of which 2 of the patients were excluded before receiving any study treatments, thus 7 patients were treated in the study."
+ },
+ "NCT05611749": {
+  "conditions": [
+   "Acute Post-operative Pain",
+   "Chronic Post Operative Pain",
+   "Narcotic Use",
+   "Opioid Use",
+   "Opioid Addiction"
+  ],
+  "interventions": [
+   {
+    "name": "Duloxetine 60 MG",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "OTHER"
+   }
+  ],
+  "nct": "NCT05611749",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Duloxetine Impact on Postoperative Pain Control and Outcomes",
+  "why_stopped": "Enrollment was extremely low and there were too many adverse events."
+ },
+ "NCT05900427": {
+  "conditions": [
+   "Total Shoulder Arthroplasty",
+   "Reverse Total Shoulder Arthroplasty"
+  ],
+  "interventions": [
+   {
+    "name": "Liposomal bupivacaine",
+    "type": "DRUG"
+   },
+   {
+    "name": "Bupivacaine",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05900427",
+  "phases": [
+   "PHASE4"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Effects on Postoperative Pain of Liposomal Bupivacaine in Interscalene Blocks for Total Shoulder Arthroplasty Patients",
+  "why_stopped": "Due to resource limitations and the lack of difference observed between study groups after the interim analysis, the study was halted prematurely."
+ },
+ "NCT05909995": {
+  "conditions": [
+   "Melanoma",
+   "Hepatocellular Carcinoma (HCC)",
+   "Renal Cell Carcinoma (RCC)",
+   "Microsatellite Instability - High (MSI-H)",
+   "Mismatch Repair Deficient (dMMR)",
+   "Colorectal Carcinoma (CRC)"
+  ],
+  "interventions": [
+   {
+    "name": "INCB 99280 with Ipilimumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05909995",
+  "phases": [
+   "PHASE1"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Interventional Study of INCB 99280 With Ipilimumab in Participants With Select Solid Tumors",
+  "why_stopped": "This was a strategic business decision. There were no safety concerns contributing to this decision."
+ },
+ "NCT05986422": {
+  "conditions": [
+   "Post-COVID-19 Syndrome"
+  ],
+  "interventions": [
+   {
+    "name": "Methylprednisolone",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05986422",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Methylprednisolone in Patients With Cognitive Deficits in Post-COVID-19 Syndrome (PCS)",
+  "why_stopped": "Following a recommendation from the Data Safety Monitoring Board (DSMB)."
+ },
+ "NCT05993143": {
+  "conditions": [
+   "COVID-19",
+   "SARS-CoV-2"
+  ],
+  "interventions": [
+   {
+    "name": "Ivermectin",
+    "type": "DRUG"
+   },
+   {
+    "name": "Placebo",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT05993143",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Ivermectin to Prevent SARS-CoV-2 (COVID-19) Hospitalisation in Subjects Over 50",
+  "why_stopped": "Study was stopped because no statistically significant difference was observed in the interim analysis. With high vaccine rates in those over 50 and an expected low incidence, it would not be feasible to complete recruitment within a short period."
+ },
+ "NCT06008249": {
+  "conditions": [
+   "Amyotrophic Lateral Sclerosis"
+  ],
+  "interventions": [
+   {
+    "name": "Lithium Carbonate 400 MG",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT06008249",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Platform Trial to Assess the Efficacy of Multiple Drugs in Amyotrophic Lateral Sclerosis (ALS)",
+  "why_stopped": "The planned interim analysis showed no survival benefit of taking the drug when compared with placebo."
+ },
+ "NCT06558799": {
+  "conditions": [
+   "Non-Small Cell Lung Cancer (NSCLC)"
+  ],
+  "interventions": [
+   {
+    "name": "NovoTTF-200T",
+    "type": "DEVICE"
+   },
+   {
+    "name": "Pembrolizumab",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT06558799",
+  "phases": [
+   "PHASE2"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "LUNAR-4: Effect of Tumor Treating Fields (TTFields) (150 kHz) Concurrent With Pembrolizumab for Treatment of Metastatic Non-small Cell Lung Cancer (NSCLC)",
+  "why_stopped": "EF-50/LUNAR-4 was terminated because available real-world data are expected to enable Novocure to achieve the study objectives without an interventional clinical study. Termination was not due to safety concerns."
+ },
+ "NCT06790966": {
+  "conditions": [
+   "Recurrent Head and Neck Cancer",
+   "Metastatic Head and Neck Cancer",
+   "HPV Positive Oropharyngeal Squamous Cell Carcinoma",
+   "Neoplasms, Head and Neck",
+   "Unresectable Head and Neck Squamous Cell Carcinoma"
+  ],
+  "interventions": [
+   {
+    "name": "Combination Treatment of PDS0101 and Pembrolizumab",
+    "type": "COMBINATION_PRODUCT"
+   },
+   {
+    "name": "Pembrolizumab Monotherapy",
+    "type": "DRUG"
+   }
+  ],
+  "nct": "NCT06790966",
+  "phases": [
+   "PHASE3"
+  ],
+  "retrieved": "2026-09-30",
+  "status": "TERMINATED",
+  "title": "Phase 3 Study of PDS0101 and Pembrolizumab in HPV16+ Recurrent/Metastatic Head and Neck Squamous Cell Carcinoma",
+  "why_stopped": "The study is being discontinued solely based on financial constraints and is not related to the safety of study participants, the investigational product, PDS0101, nor the conduct of the study."
+ }
+}

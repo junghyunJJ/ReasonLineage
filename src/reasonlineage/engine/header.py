@@ -59,8 +59,8 @@ def experiment_problems(*, setup: Setup, options: RunOptions, protocol: Protocol
     problems = []
     if not policies_fixed:
         problems.append("experiment mode needs the fixed policies")
-    if options.generations < 1:
-        problems.append("experiment mode needs a fixed number of generations (1 or more)")
+    if options.generations < 0:
+        problems.append("experiment mode needs a fixed number of generations (0 or more)")
     for member in setup.panel:
         if any(alias in member.model.lower() for alias in ALIASES):
             problems.append(f"{member.name}: pin a model version instead of the alias {member.model!r}")
