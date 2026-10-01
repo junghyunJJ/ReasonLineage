@@ -5,7 +5,7 @@ import pytest
 from reasonlineage.protocol import ROOT, load_protocol, protocol_hash
 from reasonlineage.prompts import candidate_prompt, strict_evaluator_system
 
-# The evaluator text used in the 2026-09-27 calibration runs; the protocol must not change it.
+# The evaluator text used in the 2026-09-27 calibration runs; protocol 1.0.3 adds one line after it.
 CALIBRATION_EVALUATOR = """You are a rigorous, skeptical evaluator. Your job is to find flaws, not to praise.
 Score each dimension independently from 0.0 to 1.0.
 - 0.9-1.0: genuinely excellent; must cite what makes it exceptional.
@@ -20,7 +20,7 @@ Give 1-3 critique points; each names what is wrong and how to fix it."""
 
 def test_loads_version_and_values():
     protocol = load_protocol()
-    assert protocol.version == "1.0.2"
+    assert protocol.version == "1.0.3"
     assert protocol.generations == 3
     assert protocol.margins == {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2}
     assert protocol.timeout("write") == 900 and protocol.timeout("judge") == 900 and protocol.timeout("check") == 120
@@ -49,8 +49,10 @@ def test_missing_value_is_an_error():
         load_protocol().render("seed", question="Q")
 
 
-def test_evaluator_text_matches_the_calibration_runs():
-    assert strict_evaluator_system(["a", "b"], "EMPHASIS") == CALIBRATION_EVALUATOR
+def test_evaluator_text_is_the_calibration_text_plus_the_no_tools_line():
+    # Protocol 1.0.3: without this line Grok skipped the arithmetic on the synthetic gold set's data tables.
+    no_tools = "You have no tools. Do every calculation you need in your own reasoning before you answer."
+    assert strict_evaluator_system(["a", "b"], "EMPHASIS") == CALIBRATION_EVALUATOR + "\n" + no_tools
 
 
 def test_candidate_prompt_is_unchanged():
