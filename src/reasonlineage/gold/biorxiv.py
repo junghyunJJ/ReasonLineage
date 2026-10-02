@@ -5,6 +5,7 @@ results: the abstract's own results and two versions rewritten by DeepSeek, whic
 what the study reported, so it cannot be worked out from the prompt.
 """
 
+import asyncio
 import hashlib
 import json
 import re
@@ -12,6 +13,9 @@ import time
 import urllib.request
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
+
+from ..backends.base import BackendError, ModelBackend, ModelRequest
+from .build import shuffled
 
 API = "https://api.biorxiv.org/details/biorxiv/{start}/{end}/{cursor}?category={category}"
 START, END = "2026-07-01", "2026-10-01"
@@ -141,3 +145,126 @@ def alteration_problems(result: str, reversed_: Any, altered: Any) -> list[str]:
         if not 0.75 <= ratio <= 1.25:
             problems.append(f"the {name} result is {ratio:.2f} times as long as the real one")
     return problems
+
+
+# --- 4.3-4.5 DeepSeek ---
+
+LETTERS = ("A", "B", "C")
+LABEL_SYSTEM = ("You read the abstract of a biology preprint, split into numbered sentences. Find the first sentence "
+                "that reports a finding or a conclusion of this study itself (what the authors found or showed, not "
+                "what was known before or what they set out to do or how they did it). Every sentence from that one "
+                "to the end will be treated as the study's results.")
+ALTER_SYSTEM = (
+    "You write two false versions of the results passage of a biology abstract, for a test in which experts read "
+    "the background and methods and must pick the real results from three versions.\n"
+    '- "reversed": reverse the direction of one central finding (increase and decrease, promotes and inhibits, '
+    "required and dispensable, present and absent) and adjust the rest so the passage stays internally consistent. "
+    "If the passage reports how well a method performs, do not make the method fail; reverse which comparison, "
+    "condition or group shows the effect instead.\n"
+    '- "altered": keep the direction but change one central detail so that the conclusion differs: the cell type or '
+    "tissue, the target, the condition, the mechanism, or the size of the effect.\n"
+    "Both versions must read like results that authors would publish: keep the authors' confident, positive "
+    "framing, keep every value physically possible (no negative rates or counts), and keep the number of sentences, "
+    "the length (within 20%), the style, the terminology and the number format of the real passage. A reader who "
+    "knows only that the passage comes from a published abstract must not be able to reject either version for "
+    "sounding like a failed study, for an impossible value or for an internal contradiction. Each version must reach "
+    "a conclusion clearly different from the real passage and from the other version. Never say that anything was "
+    "changed.")
+TELL_SYSTEM = ("Exactly one of three passages is the real results text of a published biology abstract; the other "
+               "two were rewritten. Say which one is real.")
+LABEL_SCHEMA = {"type": "object", "properties": {"first_result": {"type": "integer"}}, "required": ["first_result"],
+                "additionalProperties": False}
+ALTER_SCHEMA = {"type": "object", "properties": {"reversed": {"type": "string"}, "altered": {"type": "string"}},
+                "required": ["reversed", "altered"], "additionalProperties": False}
+TELL_SCHEMA = {"type": "object", "properties": {"real": {"type": "string", "enum": list(LETTERS)}},
+               "required": ["real"], "additionalProperties": False}
+ROTATIONS = ((0, 1, 2), (1, 2, 0), (2, 0, 1))  # the real passage lands on A, C and B
+
+
+def _request(member: Any, system: str, prompt: str, schema: Mapping[str, Any]) -> ModelRequest:
+    return ModelRequest(system=system, prompt=prompt, model=member.model, effort=member.effort,
+                        json_schema=dict(schema), timeout_s=1800, max_tokens=64000)
+
+
+def label_request(member: Any, parts: Sequence[str]) -> ModelRequest:
+    numbered = "\n".join(f"{i}. {s}" for i, s in enumerate(parts, 1))
+    return _request(member, LABEL_SYSTEM, f"Abstract:\n{numbered}", LABEL_SCHEMA)
+
+
+def alter_request(member: Any, context: str, result: str) -> ModelRequest:
+    return _request(member, ALTER_SYSTEM, f"Background and methods:\n{context}\n\nReal results:\n{result}", ALTER_SCHEMA)
+
+
+def tell_request(member: Any, passages: Sequence[str]) -> ModelRequest:
+    lines = "\n\n".join(f"Result {letter}: {text}" for letter, text in zip(LETTERS, passages))
+    return _request(member, TELL_SYSTEM, lines, TELL_SCHEMA)
+
+
+async def _ask(backend: ModelBackend, request: ModelRequest, valid: Callable[[Mapping[str, Any]], bool]):
+    """The answer's data, asking once more if the call fails or the answer is not usable; None after two tries."""
+    for _ in range(2):
+        try:
+            data = (await backend.complete(request)).data
+        except BackendError:
+            continue
+        if isinstance(data, Mapping) and valid(data):
+            return dict(data)
+    return None
+
+
+async def make_candidate(paper: Mapping[str, Any], backend: ModelBackend, member: Any) -> dict[str, Any]:
+    """One paper through splitting, rewriting and the wording check; status "kept" or "dropped" with the reason."""
+    entry: dict[str, Any] = {key: paper[key] for key in ("doi", "category", "date", "title", "abstract")}
+
+    def dropped(reason: str) -> dict[str, Any]:
+        return entry | {"status": "dropped", "reason": reason}
+
+    parts = sentences(paper["abstract"])
+    entry["sentences"] = parts
+    label = await _ask(backend, label_request(member, parts), lambda d: "first_result" in d)
+    if label is None:
+        return dropped("DeepSeek gave no usable split")
+    entry["first_result"] = label["first_result"]
+    problems = split_problems(parts, label["first_result"])
+    if problems:
+        return dropped("; ".join(problems))
+    k = label["first_result"]
+    entry["context"], entry["result"] = " ".join(parts[:k - 1]), " ".join(parts[k - 1:])
+    rewrite = await _ask(backend, alter_request(member, entry["context"], entry["result"]),
+                         lambda d: not alteration_problems(entry["result"], d.get("reversed"), d.get("altered")))
+    if rewrite is None:
+        return dropped("DeepSeek gave no usable rewritten results")
+    entry["reversed"], entry["altered"] = rewrite["reversed"], rewrite["altered"]
+    texts = (entry["result"], entry["reversed"], entry["altered"])
+    votes = await asyncio.gather(*(_ask(backend, tell_request(member, [texts[i] for i in order]),
+                                        lambda d: d.get("real") in LETTERS) for order in ROTATIONS))
+    if any(v is None for v in votes):
+        return dropped("DeepSeek gave no usable answer in the wording check")
+    entry["tell"] = [LETTERS[order.index(0)] == v["real"] for order, v in zip(ROTATIONS, votes)]
+    if all(entry["tell"]):
+        return dropped("the real result can be told from the wording alone (3 of 3)")
+    return entry | {"status": "kept"}
+
+
+async def candidates(set_name: str, papers: Sequence[Mapping[str, Any]], per_category: int, backend: ModelBackend,
+                     member: Any, exclude: set[str] = frozenset(), previous: Sequence[Mapping[str, Any]] = ()
+                     ) -> list[dict[str, Any]]:
+    """Papers tried for each field in sample order until `per_category` are kept (4.2); earlier results are reused."""
+    done = {entry["doi"]: dict(entry) for entry in previous}
+    by_doi = {paper["doi"]: paper for paper in papers}
+
+    async def field(category: str) -> list[dict[str, Any]]:
+        order = shuffled(sorted(d for d, p in by_doi.items() if p["category"] == category), f"{set_name}:{category}")
+        tried: list[dict[str, Any]] = []
+        for doi in order:
+            if sum(e["status"] == "kept" for e in tried) >= per_category:
+                return tried
+            if doi in exclude:
+                continue
+            tried.append(done.get(doi) or await make_candidate(by_doi[doi], backend, member))
+        if sum(e["status"] == "kept" for e in tried) < per_category:
+            raise SourceError(f"{category}: only {sum(e['status'] == 'kept' for e in tried)} of {per_category} "
+                              f"papers usable after trying all {len(tried)}")
+        return tried
+
+    return [entry for batch in await asyncio.gather(*(field(c) for c in CATEGORIES)) for entry in batch]

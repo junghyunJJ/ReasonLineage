@@ -1,9 +1,12 @@
 """bioRxiv preprints as gold set A (bioRxiv design 4): pool, sentences, DeepSeek steps, review, files."""
 
+import asyncio
 import hashlib
+from types import SimpleNamespace
 
 import pytest
 
+from reasonlineage.backends.base import BackendError
 from reasonlineage.gold import biorxiv as bx
 
 
@@ -116,3 +119,94 @@ ALT = "Drug X increased neuronal firing by 40% in mouse retina."
 def test_rewritten_results_must_differ_and_match_the_length(reversed_, altered, problem):
     problems = bx.alteration_problems(REAL, reversed_, altered)
     assert (problems == []) if problem is None else any(problem in p for p in problems)
+
+
+# --- 4.3-4.5 DeepSeek steps, with a fake backend ---
+
+ABSTRACT = ("Cortex matters for behavior. We gave drug X to mice and recorded neurons. "
+            "Drug X increased neuronal firing by 40% in mouse cortex. This suggests X excites cortex.")
+PAPER = {"doi": "10.1/p", "category": "neuroscience", "date": "2026-07-02", "title": "X excites cortex", "abstract": ABSTRACT}
+MEMBER = SimpleNamespace(model="deepseek", effort="max")
+
+
+class FakeDeepSeek:
+    """Answers each kind of request by its system prompt; `tell` picks a letter for the wording check."""
+
+    def __init__(self, first_result=3, rewrite=None, tell="real", fail_first=0):
+        self.first_result, self.tell, self.fail_first = first_result, tell, fail_first
+        self.rewrite = rewrite or {"reversed": "Drug X decreased neuronal firing by 40% in mouse cortex. This suggests X calms cortex.",
+                                   "altered": "Drug X increased neuronal firing by 40% in mouse retina. This suggests X excites retina."}
+        self.calls = []
+
+    async def complete(self, request):
+        self.calls.append(request.system)
+        if len(self.calls) <= self.fail_first:
+            raise BackendError("server busy")
+        if request.system == bx.LABEL_SYSTEM:
+            return SimpleNamespace(data={"first_result": self.first_result})
+        if request.system == bx.ALTER_SYSTEM:
+            return SimpleNamespace(data=dict(self.rewrite))
+        lines = [line for line in request.prompt.split("\n\n")]
+        real = "Drug X increased neuronal firing by 40% in mouse cortex. This suggests X excites cortex."
+        letter = next(line[7] for line in lines if line[10:] == real) if self.tell == "real" else self.tell
+        return SimpleNamespace(data={"real": letter})
+
+
+def make(backend, paper=PAPER):
+    return asyncio.run(bx.make_candidate(paper, backend, MEMBER))
+
+
+def test_a_paper_whose_real_result_is_hidden_in_the_wording_is_kept():
+    entry = make(FakeDeepSeek(tell="A"))
+    assert entry["status"] == "kept" and entry["tell"] == [True, False, False]
+    assert entry["context"] == "Cortex matters for behavior. We gave drug X to mice and recorded neurons."
+    assert entry["result"] == "Drug X increased neuronal firing by 40% in mouse cortex. This suggests X excites cortex."
+
+
+def test_a_paper_whose_real_result_shows_in_the_wording_is_dropped():
+    entry = make(FakeDeepSeek(tell="real"))
+    assert entry["status"] == "dropped" and "wording alone" in entry["reason"] and entry["tell"] == [True, True, True]
+
+
+def test_a_split_with_no_background_is_dropped_before_rewriting():
+    backend = FakeDeepSeek(first_result=1)
+    entry = make(backend)
+    assert entry["status"] == "dropped" and "no background" in entry["reason"]
+    assert backend.calls == [bx.LABEL_SYSTEM]
+
+
+def test_unusable_rewrites_are_asked_once_more_then_dropped():
+    backend = FakeDeepSeek(rewrite={"reversed": "Short.", "altered": "Short too."})
+    entry = make(backend)
+    assert entry["status"] == "dropped" and "rewritten" in entry["reason"]
+    assert backend.calls == [bx.LABEL_SYSTEM, bx.ALTER_SYSTEM, bx.ALTER_SYSTEM]
+
+
+def test_a_failed_call_is_tried_once_more():
+    assert make(FakeDeepSeek(tell="A", fail_first=1))["status"] == "kept"
+
+
+def papers(n_per_field):
+    return [dict(PAPER, doi=f"10.1/{field}-{i}", category=field) for field in bx.CATEGORIES for i in range(n_per_field)]
+
+
+def test_candidates_follow_a_fixed_order_per_field_and_reuse_earlier_results():
+    pool = papers(3)
+    found = asyncio.run(bx.candidates("set-a", pool, 1, FakeDeepSeek(tell="A"), MEMBER))
+    assert [e["category"] for e in found] == list(bx.CATEGORIES) and all(e["status"] == "kept" for e in found)
+    again = asyncio.run(bx.candidates("set-a", pool, 1, None, MEMBER, previous=found))
+    assert again == found
+    other = asyncio.run(bx.candidates("set-b", pool, 1, FakeDeepSeek(tell="A"), MEMBER))
+    assert [e["doi"] for e in other] != [e["doi"] for e in found]
+
+
+def test_excluded_papers_are_skipped():
+    pool = papers(2)
+    first = asyncio.run(bx.candidates("set-a", pool, 1, FakeDeepSeek(tell="A"), MEMBER))
+    second = asyncio.run(bx.candidates("set-a", pool, 1, FakeDeepSeek(tell="A"), MEMBER, exclude={e["doi"] for e in first}))
+    assert not {e["doi"] for e in first} & {e["doi"] for e in second}
+
+
+def test_a_field_that_runs_out_of_usable_papers_stops_with_the_count():
+    with pytest.raises(bx.SourceError, match="only 0 of 1 papers usable after trying all 2"):
+        asyncio.run(bx.candidates("set-a", papers(2), 1, FakeDeepSeek(tell="real"), MEMBER))
