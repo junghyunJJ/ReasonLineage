@@ -525,6 +525,43 @@
    "status": "kept"
   },
   {
+   "doi": "10.64898/2026.07.17.738956",
+   "category": "immunology",
+   "date": "2026-07-22",
+   "title": "Mechanisms regulating combination effect of antibody-drug conjugates and cancer immunotherapy",
+   "abstract": "Antibody-drug conjugates (ADCs) have emerged as a transformative class of cancer therapeutics with important challenges still to be addressed. Combination of ADC with immunotherapy is a promising strategy but mechanisms and effective application remain to be determined. We evaluated ADC combinations with T cell engagers (TCEs) and checkpoint inhibitors (CPI). ADC-TCE combinations produced robust antitumor activity independent of antigen and payload and persisted despite ADC-related T cell loss. Efficacy was dominated by a direct effect of ADC on tumor cells. ADCs induced autophagy that upregulated TNF receptors (TNFRs) and mannose-6-phosphate receptors (M6PR). When ADCs were combined with TCEs TNF released by T cells was primarily responsible for potent antitumor effect of combination. In contrast, M6PR was dispensable for ADC-TCE activity but critical for combinations with CPI expanded antigen-specific T cells via enhanced granzyme B uptake. These data reveal a unifying, target- and payload-agnostic mechanism enabling rational ADC-immunotherapy combinations. SignificanceThis is first evidence that ADC-induced tumor cell autophagy via up-regulation of TNFR and M6PR could be responsible for potent antitumor effect of combination of ADC with TCE. TCEs exploit a TNF-TNFR axis, whereas antigen-specific T cells leverage granzyme B-M6PR uptake. This mechanistic framework explains broad ADC-TCE synergy and guides rational selection of ADC-immunotherapy combinations beyond checkpoint blockade.",
+   "sentences": [
+    "Antibody-drug conjugates (ADCs) have emerged as a transformative class of cancer therapeutics with important challenges still to be addressed.",
+    "Combination of ADC with immunotherapy is a promising strategy but mechanisms and effective application remain to be determined.",
+    "We evaluated ADC combinations with T cell engagers (TCEs) and checkpoint inhibitors (CPI).",
+    "ADC-TCE combinations produced robust antitumor activity independent of antigen and payload and persisted despite ADC-related T cell loss.",
+    "Efficacy was dominated by a direct effect of ADC on tumor cells.",
+    "ADCs induced autophagy that upregulated TNF receptors (TNFRs) and mannose-6-phosphate receptors (M6PR).",
+    "When ADCs were combined with TCEs TNF released by T cells was primarily responsible for potent antitumor effect of combination.",
+    "In contrast, M6PR was dispensable for ADC-TCE activity but critical for combinations with CPI expanded antigen-specific T cells via enhanced granzyme B uptake.",
+    "These data reveal a unifying, target- and payload-agnostic mechanism enabling rational ADC-immunotherapy combinations.",
+    "SignificanceThis is first evidence that ADC-induced tumor cell autophagy via up-regulation of TNFR and M6PR could be responsible for potent antitumor effect of combination of ADC with TCE.",
+    "TCEs exploit a TNF-TNFR axis, whereas antigen-specific T cells leverage granzyme B-M6PR uptake.",
+    "This mechanistic framework explains broad ADC-TCE synergy and guides rational selection of ADC-immunotherapy combinations beyond checkpoint blockade."
+   ],
+   "first_result": 4,
+   "context": "Antibody-drug conjugates (ADCs) have emerged as a transformative class of cancer therapeutics with important challenges still to be addressed. Combination of ADC with immunotherapy is a promising strategy but mechanisms and effective application remain to be determined. We evaluated ADC combinations with T cell engagers (TCEs) and checkpoint inhibitors (CPI).",
+   "result": "ADC-TCE combinations produced robust antitumor activity independent of antigen and payload and persisted despite ADC-related T cell loss. Efficacy was dominated by a direct effect of ADC on tumor cells. ADCs induced autophagy that upregulated TNF receptors (TNFRs) and mannose-6-phosphate receptors (M6PR). When ADCs were combined with TCEs TNF released by T cells was primarily responsible for potent antitumor effect of combination. In contrast, M6PR was dispensable for ADC-TCE activity but critical for combinations with CPI expanded antigen-specific T cells via enhanced granzyme B uptake. These data reveal a unifying, target- and payload-agnostic mechanism enabling rational ADC-immunotherapy combinations. SignificanceThis is first evidence that ADC-induced tumor cell autophagy via up-regulation of TNFR and M6PR could be responsible for potent antitumor effect of combination of ADC with TCE. TCEs exploit a TNF-TNFR axis, whereas antigen-specific T cells leverage granzyme B-M6PR uptake. This mechanistic framework explains broad ADC-TCE synergy and guides rational selection of ADC-immunotherapy combinations beyond checkpoint blockade.",
+   "reversed": "ADC-TCE combinations produced robust antitumor activity independent of antigen and payload and persisted despite ADC-related T cell loss. Efficacy was dominated by a direct effect of ADC on tumor cells. ADCs induced autophagy that upregulated TNF receptors (TNFRs) and mannose-6-phosphate receptors (M6PR). When ADCs were combined with TCEs M6PR-mediated granzyme B uptake was primarily responsible for potent antitumor effect of combination. In contrast, TNF was dispensable for ADC-TCE activity but critical for combinations with CPI expanded antigen-specific T cells via enhanced TNF-TNFR signaling. These data reveal a unifying, target- and payload-agnostic mechanism enabling rational ADC-immunotherapy combinations. SignificanceThis is first evidence that ADC-induced tumor cell autophagy via up-regulation of TNFR and M6PR could be responsible for potent antitumor effect of combination of ADC with TCE. TCEs exploit a granzyme B-M6PR axis, whereas antigen-specific T cells leverage TNF-TNFR signaling. This mechanistic framework explains broad ADC-TCE synergy and guides rational selection of ADC-immunotherapy combinations beyond checkpoint blockade.",
+   "altered": "ADC-TCE combinations produced robust antitumor activity independent of antigen and payload and persisted despite ADC-related T cell loss. Efficacy was dominated by a direct effect of ADC on tumor cells. ADCs induced apoptosis that upregulated TNF receptors (TNFRs) and mannose-6-phosphate receptors (M6PR). When ADCs were combined with TCEs TNF released by T cells was primarily responsible for potent antitumor effect of combination. In contrast, M6PR was dispensable for ADC-TCE activity but critical for combinations with CPI expanded antigen-specific T cells via enhanced granzyme B uptake. These data reveal a unifying, target- and payload-agnostic mechanism enabling rational ADC-immunotherapy combinations. SignificanceThis is first evidence that ADC-induced tumor cell apoptosis via up-regulation of TNFR and M6PR could be responsible for potent antitumor effect of combination of ADC with TCE. TCEs exploit a TNF-TNFR axis, whereas antigen-specific T cells leverage granzyme B-M6PR uptake. This mechanistic framework explains broad ADC-TCE synergy and guides rational selection of ADC-immunotherapy combinations beyond checkpoint blockade.",
+   "tell": [
+    true,
+    false,
+    false
+   ],
+   "tell_context": [
+    true,
+    false,
+    false
+   ],
+   "status": "kept"
+  },
+  {
    "doi": "10.64898/2026.08.11.744200",
    "category": "neuroscience",
    "date": "2026-08-12",
