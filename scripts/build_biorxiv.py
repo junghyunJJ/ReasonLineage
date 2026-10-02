@@ -3,7 +3,7 @@
 
     python scripts/build_biorxiv.py fetch
         # the pool: ~/.cache/reasonlineage/biorxiv/pool.json, and its index gold/biorxiv/pool.json with the sha256
-    python scripts/build_biorxiv.py candidates SET --per-category N [--exclude-set OTHER]
+    python scripts/build_biorxiv.py candidates SET --per-category N [--exclude-set OTHER ...]
         # DeepSeek splits, rewrites and checks papers: gold/SET/candidates.json and gold/SET/review_sheet.md
     (the user reads review_sheet.md and writes gold/SET/review.json)
     python scripts/build_biorxiv.py build SET
@@ -65,9 +65,7 @@ def cmd_candidates(args: argparse.Namespace) -> int:
         print(f"cannot read the pool ({exc}); run `fetch` first", file=sys.stderr)
         return 1
     previous = read_json(gold_dir / "candidates.json")["papers"] if (gold_dir / "candidates.json").exists() else []
-    exclude: set[str] = set()
-    if args.exclude_set:
-        exclude = {e["doi"] for e in read_json(args.gold_root / args.exclude_set / "candidates.json")["papers"]}
+    exclude = {e["doi"] for other in args.exclude_set for e in read_json(args.gold_root / other / "candidates.json")["papers"]}
     review = gold_dir / "review.json"
     dropped = {d["doi"] for d in read_json(review).get("drop", [])} if review.exists() else set()
     member = load_setup(args.config).local_checkers["deepseek"]
@@ -78,7 +76,7 @@ def cmd_candidates(args: argparse.Namespace) -> int:
         print(f"cannot fill {args.set}: {exc}", file=sys.stderr)
         return 1
     source = {"api": bx.API, "window": [bx.START, bx.END], "pool_sha256": index["sha256"], "writer": member.model,
-              "set": args.set, "per_category": args.per_category, "exclude_set": args.exclude_set}
+              "set": args.set, "per_category": args.per_category, "exclude_sets": args.exclude_set}
     write_json(gold_dir / "candidates.json", {"source": source, "papers": found})
     sample = bx.review_sample(found, dropped)
     (gold_dir / "review_sheet.md").write_text(bx.review_sheet(found, sample), encoding="utf-8")
@@ -131,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
     cand = sub.add_parser("candidates")
     cand.add_argument("set", type=set_name)
     cand.add_argument("--per-category", type=positive, required=True)
-    cand.add_argument("--exclude-set", type=set_name)
+    cand.add_argument("--exclude-set", type=set_name, action="append", default=[], help="repeat for several sets")
     cand.add_argument("--config", type=Path, default=ROOT / "configs" / "main.json")
     build = sub.add_parser("build")
     build.add_argument("set", type=set_name)

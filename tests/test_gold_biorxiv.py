@@ -135,8 +135,9 @@ MEMBER = SimpleNamespace(model="deepseek", effort="max")
 class FakeDeepSeek:
     """Answers each kind of request by its system prompt; `tell` picks a letter for the wording check."""
 
-    def __init__(self, first_result=3, rewrite=None, tell="real", fail_first=0):
+    def __init__(self, first_result=3, rewrite=None, tell="real", fail_first=0, tell_context=None):
         self.first_result, self.tell, self.fail_first = first_result, tell, fail_first
+        self.tell_context = tell if tell_context is None else tell_context  # the answer when the background is shown
         self.rewrite = rewrite or {"reversed": "Drug X decreased neuronal firing by 40% in mouse cortex. This suggests X calms cortex.",
                                    "altered": "Drug X increased neuronal firing by 40% in mouse retina. This suggests X excites retina."}
         self.calls = []
@@ -151,7 +152,8 @@ class FakeDeepSeek:
             return SimpleNamespace(data=dict(self.rewrite))
         lines = [line for line in request.prompt.split("\n\n")]
         real = "Drug X increased neuronal firing by 40% in mouse cortex. This suggests X excites cortex."
-        letter = next(line[7] for line in lines if line[10:] == real) if self.tell == "real" else self.tell
+        tell = self.tell_context if request.prompt.startswith("Background and methods:") else self.tell
+        letter = next(line[7] for line in lines if line[10:] == real) if tell == "real" else tell
         return SimpleNamespace(data={"real": letter})
 
 
@@ -162,6 +164,7 @@ def make(backend, paper=PAPER):
 def test_a_paper_whose_real_result_is_hidden_in_the_wording_is_kept():
     entry = make(FakeDeepSeek(tell="A"))
     assert entry["status"] == "kept" and entry["tell"] == [True, False, False]
+    assert entry["tell_context"] == [True, False, False]
     assert entry["context"] == "Cortex matters for behavior. We gave drug X to mice and recorded neurons."
     assert entry["result"] == "Drug X increased neuronal firing by 40% in mouse cortex. This suggests X excites cortex."
 
@@ -371,3 +374,19 @@ def test_the_real_result_is_spread_evenly_over_the_letters(tmp_path, per_field):
     tasks = json.loads((tmp_path / "gold.json").read_text())["tasks"].values()
     counts = [sum(t["approved"][0] == f"Result {x}" for t in tasks) for x in bx.LETTERS]
     assert sum(counts) == 5 * per_field and max(counts) - min(counts) <= 1
+
+
+
+def test_a_paper_whose_real_result_follows_from_the_background_is_dropped():
+    # In the first pilot the panel rejected rewrites that contradicted the background ("GABAergic" against
+    # "monoaminergic centers"), so 19 of 20 answers were right (pilot ceiling, 2026-10-02).
+    entry = make(FakeDeepSeek(tell="A", tell_context="real"))
+    assert entry["status"] == "dropped" and "background" in entry["reason"] and entry["tell_context"] == [True, True, True]
+
+
+def test_the_rewrites_must_not_contradict_the_background_and_the_check_shows_it():
+    assert "never contradict anything the background and methods state" in bx.ALTER_SYSTEM
+    request = bx.tell_request(MEMBER, ["a", "b", "c"], context="We used mice.")
+    assert request.prompt.startswith("Background and methods:\nWe used mice.\n\nResult A: a")
+    assert bx.tell_request(MEMBER, ["a", "b", "c"]).prompt.startswith("Result A: a")
+

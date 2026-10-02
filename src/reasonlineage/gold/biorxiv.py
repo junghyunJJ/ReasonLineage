@@ -194,7 +194,9 @@ LABEL_SYSTEM = ("You read the abstract of a biology preprint, split into numbere
                 "to the end will be treated as the study's results.")
 ALTER_SYSTEM = (
     "You write two false versions of the results passage of a biology abstract, for a test in which experts read "
-    "the background and methods and must pick the real results from three versions.\n"
+    "the background and methods and must pick the real results from three versions. Both versions must never "
+    "contradict anything the background and methods state (organisms, cells, targets, techniques, definitions, "
+    "numbers): change only what the study found, so that the background alone cannot rule a version out.\n"
     '- "reversed": reverse the direction of one central finding (increase and decrease, promotes and inhibits, '
     "required and dispensable, present and absent) and adjust the rest so the passage stays internally consistent. "
     "If the passage reports how well a method performs, do not make the method fail; reverse which comparison, "
@@ -233,9 +235,11 @@ def alter_request(member: Any, context: str, result: str) -> ModelRequest:
     return _request(member, ALTER_SYSTEM, f"Background and methods:\n{context}\n\nReal results:\n{result}", ALTER_SCHEMA)
 
 
-def tell_request(member: Any, passages: Sequence[str]) -> ModelRequest:
+def tell_request(member: Any, passages: Sequence[str], context: str | None = None) -> ModelRequest:
+    """The wording check (no context) or, with `context`, the background check."""
     lines = "\n\n".join(f"Result {letter}: {text}" for letter, text in zip(LETTERS, passages))
-    return _request(member, TELL_SYSTEM, lines, TELL_SCHEMA)
+    prompt = f"Background and methods:\n{context}\n\n{lines}" if context else lines
+    return _request(member, TELL_SYSTEM, prompt, TELL_SCHEMA)
 
 
 async def _ask(backend: ModelBackend, request: ModelRequest, valid: Callable[[Mapping[str, Any]], bool]):
@@ -281,6 +285,14 @@ async def make_candidate(paper: Mapping[str, Any], backend: ModelBackend, member
     entry["tell"] = [LETTERS[order.index(0)] == v["real"] for order, v in zip(ROTATIONS, votes)]
     if all(entry["tell"]):
         return dropped("the real result can be told from the wording alone (3 of 3)")
+    # The first pilot hit the ceiling because rewrites contradicted the background (pilot, 2026-10-02).
+    votes = await asyncio.gather(*(_ask(backend, tell_request(member, [texts[i] for i in order], entry["context"]),
+                                        lambda d: d.get("real") in LETTERS) for order in ROTATIONS))
+    if any(v is None for v in votes):
+        return dropped("DeepSeek gave no usable answer in the background check")
+    entry["tell_context"] = [LETTERS[order.index(0)] == v["real"] for order, v in zip(ROTATIONS, votes)]
+    if all(entry["tell_context"]):
+        return dropped("the real result follows from the background (3 of 3)")
     return entry | {"status": "kept"}
 
 

@@ -1671,3 +1671,22 @@ Task 8 Step 3과 같은 방식으로 기다린다. 5–10시간 걸린다.
 - 보고서 경로를 링크한다.
 - `signal`이면 2단계 기준을 먼저 정하자고 제안한다(설계 10).
 - 메모리에 결과를 남긴다.
+
+---
+
+## 추가: 첫 파일럿이 천장일 때 (2026-10-02, 사용자 결정)
+
+첫 파일럿은 0.95(19/20)로 천장이었다. 모델들은 바꾼 결과가 배경과 모순되는 점을 근거로 지웠다. 사용자가 설계 ①을 골랐다. 바꾸기 지시에 모순 금지를 넣고, 맥락을 보여 주는 두 번째 거르기를 더하고, 새 파일럿을 돌린다.
+
+- **코드 (커밋 후 테스트 509개 통과):**
+  - `ALTER_SYSTEM`에 모순 금지 문장을 넣었다.
+  - `tell_request(member, passages, context=None)`이 맥락을 받는다.
+  - `make_candidate`가 맥락 거르기에서 3번 모두 진짜를 고르면 버린다(`tell_context`).
+  - `build_biorxiv.py candidates`의 `--exclude-set`은 여러 번 쓸 수 있다.
+  - 테스트: `test_a_paper_whose_real_result_follows_from_the_background_is_dropped`, `test_the_rewrites_must_not_contradict_the_background_and_the_check_shows_it`, `test_candidates_step_skips_the_papers_of_several_sets`.
+- **Task 7·8을 다시 한다.** 세트 이름은 `biorxiv-pilot2`이고, 첫 파일럿 논문을 뺀다.
+  - `python scripts/build_biorxiv.py candidates biorxiv-pilot2 --per-category 1 --exclude-set biorxiv-pilot`
+  - 사용자 검토에서 멈춘다.
+  - `build biorxiv-pilot2`를 하고, `run_set.sh biorxiv-pilot2`로 돌리고, 같은 파일럿 규칙을 적용한다.
+- **Task 9의 후보 명령**은 `--exclude-set biorxiv-pilot --exclude-set biorxiv-pilot2`를 쓴다.
+

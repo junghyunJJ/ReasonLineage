@@ -111,3 +111,22 @@ def test_a_paper_dropped_in_review_is_replaced_and_the_set_builds(tmp_path, monk
     assert code == 0
     tasks = json.loads((gold / "gold.json").read_text())["tasks"]
     assert len(tasks) == 5 and sample[0] not in {t["doi"] for t in tasks.values()}
+
+
+def test_candidates_step_skips_the_papers_of_several_sets(tmp_path, monkeypatch):
+    monkeypatch.setattr(bx, "make_candidate", fake_candidate)
+    monkeypatch.setattr(build_biorxiv, "load_setup",
+                        lambda path: SimpleNamespace(local_checkers={"deepseek": SimpleNamespace(model="deepseek-test")}))
+    monkeypatch.setattr(build_biorxiv, "build_backend", lambda member, n: None)
+    index, gold = pool_files(tmp_path, 3), tmp_path / "gold"
+
+    def run(name, *extra):
+        assert build_biorxiv.main(["--index", str(index), "--gold-root", str(gold), "candidates", name,
+                                   "--per-category", "1", *extra]) == 0
+        return {e["doi"] for e in json.loads((gold / name / "candidates.json").read_text())["papers"]}
+
+    one = run("one")
+    two = run("two", "--exclude-set", "one")
+    three = run("three", "--exclude-set", "one", "--exclude-set", "two")
+    assert not (one & two) and not (three & (one | two)) and len(three) == 5
+
