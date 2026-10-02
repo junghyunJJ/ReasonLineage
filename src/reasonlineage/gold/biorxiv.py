@@ -268,3 +268,93 @@ async def candidates(set_name: str, papers: Sequence[Mapping[str, Any]], per_cat
         return tried
 
     return [entry for batch in await asyncio.gather(*(field(c) for c in CATEGORIES)) for entry in batch]
+
+
+# --- 4.6 review and 4.7 files ---
+
+class ReviewError(ValueError):
+    """The review record breaks a rule of bioRxiv design 4.6, or the task folder holds files `build` does not make."""
+
+
+QUESTION = ("Three candidate results follow. Exactly one is what this study reported.\n{lines}\n"
+            "Which result did this study report? Rank the candidates, and give the mechanism, the key evidence, and "
+            "a validation experiment for the top pick.")
+
+
+def review_sample(found: Sequence[Mapping[str, Any]], dropped: set[str] = frozenset()) -> list[str]:
+    """The DOIs to review: the first kept paper of each field not dropped in review (4.6)."""
+    sample = []
+    for category in CATEGORIES:
+        for entry in found:
+            if entry["category"] == category and entry["status"] == "kept" and entry["doi"] not in dropped:
+                sample.append(entry["doi"])
+                break
+    return sample
+
+
+def review_sheet(found: Sequence[Mapping[str, Any]], sample: Sequence[str]) -> str:
+    by_doi = {entry["doi"]: entry for entry in found}
+    lines = ["# Review sheet", "",
+             "For each paper: are both rewritten results plausible yet clearly a different conclusion from the real "
+             "one, and does the background leak no result? Write review.json as "
+             '{"keep": [doi, ...], "drop": [{"doi": ..., "why": ...}]}.', ""]
+    for doi in sample:
+        e = by_doi[doi]
+        lines += [f"## {e['category']} — {doi}", "", f"**Background and methods.** {e['context']}", "",
+                  f"**Real result.** {e['result']}", "", f"**Reversed.** {e['reversed']}", "",
+                  f"**Altered.** {e['altered']}", ""]
+    return "\n".join(lines)
+
+
+def check_review(review: Mapping[str, Any], found: Sequence[Mapping[str, Any]]) -> list[str]:
+    """What breaks the review rules (4.6); empty when the record is usable."""
+    kept = {e["doi"] for e in found if e["status"] == "kept"}
+    keep_list = list(review.get("keep", []))
+    drops = list(review.get("drop", []))
+    named = keep_list + [d.get("doi") for d in drops]
+    problems = [f"{doi}: reviewed twice" for doi in sorted({d for d in named if named.count(d) > 1})]
+    problems += [f"{doi}: not a kept candidate" for doi in named if doi not in kept]
+    problems += [f"{d.get('doi')}: dropped without a reason ('why')" for d in drops if not str(d.get("why", "")).strip()]
+    dropped = {d.get("doi") for d in drops}
+    problems += [f"{doi}: not reviewed" for doi in review_sample(found, dropped) if doi not in named]
+    return problems
+
+
+def build(set_name: str, found: Sequence[Mapping[str, Any]], review: Mapping[str, Any], per_category: int,
+          source: Mapping[str, Any], tasks_dir: str | Path, gold_path: str | Path) -> list[Path]:
+    """Write the task files and the gold file; nothing is written if the review breaks a rule (4.7)."""
+    problems = check_review(review, found)
+    if problems:
+        raise ReviewError("; ".join(problems))
+    dropped = {d["doi"] for d in review.get("drop", [])}
+    chosen = []
+    for category in CATEGORIES:
+        usable = [e for e in found if e["category"] == category and e["status"] == "kept" and e["doi"] not in dropped]
+        if len(usable) < per_category:
+            raise ReviewError(f"{category}: {len(usable)} usable papers for {per_category} tasks; run `candidates` "
+                              f"again to replace the papers dropped in review")
+        chosen += usable[:per_category]
+    ids = [f"{set_name}-{i:02d}" for i in range(1, len(chosen) + 1)]
+    tasks_dir, gold_path = Path(tasks_dir), Path(gold_path)
+    stale = [f"{path} is not built by this review; delete it, then build again"
+             for path in sorted(tasks_dir.glob("*.json")) if path.stem not in ids]
+    if stale:
+        raise ReviewError("; ".join(stale))
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    gold = {"source": dict(source), "tasks": {}}
+    written = []
+    for task_id, entry in zip(ids, chosen):
+        kinds = shuffled(["result", "reversed", "altered"], task_id)
+        letter = dict(zip(kinds, LETTERS))
+        lines = "\n".join(f"- Result {LETTERS[i]}: {entry[kind]}" for i, kind in enumerate(kinds))
+        body = {"id": task_id, "question": entry["context"] + "\n\n" + QUESTION.format(lines=lines),
+                "candidates": [f"Result {x}" for x in LETTERS], "category": "analytical", "data_sensitivity": "public"}
+        path = tasks_dir / f"{task_id}.json"
+        path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+        gold["tasks"][task_id] = {"approved": [f"Result {letter['result']}"],
+                                  "failed": sorted(f"Result {letter[k]}" for k in ("reversed", "altered")),
+                                  "doi": entry["doi"]}
+    gold_path.parent.mkdir(parents=True, exist_ok=True)
+    gold_path.write_text(json.dumps(gold, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return written

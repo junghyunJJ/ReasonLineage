@@ -2,11 +2,14 @@
 
 import asyncio
 import hashlib
+import json
 from types import SimpleNamespace
 
 import pytest
 
 from reasonlineage.backends.base import BackendError
+from reasonlineage.diagnose.gold import correctness
+from reasonlineage.engine.config import load_task
 from reasonlineage.gold import biorxiv as bx
 
 
@@ -210,3 +213,90 @@ def test_excluded_papers_are_skipped():
 def test_a_field_that_runs_out_of_usable_papers_stops_with_the_count():
     with pytest.raises(bx.SourceError, match="only 0 of 1 papers usable after trying all 2"):
         asyncio.run(bx.candidates("set-a", papers(2), 1, FakeDeepSeek(tell="real"), MEMBER))
+
+
+# --- 4.6 review and 4.7 files ---
+
+def kept(field, i):
+    return {"doi": f"10.1/{field}-{i}", "category": field, "status": "kept", "context": f"Background {field} {i}.",
+            "result": "Real result.", "reversed": "Reversed result.", "altered": "Altered result.", "title": "Title tells"}
+
+
+def found(n_per_field=2):
+    return [kept(field, i) for field in bx.CATEGORIES for i in range(n_per_field)]
+
+
+def keep_all(entries):
+    return {"keep": bx.review_sample(entries), "drop": []}
+
+
+SOURCE = {"api": bx.API, "pool_sha256": "abc"}
+
+
+def test_the_review_sample_is_the_first_kept_paper_of_each_field():
+    entries = found()
+    assert bx.review_sample(entries) == [f"10.1/{f}-0" for f in bx.CATEGORIES]
+    assert bx.review_sample(entries, {"10.1/immunology-0"})[2] == "10.1/immunology-1"
+
+
+def test_the_review_sheet_shows_the_real_and_rewritten_results():
+    sheet = bx.review_sheet(found(), ["10.1/neuroscience-0"])
+    assert "## neuroscience — 10.1/neuroscience-0" in sheet and "**Real result.** Real result." in sheet
+    assert "**Reversed.**" in sheet and "**Altered.**" in sheet
+
+
+@pytest.mark.parametrize("review, problem", [
+    ({"keep": [f"10.1/{f}-0" for f in bx.CATEGORIES[:4]], "drop": []}, "cell_biology-0: not reviewed"),
+    ({"keep": [f"10.1/{f}-0" for f in bx.CATEGORIES] + ["10.1/none"], "drop": []}, "10.1/none: not a kept candidate"),
+    ({"keep": [f"10.1/{f}-0" for f in bx.CATEGORIES] * 2, "drop": []}, "reviewed twice"),
+    ({"keep": [f"10.1/{f}-0" for f in bx.CATEGORIES[1:]], "drop": [{"doi": "10.1/pharmacology_and_toxicology-0", "why": " "}]},
+     "dropped without a reason"),
+])
+def test_review_rules_are_enforced(review, problem):
+    assert any(problem in p for p in bx.check_review(review, found()))
+
+
+def test_build_writes_tasks_that_hide_the_title_and_shuffle_the_letters(tmp_path):
+    paths = bx.build("set-a", found(1), keep_all(found(1)), 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+    gold = json.loads((tmp_path / "gold.json").read_text())
+    assert gold["source"] == SOURCE and [p.name for p in paths] == [f"set-a-0{i}.json" for i in range(1, 6)]
+    letters = set()
+    for path in paths:
+        task = load_task(path)
+        truth = gold["tasks"][task.id]
+        assert task.candidates == ("Result A", "Result B", "Result C") and task.category == "analytical"
+        assert set(task.candidates) == {*truth["approved"], *truth["failed"]}
+        assert "Title tells" not in task.question and task.question.startswith("Background ")
+        letter = truth["approved"][0][-1]
+        assert f"- Result {letter}: Real result." in task.question
+        assert correctness([truth["approved"][0], *truth["failed"]], truth) == 1.0
+        letters.add(letter)
+    assert len(letters) > 1  # the real result is not always in the same place
+    again = tmp_path / "again"
+    bx.build("set-a", found(1), keep_all(found(1)), 1, SOURCE, again / "tasks", again / "gold.json")
+    assert (again / "gold.json").read_text() == (tmp_path / "gold.json").read_text()
+
+
+def test_a_paper_dropped_in_review_is_replaced_by_the_next_kept_one(tmp_path):
+    entries = found(2)
+    review = {"keep": [d for d in bx.review_sample(entries) if "immunology" not in d] + ["10.1/immunology-1"],
+              "drop": [{"doi": "10.1/immunology-0", "why": "the altered result is not clearly different"}]}
+    bx.build("set-a", entries, review, 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+    assert json.loads((tmp_path / "gold.json").read_text())["tasks"]["set-a-03"]["doi"] == "10.1/immunology-1"
+
+
+def test_build_stops_when_review_left_too_few_papers_or_breaks_a_rule(tmp_path):
+    entries = found(1)
+    review = {"keep": bx.review_sample(entries)[1:], "drop": [{"doi": "10.1/pharmacology_and_toxicology-0", "why": "leaks"}]}
+    with pytest.raises(bx.ReviewError, match="run `candidates` again"):
+        bx.build("set-a", entries, review, 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+    with pytest.raises(bx.ReviewError, match="not reviewed"):
+        bx.build("set-a", entries, {"keep": [], "drop": []}, 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+    assert not (tmp_path / "gold.json").exists()
+
+
+def test_build_refuses_task_files_it_does_not_make(tmp_path):
+    (tmp_path / "tasks").mkdir()
+    (tmp_path / "tasks" / "set-a-09.json").write_text("{}")
+    with pytest.raises(bx.ReviewError, match="set-a-09.json is not built by this review"):
+        bx.build("set-a", found(1), keep_all(found(1)), 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
