@@ -67,20 +67,19 @@ def cmd_candidates(args: argparse.Namespace) -> int:
     previous = read_json(gold_dir / "candidates.json")["papers"] if (gold_dir / "candidates.json").exists() else []
     exclude: set[str] = set()
     if args.exclude_set:
-        exclude |= {e["doi"] for e in read_json(args.gold_root / args.exclude_set / "candidates.json")["papers"]}
-    if (gold_dir / "review.json").exists():
-        exclude |= {d["doi"] for d in read_json(gold_dir / "review.json").get("drop", [])}
+        exclude = {e["doi"] for e in read_json(args.gold_root / args.exclude_set / "candidates.json")["papers"]}
+    review = gold_dir / "review.json"
+    dropped = {d["doi"] for d in read_json(review).get("drop", [])} if review.exists() else set()
     member = load_setup(args.config).local_checkers["deepseek"]
     try:
         found = asyncio.run(bx.candidates(args.set, pool, args.per_category, build_backend(member, 6), member,
-                                          exclude=exclude, previous=previous))
+                                          exclude=exclude, previous=previous, dropped=dropped))
     except bx.SourceError as exc:
         print(f"cannot fill {args.set}: {exc}", file=sys.stderr)
         return 1
     source = {"api": bx.API, "window": [bx.START, bx.END], "pool_sha256": index["sha256"], "writer": member.model,
               "set": args.set, "per_category": args.per_category, "exclude_set": args.exclude_set}
     write_json(gold_dir / "candidates.json", {"source": source, "papers": found})
-    dropped = {d["doi"] for d in read_json(gold_dir / "review.json").get("drop", [])} if (gold_dir / "review.json").exists() else set()
     sample = bx.review_sample(found, dropped)
     (gold_dir / "review_sheet.md").write_text(bx.review_sheet(found, sample), encoding="utf-8")
     kept = sum(e["status"] == "kept" for e in found)

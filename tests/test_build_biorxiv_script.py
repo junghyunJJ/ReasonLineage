@@ -95,3 +95,19 @@ def test_build_step_refuses_a_broken_review(tmp_path):
 def test_a_bad_set_name_is_refused(tmp_path):
     result = subprocess.run([sys.executable, str(SCRIPT), "build", "Set_A"], capture_output=True, text=True)
     assert result.returncode == 2 and "lowercase letters" in result.stderr
+
+
+def test_a_paper_dropped_in_review_is_replaced_and_the_set_builds(tmp_path, monkeypatch):
+    # Before the final-review fix the dropped paper vanished from candidates.json and build refused the review.
+    assert run_candidates(tmp_path, monkeypatch) == 0
+    gold = tmp_path / "gold" / "set-a"
+    sample = bx.review_sample(json.loads((gold / "candidates.json").read_text())["papers"])
+    drop = [{"doi": sample[0], "why": "the background leaks a result"}]
+    (gold / "review.json").write_text(json.dumps({"keep": sample[1:], "drop": drop}))
+    assert run_candidates(tmp_path, monkeypatch) == 0
+    saved = json.loads((gold / "candidates.json").read_text())["papers"]
+    (gold / "review.json").write_text(json.dumps({"keep": bx.review_sample(saved, {sample[0]}), "drop": drop}))
+    code = build_biorxiv.main(["--gold-root", str(tmp_path / "gold"), "--tasks-root", str(tmp_path / "tasks"), "build", "set-a"])
+    assert code == 0
+    tasks = json.loads((gold / "gold.json").read_text())["tasks"]
+    assert len(tasks) == 5 and sample[0] not in {t["doi"] for t in tasks.values()}

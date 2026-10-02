@@ -7,9 +7,11 @@ what the study reported, so it cannot be worked out from the prompt.
 
 import asyncio
 import hashlib
+import html
 import json
 import re
 import time
+import unicodedata
 import urllib.request
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
@@ -78,15 +80,51 @@ def keep(record: Mapping[str, Any]) -> bool:
             and not WITHDRAWN.search(record.get("title") or "") and not WITHDRAWN.search(abstract))
 
 
+# The API writes some characters as markup ("{beta}", "[&ge;]"). The real result is the abstract's own text, so
+# undecoded markup would set it apart from DeepSeek's rewrites (final review, 2026-10-02).
+SYMBOLS = {"micro": "µ", "degrees": "°", "+/-": "±", "-": "−", "approx": "≈", "square": "²", "triangleup": "△",
+           "schwa": "ə", "propto": "∝", "uparrow": "↑", "downarrow": "↓", ",": ",", "varepsilon": "ε", "varphi": "φ"}
+# List, figure and glued-heading residue of structured abstracts: left out rather than repaired.
+RESIDUE = re.compile(r"\b[OC]_(?:LI|FIG|TBL)|O_LINK|\b(?:Summary|Significance Statement|Highlights|Graphical Abstract|"
+                     r"Abstract|Background|Introduction|Methods|Results|Conclusions?|Objectives?|Aims?|Purpose)[A-Z][a-z]")
+
+
+def _symbol(match: re.Match) -> str:
+    name = match.group(1)
+    if name in SYMBOLS:
+        return SYMBOLS[name]
+    try:
+        return unicodedata.lookup(f"GREEK {'CAPITAL' if name[0].isupper() else 'SMALL'} LETTER {name.upper()}")
+    except KeyError:
+        return match.group(0)  # unknown markup stays, and the abstract is left out below
+
+
+def clean_abstract(text: str) -> str | None:
+    """The abstract with the API's markup decoded; None when residue or unknown markup is left."""
+    if RESIDUE.search(text):
+        return None
+    text = re.sub(r"\{([^{}\s]{1,20})\}", _symbol, text)
+    text = html.unescape(re.sub(r"\[(&[a-zA-Z]+;|~)\]", r"\1", text))
+    if re.search(r"\{[^{}]*\}|&[a-zA-Z#0-9]+;", text):
+        return None
+    return " ".join(text.split())
+
+
 def build_pool(cache: Path = CACHE, get: Callable[[str], dict] = _get) -> list[dict[str, Any]]:
-    """The kept papers of the five fields, one per DOI, in DOI order."""
+    """The kept papers of the five fields, one per DOI, in DOI order.
+
+    A paper withdrawn in any version is left out, though its first version looks usable on its own.
+    """
+    records = [(category, record) for category in CATEGORIES for record in fetch_category(category, cache, get)]
+    withdrawn = {r["doi"] for _, r in records if r.get("type") == "withdrawn" or WITHDRAWN.search(r.get("title") or "")}
     papers: dict[str, dict[str, Any]] = {}
-    for category in CATEGORIES:
-        for record in fetch_category(category, cache, get):
-            if keep(record) and record["doi"] not in papers:
-                papers[record["doi"]] = {"doi": record["doi"], "category": category, "date": record["date"],
-                                         "title": " ".join(record["title"].split()),
-                                         "abstract": " ".join(record["abstract"].split())}
+    for category, record in records:
+        if record["doi"] in withdrawn or record["doi"] in papers or not keep(record):
+            continue
+        abstract = clean_abstract(record["abstract"])
+        if abstract is not None:
+            papers[record["doi"]] = {"doi": record["doi"], "category": category, "date": record["date"],
+                                     "title": " ".join(record["title"].split()), "abstract": abstract}
     return [papers[doi] for doi in sorted(papers)]
 
 
@@ -107,8 +145,8 @@ def load_pool(path: str | Path, sha256: str) -> list[dict[str, Any]]:
 MAX_RESULT_WORDS = 400
 ABBREVIATIONS = {"e.g", "i.e", "al", "fig", "figs", "vs", "approx", "ca", "cf", "no", "dr", "ref", "refs", "eq",
                  "resp", "incl", "st", "sp", "spp"}
-_BOUNDARY = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])")
-_LAST_WORD = re.compile(r"([A-Za-z][A-Za-z.]*)\.$")
+_BOUNDARY = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]?[^\W_])")  # any letter or digit may start one
+_LAST_WORD = re.compile(r"(?<![\w\-}])([A-Za-z][A-Za-z.]*)\.$")  # a whole word, not the end of "2D" or "κB"
 
 
 def sentences(text: str) -> list[str]:
@@ -234,7 +272,7 @@ async def make_candidate(paper: Mapping[str, Any], backend: ModelBackend, member
                          lambda d: not alteration_problems(entry["result"], d.get("reversed"), d.get("altered")))
     if rewrite is None:
         return dropped("DeepSeek gave no usable rewritten results")
-    entry["reversed"], entry["altered"] = rewrite["reversed"], rewrite["altered"]
+    entry["reversed"], entry["altered"] = (" ".join(rewrite[k].split()) for k in ("reversed", "altered"))
     texts = (entry["result"], entry["reversed"], entry["altered"])
     votes = await asyncio.gather(*(_ask(backend, tell_request(member, [texts[i] for i in order]),
                                         lambda d: d.get("real") in LETTERS) for order in ROTATIONS))
@@ -247,24 +285,31 @@ async def make_candidate(paper: Mapping[str, Any], backend: ModelBackend, member
 
 
 async def candidates(set_name: str, papers: Sequence[Mapping[str, Any]], per_category: int, backend: ModelBackend,
-                     member: Any, exclude: set[str] = frozenset(), previous: Sequence[Mapping[str, Any]] = ()
-                     ) -> list[dict[str, Any]]:
-    """Papers tried for each field in sample order until `per_category` are kept (4.2); earlier results are reused."""
+                     member: Any, exclude: set[str] = frozenset(), previous: Sequence[Mapping[str, Any]] = (),
+                     dropped: set[str] = frozenset()) -> list[dict[str, Any]]:
+    """Papers tried for each field in sample order until `per_category` are kept (4.2); earlier results are reused.
+
+    `exclude` skips papers (another set's); `dropped` are papers the review dropped: they stay on record, so the
+    review can still name them, but do not count toward `per_category`.
+    """
     done = {entry["doi"]: dict(entry) for entry in previous}
     by_doi = {paper["doi"]: paper for paper in papers}
+
+    def usable(tried: list[dict[str, Any]]) -> int:
+        return sum(e["status"] == "kept" and e["doi"] not in dropped for e in tried)
 
     async def field(category: str) -> list[dict[str, Any]]:
         order = shuffled(sorted(d for d, p in by_doi.items() if p["category"] == category), f"{set_name}:{category}")
         tried: list[dict[str, Any]] = []
         for doi in order:
-            if sum(e["status"] == "kept" for e in tried) >= per_category:
+            if usable(tried) >= per_category:
                 return tried
             if doi in exclude:
                 continue
             tried.append(done.get(doi) or await make_candidate(by_doi[doi], backend, member))
-        if sum(e["status"] == "kept" for e in tried) < per_category:
-            raise SourceError(f"{category}: only {sum(e['status'] == 'kept' for e in tried)} of {per_category} "
-                              f"papers usable after trying all {len(tried)}")
+        if usable(tried) < per_category:
+            raise SourceError(f"{category}: only {usable(tried)} of {per_category} papers usable after trying all "
+                              f"{len(tried)}")
         return tried
 
     return [entry for batch in await asyncio.gather(*(field(c) for c in CATEGORIES)) for entry in batch]
@@ -343,10 +388,12 @@ def build(set_name: str, found: Sequence[Mapping[str, Any]], review: Mapping[str
     tasks_dir.mkdir(parents=True, exist_ok=True)
     gold = {"source": dict(source), "tasks": {}}
     written = []
-    for task_id, entry in zip(ids, chosen):
-        kinds = shuffled(["result", "reversed", "altered"], task_id)
-        letter = dict(zip(kinds, LETTERS))
-        lines = "\n".join(f"- Result {LETTERS[i]}: {entry[kind]}" for i, kind in enumerate(kinds))
+    # The real result's letter is spread evenly over the set, in an order fixed by the set name (final review).
+    real_letters = shuffled([LETTERS[i % len(LETTERS)] for i in range(len(chosen))], f"{set_name}:letters")
+    for task_id, entry, real in zip(ids, chosen, real_letters):
+        others = shuffled([x for x in LETTERS if x != real], task_id)
+        letter = {"result": real, "reversed": others[0], "altered": others[1]}
+        lines = "\n".join(f"- Result {letter[kind]}: {entry[kind]}" for kind in sorted(letter, key=letter.get))
         body = {"id": task_id, "question": entry["context"] + "\n\n" + QUESTION.format(lines=lines),
                 "candidates": [f"Result {x}" for x in LETTERS], "category": "analytical", "data_sensitivity": "public"}
         path = tasks_dir / f"{task_id}.json"

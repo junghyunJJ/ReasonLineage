@@ -300,3 +300,74 @@ def test_build_refuses_task_files_it_does_not_make(tmp_path):
     (tmp_path / "tasks" / "set-a-09.json").write_text("{}")
     with pytest.raises(bx.ReviewError, match="set-a-09.json is not built by this review"):
         bx.build("set-a", found(1), keep_all(found(1)), 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+
+
+# --- final review fixes (2026-10-02) ---
+
+def test_api_markup_is_decoded_to_the_characters_authors_wrote():
+    # The real result is the abstract's own text; if it kept "{beta}" while a rewrite wrote "β", the markup alone
+    # would tell the real one (final review).
+    raw = ("IL-1{beta} rose {+/-} 5 at 37{degrees}C in 10 {micro}M, [&ge;]2-fold, p &lt; 0.05 and [~]3 cells, "
+           "NF-{kappa}B and {Delta}F508")
+    assert bx.clean_abstract(raw) == "IL-1β rose ± 5 at 37°C in 10 µM, ≥2-fold, p < 0.05 and ~3 cells, NF-κB and ΔF508"
+
+
+@pytest.mark.parametrize("raw", [
+    "Highlights C_LIO_LIThe cortex fires C_LI " + WORDS,
+    "O_FIG O_LINKSMALLFIG C_FIG " + WORDS,
+    "BackgroundThe cortex matters. " + WORDS,
+    "Cells grew in {termination} medium. " + WORDS,
+])
+def test_abstracts_with_list_figure_heading_or_unknown_markup_are_left_out(raw):
+    assert bx.clean_abstract(raw) is None
+
+
+def test_a_paper_withdrawn_in_a_later_version_is_left_out_of_the_pool(tmp_path):
+    records = [record("10.1/w"), record("10.1/w", version="2", date="2026-08-11", type_="withdrawn",
+                                        title="WITHDRAWN: A study"), record("10.1/k", abstract="{beta} " + WORDS)]
+
+    def get(url):
+        return page(records if "neuroscience" in url else [], 3 if "neuroscience" in url else 0)
+
+    pool = bx.build_pool(tmp_path, get)
+    assert [p["doi"] for p in pool] == ["10.1/k"] and pool[0]["abstract"].startswith("β ")
+
+
+def test_rewrites_are_stored_with_plain_spacing():
+    backend = FakeDeepSeek(tell="A", rewrite={
+        "reversed": "Drug X decreased neuronal firing by 40% in mouse cortex.\nThis suggests  X calms cortex.",
+        "altered": "Drug X increased neuronal firing by 40% in mouse retina. This suggests X excites retina."})
+    entry = make(backend)
+    assert entry["reversed"] == "Drug X decreased neuronal firing by 40% in mouse cortex. This suggests X calms cortex."
+
+
+@pytest.mark.parametrize("text, count", [
+    ("Cells grew in 2D. Our metrics improved.", 2),
+    ("NF-κB was active. Levels rose.", 2),
+    ("We treated mice with vehicle. scRNA-seq analysis showed loss of Lgr5. mTOR was inhibited. p53 rose. β-cells died.", 5),
+    ("Infection with K. pneumoniae rose in mice.", 1),
+    ("Smith et al. showed this, e.g. in cortex.", 1),
+])
+def test_sentences_end_after_a_digit_or_a_lowercase_start_but_not_after_initials(text, count):
+    # Under-splitting merged a method sentence with a result sentence in about 10% of abstracts (final review).
+    assert len(bx.sentences(text)) == count
+
+
+def test_a_paper_dropped_in_review_stays_on_record_and_the_next_one_is_added():
+    pool = papers(3)
+    first = asyncio.run(bx.candidates("set-a", pool, 1, FakeDeepSeek(tell="A"), MEMBER))
+    gone = first[0]["doi"]
+    again = asyncio.run(bx.candidates("set-a", pool, 1, FakeDeepSeek(tell="A"), MEMBER, previous=first, dropped={gone}))
+    field = [e for e in again if e["category"] == first[0]["category"]]
+    assert field[0]["doi"] == gone and len(field) == 2 and field[1]["status"] == "kept"
+
+
+@pytest.mark.parametrize("per_field", [1, 4])
+def test_the_real_result_is_spread_evenly_over_the_letters(tmp_path, per_field):
+    # A pull toward the first option would inflate the pilot rule if the real result sat mostly at A; the
+    # per-task shuffle put it at A in 4 of the 5 pilot tasks (final review).
+    entries = found(per_field)
+    bx.build("set-a", entries, keep_all(entries), per_field, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
+    tasks = json.loads((tmp_path / "gold.json").read_text())["tasks"].values()
+    counts = [sum(t["approved"][0] == f"Result {x}" for t in tasks) for x in bx.LETTERS]
+    assert sum(counts) == 5 * per_field and max(counts) - min(counts) <= 1
