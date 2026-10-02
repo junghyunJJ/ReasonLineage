@@ -80,3 +80,39 @@ def test_a_pool_file_that_is_not_the_recorded_one_is_refused(tmp_path):
     assert bx.load_pool(path, hashlib.sha256(path.read_bytes()).hexdigest()) == [{"doi": "10.1/a"}]
     with pytest.raises(bx.SourceError, match="not the recorded"):
         bx.load_pool(path, "0" * 64)
+
+
+# --- 4.3 sentences ---
+
+def test_abbreviations_initials_and_decimals_do_not_end_a_sentence():
+    text = ("Neurons fire (e.g. in cortex). Smith et al. showed this in Fig. 2. J. Doe agreed. "
+            "Levels rose 3.5-fold. 12 mice were used. Thus X holds!")
+    assert bx.sentences(text) == ["Neurons fire (e.g. in cortex).", "Smith et al. showed this in Fig. 2.",
+                                  "J. Doe agreed.", "Levels rose 3.5-fold.", "12 mice were used.", "Thus X holds!"]
+
+
+@pytest.mark.parametrize("first, ok", [(1, False), (2, True), (4, True), (5, False), ("2", False), (None, False)])
+def test_a_split_needs_background_before_and_results_after(first, ok):
+    assert (bx.split_problems(["a.", "b.", "c.", "d."], first) == []) is ok
+
+
+def test_results_over_400_words_are_too_long():
+    parts = ["Background.", " ".join(["x"] * 401)]
+    assert bx.split_problems(parts, 2) == ["the results have 401 words, more than 400"]
+
+
+REAL = "Drug X increased neuronal firing by 40% in mouse cortex."
+REV = "Drug X decreased neuronal firing by 40% in mouse cortex."
+ALT = "Drug X increased neuronal firing by 40% in mouse retina."
+
+
+@pytest.mark.parametrize("reversed_, altered, problem", [
+    (REV, ALT, None),
+    (REAL, ALT, "repeats"),
+    (REV, " ".join(REV.split()).upper(), "repeats"),
+    (REV, "Short.", "times as long"),
+    (None, ALT, "not text"),
+])
+def test_rewritten_results_must_differ_and_match_the_length(reversed_, altered, problem):
+    problems = bx.alteration_problems(REAL, reversed_, altered)
+    assert (problems == []) if problem is None else any(problem in p for p in problems)

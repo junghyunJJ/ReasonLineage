@@ -96,3 +96,48 @@ def load_pool(path: str | Path, sha256: str) -> list[dict[str, Any]]:
     if digest != sha256:
         raise SourceError(f"{path} has sha256 {digest}, not the recorded {sha256}; run `fetch` again")
     return json.loads(data)
+
+
+# --- 4.3 sentences and the checks on DeepSeek's work ---
+
+MAX_RESULT_WORDS = 400
+ABBREVIATIONS = {"e.g", "i.e", "al", "fig", "figs", "vs", "approx", "ca", "cf", "no", "dr", "ref", "refs", "eq",
+                 "resp", "incl", "st", "sp", "spp"}
+_BOUNDARY = re.compile(r"(?<=[.!?])\s+(?=[\"'(\[]?[A-Z0-9])")
+_LAST_WORD = re.compile(r"([A-Za-z][A-Za-z.]*)\.$")
+
+
+def sentences(text: str) -> list[str]:
+    """The abstract split into sentences; abbreviations, initials and decimals do not end one."""
+    parts, start = [], 0
+    for match in _BOUNDARY.finditer(text):
+        word = _LAST_WORD.search(text[start:match.start()])
+        if word and (word.group(1).lower() in ABBREVIATIONS or re.fullmatch(r"[A-Z]", word.group(1))):
+            continue
+        parts.append(text[start:match.start()].strip())
+        start = match.end()
+    parts.append(text[start:].strip())
+    return [p for p in parts if p]
+
+
+def split_problems(parts: Sequence[str], first_result: Any) -> list[str]:
+    """Why the split at `first_result` (1-based) cannot make a task; empty when it can (4.3)."""
+    if not isinstance(first_result, int) or not 2 <= first_result <= len(parts):
+        return [f"first result sentence {first_result!r} leaves no background or no result"]
+    words = len(" ".join(parts[first_result - 1:]).split())
+    return [f"the results have {words} words, more than {MAX_RESULT_WORDS}"] if words > MAX_RESULT_WORDS else []
+
+
+def alteration_problems(result: str, reversed_: Any, altered: Any) -> list[str]:
+    """Why the two rewritten results cannot be used; empty when they can (4.4)."""
+    if not isinstance(reversed_, str) or not isinstance(altered, str):
+        return ["the rewritten results are not text"]
+    norm = [" ".join(t.split()).casefold() for t in (result, reversed_, altered)]
+    problems = []
+    if len(set(norm)) < 3:
+        problems.append("a rewritten result repeats the real one or the other")
+    for name, text in (("reversed", reversed_), ("altered", altered)):
+        ratio = len(text) / max(len(result), 1)
+        if not 0.75 <= ratio <= 1.25:
+            problems.append(f"the {name} result is {ratio:.2f} times as long as the real one")
+    return problems
