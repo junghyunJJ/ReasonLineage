@@ -97,17 +97,23 @@ def sign_test(concordant: int, discordant: int) -> float | None:
     return sum(comb(n, k) for k in range(concordant, n + 1)) / 2 ** n
 
 
+def _counted(runs: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    """The run each task counts with: its earliest run folder by name (gold design 6.2)."""
+    kept: dict[str, Mapping[str, Any]] = {}
+    for run in sorted(runs, key=lambda r: r["run"]):
+        kept.setdefault(run["task"], run)
+    return list(kept.values())
+
+
 def level1(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """Does generation-0 fitness follow correctness? The verdict follows gold design 6.2 in order.
 
     Each task counts once (gold design 6.2: its four generation-0 answers). When a task has several runs,
     for example a replay that continues it, the earliest run folder by name counts; the rest are set aside.
     """
-    kept: dict[str, Mapping[str, Any]] = {}
-    for run in sorted(runs, key=lambda r: r["run"]):
-        kept.setdefault(run["task"], run)
-    set_aside = sorted(run["run"] for run in runs if kept[run["task"]] is not run)
-    runs = list(kept.values())
+    counted = _counted(runs)
+    set_aside = sorted(run["run"] for run in runs if run not in counted)
+    runs = counted
     groups = [[a for a in run["answers"] if a["generation"] == 0 and a["correctness"] is not None] for run in runs]
     answers = [a for group in groups for a in group]
     unscorable = sum(1 for run in runs for a in run["answers"] if a["generation"] == 0 and a["correctness"] is None)
@@ -208,3 +214,56 @@ def format_report(report: Mapping[str, Any]) -> str:
         lines.append("  by generation: " + ", ".join(f"{g}: fitness {v['fitness']} correctness {v['correctness']}"
                                                   for g, v in two["by_generation"].items()))
     return "\n".join(lines)
+
+
+def author_judge(runs: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, float]]:
+    """The mean weighted score each judge gave each author's generation-0 answers, over the runs level 1 counts."""
+    cells: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for run in _counted(runs):
+        for answer in run["answers"]:
+            if answer["generation"] == 0:
+                for judge, score in answer["judges"].items():
+                    cells[(answer["author"], judge)].append(score)
+    table: dict[str, dict[str, float]] = defaultdict(dict)
+    for (author, judge), values in sorted(cells.items()):
+        table[author][judge] = sum(values) / len(values)
+    return dict(table)
+
+
+_MARK = {1.0: "✓", 0.5: "½", 0.0: "✗"}
+
+
+def format_analysis(runs: Sequence[Mapping[str, Any]]) -> str:
+    """Level 1 as a Markdown report: the verdict, correctness by author, concordance by judge, the judge-by-author
+    score table and every task's generation-0 answers. `runs` are scored runs (`score_run`)."""
+    one = level1(runs)
+    rate = "n/a" if one["concordance"] is None else f"{one['concordance']:.2f}"
+    p = "" if one["sign_test_p"] is None else f", sign test p = {one['sign_test_p']:.3g}"
+    rules = one["rules"]
+    lines = ["# Level 1 analysis", "",
+             f"**Verdict: {one['verdict']}.** {one['answers']} answers in {one['tasks']} tasks: "
+             f"{one['share_correct']:.0%} fully correct, {one['pairs']} pairs with different correctness, "
+             f"concordance {rate}{p}.",
+             f"Rules fixed before the run: ceiling {rules['ceiling']:.0%}, at least {rules['min_pairs']} pairs, "
+             f"signal at concordance {rules['signal']:.2f}.", "",
+             "## Correctness by author", "", "| Author | Mean correctness |", "|---|---|"]
+    lines += [f"| {m} | {v:.2f} |" for m, v in one["by_model"].items()]
+    lines += ["", "## Concordance by judge", "", "| Judge | Pairs | Concordance |", "|---|---|---|"]
+    lines += [f"| {j} | {v['pairs']} | {'n/a' if v['concordance'] is None else format(v['concordance'], '.2f')} |"
+              for j, v in one["by_judge"].items()]
+    table = author_judge(runs)
+    judges = sorted({j for row in table.values() for j in row})
+    lines += ["", "## Mean judge score by author", "",
+              "Rows: the answer's author. Columns: the judge. Generation 0, weighted rubric score; "
+              "\"—\" where the judge did not score that author (recusal).", "",
+              "| Author \\ Judge | " + " | ".join(judges) + " |", "|---|" + "---|" * len(judges)]
+    lines += [f"| {a} | " + " | ".join(f"{row[j]:.3f}" if j in row else "—" for j in judges) + " |"
+              for a, row in table.items()]
+    lines += ["", "## Tasks", "", "Each cell: the author's top pick, its correctness (✓ 1, ½ 0.5, ✗ 0) and the "
+              "answer's fitness.", ""]
+    for run in sorted(_counted(runs), key=lambda r: r["task"]):
+        cells = [f"{a['author']}: {a['ranking'][0] if a['ranking'] else '-'} "
+                 f"{_MARK.get(a['correctness'], '?')} {a['fitness'] if a['fitness'] is None else format(a['fitness'], '.3f')}"
+                 for a in sorted(run["answers"], key=lambda a: a["author"]) if a["generation"] == 0]
+        lines.append(f"- **{run['task']}** (truth {', '.join(run['truth']['approved'])}): " + "; ".join(cells))
+    return "\n".join(lines) + "\n"

@@ -4,7 +4,8 @@ import json
 
 import pytest
 
-from reasonlineage.diagnose.gold import borda, correctness, level1, level2, score_run, summarize
+from reasonlineage.diagnose.gold import (author_judge, borda, correctness, format_analysis, level1, level2,
+                                         score_run, summarize)
 
 TRUTH = {"approved": ["A"], "failed": ["B", "C"]}
 GOLD = {"tasks": {f"t{i}": TRUTH for i in range(1, 6)}}
@@ -153,3 +154,19 @@ def test_level1_counts_each_task_once_and_names_the_runs_set_aside(tmp_path):
     report = level1(first + again)
     assert (report["tasks"], report["answers"], report["pairs"]) == (3, 12, 15)
     assert report["set_aside"] == ["zz-again1", "zz-again2", "zz-again3"]
+
+
+def test_author_judge_averages_each_judges_scores_of_each_author(tmp_path):
+    runs = scored(tmp_path, [aligned(), aligned((0.6, 0.6, 0.4, 0.3))])
+    table = author_judge(runs)
+    assert table["opus"] == {"glm": 0.7, "gpt": 0.7, "grok": 0.7}  # judged 0.8 and 0.6; never by itself
+    assert set(table) == set(PANEL)
+
+
+def test_the_analysis_gives_the_verdict_the_tables_and_every_task(tmp_path):
+    runs = scored(tmp_path, [aligned()] * 5)
+    text = format_analysis(runs)
+    assert "**Verdict: signal.**" in text and "20 answers in 5 tasks" in text
+    assert "| opus | 1.00 |" in text and "| Author \\ Judge | glm | gpt | grok | opus |" in text
+    assert "| opus | 0.800 | 0.800 | 0.800 | — |" in text
+    assert "- **t1** (truth A): glm: C ✗ 0.300; gpt: B ½ 0.600; grok: B ✗ 0.400; opus: A ✓ 0.800" in text

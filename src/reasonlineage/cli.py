@@ -21,7 +21,7 @@ from .checks.base import Checker
 from .checks.gate import Gate
 from .checks.jev import JevChecker
 from .checks.local import LocalLLMChecker
-from .diagnose.gold import format_report, score_run, summarize
+from .diagnose.gold import format_analysis, format_report, score_run, summarize
 from .diagnose.j2 import load_gold_items, run_j2
 from .diagnose.pmid import efetch, run_pmid_check
 from .engine.calls import CallRecorder, ReplaySource, gen0_writing
@@ -100,6 +100,7 @@ def build_parser() -> argparse.ArgumentParser:
     gold.add_argument("run_dirs", nargs="+", metavar="RUN_DIR")
     gold.add_argument("--gold", required=True, help="JSON file: {\"tasks\": {task id: {\"approved\": [...], \"failed\": [...]}}}")
     gold.add_argument("--out", help="also write the summary to this JSON file")
+    gold.add_argument("--analysis", help="also write the level-1 analysis to this Markdown file")
     return parser
 
 
@@ -297,6 +298,10 @@ def cmd_gold(args: argparse.Namespace, services: Services) -> int:
     print(format_report(report))
     if args.out:
         Path(args.out).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if args.analysis:
+        scored = [run for run in runs if run["status"] == "scored"]
+        Path(args.analysis).write_text(format_analysis(scored) if scored else "# Level 1 analysis\n\nNo scored runs.\n",
+                                       encoding="utf-8")
     return 0
 
 

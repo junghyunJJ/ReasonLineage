@@ -74,6 +74,7 @@ def test_run_script_skips_finished_tasks_and_runs_this_checkouts_code(tmp_path):
     assert [args.split()[:3] for _, args in calls] == [["-m", "reasonlineage", "run"], ["-m", "reasonlineage", "gold"]]
     assert "repodb-b.json" in calls[0][1] and {path for path, _ in calls} == {str(root / "src")}
     assert f"--gold {root}/gold/repodb-dev/gold.json" in calls[1][1]
+    assert f"--analysis {tmp_path}/out/analysis.md" in calls[1][1]
 
 
 def test_run_script_stops_at_a_run_that_did_not_finish(tmp_path):
