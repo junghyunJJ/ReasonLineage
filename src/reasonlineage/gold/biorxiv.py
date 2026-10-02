@@ -378,8 +378,13 @@ def check_review(review: Mapping[str, Any], found: Sequence[Mapping[str, Any]]) 
 
 
 def build(set_name: str, found: Sequence[Mapping[str, Any]], review: Mapping[str, Any], per_category: int,
-          source: Mapping[str, Any], tasks_dir: str | Path, gold_path: str | Path) -> list[Path]:
-    """Write the task files and the gold file; nothing is written if the review breaks a rule (4.7)."""
+          source: Mapping[str, Any], tasks_dir: str | Path, gold_path: str | Path,
+          limits: Mapping[str, int] | None = None) -> list[Path]:
+    """Write the task files and the gold file; nothing is written if the review breaks a rule (4.7).
+
+    `limits` gives a field fewer tasks than `per_category`: immunology ran out of papers every provider accepts.
+    """
+    limits = dict(limits or {})
     problems = check_review(review, found)
     if problems:
         raise ReviewError("; ".join(problems))
@@ -387,10 +392,11 @@ def build(set_name: str, found: Sequence[Mapping[str, Any]], review: Mapping[str
     chosen = []
     for category in CATEGORIES:
         usable = [e for e in found if e["category"] == category and e["status"] == "kept" and e["doi"] not in dropped]
-        if len(usable) < per_category:
-            raise ReviewError(f"{category}: {len(usable)} usable papers for {per_category} tasks; run `candidates` "
+        want = limits.get(category, per_category)
+        if len(usable) < want:
+            raise ReviewError(f"{category}: {len(usable)} usable papers for {want} tasks; run `candidates` "
                               f"again to replace the papers dropped in review")
-        chosen += usable[:per_category]
+        chosen += usable[:want]
     ids = [f"{set_name}-{i:02d}" for i in range(1, len(chosen) + 1)]
     tasks_dir, gold_path = Path(tasks_dir), Path(gold_path)
     stale = [f"{path} is not built by this review; delete it, then build again"
@@ -398,10 +404,11 @@ def build(set_name: str, found: Sequence[Mapping[str, Any]], review: Mapping[str
     if stale:
         raise ReviewError("; ".join(stale))
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    gold = {"source": dict(source), "tasks": {}}
+    gold = {"source": dict(source) | {"limits": limits}, "tasks": {}}
     written = []
     # The real result's letter is spread evenly over the set, in an order fixed by the set name (final review).
-    real_letters = shuffled([LETTERS[i % len(LETTERS)] for i in range(len(chosen))], f"{set_name}:letters")
+    declared = per_category * len(CATEGORIES)  # the set's declared size: a short field must not re-draw the letters
+    real_letters = shuffled([LETTERS[i % len(LETTERS)] for i in range(declared)], f"{set_name}:letters")[:len(chosen)]
     for task_id, entry, real in zip(ids, chosen, real_letters):
         others = shuffled([x for x in LETTERS if x != real], task_id)
         letter = {"result": real, "reversed": others[0], "altered": others[1]}

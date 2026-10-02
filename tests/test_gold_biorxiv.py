@@ -262,7 +262,7 @@ def test_review_rules_are_enforced(review, problem):
 def test_build_writes_tasks_that_hide_the_title_and_shuffle_the_letters(tmp_path):
     paths = bx.build("set-a", found(1), keep_all(found(1)), 1, SOURCE, tmp_path / "tasks", tmp_path / "gold.json")
     gold = json.loads((tmp_path / "gold.json").read_text())
-    assert gold["source"] == SOURCE and [p.name for p in paths] == [f"set-a-0{i}.json" for i in range(1, 6)]
+    assert gold["source"] == SOURCE | {"limits": {}} and [p.name for p in paths] == [f"set-a-0{i}.json" for i in range(1, 6)]
     letters = set()
     for path in paths:
         task = load_task(path)
@@ -390,3 +390,30 @@ def test_the_rewrites_must_not_contradict_the_background_and_the_check_shows_it(
     assert request.prompt.startswith("Background and methods:\nWe used mice.\n\nResult A: a")
     assert bx.tell_request(MEMBER, ["a", "b", "c"]).prompt.startswith("Result A: a")
 
+
+
+def test_a_field_can_have_fewer_tasks_than_the_others(tmp_path):
+    # Immunology ran out of papers the providers would accept, so the main set keeps 2 there and 4 elsewhere.
+    entries = found(4)
+    paths = bx.build("set-a", entries, keep_all(entries), 4, SOURCE, tmp_path / "tasks", tmp_path / "gold.json",
+                     limits={"immunology": 2})
+    gold = json.loads((tmp_path / "gold.json").read_text())
+    assert len(paths) == 18 and gold["source"]["limits"] == {"immunology": 2}
+    immunology = [t for t, g in gold["tasks"].items() if "immunology" in g["doi"]]
+    assert immunology == ["set-a-09", "set-a-10"]
+    assert [t for t, g in gold["tasks"].items() if "neuroscience" in g["doi"]][0] == "set-a-11"
+
+
+def test_giving_one_field_fewer_tasks_leaves_the_other_tasks_untouched(tmp_path):
+    # The letters are drawn for the set's declared size, so shrinking a field cannot invalidate measured tasks.
+    entries = found(4)
+    full = tmp_path / "full"
+    bx.build("set-a", entries, keep_all(entries), 4, SOURCE, full / "tasks", full / "gold.json")
+    short = tmp_path / "short"
+    bx.build("set-a", entries, keep_all(entries), 4, SOURCE, short / "tasks", short / "gold.json",
+             limits={"immunology": 2})
+    before = json.loads((full / "gold.json").read_text())["tasks"]
+    after = json.loads((short / "gold.json").read_text())["tasks"]
+    kept = [f"set-a-{i:02d}" for i in range(1, 11)]
+    assert all(before[k]["approved"] == after[k]["approved"] for k in kept)
+    assert [(short / "tasks" / f"{k}.json").read_text() == (full / "tasks" / f"{k}.json").read_text() for k in kept]

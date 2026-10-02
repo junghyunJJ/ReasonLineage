@@ -6,7 +6,7 @@
     python scripts/build_biorxiv.py candidates SET --per-category N [--exclude-set OTHER ...]
         # DeepSeek splits, rewrites and checks papers: gold/SET/candidates.json and gold/SET/review_sheet.md
     (the user reads review_sheet.md and writes gold/SET/review.json)
-    python scripts/build_biorxiv.py build SET
+    python scripts/build_biorxiv.py build SET [--limit FIELD=N]
         # tasks/SET/*.json and gold/SET/gold.json, from the saved candidates and review (no model calls)
 """
 
@@ -96,7 +96,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         return 1
     try:
         written = bx.build(args.set, saved["papers"], review, saved["source"]["per_category"], saved["source"],
-                           args.tasks_root / args.set, gold_dir / "gold.json")
+                           args.tasks_root / args.set, gold_dir / "gold.json", limits=dict(args.limit))
     except bx.ReviewError as exc:
         print(f"review.json breaks the rules: {exc}", file=sys.stderr)
         return 1
@@ -108,6 +108,13 @@ def set_name(text: str) -> str:
     if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", text):
         raise argparse.ArgumentTypeError("the set name takes lowercase letters, digits and single hyphens")
     return text
+
+
+def limit(text: str) -> tuple[str, int]:
+    field, _, count = text.partition("=")
+    if field not in bx.CATEGORIES or not count.isdigit():
+        raise argparse.ArgumentTypeError(f"--limit takes FIELD=N with a field of {', '.join(bx.CATEGORIES)}")
+    return field, int(count)
 
 
 def positive(text: str) -> int:
@@ -133,6 +140,8 @@ def main(argv: list[str] | None = None) -> int:
     cand.add_argument("--config", type=Path, default=ROOT / "configs" / "main.json")
     build = sub.add_parser("build")
     build.add_argument("set", type=set_name)
+    build.add_argument("--limit", type=limit, action="append", default=[], metavar="FIELD=N",
+                       help="give FIELD fewer tasks than --per-category; repeat for several fields")
     args = parser.parse_args(argv)
     return {"fetch": cmd_fetch, "candidates": cmd_candidates, "build": cmd_build}[args.command](args)
 
