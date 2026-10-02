@@ -1,7 +1,7 @@
 # bioRxiv 결과 예측 정답지 (A 세트) 설계
 
 - 날짜: 2026-10-02
-- 상태: 사용자 검토 대기
+- 상태: 승인(2026-10-02). 구현 계획을 쓰며 시제품으로 확인한 내용을 3, 4.1, 4.3, 4.4, 4.6, 4.7, 5, 9에 반영함
 - 기반: `specs/2026-09-30-gold-dev-design.md` (정답 점수와 1단계 판정 규칙), `specs/2026-09-29-engine-design.md` (프로토콜 1.0.5)
 - 조사: `.omc/research/2026-10-01-framework-validation-sources.md` (권장안 A, BrainBench 방식)
 - 브랜치: `gold-biorxiv` (`gold-synth`의 엔진 수정 위에서 시작)
@@ -42,9 +42,11 @@
 |---|---|
 | `src/reasonlineage/gold/biorxiv.py` (새) | 목록 받기와 거르기, 표본 순서, 문장 나누기, DeepSeek 요청과 검사, 티 거르기, 과제·정답 파일 쓰기 |
 | `scripts/build_biorxiv.py` (새) | `fetch` → `candidates SET` → (검토) → `build SET` |
-| `gold/biorxiv/pool.json` | 받은 목록. 세트들이 함께 쓰고, sha256을 기록해요 |
+| `~/.cache/reasonlineage/biorxiv/pool.json` | 받은 목록 전체(초록 포함, 약 9MB). 저장소에 넣기엔 커서 캐시에 둬요 |
+| `gold/biorxiv/pool.json` | 목록의 색인(DOI, 분야, 날짜)과 전체 목록의 sha256. 세트들이 함께 써요 |
 | `gold/<SET>/` | `candidates.json`(DeepSeek 출력 포함), `review_sheet.md`, `review.json`, `gold.json` |
 | `tasks/<SET>/` | 과제 파일 |
+| `src/reasonlineage/diagnose/gold.py`, `cli.py`, `scripts/run_gold.sh` | 1단계 분석 보고서(`analysis.md`): `reasonlineage gold --analysis` |
 
 **그대로 다시 쓰는 것:** `build.shuffled`, `scripts/run_gold.sh SET`, `reasonlineage gold`, 정답 점수와 1단계 판정, 엔진의 `HttpBackend`(DeepSeek 호출), 합성 세트 때의 실행 스크립트 방식(분리 실행, 이어 돌리기 최대 3번). 엔진은 바꾸지 않아요.
 
@@ -73,7 +75,9 @@ tasks/SET/*.json + gold/SET/gold.json ── run_gold.sh SET ──> report.json
   2. `type`이 `"new results"`예요.
   3. `published`가 `"NA"`예요. 이미 학술지에 실린 논문은 언제 실렸는지와 상관없이 빼요.
   4. 초록이 120단어 이상이고, 제목이나 초록이 철회(withdrawn)를 알리지 않아요.
-- 남긴 기록의 DOI, 제목, 분야, 날짜, 초록을 `pool.json`에 DOI 순서로 저장하고 sha256을 적어요. 받은 원본 페이지는 저장소 밖 캐시에 둬요.
+- 남긴 기록의 DOI, 제목, 분야, 날짜, 초록을 DOI 순서로 캐시의 `pool.json`에 저장해요. 저장소의 색인에는 DOI·분야·날짜와 전체 목록의 sha256을 적어요. 받은 원본 페이지도 캐시에 둬요.
+- 서버가 가끔 연결을 끊어서, 페이지마다 쉬었다가 최대 4번까지 다시 받아요(2026-10-02 시제품에서 한 번 일어남).
+- 2026-10-02에 받은 목록은 4,792편(약리·독성 167, 암 666, 면역 570, 신경 2,593, 세포 796), 초록 중앙값 211단어예요.
 
 ### 4.2 표본 순서
 - 분야마다 DOI 순서로 정렬한 뒤, `<SET>:<분야>`를 열쇠로 한 고정 seed로 섞어요(`build.shuffled`).
@@ -82,20 +86,20 @@ tasks/SET/*.json + gold/SET/gold.json ── run_gold.sh SET ──> report.json
 
 ### 4.3 문장 나누기 (DeepSeek)
 - 코드가 초록을 문장으로 나누고 번호를 붙여요. 약어(e.g., et al., Fig.)와 소수점에서는 나누지 않아요.
-- DeepSeek는 각 문장이 배경·방법(`context`)인지 결과·결론(`result`)인지만 답해요(JSON). 새 문장은 쓰지 않아요.
-- 맥락은 `context` 문장들, 진짜 결과는 `result` 문장들을 원래 순서대로 이은 것이에요. 원문 문장만 쓰니까 원문 일치는 저절로 보장돼요.
+- DeepSeek는 이 연구 자체의 발견이나 결론을 말하는 첫 문장의 번호만 답해요(JSON `{"first_result": n}`). 새 문장은 쓰지 않아요.
+- 맥락은 그 앞의 문장들, 진짜 결과는 그 문장부터 끝까지예요. 원문 문장만 쓰니까 원문 일치는 저절로 보장되고, 결과는 늘 초록 끝의 한 덩어리예요.
 - 버리는 경우
   - 맥락 문장이 하나도 없는 경우
   - 결과 문장이 하나도 없는 경우
-  - 결과 문장들이 초록 끝의 한 덩어리가 아닌 경우. 결과 문장 뒤에 맥락 문장이 다시 나오면, 맥락에 결과가 섞일 위험이 있어서예요.
   - 결과가 400단어를 넘는 경우
 - 제목은 보여 주지 않아요. 제목이 결과를 말하는 경우가 많아서예요.
 
 ### 4.4 바꾼 결과 2개 (DeepSeek)
 - 입력은 맥락과 진짜 결과예요. 출력은 JSON `{"reversed": …, "altered": …}`예요.
-  - `reversed`: 핵심 결과의 효과 방향을 뒤집어요(증가↔감소, 촉진↔억제, 있음↔없음).
+  - `reversed`: 핵심 결과 하나의 효과 방향을 뒤집어요(증가↔감소, 촉진↔억제, 있음↔없음). 방법의 성능을 보고하는 초록이면 방법이 실패했다고 쓰지 않고, 어느 비교·조건·집단에서 효과가 났는지를 뒤집어요.
   - `altered`: 방향은 두고 크기·조건·대상·기전 중 하나를 그럴듯하게 바꿔요.
-  - 둘 다 원문과 문장 수·길이·문체·숫자 형식을 맞추고, 원문과 분명히 다른 결론이어야 해요.
+  - 둘 다 저자가 실제로 낼 법한 결과처럼 읽혀야 해요. 저자의 자신 있고 긍정적인 논조를 지키고, 불가능한 값(음수 비율 등)을 쓰지 않고, 원문과 문장 수·길이·문체·숫자 형식을 맞춰요. 원문과도 서로와도 분명히 다른 결론이어야 해요.
+  - 2026-10-02 시제품에서 처음 지시로는 `reversed`가 "억제율 −39%", "이 방법은 쓸모없다" 같은 실패한 연구 문장이 되어 내용을 몰라도 지울 수 있었어요. 위 지시로 고치자 논조를 지키는 미묘한 변조가 나왔어요.
 - 코드가 확인해요. 아래 중 하나라도 걸리면 버려요.
   - 두 변조문이 원문이나 서로와 같아요(공백 무시).
   - 길이가 원문의 0.75–1.25배를 벗어나요.
@@ -107,7 +111,7 @@ tasks/SET/*.json + gold/SET/gold.json ── run_gold.sh SET ──> report.json
 
 ### 4.6 사람 검토 (`review.json`)
 - 검토표(`review_sheet.md`)는 과제마다 맥락, 진짜 결과, 바꾼 결과 2개를 표시해서 보여 줘요.
-- 검토자는 사용자예요. 파일럿은 5과제 모두, 본 세트는 고정 seed로 고른 5과제를 봐요.
+- 검토자는 사용자예요. 검토 표본은 분야마다 표본 순서상 처음으로 남은 논문이에요. 파일럿은 그래서 5과제 모두이고, 본 세트는 20개 중 5개예요.
 - 기준: 두 변조문이 그럴듯하면서도 진짜와 확실히 다른 결론인지, 맥락에 결과가 새지 않았는지예요.
 - 형식: `{"keep": [doi, …], "drop": [{"doi": …, "why": …}]}`예요.
 - 버린 항목은 그 분야의 다음 논문으로 바꾸고, 그 논문도 검토해요. 검토하지 않은 표본 과제가 있으면 `build`가 멈춰요.
@@ -128,7 +132,7 @@ Which result did this study report? Rank the candidates, and give the mechanism,
 ```
 
 - 과제 파일은 엔진 과제 형식이에요(`category: analytical`, `data_sensitivity: public`).
-- `gold.json`은 개발용 세트와 같은 형식이에요. 진짜 결과의 글자가 `approved`, 나머지 둘이 `failed`예요. `source`에는 API, 기간, 분야, `pool.json`의 sha256, DeepSeek 모델을 적어요.
+- `gold.json`은 개발용 세트와 같은 형식이에요. 진짜 결과의 글자가 `approved`, 나머지 둘이 `failed`이고, 과제마다 `doi`도 적어요. `source`에는 API, 기간, 목록의 sha256, DeepSeek 모델, 분야당 과제 수를 적어요.
 - DeepSeek 출력은 같은 seed로도 달라져요(2026-09-29 확인). 그래서 `candidates`가 저장한 출력으로만 `build`해요. 다시 만들 때도 DeepSeek를 부르지 않아요.
 - 과제 폴더에 이번 `build`가 만들지 않는 파일이 있으면 멈춰요.
 
@@ -143,6 +147,7 @@ Which result did this study report? Rank the candidates, and give the mechanism,
   - 0.375 이하: 우연 수준(1/3)이에요. 멈추고 과제를 점검해요.
   - 그 사이: 본 세트로 가요.
 - 파일럿은 판정에 넣지 않아요.
+- 실행 스크립트는 판정 요약(`report.json`)과 함께 분석 보고서(`analysis.md`)를 써요. 보고서에는 판정, 저자별 정답률, 심사위원별 일치도, 저자×심사위원 평균 점수표, 과제마다 각 답의 1위 후보·정답 여부·적합도가 들어가요.
 
 ### 5.2 본 세트 (`biorxiv-v1`, 20과제)
 - 파일럿 논문을 뺀 새 표본으로 만들고, 표본 5과제를 검토한 뒤 같은 조건으로 돌려요.
@@ -186,7 +191,8 @@ Which result did this study report? Rank the candidates, and give the mechanism,
 - **스크립트:** `build_biorxiv.py` 세 단계의 인자와 오류 안내를 확인해요.
 
 ## 9. 지금 코드에서 바뀌는 것
-- 새 파일만 생겨요(3장 표). 엔진, 채점, 실행 스크립트는 그대로예요.
+- 새 파일: `src/reasonlineage/gold/biorxiv.py`, `scripts/build_biorxiv.py`와 그 테스트예요.
+- 고치는 파일: `src/reasonlineage/diagnose/gold.py`(분석 보고서), `src/reasonlineage/cli.py`(`gold --analysis`), `scripts/run_gold.sh`(보고서 쓰기)예요. 엔진의 실행 경로와 프로토콜은 그대로예요.
 
 ## 10. 나중에 정할 것
 - 2단계 판정 기준(1단계에 신호가 있을 때)
