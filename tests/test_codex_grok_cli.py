@@ -83,6 +83,17 @@ def test_codex_argv_disables_config_tools_and_web(tmp_path):
     assert argv[-1] == "-"
 
 
+def test_codex_waits_on_a_silent_stream_as_long_as_the_call_may_run(tmp_path):
+    # Codex dropped GPT's long silent reasoning at its default stream idle limit ("idle timeout waiting for
+    # websocket", 2026-10-01). The built-in provider cannot be changed, so calls use a copy of it whose idle
+    # limit is the call's own timeout.
+    argv = CodexCLIBackend().build_argv(request(timeout_s=3600), tmp_path, tmp_path / "i.txt", None, tmp_path / "o.txt")
+    assert 'model_provider="openai-long-idle"' in argv
+    (provider,) = [a for a in argv if a.startswith("model_providers.openai-long-idle=")]
+    assert 'base_url="https://chatgpt.com/backend-api/codex"' in provider and "requires_openai_auth=true" in provider
+    assert 'wire_api="responses"' in provider and "stream_idle_timeout_ms=3600000" in provider
+
+
 def test_codex_reply_comes_back_through_an_empty_workdir(tmp_path):
     backend = CodexCLIBackend(binary=fake(tmp_path, "codex", FAKE_CODEX))
     response = asyncio.run(backend.complete(request()))
