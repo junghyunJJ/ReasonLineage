@@ -1,5 +1,7 @@
 """The generated shopping-basket gold set (basket design 4): prices, misreadings, bands and files."""
 
+import random
+
 import pytest
 
 from reasonlineage.gold import basket as bk
@@ -205,3 +207,34 @@ def test_the_flipping_misreadings_are_the_ones_that_change_the_winner():
     assert bk.winner(stores, BASKET, "no_delivery") == 0
     assert "delivery_after_discount" in bk.flipping(stores, BASKET)  # the fee returns and store B wins
     assert bk.margin(stores, BASKET) == pytest.approx((30300 - 27000) / 27000)
+
+
+# --- 4.3 the bands ---
+
+@pytest.mark.parametrize("band", sorted(bk.BANDS))
+def test_a_draw_meets_its_band_or_is_discarded(band):
+    low, high, least = bk.BANDS[band]
+    rng = random.Random(7)
+    kept = 0
+    while kept < 10:
+        drawn = bk.draw(band, rng)
+        if drawn is None:
+            continue
+        kept += 1
+        assert low <= drawn["margin"] < high and len(drawn["flipping"]) >= least
+        totals = [receipt["total"] for receipt in drawn["receipts"]]
+        assert len(set(totals)) == 3 and totals[drawn["winner"]] == min(totals)
+        assert drawn["margin"] >= 0.002  # never decided by luck
+
+
+def test_a_store_never_measures_its_threshold_at_a_step_it_does_not_have():
+    rng = random.Random(11)
+    for _ in range(40):
+        drawn = bk.draw("medium", rng)
+        if drawn is None:
+            continue
+        for store_ in drawn["stores"]:
+            kinds = {rule["kind"] for rule in store_["rules"]}
+            delivery = next(rule for rule in store_["rules"] if rule["kind"] == "delivery")
+            assert delivery["measured"] != "after_coupon" or "coupon" in kinds
+            assert delivery["measured"] != "after_discount" or "percent" in kinds

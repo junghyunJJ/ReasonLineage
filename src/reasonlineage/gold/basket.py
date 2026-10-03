@@ -149,3 +149,93 @@ def margin(stores: Sequence[Mapping[str, Any]], basket: Mapping[str, int]) -> fl
     """How much more the second-cheapest store charges, as a share of the cheapest."""
     first, second, _ = sorted(price(store, basket)["total"] for store in stores)
     return (second - first) / first
+
+
+# --- 4.1, 4.2 drawing a task ---
+
+def draw_basket(rng: random.Random) -> dict[str, int]:
+    names = [name for name, _, _ in ITEMS]
+    chosen = rng.sample(names, rng.randint(4, 8))
+    return {item: rng.randint(1, 4) for item in sorted(chosen, key=names.index)}
+
+
+def draw_prices(rng: random.Random, basket: Mapping[str, int]) -> dict[str, int]:
+    base = {name: price for name, _, price in ITEMS}
+    return {item: max(100, round(base[item] * rng.uniform(0.85, 1.15) / 100) * 100) for item in basket}
+
+
+def draw_rules(rng: random.Random, basket: Mapping[str, int], prices: Mapping[str, int],
+               measured: str) -> list[dict[str, Any]]:
+    """Two to four rules: the delivery rule, plus one to three of the others (design 4.2)."""
+    goods = sum(prices[item] * quantity for item, quantity in basket.items())
+    pool: list[dict[str, Any]] = []
+    repeated = [item for item, quantity in basket.items() if quantity >= 2]
+    if repeated:
+        item = rng.choice(repeated)
+        pool.append({"kind": "bundle", "item": item, "group": 3 if basket[item] >= 3 else 2})
+    categories = {category_of(item) for item in basket}
+    if categories:
+        category = rng.choice(sorted(categories))
+        in_category = sum(prices[item] * quantity for item, quantity in basket.items() if category_of(item) == category)
+        if in_category > 2000:
+            pool.append({"kind": "coupon", "category": category,
+                         "threshold": round(in_category * rng.uniform(0.5, 0.95) / 100) * 100,
+                         "amount": round(in_category * rng.uniform(0.1, 0.3) / 100) * 100})
+    rate = rng.randint(3, 8)
+    threshold = None if rng.random() < 0.4 else round(goods * rng.uniform(0.7, 1.05) / 100) * 100
+    pool.append({"kind": "percent", "rate": rate, "threshold": threshold})
+    # A store may only measure its threshold at a step it actually has: "after the coupon" needs a coupon rule,
+    # "after all discounts" needs the percentage rule. Otherwise the wording would describe a step that is absent.
+    needed = {"after_coupon": "coupon", "after_discount": "percent"}.get(measured)
+    required = [rule for rule in pool if rule["kind"] == needed]
+    if needed and not required:
+        measured = "before"
+    rest = [rule for rule in pool if rule not in required]
+    rng.shuffle(rest)
+    rules = required + rest[:rng.randint(1, 3) - len(required)]
+    rng.shuffle(rules)
+    rules.append({"kind": "delivery", "fee": rng.choice((2500, 2900, 3500, 4500)),
+                  "free_at": round(goods * rng.uniform(0.8, 1.1) / 100) * 100, "measured": measured})
+    return rules
+
+
+def draw_stores(rng: random.Random, basket: Mapping[str, int]) -> list[dict[str, Any]]:
+    measured = list(MEASURED)
+    rng.shuffle(measured)
+    stores = []
+    for where in measured:
+        prices = draw_prices(rng, basket)
+        stores.append({"prices": prices, "rules": draw_rules(rng, basket, prices, where)})
+    return stores
+
+
+def _rng(set_name: str, index: int) -> random.Random:
+    return random.Random(int(hashlib.sha256(f"{set_name}:{index}".encode("utf-8")).hexdigest()[:16], 16))
+
+
+def printed(stores: Sequence[Mapping[str, Any]]) -> set[int]:
+    """Every amount the task prints: unit prices, thresholds, coupon amounts and delivery fees."""
+    shown: set[int] = set()
+    for store in stores:
+        shown |= set(store["prices"].values())
+        for rule in store["rules"]:
+            shown |= {rule[key] for key in ("threshold", "amount", "fee", "free_at")
+                      if isinstance(rule.get(key), int)}
+    return shown
+
+
+def draw(band: str, rng: random.Random) -> dict[str, Any] | None:
+    """One draw of a basket and three stores; None when it does not meet the band (design 4.3)."""
+    low, high, least_flips = BANDS[band]
+    basket = draw_basket(rng)
+    stores = draw_stores(rng, basket)
+    receipts = [price(store, basket) for store in stores]
+    totals = [receipt["total"] for receipt in receipts]
+    if len(set(totals)) < 3 or set(totals) & printed(stores):
+        return None  # no printed number may equal a store's total, so the answer is nowhere in the prompt
+    gap = margin(stores, basket)
+    flips = flipping(stores, basket)
+    if not low <= gap < high or len(flips) < least_flips:
+        return None
+    return {"basket": dict(basket), "stores": stores, "receipts": receipts, "margin": gap, "flipping": flips,
+            "winner": totals.index(min(totals))}
