@@ -1,0 +1,11 @@
+{
+  "id": "basket-calib-easy-01",
+  "question": "You are buying the same shopping list from three online stores. Each store has its own unit prices and promotions. You have no tools: do the arithmetic in your own reasoning.\n\nEvery store applies its promotions in this order: the bundle offers, then the category coupon, then the percentage discount, then delivery. A coupon's category total is the amount after the bundle offers. A percentage discount's own threshold is checked on the amount after the coupon. The percentage never applies to the delivery fee, and every amount is a whole number of won.\n\nShopping list: milk x3, cheese x3, lettuce x1, coffee x2, pasta x1\n\nStore A\n  unit prices (won): milk 2,200, cheese 7,100, lettuce 2,700, coffee 12,600, pasta 2,000\n  - if the order comes to 53,600 won or more, 8% off the order\n  - delivery 3,500 won, free when the amount after all discounts is 57,600 won or more\n\nStore B\n  unit prices (won): milk 2,500, cheese 6,800, lettuce 2,600, coffee 11,600, pasta 2,400\n  - milk: 3 for the price of 2\n  - if the dairy items come to 23,200 won or more, take 5,200 won off the order\n  - delivery 2,500 won, free when the goods total before any discount is 54,700 won or more\n\nStore C\n  unit prices (won): milk 2,100, cheese 8,600, lettuce 2,600, coffee 11,800, pasta 2,000\n  - coffee: 2 for the price of 1\n  - if the fresh items come to 1,600 won or more, take 500 won off the order\n  - delivery 4,500 won, free when the amount after the coupon is 59,800 won or more\n\nWhich store charges the least in total, including delivery? Rank the three stores from cheapest to most expensive, and give the steps that decide the order, the key comparison, and one check that would confirm your top pick.",
+  "candidates": [
+    "Store A",
+    "Store B",
+    "Store C"
+  ],
+  "category": "analytical",
+  "data_sensitivity": "public"
+}

@@ -1,0 +1,399 @@
+{
+  "source": {
+    "generator": "reasonlineage.gold.basket",
+    "set": "basket-calib-easy",
+    "band": "easy"
+  },
+  "tasks": {
+    "basket-calib-easy-01": {
+      "band": "easy",
+      "letters": [
+        "B",
+        "A",
+        "C"
+      ],
+      "winner": "Store B",
+      "margin": 0.03143,
+      "misreadings": {
+        "delivery_after_discount": {
+          "winner": "Store B",
+          "totals": [
+            50900,
+            56676,
+            52500
+          ]
+        },
+        "delivery_before": {
+          "winner": "Store B",
+          "totals": [
+            50900,
+            53176,
+            52500
+          ]
+        },
+        "percent_before_coupon": {
+          "winner": "Store B",
+          "totals": [
+            50900,
+            56676,
+            52500
+          ]
+        },
+        "bundle_as_percent": {
+          "winner": "Store B",
+          "totals": [
+            50900,
+            56676,
+            52500
+          ]
+        },
+        "no_delivery": {
+          "winner": "Store C",
+          "totals": [
+            48400,
+            53176,
+            48000
+          ]
+        },
+        "percent_on_delivery": {
+          "winner": "Store B",
+          "totals": [
+            50900,
+            56396,
+            52500
+          ]
+        }
+      },
+      "flipping": [
+        "no_delivery"
+      ],
+      "tries": 73,
+      "basket": {
+        "milk": 3,
+        "cheese": 3,
+        "lettuce": 1,
+        "coffee": 2,
+        "pasta": 1
+      },
+      "stores": [
+        {
+          "letter": "B",
+          "prices": {
+            "milk": 2500,
+            "cheese": 6800,
+            "lettuce": 2600,
+            "coffee": 11600,
+            "pasta": 2400
+          },
+          "rules": [
+            {
+              "kind": "bundle",
+              "item": "milk",
+              "group": 3
+            },
+            {
+              "kind": "coupon",
+              "category": "dairy",
+              "threshold": 23200,
+              "amount": 5200
+            },
+            {
+              "kind": "delivery",
+              "fee": 2500,
+              "free_at": 54700,
+              "measured": "before"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "milk": 5000,
+              "cheese": 20400,
+              "lettuce": 2600,
+              "coffee": 23200,
+              "pasta": 2400
+            },
+            "goods": 53600,
+            "after_coupon": 48400,
+            "after_discount": 48400,
+            "delivery": 2500,
+            "total": 50900
+          }
+        },
+        {
+          "letter": "A",
+          "prices": {
+            "milk": 2200,
+            "cheese": 7100,
+            "lettuce": 2700,
+            "coffee": 12600,
+            "pasta": 2000
+          },
+          "rules": [
+            {
+              "kind": "percent",
+              "rate": 8,
+              "threshold": 53600
+            },
+            {
+              "kind": "delivery",
+              "fee": 3500,
+              "free_at": 57600,
+              "measured": "after_discount"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "milk": 6600,
+              "cheese": 21300,
+              "lettuce": 2700,
+              "coffee": 25200,
+              "pasta": 2000
+            },
+            "goods": 57800,
+            "after_coupon": 57800,
+            "after_discount": 53176,
+            "delivery": 3500,
+            "total": 56676
+          }
+        },
+        {
+          "letter": "C",
+          "prices": {
+            "milk": 2100,
+            "cheese": 8600,
+            "lettuce": 2600,
+            "coffee": 11800,
+            "pasta": 2000
+          },
+          "rules": [
+            {
+              "kind": "bundle",
+              "item": "coffee",
+              "group": 2
+            },
+            {
+              "kind": "coupon",
+              "category": "fresh",
+              "threshold": 1600,
+              "amount": 500
+            },
+            {
+              "kind": "delivery",
+              "fee": 4500,
+              "free_at": 59800,
+              "measured": "after_coupon"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "milk": 6300,
+              "cheese": 25800,
+              "lettuce": 2600,
+              "coffee": 11800,
+              "pasta": 2000
+            },
+            "goods": 48500,
+            "after_coupon": 48000,
+            "after_discount": 48000,
+            "delivery": 4500,
+            "total": 52500
+          }
+        }
+      ]
+    },
+    "basket-calib-easy-02": {
+      "band": "easy",
+      "letters": [
+        "C",
+        "A",
+        "B"
+      ],
+      "winner": "Store A",
+      "margin": 0.03881,
+      "misreadings": {
+        "delivery_after_discount": {
+          "winner": "Store A",
+          "totals": [
+            36353,
+            33500,
+            34800
+          ]
+        },
+        "delivery_before": {
+          "winner": "Store A",
+          "totals": [
+            36353,
+            33500,
+            34800
+          ]
+        },
+        "percent_before_coupon": {
+          "winner": "Store B",
+          "totals": [
+            36353,
+            33500,
+            32329
+          ]
+        },
+        "bundle_as_percent": {
+          "winner": "Store A",
+          "totals": [
+            36353,
+            33500,
+            34433
+          ]
+        },
+        "no_delivery": {
+          "winner": "Store A",
+          "totals": [
+            33853,
+            30000,
+            31300
+          ]
+        },
+        "percent_on_delivery": {
+          "winner": "Store A",
+          "totals": [
+            36278,
+            33500,
+            34800
+          ]
+        }
+      },
+      "flipping": [
+        "percent_before_coupon"
+      ],
+      "tries": 5,
+      "basket": {
+        "yogurt": 2,
+        "bananas": 4,
+        "apples": 4,
+        "lettuce": 1
+      },
+      "stores": [
+        {
+          "letter": "C",
+          "prices": {
+            "yogurt": 4800,
+            "bananas": 1100,
+            "apples": 5800,
+            "lettuce": 2500
+          },
+          "rules": [
+            {
+              "kind": "percent",
+              "rate": 3,
+              "threshold": null
+            },
+            {
+              "kind": "bundle",
+              "item": "yogurt",
+              "group": 2
+            },
+            {
+              "kind": "delivery",
+              "fee": 2500,
+              "free_at": 38200,
+              "measured": "after_discount"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "yogurt": 4800,
+              "bananas": 4400,
+              "apples": 23200,
+              "lettuce": 2500
+            },
+            "goods": 34900,
+            "after_coupon": 34900,
+            "after_discount": 33853,
+            "delivery": 2500,
+            "total": 36353
+          }
+        },
+        {
+          "letter": "A",
+          "prices": {
+            "yogurt": 4800,
+            "bananas": 1200,
+            "apples": 5000,
+            "lettuce": 3100
+          },
+          "rules": [
+            {
+              "kind": "coupon",
+              "category": "fresh",
+              "threshold": 24300,
+              "amount": 7500
+            },
+            {
+              "kind": "delivery",
+              "fee": 3500,
+              "free_at": 37800,
+              "measured": "after_coupon"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "yogurt": 9600,
+              "bananas": 4800,
+              "apples": 20000,
+              "lettuce": 3100
+            },
+            "goods": 37500,
+            "after_coupon": 30000,
+            "after_discount": 30000,
+            "delivery": 3500,
+            "total": 33500
+          }
+        },
+        {
+          "letter": "B",
+          "prices": {
+            "yogurt": 4700,
+            "bananas": 1100,
+            "apples": 4900,
+            "lettuce": 3000
+          },
+          "rules": [
+            {
+              "kind": "bundle",
+              "item": "bananas",
+              "group": 3
+            },
+            {
+              "kind": "coupon",
+              "category": "fresh",
+              "threshold": 24800,
+              "amount": 4000
+            },
+            {
+              "kind": "percent",
+              "rate": 7,
+              "threshold": 33400
+            },
+            {
+              "kind": "delivery",
+              "fee": 3500,
+              "free_at": 39000,
+              "measured": "before"
+            }
+          ],
+          "receipt": {
+            "lines": {
+              "yogurt": 9400,
+              "bananas": 3300,
+              "apples": 19600,
+              "lettuce": 3000
+            },
+            "goods": 35300,
+            "after_coupon": 31300,
+            "after_discount": 31300,
+            "delivery": 3500,
+            "total": 34800
+          }
+        }
+      ]
+    }
+  }
+}
