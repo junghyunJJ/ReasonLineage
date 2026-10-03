@@ -15,10 +15,11 @@
 **Spec:** `specs/2026-10-03-gold-weather-design.md` (판정 규칙은 `specs/2026-09-30-gold-dev-design.md` 6.1–6.2)
 
 **미리 확인한 것 (2026-10-03):**
-- 코드를 임시 복사본에서 모두 짜고, 실제로 받아 둔 NCEI 목록(네 묶음, 주 49곳)으로 돌려 봤다. 지역 규칙을 적용한 뒤에도 공급이 넉넉하다: 7월 기온 easy 3,699 / medium 3,234 / hard 2,784, 8월 강수 easy 3,884 / medium 2,699 / hard 2,331 삼중항이다.
+- 코드를 임시 복사본에서 모두 짜고, 실제로 받아 둔 NCEI 목록(네 묶음, 주 48곳)으로 돌려 봤다. 지역 규칙을 적용한 뒤에도 공급이 넉넉하다: 7월 기온 easy 3,699 / medium 3,234 / hard 2,784, 8월 강수 easy 3,884 / medium 2,699 / hard 2,331 삼중항이다.
 - 보정 세트 3개와 20과제 세트를 실제 목록으로 만들어 보니, 지표가 10:10, 월이 10:10으로 나뉘고 한 주가 최대 3번까지만 나온다. 과제 문구에 편차 수치가 들어가지 않는다.
 - 0.1 정밀도의 뺄셈에서 부동소수 오차가 나와 구간 경계가 흔들렸다(5.3 - 3.3 = 2.0000000000000004). 그래서 1~2위 차이는 `margin()`에서 반올림한 값만 쓴다.
-- `gold-weather` 브랜치의 새 복사본에 Task 1–4를 차례로 적용하며 단계마다 Run 명령을 돌렸다. RED는 아래 Expected처럼 실패했고 GREEN은 통과했다. 전체 테스트는 560 → 568 → 587 → 596 → 605 passed, 3 deselected다.
+- NCEI의 주 번호는 1~48이 본토 48개 주(1 Alabama ~ 48 Wyoming)다. 49는 없는 번호라서 404를 돌려주고, 50(알래스카)과 51(하와이)은 평년 기준 기간이 1901~2000년이 아니다. 그래서 `STATE_IDS`는 1~48만 쓴다(설계 4.1의 "1~50"은 틀렸다).
+- `gold-weather` 브랜치의 새 복사본에 Task 1–4를 차례로 적용하며 단계마다 Run 명령을 돌렸다. RED는 아래 Expected처럼 실패했고 GREEN은 통과했다. 전체 테스트는 560 → 569 → 588 → 597 → 606 passed, 3 deselected다.
 
 ## Global Constraints
 
@@ -152,6 +153,15 @@ def test_reading_skips_a_month_with_no_departure():
     assert w.reading(reply("Ohio", 7, "pcp", None), 7) is None
 
 
+def test_the_state_ids_are_the_48_contiguous_states():
+    """NCEI's numbering runs 1 (Alabama) to 48 (Wyoming); 49 is unused, and 50 (Alaska) and 51 (Hawaii)
+    have a shorter base period than the 1901-2000 normal the question names."""
+    ids = tuple(w.STATE_IDS)
+    assert len(ids) == len(w.REGION_OF) == 48
+    assert ids[0] == 1 and ids[-1] == 48
+    assert 49 not in ids and 50 not in ids and 51 not in ids
+
+
 def test_fetch_pool_keeps_the_contiguous_states_with_a_departure(tmp_path):
     get, asked = fake_get(missing=(3,))
     found = w.fetch_pool(tmp_path, get, state_ids=(1, 2, 3, 4, 50))
@@ -251,7 +261,8 @@ class SourceError(RuntimeError):
 
 API = ("https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/"
        "{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000")
-STATE_IDS = range(1, 51)  # NCEI's statewide numbers, alphabetical
+STATE_IDS = range(1, 49)  # NCEI's statewide numbers: 1 Alabama to 48 Wyoming, alphabetical.
+# 49 is unused, and 50 (Alaska) and 51 (Hawaii) report a shorter base period than the 1901-2000 normal.
 MONTHS = (7, 8)
 MONTH_NAMES = {7: "July", 8: "August"}
 MEASURES = ("tavg", "pcp")
@@ -342,10 +353,10 @@ def load_pool(path: str | Path, sha256: str) -> dict[str, dict[str, float]]:
 - [ ] **Step 4: 돌려서 통과를 보기**
 
 Run: `python -m pytest tests/test_gold_weather.py -q`
-Expected: `8 passed`
+Expected: `9 passed`
 
 Run: `python -m pytest -q`
-Expected: `568 passed, 3 deselected`
+Expected: `569 passed, 3 deselected`
 
 - [ ] **Step 5: 커밋**
 
@@ -456,7 +467,7 @@ def _wide_pool() -> dict[str, dict[str, float]]:
 - [ ] **Step 2: 돌려서 실패를 보기**
 
 Run: `python -m pytest tests/test_gold_weather.py -q`
-Expected: `19 failed, 8 passed`, `AttributeError: module 'reasonlineage.gold.weather' has no attribute 'choose'`
+Expected: `19 failed, 9 passed`, `AttributeError: module 'reasonlineage.gold.weather' has no attribute 'choose'`
 
 - [ ] **Step 3: 구간과 고르기를 쓰기**
 
@@ -537,10 +548,10 @@ def choose(set_name: str, pool: Mapping[str, Mapping[str, float]], band: str, co
 - [ ] **Step 4: 돌려서 통과를 보기**
 
 Run: `python -m pytest tests/test_gold_weather.py -q`
-Expected: `27 passed`
+Expected: `28 passed`
 
 Run: `python -m pytest -q`
-Expected: `587 passed, 3 deselected`
+Expected: `588 passed, 3 deselected`
 
 - [ ] **Step 5: 커밋**
 
@@ -676,7 +687,7 @@ def _one() -> dict:
 - [ ] **Step 2: 돌려서 실패를 보기**
 
 Run: `python -m pytest tests/test_gold_weather.py -q`
-Expected: `9 failed, 27 passed`, `AttributeError: module 'reasonlineage.gold.weather' has no attribute 'build'`
+Expected: `9 failed, 28 passed`, `AttributeError: module 'reasonlineage.gold.weather' has no attribute 'build'`
 
 - [ ] **Step 3: 과제와 파일 쓰기**
 
@@ -755,10 +766,10 @@ def triples_of(gold_dir: str | Path) -> list[list[str]]:
 - [ ] **Step 4: 돌려서 통과를 보기**
 
 Run: `python -m pytest tests/test_gold_weather.py -q`
-Expected: `36 passed`
+Expected: `37 passed`
 
 Run: `python -m pytest -q`
-Expected: `596 passed, 3 deselected`
+Expected: `597 passed, 3 deselected`
 
 - [ ] **Step 5: 커밋**
 
@@ -1009,7 +1020,7 @@ Run: `python -m pytest tests/test_build_weather_script.py -q`
 Expected: `9 passed`
 
 Run: `python -m pytest -q`
-Expected: `605 passed, 3 deselected`
+Expected: `606 passed, 3 deselected`
 
 - [ ] **Step 5: 커밋**
 

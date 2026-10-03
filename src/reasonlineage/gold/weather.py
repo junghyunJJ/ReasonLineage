@@ -22,7 +22,8 @@ class SourceError(RuntimeError):
 
 API = ("https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/"
        "{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000")
-STATE_IDS = range(1, 51)  # NCEI's statewide numbers, alphabetical
+STATE_IDS = range(1, 49)  # NCEI's statewide numbers: 1 Alabama to 48 Wyoming, alphabetical.
+# 49 is unused, and 50 (Alaska) and 51 (Hawaii) report a shorter base period than the 1901-2000 normal.
 MONTHS = (7, 8)
 MONTH_NAMES = {7: "July", 8: "August"}
 MEASURES = ("tavg", "pcp")

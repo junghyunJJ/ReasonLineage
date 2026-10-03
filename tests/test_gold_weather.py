@@ -58,6 +58,15 @@ def test_reading_skips_a_month_with_no_departure():
     assert w.reading(reply("Ohio", 7, "pcp", None), 7) is None
 
 
+def test_the_state_ids_are_the_48_contiguous_states():
+    """NCEI's numbering runs 1 (Alabama) to 48 (Wyoming); 49 is unused, and 50 (Alaska) and 51 (Hawaii)
+    have a shorter base period than the 1901-2000 normal the question names."""
+    ids = tuple(w.STATE_IDS)
+    assert len(ids) == len(w.REGION_OF) == 48
+    assert ids[0] == 1 and ids[-1] == 48
+    assert 49 not in ids and 50 not in ids and 51 not in ids
+
+
 def test_fetch_pool_keeps_the_contiguous_states_with_a_departure(tmp_path):
     get, asked = fake_get(missing=(3,))
     found = w.fetch_pool(tmp_path, get, state_ids=(1, 2, 3, 4, 50))
