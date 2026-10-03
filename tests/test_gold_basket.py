@@ -1,9 +1,13 @@
 """The generated shopping-basket gold set (basket design 4): prices, misreadings, bands and files."""
 
+import json
 import random
+from collections import Counter
 
 import pytest
 
+from reasonlineage.diagnose.gold import correctness
+from reasonlineage.engine.config import load_task
 from reasonlineage.gold import basket as bk
 
 BASKET = {"milk": 3, "eggs": 2, "coffee": 1}
@@ -238,3 +242,75 @@ def test_a_store_never_measures_its_threshold_at_a_step_it_does_not_have():
             delivery = next(rule for rule in store_["rules"] if rule["kind"] == "delivery")
             assert delivery["measured"] != "after_coupon" or "coupon" in kinds
             assert delivery["measured"] != "after_discount" or "percent" in kinds
+
+
+# --- 4.4 the task and the files ---
+
+def test_a_band_that_cannot_be_filled_stops_with_the_count(monkeypatch):
+    monkeypatch.setattr(bk, "MAX_TRIES", 3)
+    monkeypatch.setattr(bk, "draw", lambda *args: None)
+    with pytest.raises(bk.BasketError, match="basket-test-01: no basket in band 'hard' after 3 draws"):
+        bk.make_task("basket-test", 0, "hard", "A")
+
+def test_a_task_reads_as_a_shopping_question_and_hides_the_answer():
+    made = bk.make_task("basket-test", 0, "medium", "B")
+    task, record = made["task"], made["record"]
+    assert task["id"] == "basket-test-01" and task["candidates"] == ["Store A", "Store B", "Store C"]
+    assert (task["category"], task["data_sensitivity"]) == ("analytical", "public")
+    assert made["gold"] == {"approved": ["Store B"], "failed": ["Store A", "Store C"]}
+    question = task["question"]
+    assert "You have no tools" in question and "Shopping list:" in question
+    assert all(f"Store {letter}\n  unit prices (won):" in question for letter in bk.STORES)
+    totals = {bk.won(s["receipt"]["total"]) for s in record["stores"]}  # no receipt leaks into the question
+    assert not any(total in question for total in totals)
+    assert record["winner"] == "Store B" and sorted(record["letters"]) == list(bk.STORES)
+    cheapest = next(s for s in record["stores"] if s["letter"] == "B")
+    assert cheapest["receipt"]["total"] == min(s["receipt"]["total"] for s in record["stores"])
+
+
+def test_the_same_set_gives_the_same_task_and_another_set_a_different_one():
+    first = bk.make_task("basket-test", 1, "easy", "A")
+    assert first == bk.make_task("basket-test", 1, "easy", "A")
+    assert bk.make_task("basket-other", 1, "easy", "A")["task"]["question"] != first["task"]["question"]
+
+
+def test_build_writes_loadable_tasks_the_gold_file_and_the_receipts(tmp_path):
+    paths = bk.build("basket-test", "medium", 3, tmp_path / "tasks", tmp_path / "gold")
+    assert [p.name for p in paths] == [f"basket-test-0{i}.json" for i in (1, 2, 3)]
+    gold = json.loads((tmp_path / "gold" / "gold.json").read_text())
+    record = json.loads((tmp_path / "gold" / "generation.json").read_text())
+    assert gold["source"] == record["source"] == {"generator": "reasonlineage.gold.basket", "set": "basket-test",
+                                                 "band": "medium"}
+    for path in paths:
+        task = load_task(path)
+        truth = gold["tasks"][task.id]
+        assert set(task.candidates) == {*truth["approved"], *truth["failed"]}  # what score_run checks
+        assert correctness([*truth["approved"], *truth["failed"]], truth) == 1.0
+        assert record["tasks"][task.id]["winner"] == truth["approved"][0]
+
+
+def test_the_cheapest_store_is_spread_evenly_over_the_letters(tmp_path):
+    bk.build("basket-test", "easy", 9, tmp_path / "tasks", tmp_path / "gold")
+    gold = json.loads((tmp_path / "gold" / "gold.json").read_text())["tasks"]
+    counts = Counter(entry["approved"][0] for entry in gold.values())
+    assert set(counts) == {f"Store {letter}" for letter in bk.STORES} and max(counts.values()) == 3
+
+
+def test_building_the_same_set_again_gives_the_same_bytes(tmp_path):
+    bk.build("basket-test", "easy", 3, tmp_path / "tasks", tmp_path / "gold")
+    before = {p.name: p.read_bytes() for p in [*(tmp_path / "tasks").iterdir(), *(tmp_path / "gold").iterdir()]}
+    bk.build("basket-test", "easy", 3, tmp_path / "tasks", tmp_path / "gold")
+    assert {p.name: p.read_bytes() for p in [*(tmp_path / "tasks").iterdir(), *(tmp_path / "gold").iterdir()]} == before
+
+
+def test_build_refuses_files_it_does_not_make_and_writes_nothing(tmp_path):
+    (tmp_path / "tasks").mkdir()
+    (tmp_path / "tasks" / "basket-test-09.json").write_text("{}")
+    with pytest.raises(bk.BasketError, match="basket-test-09.json is not built by this set"):
+        bk.build("basket-test", "easy", 2, tmp_path / "tasks", tmp_path / "gold")
+    assert not (tmp_path / "gold").exists()
+
+
+def test_build_refuses_an_unknown_band(tmp_path):
+    with pytest.raises(bk.BasketError, match="unknown band 'cheap'"):
+        bk.build("basket-test", "cheap", 2, tmp_path / "tasks", tmp_path / "gold")

@@ -239,3 +239,85 @@ def draw(band: str, rng: random.Random) -> dict[str, Any] | None:
         return None
     return {"basket": dict(basket), "stores": stores, "receipts": receipts, "margin": gap, "flipping": flips,
             "winner": totals.index(min(totals))}
+
+
+# --- 4.4 the task and the files ---
+
+def render_rule(rule: Mapping[str, Any]) -> str:
+    if rule["kind"] == "bundle":
+        offer = "3 for the price of 2" if rule["group"] == 3 else "2 for the price of 1"
+        return f"{rule['item']}: {offer}"
+    if rule["kind"] == "coupon":
+        return (f"if the {rule['category']} items come to {won(rule['threshold'])} won or more, "
+                f"take {won(rule['amount'])} won off the order")
+    if rule["kind"] == "percent":
+        if rule["threshold"] is None:
+            return f"{rule['rate']}% off the order, with no condition"
+        return f"if the order comes to {won(rule['threshold'])} won or more, {rule['rate']}% off the order"
+    when = {"before": "the goods total before any discount",
+            "after_coupon": "the amount after the coupon",
+            "after_discount": "the amount after all discounts"}[rule["measured"]]
+    return (f"delivery {won(rule['fee'])} won, free when {when} is {won(rule['free_at'])} won or more")
+
+
+def question(drawn: Mapping[str, Any], letters: Sequence[str]) -> str:
+    items = ", ".join(f"{item} x{quantity}" for item, quantity in drawn["basket"].items())
+    blocks = []
+    for letter, store in zip(letters, drawn["stores"]):
+        prices = ", ".join(f"{item} {won(store['prices'][item])}" for item in drawn["basket"])
+        rules = "\n".join(f"  - {render_rule(rule)}" for rule in store["rules"])
+        blocks.append(f"Store {letter}\n  unit prices (won): {prices}\n{rules}")
+    return QUESTION.format(list=items, stores="\n\n".join(blocks) + "\n")
+
+
+def make_task(set_name: str, index: int, band: str, letter: str) -> dict[str, Any]:
+    """Task `index` of the set: its task file body, gold entry and receipt record."""
+    task_id = f"{set_name}-{index + 1:02d}"
+    rng = _rng(set_name, index)
+    for tries in range(1, MAX_TRIES + 1):
+        drawn = draw(band, rng)
+        if drawn is not None:
+            break
+    else:
+        raise BasketError(f"{task_id}: no basket in band {band!r} after {MAX_TRIES} draws")
+    # The cheapest store takes `letter`; the other two take the remaining letters in a fixed order.
+    others = shuffled([x for x in STORES if x != letter], task_id)
+    letters = [None, None, None]
+    letters[drawn["winner"]] = letter
+    for i in (i for i in range(3) if i != drawn["winner"]):
+        letters[i] = others.pop(0)
+    body = {"id": task_id, "question": question(drawn, letters), "candidates": [f"Store {x}" for x in STORES],
+            "category": "analytical", "data_sensitivity": "public"}
+    gold = {"approved": [f"Store {letter}"], "failed": sorted(f"Store {x}" for x in STORES if x != letter)}
+    record = {"band": band, "letters": letters, "winner": f"Store {letter}", "margin": round(drawn["margin"], 5),
+              "flipping": drawn["flipping"], "tries": tries, "basket": drawn["basket"],
+              "stores": [{"letter": x, "prices": s["prices"], "rules": s["rules"], "receipt": r}
+                         for x, s, r in zip(letters, drawn["stores"], drawn["receipts"])]}
+    return {"task": body, "gold": gold, "record": record}
+
+
+def build(set_name: str, band: str, count: int, tasks_dir: str | Path, gold_dir: str | Path) -> list[Path]:
+    """Write `count` task files, gold.json and generation.json; nothing is written if a task cannot be made."""
+    if band not in BANDS:
+        raise BasketError(f"unknown band {band!r}; use one of {sorted(BANDS)}")
+    tasks_dir, gold_dir = Path(tasks_dir), Path(gold_dir)
+    ids = [f"{set_name}-{i + 1:02d}" for i in range(count)]
+    stale = [f"{path} is not built by this set; delete it, then build again"
+             for path in sorted(tasks_dir.glob("*.json")) if path.stem not in ids]
+    if stale:
+        raise BasketError("; ".join(stale))
+    # The cheapest store's letter is spread evenly over the set, in an order fixed by the set name.
+    letters = shuffled([STORES[i % len(STORES)] for i in range(count)], f"{set_name}:letters")
+    made = [make_task(set_name, i, band, letter) for i, letter in enumerate(letters)]
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    gold_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    for task in made:
+        path = tasks_dir / f"{task['task']['id']}.json"
+        path.write_text(json.dumps(task["task"], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+    source = {"generator": "reasonlineage.gold.basket", "set": set_name, "band": band}
+    for name, body in (("gold.json", {"source": source, "tasks": {t["task"]["id"]: t["gold"] for t in made}}),
+                       ("generation.json", {"source": source, "tasks": {t["task"]["id"]: t["record"] for t in made}})):
+        (gold_dir / name).write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return written
