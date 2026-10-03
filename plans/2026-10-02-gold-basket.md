@@ -83,8 +83,14 @@
 ```python
 """The generated shopping-basket gold set (basket design 4): prices, misreadings, bands and files."""
 
+import json
+import random
+from collections import Counter
+
 import pytest
 
+from reasonlineage.diagnose.gold import correctness
+from reasonlineage.engine.config import load_task
 from reasonlineage.gold import basket as bk
 
 BASKET = {"milk": 3, "eggs": 2, "coffee": 1}
@@ -154,7 +160,7 @@ def test_every_step_is_floored_to_whole_won():
                              {"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"}),
                        {"milk": 1}, )
     assert receipt["after_discount"] == 2000 - 60 == 1940
-
+```
 
 - [ ] **Step 2: 테스트가 실패하는지 확인**
 
