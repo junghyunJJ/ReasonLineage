@@ -42,8 +42,7 @@ def cmd_fetch(args: argparse.Namespace) -> int:
     args.full.parent.mkdir(parents=True, exist_ok=True)
     args.full.write_bytes(data)
     write_json(args.index, {"api": wx.API, "months": list(wx.MONTHS), "measures": list(wx.MEASURES),
-                            "full_pool": str(args.full), "sha256": hashlib.sha256(data).hexdigest(),
-                            "readings": pool})
+                            "sha256": hashlib.sha256(data).hexdigest(), "readings": pool})
     print("; ".join(f"{key} {len(values)} states" for key, values in sorted(pool.items())))
     return 0
 
@@ -51,9 +50,13 @@ def cmd_fetch(args: argparse.Namespace) -> int:
 def cmd_build(args: argparse.Namespace) -> int:
     try:
         index = read_json(args.index)
-        pool = wx.load_pool(index["full_pool"], index["sha256"])
-    except (OSError, KeyError, wx.SourceError) as exc:
-        print(f"cannot read the pool ({exc}); run `fetch` first", file=sys.stderr)
+    except OSError as exc:
+        print(f"cannot read {args.index} ({exc}); run `fetch` first", file=sys.stderr)
+        return 1
+    try:
+        pool = wx.load_index(index)
+    except (KeyError, wx.SourceError) as exc:
+        print(f"cannot read the readings in {args.index}: {exc}", file=sys.stderr)
         return 1
     exclude = [triple for other in args.exclude_set for triple in wx.triples_of(args.gold_root / other)]
     source = {"api": index["api"], "months": index["months"], "measures": index["measures"],

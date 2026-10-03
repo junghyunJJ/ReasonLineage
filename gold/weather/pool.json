@@ -8,7 +8,6 @@
   "tavg",
   "pcp"
  ],
- "full_pool": "/home/jungj2/.cache/reasonlineage/weather/pool.json",
  "sha256": "0843cbd9a5f6e302ec401fc64ade67fe4f48c9136ece60578d90d2643447a41f",
  "readings": {
   "7:tavg": {

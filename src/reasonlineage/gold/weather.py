@@ -51,9 +51,11 @@ BAND_NAMES = ("easy", "medium", "hard")
 MAX_PER_STATE = 3  # how often one state may appear in a set
 MEASURE_WORDS = {"tavg": "average temperature was furthest above",
                  "pcp": "precipitation was furthest above"}
+UNITS = {"tavg": "degrees Fahrenheit", "pcp": "inches"}  # the departure's unit, stated in the question
 QUESTION = (
     "In {month} 2026, how did each of these three states compare with its own long-term normal? The normal is "
-    "that state's 1901-2000 average for the same month. You have no tools and no web access: reason from what "
+    "that state's 1901-2000 average for the same month. Compare the departure from that normal in {unit} - the "
+    "difference, not the percentage of normal. You have no tools and no web access: reason from what "
     "you know about regional climate and the patterns of that summer.\n\n"
     "Candidates: {candidates}\n\n"
     "Which state's {month} 2026 {measure} its 1901-2000 normal? Rank the three, and give the reasoning that "
@@ -129,6 +131,19 @@ def load_pool(path: str | Path, sha256: str) -> dict[str, dict[str, float]]:
     return json.loads(data)
 
 
+def load_index(index: Mapping[str, Any]) -> dict[str, dict[str, float]]:
+    """The readings the index records, checked against its own sha256.
+
+    The index is committed, so a checkout with no cache rebuilds the same set from it (success criterion 1).
+    """
+    readings = index["readings"]
+    digest = hashlib.sha256(pool_bytes(readings)).hexdigest()
+    if digest != index["sha256"]:
+        raise SourceError(f"the index's readings have sha256 {digest}, not the recorded {index['sha256']}; "
+                          f"run `fetch` again")
+    return readings
+
+
 # --- 4.3 choosing the triples ---
 
 def margin(triple: Sequence[str], values: Mapping[str, float]) -> float:
@@ -144,6 +159,8 @@ def usable(triple: Sequence[str], values: Mapping[str, float], band: tuple[float
     first, second, third = sorted((values[state] for state in triple), reverse=True)
     if first == second or second == third:
         return False
+    if first <= 0:
+        return False  # the question asks which state was furthest above its normal, so one state must be
     low, high = band
     return low <= margin(triple, values) < high
 
@@ -192,7 +209,7 @@ def choose(set_name: str, pool: Mapping[str, Mapping[str, float]], band: str, co
 
 def question(task: Mapping[str, Any], order: Sequence[str]) -> str:
     return QUESTION.format(month=MONTH_NAMES[task["month"]], candidates=", ".join(order),
-                           measure=MEASURE_WORDS[task["measure"]])
+                           measure=MEASURE_WORDS[task["measure"]], unit=UNITS[task["measure"]])
 
 
 def make_task(set_name: str, index: int, chosen: Mapping[str, Any]) -> dict[str, Any]:
@@ -220,12 +237,21 @@ def build(set_name: str, band: str, count: int, pool: Mapping[str, Mapping[str, 
     if stale:
         raise SourceError("; ".join(stale))
     made = [make_task(set_name, i, chosen) for i, chosen in enumerate(choose(set_name, pool, band, count, exclude))]
+    bodies = {task["task"]["id"]: json.dumps(task["task"], ensure_ascii=False, indent=2) + "\n" for task in made}
+    # A finished run is scored against gold.json, so a task that moved under its own id would score old answers
+    # against new truth. Changing a built task means a new set name.
+    moved = [f"{tasks_dir / name}.json is already built and this build would change it; use another set name"
+             for name, body in bodies.items()
+             if (tasks_dir / f"{name}.json").exists()
+             and (tasks_dir / f"{name}.json").read_text(encoding="utf-8") != body]
+    if moved:
+        raise SourceError("; ".join(moved))
     tasks_dir.mkdir(parents=True, exist_ok=True)
     gold_dir.mkdir(parents=True, exist_ok=True)
     written = []
     for task in made:
         path = tasks_dir / f"{task['task']['id']}.json"
-        path.write_text(json.dumps(task["task"], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        path.write_text(bodies[task["task"]["id"]], encoding="utf-8")
         written.append(path)
     head = dict(source) | {"set": set_name, "band": band}
     for name, body in (("gold.json", {"source": head, "tasks": {t["task"]["id"]: t["gold"] for t in made}}),

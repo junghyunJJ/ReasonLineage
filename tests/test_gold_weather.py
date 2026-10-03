@@ -3,6 +3,7 @@
 No test calls NCEI or a model. The replies are the shape of a real one, saved from Alabama's August 2026 reading.
 """
 
+import hashlib
 import json
 
 import pytest
@@ -122,6 +123,17 @@ def test_load_pool_refuses_a_file_that_changed(tmp_path):
     assert "fetch" in str(exc.value)
 
 
+def test_load_index_reads_the_committed_readings(tmp_path):
+    """The index in the repository is the set's source of truth: a checkout with no cache rebuilds from it."""
+    readings = pool()
+    index = {"sha256": hashlib.sha256(w.pool_bytes(readings)).hexdigest(), "readings": readings}
+    assert w.load_index(index) == readings
+    index["readings"]["7:tavg"]["Alabama"] = 9.9
+    with pytest.raises(w.SourceError) as exc:
+        w.load_index(index)
+    assert "fetch" in str(exc.value)
+
+
 # --- 4.2 the regions ---
 
 def test_the_regions_hold_the_48_contiguous_states_once_each():
@@ -159,10 +171,35 @@ def test_a_gap_falls_in_one_band_only(measure, gap, band):
     assert held == ([band] if band else [])
 
 
+def test_usable_refuses_a_triple_with_no_state_above_its_normal():
+    """The question asks which state was furthest *above* normal, so one state must be."""
+    dry = {"Oregon": -0.15, "Texas": -0.98, "Maine": -1.78}
+    assert not w.usable(("Oregon", "Texas", "Maine"), dry, w.BANDS["pcp"]["medium"])
+    at_normal = {"Oregon": 0.0, "Texas": -1.13, "Maine": -0.81}
+    assert not w.usable(("Oregon", "Texas", "Maine"), at_normal, w.BANDS["pcp"]["medium"])
+    above = {"Oregon": 0.1, "Texas": -1.03, "Maine": -0.81}
+    assert w.usable(("Oregon", "Texas", "Maine"), above, w.BANDS["pcp"]["medium"])
+
+
 def test_choose_alternates_the_measure_and_the_month():
     chosen = w.choose("weather-v1", _wide_pool(), "hard", 8)
     assert [(c["measure"], c["month"]) for c in chosen] == [
         ("tavg", 7), ("pcp", 7), ("tavg", 8), ("pcp", 8)] * 2
+
+
+def test_the_values_come_from_the_month_and_measure_the_task_names():
+    """The month and measure labels are not enough: a task that read August's bucket but says July would
+    publish a wrong answer, and every other test would still pass."""
+    pool = _wide_pool()
+    for chosen in w.choose("weather-v1", pool, "medium", 8):
+        bucket = pool[f"{chosen['month']}:{chosen['measure']}"]
+        assert chosen["departures"] == {state: bucket[state] for state in chosen["states"]}
+        assert chosen["margin"] == w.margin(chosen["states"], bucket)
+        made = w.make_task("weather-v1", 0, chosen)
+        winner = max(chosen["states"], key=lambda state: bucket[state])
+        assert made["gold"]["approved"] == [winner]
+        assert w.MONTH_NAMES[chosen["month"]] in made["task"]["question"]
+        assert w.UNITS[chosen["measure"]] in made["task"]["question"]
 
 
 def test_choose_keeps_every_state_under_the_reuse_cap():
@@ -202,6 +239,14 @@ def test_the_question_states_the_normal_and_asks_for_the_departure():
     assert "1901-2000" in text and "furthest above" in text
     assert "July 2026" in text
     assert sorted(made["task"]["candidates"]) == ["California", "Maine", "Texas"]
+
+
+def test_the_question_names_the_unit_and_the_convention():
+    """A departure in inches and a departure as a percentage of normal can name different winners."""
+    warm = w.make_task("weather-v1", 0, _one())["task"]["question"]
+    assert "degrees Fahrenheit" in warm and "not the percentage of normal" in warm
+    wet = w.make_task("weather-v1", 0, dict(_one(), measure="pcp"))["task"]["question"]
+    assert "inches" in wet and "not the percentage of normal" in wet
 
 
 def test_the_question_leaks_no_departure_figure():
@@ -261,6 +306,24 @@ def test_build_stops_when_the_task_folder_holds_a_file_it_does_not_build(tmp_pat
         w.build("weather-v1", "easy", 4, _wide_pool(), {}, tasks, tmp_path / "gold")
     assert "weather-v1-09.json" in str(exc.value)
     assert not (tmp_path / "gold").exists()
+
+
+def test_build_stops_when_a_task_it_builds_would_change(tmp_path):
+    """A finished run is scored against gold.json, so a rebuild that moves a task under its own id would
+    score yesterday's answers against today's truth."""
+    tasks, gold = tmp_path / "tasks", tmp_path / "gold"
+    w.build("weather-v1", "easy", 2, _wide_pool(), {}, tasks, gold)
+    kept = (tasks / "weather-v1-01.json").read_text(encoding="utf-8")
+    with pytest.raises(w.SourceError) as exc:
+        w.build("weather-v1", "medium", 2, _wide_pool(), {}, tasks, gold)
+    assert "weather-v1-01.json" in str(exc.value) and "already built" in str(exc.value)
+    assert (tasks / "weather-v1-01.json").read_text(encoding="utf-8") == kept
+
+
+def test_build_writes_the_same_set_again_without_complaining(tmp_path):
+    tasks, gold = tmp_path / "tasks", tmp_path / "gold"
+    w.build("weather-v1", "easy", 2, _wide_pool(), {}, tasks, gold)
+    assert len(w.build("weather-v1", "easy", 4, _wide_pool(), {}, tasks, gold)) == 4  # 01-02 unchanged, 03-04 new
 
 
 def test_build_refuses_an_unknown_band(tmp_path):

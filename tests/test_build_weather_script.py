@@ -20,18 +20,15 @@ def run(*args):
 
 
 def write_pool(tmp_path: Path) -> Path:
-    """A saved pool and the index that points at it, as `fetch` leaves them."""
+    """The committed index, as `fetch` leaves it. No cache file: a fresh checkout has none."""
     states = sorted(wx.REGION_OF)
     pool = {}
     for shift, key in enumerate(("7:tavg", "7:pcp", "8:tavg", "8:pcp")):
         order = states[shift:] + states[:shift]
         pool[key] = {state: round(0.5 * i + 0.1 * (i % 4), 1) for i, state in enumerate(order)}
-    data = wx.pool_bytes(pool)
-    full = tmp_path / "pool-full.json"
-    full.write_bytes(data)
     index = tmp_path / "index.json"
     index.write_text(json.dumps({"api": wx.API, "months": list(wx.MONTHS), "measures": list(wx.MEASURES),
-                                 "full_pool": str(full), "sha256": hashlib.sha256(data).hexdigest(),
+                                 "sha256": hashlib.sha256(wx.pool_bytes(pool)).hexdigest(),
                                  "readings": pool}), encoding="utf-8")
     return index
 
@@ -66,12 +63,15 @@ def test_a_missing_pool_says_to_fetch_first(tmp_path):
     assert not (tmp_path / "tasks").exists()
 
 
-def test_a_changed_pool_file_says_to_fetch_again(tmp_path):
+def test_changed_readings_say_to_fetch_again(tmp_path):
     index = write_pool(tmp_path)
-    (tmp_path / "pool-full.json").write_bytes(b'{"7:tavg": {}}\n')
+    body = json.loads(index.read_text(encoding="utf-8"))
+    body["readings"]["7:tavg"]["Alabama"] = 9.9
+    index.write_text(json.dumps(body), encoding="utf-8")
     result = run("--index", index, "--gold-root", tmp_path / "gold", "--tasks-root", tmp_path / "tasks",
                  "build", "weather-test", "--band", "easy", "--tasks", 2)
     assert result.returncode == 1 and "run `fetch` again" in result.stderr
+    assert not (tmp_path / "tasks").exists()
 
 
 @pytest.mark.parametrize("args, message", [
