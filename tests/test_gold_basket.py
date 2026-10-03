@@ -152,3 +152,56 @@ def test_every_step_is_floored_to_whole_won():
                              {"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"}),
                        {"milk": 1}, )
     assert receipt["after_discount"] == 2000 - 60 == 1940
+
+
+# --- 4.3 the misreadings ---
+
+MISREAD_RULES = (
+    {"kind": "bundle", "item": "milk", "group": 3},
+    {"kind": "coupon", "category": "dairy", "threshold": 18000, "amount": 4000},
+    {"kind": "percent", "rate": 10, "threshold": None},
+    {"kind": "delivery", "fee": 3000, "free_at": 26000, "measured": "before"},
+)
+
+
+@pytest.mark.parametrize("misreading, total", [
+    (None, 21600),  # goods 28000 -> coupon 24000 -> 10% off 21600, delivery free (28000 >= 26000)
+    ("delivery_after_discount", 24600),  # 21600 < 26000, so the fee is charged
+    ("delivery_before", 21600),  # already measured there
+    ("percent_before_coupon", 21200),  # 10% off 28000 = 25200, then -4000
+    ("bundle_as_percent", 21600),  # milk line 4000 either way for 3 units
+    ("no_delivery", 21600),
+    ("percent_on_delivery", 21600),  # delivery is free here, so there is nothing to discount
+])
+def test_each_misreading_changes_the_total_the_way_it_says(misreading, total):
+    assert bk.price(store(*MISREAD_RULES), BASKET, misreading)["total"] == total
+
+
+def test_a_misreading_can_charge_the_discount_on_delivery():
+    rules = (*MISREAD_RULES[:3], {"kind": "delivery", "fee": 5000, "free_at": 10 ** 9, "measured": "before"})
+    plain = bk.price(store(*rules), BASKET)
+    assert plain["total"] == 21600 + 5000
+    assert bk.price(store(*rules), BASKET, "percent_on_delivery")["total"] == (24000 + 5000) * 90 // 100
+
+
+def test_treating_a_bundle_as_a_percentage_differs_when_the_quantity_is_not_a_full_group():
+    basket = {"milk": 4}
+    rules = (({"kind": "bundle", "item": "milk", "group": 3}),
+             {"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"})
+    assert bk.price(store(*rules), basket)["goods"] == 3 * 2000
+    assert bk.price(store(*rules), basket, "bundle_as_percent")["goods"] == 8000 * 2 // 3
+
+
+def test_the_flipping_misreadings_are_the_ones_that_change_the_winner():
+    # The cheapest store's fee is free on the goods total (30,000) but not on the discounted amount (27,000).
+    cheap = store({"kind": "percent", "rate": 10, "threshold": None},
+                  {"kind": "delivery", "fee": 9000, "free_at": 28000, "measured": "before"})
+    dear = store({"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"},
+                 prices={"milk": 2100, "eggs": 7000, "coffee": 10000})
+    third = store({"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"},
+                  prices={"milk": 3000, "eggs": 9000, "coffee": 12000})
+    stores = [cheap, dear, third]
+    assert bk.winner(stores, BASKET) == 0 and bk.winner(stores, BASKET, "percent_on_delivery") == 0
+    assert bk.winner(stores, BASKET, "no_delivery") == 0
+    assert "delivery_after_discount" in bk.flipping(stores, BASKET)  # the fee returns and store B wins
+    assert bk.margin(stores, BASKET) == pytest.approx((30300 - 27000) / 27000)

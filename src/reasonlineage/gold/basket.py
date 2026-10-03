@@ -120,3 +120,32 @@ def price(store: Mapping[str, Any], basket: Mapping[str, int], misreading: str |
 
 def category_of(item: str) -> str:
     return next(category for name, category, _ in ITEMS if name == item)
+
+
+# --- 4.3 the misreadings ---
+
+MISREADINGS: tuple[tuple[str, str], ...] = (
+    ("delivery_after_discount", "reads every free-delivery threshold as measured after the discounts"),
+    ("delivery_before", "reads every free-delivery threshold as measured on the goods total"),
+    ("percent_before_coupon", "applies the percentage discount before the coupon"),
+    ("bundle_as_percent", "treats 3-for-2 as a third off the line instead of one free unit"),
+    ("no_delivery", "leaves the delivery fee out"),
+    ("percent_on_delivery", "applies the percentage discount to the delivery fee too"),
+)
+
+
+def winner(stores: Sequence[Mapping[str, Any]], basket: Mapping[str, int], misreading: str | None = None) -> int:
+    totals = [price(store, basket, misreading)["total"] for store in stores]
+    return totals.index(min(totals))
+
+
+def flipping(stores: Sequence[Mapping[str, Any]], basket: Mapping[str, int]) -> list[str]:
+    """The misreadings that change which store wins."""
+    true_winner = winner(stores, basket)
+    return [name for name, _ in MISREADINGS if winner(stores, basket, name) != true_winner]
+
+
+def margin(stores: Sequence[Mapping[str, Any]], basket: Mapping[str, int]) -> float:
+    """How much more the second-cheapest store charges, as a share of the cheapest."""
+    first, second, _ = sorted(price(store, basket)["total"] for store in stores)
+    return (second - first) / first
