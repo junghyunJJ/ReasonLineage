@@ -48,6 +48,17 @@ BANDS: dict[str, dict[str, tuple[float, float]]] = {
 }
 BAND_NAMES = ("easy", "medium", "hard")
 MAX_PER_STATE = 3  # how often one state may appear in a set
+MEASURE_WORDS = {"tavg": "average temperature was furthest above",
+                 "pcp": "precipitation was furthest above"}
+QUESTION = (
+    "In {month} 2026, how did each of these three states compare with its own long-term normal? The normal is "
+    "that state's 1901-2000 average for the same month. You have no tools and no web access: reason from what "
+    "you know about regional climate and the patterns of that summer.\n\n"
+    "Candidates: {candidates}\n\n"
+    "Which state's {month} 2026 {measure} its 1901-2000 normal? Rank the three, and give the reasoning that "
+    "decides the order, the key evidence, and one observation that would confirm your top pick.")
+
+
 # --- 4.1 the pool ---
 
 def _get(url: str, tries: int = 4, wait_s: float = 5.0) -> dict[str, Any]:
@@ -174,3 +185,58 @@ def choose(set_name: str, pool: Mapping[str, Mapping[str, float]], band: str, co
             raise SourceError(f"{set_name}: only {len(chosen)} of {count} tasks could be built; {key} band "
                               f"{band!r} ran out of triples (a state may appear at most {MAX_PER_STATE} times)")
     return chosen
+
+
+# --- 4.4 the task and the files ---
+
+def question(task: Mapping[str, Any], order: Sequence[str]) -> str:
+    return QUESTION.format(month=MONTH_NAMES[task["month"]], candidates=", ".join(order),
+                           measure=MEASURE_WORDS[task["measure"]])
+
+
+def make_task(set_name: str, index: int, chosen: Mapping[str, Any]) -> dict[str, Any]:
+    """One task's file body, gold entry and record."""
+    task_id = f"{set_name}-{index + 1:02d}"
+    order = shuffled(list(chosen["states"]), task_id)
+    winner = max(chosen["states"], key=lambda state: chosen["departures"][state])
+    body = {"id": task_id, "question": question(chosen, order), "candidates": order,
+            "category": "analytical", "data_sensitivity": "public"}
+    gold = {"approved": [winner], "failed": sorted(state for state in chosen["states"] if state != winner)}
+    record = {"month": chosen["month"], "measure": chosen["measure"], "departures": chosen["departures"],
+              "regions": chosen["regions"], "margin": chosen["margin"], "winner": winner}
+    return {"task": body, "gold": gold, "record": record}
+
+
+def build(set_name: str, band: str, count: int, pool: Mapping[str, Mapping[str, float]], source: Mapping[str, Any],
+          tasks_dir: str | Path, gold_dir: str | Path, exclude: Sequence[Sequence[str]] = ()) -> list[Path]:
+    """Write the task files, gold.json and generation.json; nothing is written if a band runs out."""
+    if band not in BAND_NAMES:
+        raise SourceError(f"unknown band {band!r}; use one of {', '.join(BAND_NAMES)}")
+    tasks_dir, gold_dir = Path(tasks_dir), Path(gold_dir)
+    ids = [f"{set_name}-{i + 1:02d}" for i in range(count)]
+    stale = [f"{path} is not built by this set; delete it, then build again"
+             for path in sorted(tasks_dir.glob("*.json")) if path.stem not in ids]
+    if stale:
+        raise SourceError("; ".join(stale))
+    made = [make_task(set_name, i, chosen) for i, chosen in enumerate(choose(set_name, pool, band, count, exclude))]
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    gold_dir.mkdir(parents=True, exist_ok=True)
+    written = []
+    for task in made:
+        path = tasks_dir / f"{task['task']['id']}.json"
+        path.write_text(json.dumps(task["task"], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+    head = dict(source) | {"set": set_name, "band": band}
+    for name, body in (("gold.json", {"source": head, "tasks": {t["task"]["id"]: t["gold"] for t in made}}),
+                       ("generation.json", {"source": head, "tasks": {t["task"]["id"]: t["record"] for t in made}})):
+        (gold_dir / name).write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return written
+
+
+def triples_of(gold_dir: str | Path) -> list[list[str]]:
+    """The triples a built set used, for the next set to exclude."""
+    path = Path(gold_dir) / "generation.json"
+    if not path.exists():
+        return []
+    record = json.loads(path.read_text(encoding="utf-8"))
+    return [sorted(task["departures"]) for task in record["tasks"].values()]

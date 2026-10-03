@@ -3,8 +3,11 @@
 No test calls NCEI or a model. The replies are the shape of a real one, saved from Alabama's August 2026 reading.
 """
 
+import json
+
 import pytest
 
+from reasonlineage.engine.config import load_task
 from reasonlineage.gold import weather as w
 
 # ids 1-4 of NCEI's alphabetical statewide numbering, plus Alaska, which no climate region holds.
@@ -182,6 +185,88 @@ def test_choose_reports_a_pool_without_the_bucket():
     assert "8:pcp" in str(exc.value)
 
 
+# --- 4.4 the task and the files ---
+
+def test_the_question_states_the_normal_and_asks_for_the_departure():
+    made = w.make_task("weather-v1", 0, _one())
+    text = made["task"]["question"]
+    assert "1901-2000" in text and "furthest above" in text
+    assert "July 2026" in text
+    assert sorted(made["task"]["candidates"]) == ["California", "Maine", "Texas"]
+
+
+def test_the_question_leaks_no_departure_figure():
+    made = w.make_task("weather-v1", 0, _one())
+    text = made["task"]["question"]
+    for value in _one()["departures"].values():
+        assert str(value) not in text
+    assert "normal" in text and "Northwest" not in text  # the regions stay out of the task
+
+
+def test_the_gold_names_the_largest_departure():
+    made = w.make_task("weather-v1", 0, _one())
+    assert made["gold"] == {"approved": ["California"], "failed": ["Maine", "Texas"]}
+    assert made["record"]["margin"] == 2.0
+    assert made["record"]["regions"]["Maine"] == "Northeast"
+
+
+def test_build_writes_the_tasks_the_gold_and_the_record(tmp_path):
+    written = w.build("weather-v1", "easy", 4, _wide_pool(), {"api": w.API, "pool_sha256": "abc"},
+                      tmp_path / "tasks", tmp_path / "gold")
+    assert [path.name for path in written] == [f"weather-v1-0{i}.json" for i in range(1, 5)]
+    gold = json.loads((tmp_path / "gold" / "gold.json").read_text(encoding="utf-8"))
+    record = json.loads((tmp_path / "gold" / "generation.json").read_text(encoding="utf-8"))
+    assert gold["source"] == {"api": w.API, "pool_sha256": "abc", "set": "weather-v1", "band": "easy"}
+    assert sorted(gold["tasks"]) == sorted(record["tasks"]) == [f"weather-v1-0{i}" for i in range(1, 5)]
+    for task_id, truth in gold["tasks"].items():
+        assert len(truth["approved"]) == 1 and len(truth["failed"]) == 2
+        assert truth["approved"][0] == record["tasks"][task_id]["winner"]
+
+
+def test_a_built_task_loads_in_the_engine_with_the_gold_candidates(tmp_path):
+    w.build("weather-v1", "medium", 2, _wide_pool(), {}, tmp_path / "tasks", tmp_path / "gold")
+    gold = json.loads((tmp_path / "gold" / "gold.json").read_text(encoding="utf-8"))
+    for path in sorted((tmp_path / "tasks").glob("*.json")):
+        task = load_task(path)
+        truth = gold["tasks"][task.id]
+        assert set(task.candidates) == {*truth["approved"], *truth["failed"]}  # what score_run checks
+        assert task.category == "analytical"
+
+
+def test_the_same_set_name_builds_the_same_files_and_another_name_does_not(tmp_path):
+    w.build("weather-v1", "hard", 4, _wide_pool(), {}, tmp_path / "a", tmp_path / "ga")
+    w.build("weather-v1", "hard", 4, _wide_pool(), {}, tmp_path / "b", tmp_path / "gb")
+    w.build("weather-v2", "hard", 4, _wide_pool(), {}, tmp_path / "c", tmp_path / "gc")
+    first = [path.read_text(encoding="utf-8") for path in sorted((tmp_path / "a").glob("*.json"))]
+    same = [path.read_text(encoding="utf-8") for path in sorted((tmp_path / "b").glob("*.json"))]
+    other = [path.read_text(encoding="utf-8") for path in sorted((tmp_path / "c").glob("*.json"))]
+    assert first == same
+    assert first != other
+
+
+def test_build_stops_when_the_task_folder_holds_a_file_it_does_not_build(tmp_path):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    (tasks / "weather-v1-09.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(w.SourceError) as exc:
+        w.build("weather-v1", "easy", 4, _wide_pool(), {}, tasks, tmp_path / "gold")
+    assert "weather-v1-09.json" in str(exc.value)
+    assert not (tmp_path / "gold").exists()
+
+
+def test_build_refuses_an_unknown_band(tmp_path):
+    with pytest.raises(w.SourceError) as exc:
+        w.build("weather-v1", "medium-hard", 2, _wide_pool(), {}, tmp_path / "tasks", tmp_path / "gold")
+    assert "easy, medium, hard" in str(exc.value)
+
+
+def test_triples_of_reads_back_what_a_set_used(tmp_path):
+    w.build("weather-v1", "easy", 2, _wide_pool(), {}, tmp_path / "tasks", tmp_path / "gold")
+    used = w.triples_of(tmp_path / "gold")
+    assert len(used) == 2 and all(len(triple) == 3 for triple in used)
+    assert w.triples_of(tmp_path / "nothing") == []
+
+
 # --- fixtures ---
 
 def _wide_pool() -> dict[str, dict[str, float]]:
@@ -192,3 +277,9 @@ def _wide_pool() -> dict[str, dict[str, float]]:
         order = states[shift:] + states[:shift]
         built[key] = {state: round(0.5 * i + 0.1 * (i % 4), 1) for i, state in enumerate(order)}
     return built
+
+
+def _one() -> dict:
+    return {"month": 7, "measure": "tavg", "states": ["California", "Texas", "Maine"],
+            "departures": {"California": 5.3, "Texas": 3.3, "Maine": 1.1},
+            "regions": {"California": "West", "Texas": "South", "Maine": "Northeast"}, "margin": 2.0}
