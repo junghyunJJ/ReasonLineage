@@ -79,86 +79,6 @@ def test_every_step_is_floored_to_whole_won():
     assert receipt["after_discount"] == 2000 - 60 == 1940
 
 
-"""The generated shopping-basket gold set (basket design 4): prices, misreadings, bands and files."""
-
-import json
-import random
-from collections import Counter
-
-import pytest
-
-from reasonlineage.diagnose.gold import correctness
-from reasonlineage.engine.config import load_task
-from reasonlineage.gold import basket as bk
-
-BASKET = {"milk": 3, "eggs": 2, "coffee": 1}
-PRICES = {"milk": 2000, "eggs": 7000, "coffee": 10000}
-
-
-def store(*rules, prices=None):
-    return {"prices": dict(prices or PRICES), "rules": list(rules)}
-
-
-DELIVERY = {"kind": "delivery", "fee": 3000, "free_at": 100000, "measured": "before"}
-
-
-# --- 4.2 what a store charges ---
-
-@pytest.mark.parametrize("quantity, group, paid", [(3, 3, 2), (4, 3, 3), (6, 3, 4), (2, 2, 1), (3, 2, 2), (1, 3, 1)])
-def test_a_bundle_offer_pays_for_all_but_one_unit_of_each_group(quantity, group, paid):
-    assert bk.bundle_paid(quantity, group) == paid
-
-
-def test_the_plain_total_is_the_lines_plus_delivery():
-    receipt = bk.price(store(DELIVERY), BASKET)
-    assert receipt["goods"] == 3 * 2000 + 2 * 7000 + 10000 == 30000
-    assert receipt["delivery"] == 3000 and receipt["total"] == 33000
-
-
-def test_the_steps_run_bundle_then_coupon_then_percent_then_delivery():
-    receipt = bk.price(store({"kind": "bundle", "item": "milk", "group": 3},
-                             {"kind": "coupon", "category": "dairy", "threshold": 18000, "amount": 4000},
-                             {"kind": "percent", "rate": 10, "threshold": None}, DELIVERY), BASKET)
-    assert receipt["lines"]["milk"] == 4000  # 3 for the price of 2
-    assert receipt["goods"] == 4000 + 14000 + 10000 == 28000
-    assert receipt["after_coupon"] == 24000  # dairy lines 18000 >= 18000
-    assert receipt["after_discount"] == 21600  # 10% off, never on delivery
-    assert receipt["total"] == 24600
-
-
-def test_a_coupon_whose_category_falls_short_is_not_taken():
-    receipt = bk.price(store({"kind": "coupon", "category": "dairy", "threshold": 20001, "amount": 4000}, DELIVERY),
-                       BASKET)
-    assert receipt["after_coupon"] == receipt["goods"] == 30000
-
-
-def test_a_percentage_with_a_threshold_waits_for_it():
-    rule = {"kind": "percent", "rate": 5, "threshold": 30001}
-    assert bk.price(store(rule, DELIVERY), BASKET)["after_discount"] == 30000
-    rule = {"kind": "percent", "rate": 5, "threshold": 30000}
-    assert bk.price(store(rule, DELIVERY), BASKET)["after_discount"] == 28500
-
-
-@pytest.mark.parametrize("measured, free", [("before", True), ("after_coupon", True), ("after_discount", False)])
-def test_where_a_store_measures_its_free_delivery_threshold_decides_the_fee(measured, free):
-    rules = (
-        {"kind": "coupon", "category": "dairy", "threshold": 18000, "amount": 2000},
-        {"kind": "percent", "rate": 20, "threshold": None},
-        {"kind": "delivery", "fee": 3000, "free_at": 26000, "measured": measured},
-    )
-    receipt = bk.price(store(*rules), BASKET)
-    assert (receipt["goods"], receipt["after_coupon"], receipt["after_discount"]) == (30000, 28000, 22400)
-    assert receipt["delivery"] == (0 if free else 3000)
-
-
-def test_every_step_is_floored_to_whole_won():
-    receipt = bk.price(store({"kind": "percent", "rate": 7, "threshold": None}, DELIVERY), BASKET)
-    assert receipt["after_discount"] == 30000 - 2100 == 27900
-    receipt = bk.price(store({"kind": "percent", "rate": 3, "threshold": None},
-                             {"kind": "delivery", "fee": 0, "free_at": 10 ** 9, "measured": "before"}),
-                       {"milk": 1}, )
-    assert receipt["after_discount"] == 2000 - 60 == 1940
-
 
 # --- 4.3 the misreadings ---
 
@@ -314,3 +234,62 @@ def test_build_refuses_files_it_does_not_make_and_writes_nothing(tmp_path):
 def test_build_refuses_an_unknown_band(tmp_path):
     with pytest.raises(bk.BasketError, match="unknown band 'cheap'"):
         bk.build("basket-test", "cheap", 2, tmp_path / "tasks", tmp_path / "gold")
+
+
+# --- final review fixes (2026-10-02) ---
+
+def test_the_question_states_the_conventions_the_answer_depends_on():
+    # Without them the winner can turn on a convention the prompt never states, which the generator then selects
+    # for: percent-before-coupon alone decided 45% of the kept hard tasks (final review).
+    question = bk.make_task("basket-test", 0, "medium", "B")["task"]["question"]
+    for phrase in ("the bundle offers, then the category coupon, then the percentage discount, then delivery",
+                   "after the bundle offers", "checked on the amount after the coupon",
+                   "never applies to the delivery fee"):
+        assert phrase in question
+
+
+def test_the_question_lists_the_stores_in_letter_order():
+    question = bk.make_task("basket-test", 1, "medium", "C")["task"]["question"]
+    at = [question.index(f"Store {letter}\n  unit prices") for letter in bk.STORES]
+    assert at == sorted(at)
+
+
+def test_reading_the_percentage_first_also_moves_the_after_coupon_threshold():
+    # A reader who applies the percentage first reads "the amount after the coupon" as the amount after both.
+    rules = ({"kind": "coupon", "category": "dairy", "threshold": 18000, "amount": 2000},
+             {"kind": "percent", "rate": 20, "threshold": None},
+             {"kind": "delivery", "fee": 3000, "free_at": 23000, "measured": "after_coupon"})
+    assert bk.price(store(*rules), BASKET)["total"] == 22400  # 28000 >= 23000, so delivery is free
+    assert bk.price(store(*rules), BASKET, "percent_before_coupon")["total"] == 22000 + 3000
+
+
+def test_the_delivery_fee_never_opens_the_percentage_threshold():
+    rules = ({"kind": "percent", "rate": 10, "threshold": 31000},
+             {"kind": "delivery", "fee": 2000, "free_at": 10 ** 9, "measured": "before"})
+    assert bk.price(store(*rules), BASKET)["total"] == 32000  # 30000 < 31000, so no discount
+    assert bk.price(store(*rules), BASKET, "percent_on_delivery")["total"] == 32000
+
+
+def test_the_record_says_which_store_each_misreading_picks():
+    record = bk.make_task("basket-test", 0, "medium", "B")["record"]
+    assert set(record["misreadings"]) == {name for name, _ in bk.MISREADINGS}
+    for info in record["misreadings"].values():
+        assert info["winner"] in [f"Store {letter}" for letter in bk.STORES] and len(info["totals"]) == 3
+    flipped = {name for name, info in record["misreadings"].items() if info["winner"] != record["winner"]}
+    assert flipped == set(record["flipping"])
+
+
+@pytest.mark.parametrize("count", [6, 9, 11])
+def test_extending_a_set_leaves_the_earlier_tasks_and_their_gold_untouched(tmp_path, count):
+    # The letter schedule used to depend on the task count, so adding tasks rewrote the measured ones in silence.
+    small = tmp_path / "small"
+    bk.build("basket-test", "easy", 5, small / "tasks", small / "gold")
+    large = tmp_path / f"large{count}"
+    bk.build("basket-test", "easy", count, large / "tasks", large / "gold")
+    before = json.loads((small / "gold" / "gold.json").read_text())["tasks"]
+    after = json.loads((large / "gold" / "gold.json").read_text())["tasks"]
+    assert all(before[task_id] == after[task_id] for task_id in before)
+    for task_id in before:
+        assert (small / "tasks" / f"{task_id}.json").read_bytes() == (large / "tasks" / f"{task_id}.json").read_bytes()
+    counts = Counter(entry["approved"][0] for entry in after.values())
+    assert max(counts.values()) - min(counts.values()) <= 1 or len(counts) < 3

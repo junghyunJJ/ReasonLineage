@@ -68,6 +68,7 @@
 - **비율 할인:** 조건 없이 3~8%, 또는 합계가 기준을 넘으면 5~10%예요.
 - **배송비:** 2,500~4,500원이고, 무료 기준이 있어요. **기준점을 재는 시점이 마트마다 달라요:** 할인 전 상품 합계 / 쿠폰 차감 후 / 모든 할인 후예요. 이 시점이 이 설계의 핵심 함정이에요.
 - 적용 순서는 코드가 정해요: 묶음 할인 → 분류 쿠폰 → 비율 할인 → 배송비. 비율 할인은 배송비에 적용하지 않아요. 금액은 단계마다 원 단위로 내림해요.
+- **이 순서와 기준을 과제 문구에 그대로 적어요**(4.4). 적지 않으면 승자가 적히지 않은 관례로 갈리고, 생성기가 하필 그런 과제를 골라요. 최종 검토에서 hard 구간의 45%가 그랬어요. 적어 두면 오독은 "적힌 규칙을 잘못 읽은 것"이 되고, 심사위원도 확인할 수 있어요.
 
 ### 4.3 난이도: 오독이 순위를 뒤집는가
 계산량을 늘리는 대신, **그럴듯한 오독이 1위를 바꾸는지**로 난이도를 정해요. 합성 법칙 세트는 모델이 계산을 정확히 해내서 천장에 걸렸어요. 여기서는 계산이 맞아도 규칙을 잘못 읽으면 틀려요.
@@ -93,12 +94,18 @@
 
 ### 4.4 과제 배정과 파일
 - 난수는 세트 이름과 과제 번호에서 만든 고정 seed로 뽑아요. 그래서 보정 세트와 본 세트는 서로 다른 과제를 써요.
-- 과제 id는 `<SET>-01`, `-02`, …예요. 후보 이름은 `Store A`, `Store B`, `Store C`예요. 가장 싼 마트가 어느 글자인지는 세트 안에서 고르게 나누고(차이 최대 1), 그 순서는 세트 이름으로 섞어요. 합성 세트에서 정답이 A에 쏠린 문제를 그대로 피해요.
+- 과제 id는 `<SET>-01`, `-02`, …예요. 후보 이름은 `Store A`, `Store B`, `Store C`이고, 마트는 글자 순서로 보여 줘요.
+- 가장 싼 마트의 글자는 **과제 세 개씩 묶어서 한 글자씩** 배정해요. 순서는 세트 이름과 묶음 번호로 섞어요. 그래서 어떤 과제 수에서도 고르게 나뉘고(차이 최대 1), **과제를 더 만들어도 이미 측정한 과제의 글자가 바뀌지 않아요.** 세트 전체 길이로 섞으면 과제 수가 달라질 때 앞 과제의 정답까지 바뀌어서, 끝난 실행의 채점이 조용히 틀어져요(최종 검토).
 - 질문(영어):
 
 ```
 You are buying the same shopping list from three online stores. Each store has its own unit prices and
 promotions. You have no tools: do the arithmetic in your own reasoning.
+
+Every store applies its promotions in this order: the bundle offers, then the category coupon, then the
+percentage discount, then delivery. A coupon's category total is the amount after the bundle offers. A
+percentage discount's own threshold is checked on the amount after the coupon. The percentage never applies
+to the delivery fee, and every amount is a whole number of won.
 
 Shopping list: <품목 n개와 수량>
 
@@ -114,7 +121,7 @@ top pick.
 
 - 과제 파일은 엔진 과제 형식이에요(`category: analytical`, `data_sensitivity: public`).
 - `gold.json`은 개발용 세트와 같은 형식이에요. 가장 싼 마트가 `approved`, 나머지 둘이 `failed`예요. `source`에는 생성기(`reasonlineage.gold.basket`), 세트 이름, 구간을 적어요.
-- `generation.json`에는 과제마다 영수증(마트별 단계 금액), 1~2위 차이, 오독마다의 결과 순위를 적어요. 사람이 검산할 수 있는 근거이고, 채점은 이 파일을 읽지 않아요.
+- `generation.json`에는 과제마다 영수증(마트별 단계 금액), 1~2위 차이, 오독마다 어느 마트가 1위가 되는지와 세 금액을 적어요. 사람이 검산할 수 있는 근거이고, 채점은 이 파일을 읽지 않아요.
 - 과제 폴더에 이번 생성이 만들지 않는 파일이 있으면 멈춰요.
 
 ## 5. 실행 계획 (실행 전에 고정)

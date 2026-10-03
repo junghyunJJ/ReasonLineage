@@ -33,9 +33,15 @@ BANDS: dict[str, tuple[float, float, int]] = {  # (low margin, high margin, misr
     "easy": (0.03, 1.0, 1), "medium": (0.01, 0.03, 2), "hard": (0.002, 0.01, 3),
 }
 MAX_TRIES = 2000
+CONVENTIONS = (
+    "Every store applies its promotions in this order: the bundle offers, then the category coupon, then the "
+    "percentage discount, then delivery. A coupon's category total is the amount after the bundle offers. A "
+    "percentage discount's own threshold is checked on the amount after the coupon. The percentage never applies "
+    "to the delivery fee, and every amount is a whole number of won.")
 QUESTION = (
     "You are buying the same shopping list from three online stores. Each store has its own unit prices and "
     "promotions. You have no tools: do the arithmetic in your own reasoning.\n\n"
+    + CONVENTIONS + "\n\n"
     "Shopping list: {list}\n\n{stores}\n"
     "Which store charges the least in total, including delivery? Rank the three stores from cheapest to most "
     "expensive, and give the steps that decide the order, the key comparison, and one check that would confirm "
@@ -104,7 +110,10 @@ def price(store: Mapping[str, Any], basket: Mapping[str, int], misreading: str |
     else:
         after_coupon = apply_coupon(goods)
         after_discount = apply_percent(after_coupon)
-    measured = {"before": goods, "after_coupon": after_coupon, "after_discount": after_discount}
+    if misreading == "percent_before_coupon":  # this reader has already applied both steps by then
+        measured = {"before": goods, "after_coupon": after_discount, "after_discount": after_discount}
+    else:
+        measured = {"before": goods, "after_coupon": after_coupon, "after_discount": after_discount}
     where = delivery["measured"]
     if misreading == "delivery_after_discount":
         where = "after_discount"
@@ -113,7 +122,10 @@ def price(store: Mapping[str, Any], basket: Mapping[str, int], misreading: str |
     fee = 0 if measured[where] >= delivery["free_at"] else delivery["fee"]
     if misreading == "no_delivery":
         fee = 0
-    total = apply_percent(after_coupon + fee) if misreading == "percent_on_delivery" else after_discount + fee
+    if misreading == "percent_on_delivery" and after_discount != after_coupon:
+        total = (after_coupon + fee) - (after_coupon + fee) * percent["rate"] // 100  # the fee is discounted too
+    else:
+        total = after_discount + fee
     return {"lines": lines, "goods": goods, "after_coupon": after_coupon, "after_discount": after_discount,
             "delivery": fee, "total": total}
 
@@ -263,11 +275,20 @@ def render_rule(rule: Mapping[str, Any]) -> str:
 def question(drawn: Mapping[str, Any], letters: Sequence[str]) -> str:
     items = ", ".join(f"{item} x{quantity}" for item, quantity in drawn["basket"].items())
     blocks = []
-    for letter, store in zip(letters, drawn["stores"]):
+    for letter, store in sorted(zip(letters, drawn["stores"]), key=lambda pair: pair[0]):
         prices = ", ".join(f"{item} {won(store['prices'][item])}" for item in drawn["basket"])
         rules = "\n".join(f"  - {render_rule(rule)}" for rule in store["rules"])
         blocks.append(f"Store {letter}\n  unit prices (won): {prices}\n{rules}")
     return QUESTION.format(list=items, stores="\n\n".join(blocks) + "\n")
+
+
+def letter_for(set_name: str, index: int) -> str:
+    """The letter the cheapest store takes in task `index`.
+
+    Each block of three tasks gets each letter once, in an order fixed by the set name and the block, so the
+    letters stay balanced for any count and adding tasks never changes the ones already measured.
+    """
+    return shuffled(list(STORES), f"{set_name}:letters:{index // len(STORES)}")[index % len(STORES)]
 
 
 def make_task(set_name: str, index: int, band: str, letter: str) -> dict[str, Any]:
@@ -289,7 +310,12 @@ def make_task(set_name: str, index: int, band: str, letter: str) -> dict[str, An
     body = {"id": task_id, "question": question(drawn, letters), "candidates": [f"Store {x}" for x in STORES],
             "category": "analytical", "data_sensitivity": "public"}
     gold = {"approved": [f"Store {letter}"], "failed": sorted(f"Store {x}" for x in STORES if x != letter)}
+    misreadings = {}
+    for name, _ in MISREADINGS:
+        totals = [price(store, drawn["basket"], name)["total"] for store in drawn["stores"]]
+        misreadings[name] = {"winner": f"Store {letters[totals.index(min(totals))]}", "totals": totals}
     record = {"band": band, "letters": letters, "winner": f"Store {letter}", "margin": round(drawn["margin"], 5),
+              "misreadings": misreadings,
               "flipping": drawn["flipping"], "tries": tries, "basket": drawn["basket"],
               "stores": [{"letter": x, "prices": s["prices"], "rules": s["rules"], "receipt": r}
                          for x, s, r in zip(letters, drawn["stores"], drawn["receipts"])]}
@@ -307,8 +333,7 @@ def build(set_name: str, band: str, count: int, tasks_dir: str | Path, gold_dir:
     if stale:
         raise BasketError("; ".join(stale))
     # The cheapest store's letter is spread evenly over the set, in an order fixed by the set name.
-    letters = shuffled([STORES[i % len(STORES)] for i in range(count)], f"{set_name}:letters")
-    made = [make_task(set_name, i, band, letter) for i, letter in enumerate(letters)]
+    made = [make_task(set_name, i, band, letter_for(set_name, i)) for i in range(count)]
     tasks_dir.mkdir(parents=True, exist_ok=True)
     gold_dir.mkdir(parents=True, exist_ok=True)
     written = []
