@@ -41,6 +41,13 @@ REGIONS: dict[str, tuple[str, ...]] = {
     "West": ("California", "Nevada"),
 }
 REGION_OF = {state: region for region, states in REGIONS.items() for state in states}
+# (low, high) departure between the first and second place, by measure and band (design 4.3).
+BANDS: dict[str, dict[str, tuple[float, float]]] = {
+    "tavg": {"easy": (2.0, 1e9), "medium": (1.0, 2.0), "hard": (0.4, 1.0)},
+    "pcp": {"easy": (1.5, 1e9), "medium": (0.7, 1.5), "hard": (0.3, 0.7)},
+}
+BAND_NAMES = ("easy", "medium", "hard")
+MAX_PER_STATE = 3  # how often one state may appear in a set
 # --- 4.1 the pool ---
 
 def _get(url: str, tries: int = 4, wait_s: float = 5.0) -> dict[str, Any]:
@@ -108,3 +115,62 @@ def load_pool(path: str | Path, sha256: str) -> dict[str, dict[str, float]]:
     if digest != sha256:
         raise SourceError(f"{path} has sha256 {digest}, not the recorded {sha256}; run `fetch` again")
     return json.loads(data)
+
+
+# --- 4.3 choosing the triples ---
+
+def margin(triple: Sequence[str], values: Mapping[str, float]) -> float:
+    """The gap between first and second place, rounded away from the float error of a 0.1-precision subtraction."""
+    first, second, _ = sorted((values[state] for state in triple), reverse=True)
+    return round(first - second, 4)
+
+
+def usable(triple: Sequence[str], values: Mapping[str, float], band: tuple[float, float]) -> bool:
+    """Three states from three regions whose first-to-second gap falls in the band (design 4.3)."""
+    if len({REGION_OF[state] for state in triple}) < 3:
+        return False
+    first, second, third = sorted((values[state] for state in triple), reverse=True)
+    if first == second or second == third:
+        return False
+    low, high = band
+    return low <= margin(triple, values) < high
+
+
+def choose(set_name: str, pool: Mapping[str, Mapping[str, float]], band: str, count: int,
+           exclude: Sequence[Sequence[str]] = ()) -> list[dict[str, Any]]:
+    """`count` triples, alternating measure and month, each state used at most MAX_PER_STATE times.
+
+    The order of the keys and of the candidate triples is fixed by the set name, so the same set is rebuilt
+    identically (design 4.3, 4.4).
+    """
+    taken = {frozenset(triple) for triple in exclude}
+    used: dict[str, int] = {}
+    chosen: list[dict[str, Any]] = []
+    for index in range(count):
+        # measure alternates every task, month every two tasks: tavg/7, pcp/7, tavg/8, pcp/8, tavg/7, ...
+        measure = MEASURES[index % len(MEASURES)]
+        month = MONTHS[(index // len(MEASURES)) % len(MONTHS)]
+        key = f"{month}:{measure}"
+        if key not in pool:
+            raise SourceError(f"the pool has no {key}; run `fetch` again")
+        values = pool[key]
+        limits = BANDS[measure][band]
+        order = shuffled(["|".join(t) for t in itertools.combinations(sorted(values), 3)], f"{set_name}:{key}:{index}")
+        for packed in order:
+            triple = tuple(packed.split("|"))
+            if frozenset(triple) in taken or not usable(triple, values, limits):
+                continue
+            if any(used.get(state, 0) >= MAX_PER_STATE for state in triple):
+                continue
+            taken.add(frozenset(triple))
+            for state in triple:
+                used[state] = used.get(state, 0) + 1
+            chosen.append({"month": month, "measure": measure, "states": list(triple),
+                           "departures": {state: values[state] for state in triple},
+                           "regions": {state: REGION_OF[state] for state in triple},
+                           "margin": margin(triple, values)})
+            break
+        else:
+            raise SourceError(f"{set_name}: only {len(chosen)} of {count} tasks could be built; {key} band "
+                              f"{band!r} ran out of triples (a state may appear at most {MAX_PER_STATE} times)")
+    return chosen

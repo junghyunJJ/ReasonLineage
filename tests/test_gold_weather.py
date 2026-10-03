@@ -118,3 +118,77 @@ def test_the_regions_hold_the_48_contiguous_states_once_each():
     assert len(set(named)) == 48
     assert "Alaska" not in named and "Hawaii" not in named
     assert w.REGION_OF["Wyoming"] == "Northern Rockies and Plains"
+
+
+# --- 4.3 the triples ---
+
+def test_usable_refuses_two_states_from_one_region():
+    values = {"Oregon": 4.0, "Washington": 1.0, "Idaho": 0.5}  # all Northwest
+    assert not w.usable(("Oregon", "Washington", "Idaho"), values, w.BANDS["tavg"]["easy"])
+
+
+def test_usable_refuses_a_tie():
+    values = {"Oregon": 4.0, "Texas": 4.0, "Maine": 1.0}
+    assert not w.usable(("Oregon", "Texas", "Maine"), values, w.BANDS["tavg"]["easy"])
+    assert not w.usable(("Oregon", "Texas", "Maine"), values, w.BANDS["tavg"]["medium"])
+
+
+@pytest.mark.parametrize("measure, gap, band", [
+    ("tavg", 2.0, "easy"), ("tavg", 1.9, "medium"), ("tavg", 1.0, "medium"),
+    ("tavg", 0.9, "hard"), ("tavg", 0.4, "hard"), ("tavg", 0.3, None),
+    ("pcp", 1.5, "easy"), ("pcp", 1.4, "medium"), ("pcp", 0.7, "medium"),
+    ("pcp", 0.6, "hard"), ("pcp", 0.3, "hard"), ("pcp", 0.2, None),
+])
+def test_a_gap_falls_in_one_band_only(measure, gap, band):
+    values = {"Oregon": 5.0 + gap, "Texas": 5.0, "Maine": 0.0}
+    triple = ("Oregon", "Texas", "Maine")
+    assert w.margin(triple, values) == gap
+    held = [name for name in w.BAND_NAMES if w.usable(triple, values, w.BANDS[measure][name])]
+    assert held == ([band] if band else [])
+
+
+def test_choose_alternates_the_measure_and_the_month():
+    chosen = w.choose("weather-v1", _wide_pool(), "hard", 8)
+    assert [(c["measure"], c["month"]) for c in chosen] == [
+        ("tavg", 7), ("pcp", 7), ("tavg", 8), ("pcp", 8)] * 2
+
+
+def test_choose_keeps_every_state_under_the_reuse_cap():
+    chosen = w.choose("weather-v1", _wide_pool(), "medium", 20)
+    counts: dict[str, int] = {}
+    for task in chosen:
+        for state in task["states"]:
+            counts[state] = counts.get(state, 0) + 1
+    assert counts and max(counts.values()) <= w.MAX_PER_STATE
+
+
+def test_choose_leaves_out_the_triples_it_is_given():
+    first = w.choose("weather-v1", _wide_pool(), "easy", 4)
+    used = [sorted(task["states"]) for task in first]
+    again = w.choose("weather-v1", _wide_pool(), "easy", 4, exclude=used)
+    assert all(sorted(task["states"]) not in used for task in again)
+
+
+def test_choose_says_how_far_it_got_when_a_band_runs_out():
+    with pytest.raises(w.SourceError) as exc:
+        w.choose("weather-v1", pool(), "easy", 4)
+    assert "only 1 of 4" in str(exc.value) and "easy" in str(exc.value)
+
+
+def test_choose_reports_a_pool_without_the_bucket():
+    thin = {key: values for key, values in _wide_pool().items() if key != "8:pcp"}
+    with pytest.raises(w.SourceError) as exc:
+        w.choose("weather-v1", thin, "easy", 4)
+    assert "8:pcp" in str(exc.value)
+
+
+# --- fixtures ---
+
+def _wide_pool() -> dict[str, dict[str, float]]:
+    """All 48 states, with 0.1-precision departures whose gaps land in every band, shifted per bucket."""
+    states = sorted(w.REGION_OF)
+    built = {}
+    for shift, key in enumerate(("7:tavg", "7:pcp", "8:tavg", "8:pcp")):
+        order = states[shift:] + states[:shift]
+        built[key] = {state: round(0.5 * i + 0.1 * (i % 4), 1) for i, state in enumerate(order)}
+    return built
