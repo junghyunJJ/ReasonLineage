@@ -17,6 +17,9 @@ from ..engine.events import read_events
 CEILING = 0.8
 MIN_PAIRS = 10
 SIGNAL = 0.7
+# Level-2 rule, fixed before the level-2 run (weather level-2 design 5.1). Do not change it after seeing results.
+GAIN = 0.10
+ALPHA = 0.05
 _EPS = 1e-9
 
 
@@ -174,9 +177,31 @@ def level2(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
                 generations[a["generation"]]["fitness"].append(a["fitness"])
                 generations[a["generation"]]["correctness"].append(a["correctness"])
     means = {key: _mean([t[key] for t in per_task if t[key] is not None]) for key in ("gen0_best", "final_best", "gen0_vote")}
+    diffs = [t["final_best"] - t["gen0_best"] for t in per_task if t["final_best"] is not None and t["gen0_best"] is not None]
     return {"tasks": len(evolved), "per_task": per_task, "mean": means,
             "by_generation": {str(g): {"fitness": _mean(v["fitness"]), "correctness": _mean(v["correctness"]),
-                                       "answers": len(v["fitness"])} for g, v in sorted(generations.items())}}
+                                       "answers": len(v["fitness"])} for g, v in sorted(generations.items())},
+            "change": change_verdict(diffs) | {"left_out": len(per_task) - len(diffs)}}
+
+
+def change_verdict(diffs: Sequence[float]) -> dict[str, Any]:
+    """Did evolution change the best answer's correctness? d = final best minus generation-0 best, one per task.
+
+    Gain or loss needs both a mean change of at least GAIN and a one-sided sign test below ALPHA (weather level-2
+    design 5.1); tasks where d is 0 leave the sign test.
+    """
+    up = sum(d > _EPS for d in diffs)
+    down = sum(d < -_EPS for d in diffs)
+    mean = _mean(list(diffs))
+    p_up, p_down = sign_test(up, down), sign_test(down, up)
+    if mean is not None and mean >= GAIN - _EPS and p_up is not None and p_up < ALPHA:
+        verdict = "gain"
+    elif mean is not None and mean <= -GAIN + _EPS and p_down is not None and p_down < ALPHA:
+        verdict = "loss"
+    else:
+        verdict = "no change"
+    return {"tasks": len(diffs), "mean": mean, "up": up, "down": down, "p_up": p_up, "p_down": p_down,
+            "verdict": verdict, "rules": {"gain": GAIN, "alpha": ALPHA}}
 
 
 def summarize(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:

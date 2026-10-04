@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from reasonlineage.diagnose.gold import (author_judge, borda, correctness, format_analysis, level1, level2,
-                                         score_run, summarize)
+from reasonlineage.diagnose.gold import (author_judge, borda, change_verdict, correctness, format_analysis,
+                                         level1, level2, score_run, summarize)
 
 TRUTH = {"approved": ["A"], "failed": ["B", "C"]}
 GOLD = {"tasks": {f"t{i}": TRUTH for i in range(1, 6)}}
@@ -127,6 +127,39 @@ def test_level2_compares_the_best_answers_the_vote_and_each_generation(tmp_path)
     assert task["by_model"] == {"opus": 1.0, "gpt": 0.5, "grok": 0.0, "glm": 0.0}
     assert report["by_generation"]["1"] == {"fitness": 0.8, "correctness": 0.75, "answers": 2}
     assert level2(scored(tmp_path / "zero", [aligned()])) is None
+
+
+@pytest.mark.parametrize("diffs, verdict", [
+    ([0.5] * 10 + [0.0] * 40, "gain"),        # mean exactly +0.10, p = 0.001
+    ([0.5] * 9 + [0.0] * 41, "no change"),    # p is small but the mean is 0.09
+    ([-0.5] * 10 + [0.0] * 40, "loss"),       # mean exactly -0.10
+    ([0.5] * 5, "gain"),                      # 5 up, 0 down: p = 0.031
+    ([0.5] * 4, "no change"),                 # 4 up, 0 down: p = 0.0625, a large mean is not enough
+    ([1.0, 1.0, 0.0, -0.5], "no change"),     # mean 0.375 but 2 up, 1 down: p = 0.5
+])
+def test_change_needs_both_the_size_and_the_sign_test(diffs, verdict):
+    assert change_verdict(diffs)["verdict"] == verdict
+
+
+def test_tasks_without_change_dilute_the_mean_but_leave_the_sign_test():
+    assert change_verdict([0.5] * 5 + [0.0] * 20) | {"rules": None} == {
+        "tasks": 25, "mean": 0.1, "up": 5, "down": 0, "p_up": 0.03125, "p_down": 1.0, "verdict": "gain", "rules": None}
+    assert change_verdict([0.5] * 5 + [0.0] * 21)["verdict"] == "no change"  # mean 0.0962
+
+
+def test_no_tasks_means_no_change():
+    assert change_verdict([]) | {"rules": None} == {
+        "tasks": 0, "mean": None, "up": 0, "down": 0, "p_up": None, "p_down": None, "verdict": "no change", "rules": None}
+
+
+def test_level2_reports_the_change_in_the_best_answer_and_leaves_out_unscorable_tasks(tmp_path):
+    worse = [answer("c005", 1, "opus", ["C", "A", "B"], 0.9)]       # the final best is half right; generation 0's was right
+    run1 = write_run(tmp_path, "run1", "t1", aligned() + worse, final=["c005", "c001", "c002", "c003"])
+    blank = [answer("c005", 1, "opus", ["B", "C"], 0.9)]            # leaves out A: the final best has no correctness
+    run2 = write_run(tmp_path, "run2", "t2", aligned() + blank, final=["c005", "c001", "c002", "c003"])
+    report = level2([score_run(run1, GOLD), score_run(run2, GOLD)])
+    assert report["change"] == {"tasks": 1, "mean": -0.5, "up": 0, "down": 1, "p_up": 1.0, "p_down": 0.5,
+                                "verdict": "no change", "rules": {"gain": 0.1, "alpha": 0.05}, "left_out": 1}
 
 
 def test_runs_without_gold_unfinished_changed_or_not_runs_are_reported(tmp_path):
