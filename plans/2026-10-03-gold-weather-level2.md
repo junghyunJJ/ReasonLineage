@@ -721,6 +721,8 @@ for d in sorted(OUT.glob("*/")):
             texts[(r["run"], e["id"])] = e["answer"]["answer"]
 
 print(f"A. generation-0 calls not from the record: {live}")
+duplicates = sorted(task for task, n in Counter(r["task"] for r in runs).items() if n > 1)
+print(f"A2. tasks with more than one finished run: {', '.join(duplicates) if duplicates else 'none'}")
 one = level1(runs)
 rate = "n/a" if one["concordance"] is None else f"{one['concordance']:.4f}"
 print(f"B. level 1 from these runs: tasks {one['tasks']} answers {one['answers']} share {one['share_correct']:.4f} "
@@ -767,13 +769,14 @@ for SET in weather-v1 weather-v2; do
   done
 done
 ls $W/dry | wc -l
-PYTHONPATH=src python $W/check_l2.py $W/dry gold/weather-l2/gold.json | head -2
+PYTHONPATH=src python $W/check_l2.py $W/dry gold/weather-l2/gold.json | head -3
 ```
 
 Expected:
 ```
 37
 A. generation-0 calls not from the record: 0
+A2. tasks with more than one finished run: none
 B. level 1 from these runs: tasks 37 answers 148 share 0.5270 pairs 97 concordance 0.4948 -> no signal
 ```
 - `FAILED` 줄이 있거나 세 값 중 하나라도 다르면 **멈추고** 사용자에게 알린다. 본 실행을 시작하지 않는다.
@@ -865,20 +868,20 @@ W=.superpowers/sdd/2026-10-03-gold-weather-level2
 cat > $W/run_l2.sh <<'SH'
 #!/usr/bin/env bash
 # Run the level-2 measurement to the end (level-2 design 6.2, 7). A run that stopped (header, no result) is resumed
-# after 5 minutes. A task whose run stops a fourth time is left out: its folder moves to runs/gold-weather-l2-left-out/
+# after a pause. A task whose run stops a fourth time is left out: its folder moves to runs/gold-weather-l2-left-out/
 # and its id goes into runs/gold-weather-l2/left_out.txt, which run_gold_evolve.sh skips. Four left-out tasks stop
-# everything, and so does a failure with no stopped run to resume.
+# everything. A failure that leaves no stopped run (the engine could not start, e.g. a model server is down, or the
+# scoring step failed) is retried after a pause; a fourth such failure in a row without progress stops everything.
 set -u
 cd "${REPO:-/common/jungj2/project/ReasonLineage}"
 export PYTHONPATH=src
 OUT=runs/gold-weather-l2
 declare -A resumes
+idle=0
 while true; do
-  stopped=0
   for d in "$OUT"/*/; do
     d="${d%/}"
     if [ ! -f "$d/header.json" ] || [ -f "$d/result.json" ]; then continue; fi
-    stopped=1
     name="$(basename "$d")"; id="${name#*-*-}"
     resumes[$id]=$(( ${resumes[$id]:-0} + 1 ))
     if [ "${resumes[$id]}" -gt 3 ]; then
@@ -893,11 +896,24 @@ while true; do
     sleep "${RESUME_WAIT:-300}"
     python -m reasonlineage resume "$d" || echo "== $(date '+%F %T') resume of $d stopped again"
   done
+  before=$(compgen -G "$OUT/*/result.json" | wc -l)
   if scripts/run_gold_evolve.sh "$OUT" gold/weather-l2/gold.json 3 weather-v1 weather-v2; then break; fi
-  if [ "$stopped" -eq 0 ] && ! compgen -G "$OUT/*/header.json" > /dev/null; then
-    echo "== $(date '+%F %T') stopped: the script failed with no stopped run to resume"; exit 1
+  if [ "$(compgen -G "$OUT/*/result.json" | wc -l)" -gt "$before" ]; then idle=0; fi
+  halted=0
+  for d in "$OUT"/*/; do
+    if [ -f "$d/header.json" ] && [ ! -f "$d/result.json" ]; then halted=1; fi
+  done
+  if [ "$halted" -eq 1 ]; then
+    idle=0
+    echo "== $(date '+%F %T') a run stopped"
+    continue
   fi
-  echo "== $(date '+%F %T') a run stopped"
+  idle=$((idle + 1))
+  if [ "$idle" -gt 3 ]; then
+    echo "== $(date '+%F %T') stopped: 4 failures in a row with no stopped run to resume and no progress"; exit 1
+  fi
+  echo "== $(date '+%F %T') the script failed with no stopped run to resume ($idle of 3); retrying after a pause"
+  sleep "${RESUME_WAIT:-300}"
 done
 echo "== $(date '+%F %T') done"
 SH
@@ -917,7 +933,7 @@ cat runs/gold-weather-l2/left_out.txt 2>/dev/null || echo "left out: none"
 
 Expected: `== … done`, `finished: 37`, `left out: none`
 - 빠진 과제가 있으면 수와 id를 진행 기록에 적는다. 1–3개면 Task 7로 간다(판정은 남은 과제로 하고, 빠진 수를 보고한다).
-- `main.log`가 `stopped: 4 tasks left out` 또는 `stopped: the script failed with no stopped run to resume`으로 끝났으면 **멈추고** 사용자에게 알린다.
+- `main.log`가 `stopped: 4 tasks left out` 또는 `stopped: 4 failures in a row with no stopped run to resume and no progress`로 끝났으면 **멈추고** 사용자에게 알린다. 뒤의 것은 엔진이 실행을 시작하지 못한 경우(모델 서버가 내려감 등)가 진전 없이 네 번 이어진 것이다.
 
 ---
 
@@ -946,13 +962,15 @@ W=.superpowers/sdd/2026-10-03-gold-weather-level2
 PYTHONPATH=src python $W/check_l2.py runs/gold-weather-l2 gold/weather-l2/gold.json | tee $W/check.txt
 ```
 
-Expected (앞의 두 줄):
+Expected (앞의 세 줄):
 ```
 A. generation-0 calls not from the record: 0
+A2. tasks with more than one finished run: none
 B. level 1 from these runs: tasks 37 answers 148 share 0.5270 pairs 97 concordance 0.4948 -> no signal
 ```
 - 빠진 과제가 있으면 B의 과제 수와 수치는 그만큼 다르다. 그때는 같은 과제로 건식 재생 폴더(`$W/dry`)의 해당 실행만 빼고 다시 계산한 값과 비교한다.
 - A가 0이 아니면, 0세대가 기록에서 오지 않은 과제를 찾아 판정에서 빼고 보고한다(설계 7). 그런 과제가 4개 이상이면 **멈추고** 사용자에게 알린다.
+- A2가 `none`이 아니면 **멈추고** 사용자에게 알린다. `level2()`는 과제당 한 실행만 세지 않으므로, 같은 과제가 두 번 판정에 들어간다(`report.json`의 `duplicate_tasks`도 같은 것을 보여 준다).
 - 그 밖에 B가 다르면 **멈추고** 사용자에게 알린다. 판정을 계산하지 않는다.
 
 - [ ] **Step 3: 판정 읽기**
