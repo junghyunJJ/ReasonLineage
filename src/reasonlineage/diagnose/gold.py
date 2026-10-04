@@ -238,7 +238,20 @@ def format_report(report: Mapping[str, Any]) -> str:
                      f"final best {mean['final_best']}, gen-0 vote {mean['gen0_vote']}")
         lines.append("  by generation: " + ", ".join(f"{g}: fitness {v['fitness']} correctness {v['correctness']}"
                                                   for g, v in two["by_generation"].items()))
+        lines.append(f"  change in the best answer (final - generation 0): {_change_summary(two['change'])} "
+                     f"-> {two['change']['verdict']}")
     return "\n".join(lines)
+
+
+def _p(value: float | None) -> str:
+    return "n/a" if value is None else f"{value:.3g}"
+
+
+def _change_summary(change: Mapping[str, Any]) -> str:
+    mean = "n/a" if change["mean"] is None else f"{change['mean']:+.3f}"
+    left = f"; {change['left_out']} task(s) left out because an answer left out a gold item" if change["left_out"] else ""
+    return (f"mean {mean} over {change['tasks']} task(s), {change['up']} up / {change['down']} down, "
+            f"sign test p = {_p(change['p_up'])} (up) / {_p(change['p_down'])} (down){left}")
 
 
 def author_judge(runs: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, float]]:
@@ -284,6 +297,19 @@ def format_analysis(runs: Sequence[Mapping[str, Any]]) -> str:
               "| Author \\ Judge | " + " | ".join(judges) + " |", "|---|" + "---|" * len(judges)]
     lines += [f"| {a} | " + " | ".join(f"{row[j]:.3f}" if j in row else "—" for j in judges) + " |"
               for a, row in table.items()]
+    two = level2(runs)
+    if two:
+        change, mean = two["change"], two["mean"]
+        rules = change["rules"]
+        lines += ["", "## Level 2 (evolution)", "",
+                  f"**Verdict: {change['verdict']}.** Change in the best answer (final - generation 0): "
+                  f"{_change_summary(change)}.",
+                  f"Rule fixed before the run: gain or loss needs a mean change of at least {rules['gain']:.2f} and a "
+                  f"one-sided sign test p below {rules['alpha']:.2f}.",
+                  f"Mean correctness: generation-0 best {mean['gen0_best']}, final best {mean['final_best']}, "
+                  f"generation-0 vote {mean['gen0_vote']}.", "",
+                  "| Generation | Answers | Mean fitness | Mean correctness |", "|---|---|---|---|"]
+        lines += [f"| {g} | {v['answers']} | {v['fitness']} | {v['correctness']} |" for g, v in two["by_generation"].items()]
     lines += ["", "## Tasks", "", "Each cell: the author's top pick, its correctness (✓ 1, ½ 0.5, ✗ 0) and the "
               "answer's fitness.", ""]
     for run in sorted(_counted(runs), key=lambda r: r["task"]):

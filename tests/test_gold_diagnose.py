@@ -5,7 +5,7 @@ import json
 import pytest
 
 from reasonlineage.diagnose.gold import (author_judge, borda, change_verdict, correctness, format_analysis,
-                                         level1, level2, score_run, summarize)
+                                         format_report, level1, level2, score_run, summarize)
 
 TRUTH = {"approved": ["A"], "failed": ["B", "C"]}
 GOLD = {"tasks": {f"t{i}": TRUTH for i in range(1, 6)}}
@@ -160,6 +160,33 @@ def test_level2_reports_the_change_in_the_best_answer_and_leaves_out_unscorable_
     report = level2([score_run(run1, GOLD), score_run(run2, GOLD)])
     assert report["change"] == {"tasks": 1, "mean": -0.5, "up": 0, "down": 1, "p_up": 1.0, "p_down": 0.5,
                                 "verdict": "no change", "rules": {"gain": 0.1, "alpha": 0.05}, "left_out": 1}
+
+
+def _evolved(tmp_path):
+    worse = [answer("c005", 1, "opus", ["C", "A", "B"], 0.9)]
+    blank = [answer("c005", 1, "opus", ["B", "C"], 0.9)]
+    return [score_run(write_run(tmp_path, "run1", "t1", aligned() + worse, final=["c005", "c001", "c002", "c003"]), GOLD),
+            score_run(write_run(tmp_path, "run2", "t2", aligned() + blank, final=["c005", "c001", "c002", "c003"]), GOLD)]
+
+
+def test_the_report_prints_the_level2_verdict(tmp_path):
+    text = format_report(summarize(_evolved(tmp_path)))
+    assert text.splitlines()[-1] == (
+        "  change in the best answer (final - generation 0): mean -0.500 over 1 task(s), 0 up / 1 down, "
+        "sign test p = 1 (up) / 0.5 (down); 1 task(s) left out because an answer left out a gold item -> no change")
+
+
+def test_the_analysis_gives_the_level2_verdict_the_rule_and_each_generation(tmp_path):
+    text = format_analysis(_evolved(tmp_path))
+    assert "## Level 2 (evolution)" in text and "**Verdict: no change.** Change in the best answer" in text
+    assert "a mean change of at least 0.10 and a one-sided sign test p below 0.05" in text
+    assert "Mean correctness: generation-0 best 1.0, final best 0.5, generation-0 vote 0.5." in text
+    assert "| 1 | 1 | 0.9 | 0.5 |" in text  # generation 1: the unscorable answer is not counted
+    assert text.index("## Level 2") < text.index("## Tasks")
+
+
+def test_the_analysis_has_no_level2_section_without_evolution(tmp_path):
+    assert "## Level 2" not in format_analysis(scored(tmp_path, [aligned()]))
 
 
 def test_runs_without_gold_unfinished_changed_or_not_runs_are_reported(tmp_path):
