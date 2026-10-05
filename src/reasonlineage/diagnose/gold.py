@@ -20,6 +20,9 @@ SIGNAL = 0.7
 # Level-2 rule, fixed before the level-2 run (weather level-2 design 5.1). Do not change it after seeing results.
 GAIN = 0.10
 ALPHA = 0.05
+# Level-3 rule, fixed before the level-3 run (weather level-3 design 4): the same size, alpha 0.05 over 4 conditions.
+CONDITION_ALPHA = 0.0125
+CONDITION_VERDICT = {"gain": "condition better", "loss": "recuse+isolated better", "no change": "no difference"}
 _EPS = 1e-9
 
 
@@ -167,7 +170,7 @@ def level2(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
     for run in evolved:
         by_id = {a["id"]: a for a in run["answers"]}
         first = [a for a in run["answers"] if a["generation"] == 0]
-        best_first = max(first, key=lambda a: a["fitness"])  # ties go to the earlier answer
+        best_first = _gen0_best(run)
         best_final = max((by_id[i] for i in run["final"]), key=lambda a: a["fitness"])
         vote = borda([a["ranking"] for a in first], run["candidates"])
         per_task.append({"task": run["task"], "gen0_best": best_first["correctness"], "final_best": best_final["correctness"],
@@ -184,24 +187,47 @@ def level2(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
             "change": change_verdict(diffs) | {"left_out": len(per_task) - len(diffs)}}
 
 
-def change_verdict(diffs: Sequence[float]) -> dict[str, Any]:
+def _gen0_best(run: Mapping[str, Any]) -> Mapping[str, Any]:
+    """The generation-0 answer with the top fitness; ties go to the earlier answer."""
+    return max((a for a in run["answers"] if a["generation"] == 0), key=lambda a: a["fitness"])
+
+
+def change_verdict(diffs: Sequence[float], alpha: float = ALPHA) -> dict[str, Any]:
     """Did evolution change the best answer's correctness? d = final best minus generation-0 best, one per task.
 
-    Gain or loss needs both a mean change of at least GAIN and a one-sided sign test below ALPHA (weather level-2
+    Gain or loss needs both a mean change of at least GAIN and a one-sided sign test below `alpha` (weather level-2
     design 5.1); tasks where d is 0 leave the sign test.
     """
     up = sum(d > _EPS for d in diffs)
     down = sum(d < -_EPS for d in diffs)
     mean = _mean(list(diffs))
     p_up, p_down = sign_test(up, down), sign_test(down, up)
-    if mean is not None and mean >= GAIN - _EPS and p_up is not None and p_up < ALPHA:
+    if mean is not None and mean >= GAIN - _EPS and p_up is not None and p_up < alpha:
         verdict = "gain"
-    elif mean is not None and mean <= -GAIN + _EPS and p_down is not None and p_down < ALPHA:
+    elif mean is not None and mean <= -GAIN + _EPS and p_down is not None and p_down < alpha:
         verdict = "loss"
     else:
         verdict = "no change"
     return {"tasks": len(diffs), "mean": mean, "up": up, "down": down, "p_up": p_up, "p_down": p_down,
-            "verdict": verdict, "rules": {"gain": GAIN, "alpha": ALPHA}}
+            "verdict": verdict, "rules": {"gain": GAIN, "alpha": alpha}}
+
+
+def compare_conditions(condition: Sequence[Mapping[str, Any]], baseline: Sequence[Mapping[str, Any]],
+                       alpha: float = CONDITION_ALPHA) -> dict[str, Any]:
+    """Does a judging condition pick a better or worse generation-0 best than recuse + isolated (weather level-3
+    design 3, 4)? d = the condition's best minus the baseline's best, for each task scored in both; `condition` and
+    `baseline` are `score_run` results. The earliest run of a task counts; gold tasks in only one of them, or not
+    scored in one of them, are unpaired."""
+    def best(runs):
+        return {run["task"]: _gen0_best(run)["correctness"] for run in _counted([r for r in runs if r["status"] == "scored"])}
+    cond, base = best(condition), best(baseline)
+    tasks = sorted(cond.keys() & base.keys())
+    scorable = [t for t in tasks if cond[t] is not None and base[t] is not None]
+    change = change_verdict([cond[t] - base[t] for t in scorable], alpha)
+    unpaired = {run["task"] for run in (*condition, *baseline) if run["status"] not in ("not_a_run", "no_gold")} - set(tasks)
+    return change | {"verdict": CONDITION_VERDICT[change["verdict"]], "left_out": len(tasks) - len(scorable),
+                     "unpaired": sorted(unpaired), "mean_condition": _mean([cond[t] for t in scorable]),
+                     "mean_baseline": _mean([base[t] for t in scorable])}
 
 
 def summarize(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:

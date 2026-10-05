@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from reasonlineage.diagnose.gold import (author_judge, borda, change_verdict, correctness, format_analysis,
-                                         format_report, level1, level2, score_run, summarize)
+from reasonlineage.diagnose.gold import (author_judge, borda, change_verdict, compare_conditions, correctness,
+                                         format_analysis, format_report, level1, level2, score_run, summarize)
 
 TRUTH = {"approved": ["A"], "failed": ["B", "C"]}
 GOLD = {"tasks": {f"t{i}": TRUTH for i in range(1, 6)}}
@@ -230,3 +230,47 @@ def test_the_analysis_gives_the_verdict_the_tables_and_every_task(tmp_path):
     assert "| opus | 1.00 |" in text and "| Author \\ Judge | glm | gpt | grok | opus |" in text
     assert "| opus | 0.800 | 0.800 | 0.800 | — |" in text
     assert "- **t1** (truth A): glm: C ✗ 0.300; gpt: B ½ 0.600; grok: B ✗ 0.400; opus: A ✓ 0.800" in text
+
+
+# --- level 3: comparing a judging condition with recuse + isolated (weather level-3 design 3, 4) ---
+
+WORSE = (0.3, 0.8, 0.4, 0.2)  # generation 0 of aligned(), but gpt's half-right answer has the top fitness
+
+
+def test_change_verdict_takes_the_alpha():
+    assert change_verdict([0.5] * 6)["verdict"] == "gain"                       # p = 0.0156
+    assert change_verdict([0.5] * 6, alpha=0.0125)["verdict"] == "no change"
+    assert change_verdict([0.5] * 7, alpha=0.0125)["rules"] == {"gain": 0.1, "alpha": 0.0125}
+
+
+def test_compare_conditions_pairs_tasks_by_id_and_reports_the_unpaired(tmp_path):
+    base = [score_run(write_run(tmp_path / "base", f"run{i}", f"t{i}", aligned()), GOLD) for i in (1, 2, 3, 9)]  # t9: no gold
+    cond = [score_run(write_run(tmp_path / "cond", "run1", "t1", aligned(WORSE)), GOLD),
+            score_run(write_run(tmp_path / "cond", "run2", "t2", aligned()), GOLD),
+            score_run(write_run(tmp_path / "cond", "run3", "t3", aligned(), finished=False), GOLD),
+            score_run(write_run(tmp_path / "cond", "run4", "t4", aligned()), GOLD)]
+    out = compare_conditions(cond, base, alpha=0.0125)
+    assert out | {"rules": None} == {
+        "tasks": 2, "mean": -0.25, "up": 0, "down": 1, "p_up": 1.0, "p_down": 0.5, "verdict": "no difference",
+        "rules": None, "left_out": 0, "unpaired": ["t3", "t4"], "mean_condition": 0.75, "mean_baseline": 1.0}
+
+
+@pytest.mark.parametrize("n, alpha, verdict", [
+    (7, 0.0125, "recuse+isolated better"),  # 7 tasks worse, none better: p = 0.0078
+    (6, 0.0125, "no difference"),           # p = 0.0156 is not below 0.0125
+    (6, 0.05, "recuse+isolated better"),
+])
+def test_compare_conditions_names_the_verdict_at_the_given_alpha(tmp_path, n, alpha, verdict):
+    gold = {"tasks": {f"t{i}": TRUTH for i in range(1, n + 1)}}
+    base = [score_run(write_run(tmp_path / "base", f"run{i}", f"t{i}", aligned()), gold) for i in range(1, n + 1)]
+    cond = [score_run(write_run(tmp_path / "cond", f"run{i}", f"t{i}", aligned(WORSE)), gold) for i in range(1, n + 1)]
+    assert compare_conditions(cond, base, alpha=alpha)["verdict"] == verdict
+    flipped = "condition better" if verdict != "no difference" else verdict
+    assert compare_conditions(base, cond, alpha=alpha)["verdict"] == flipped
+
+
+def test_compare_conditions_counts_the_earliest_run_of_a_task(tmp_path):
+    base = [score_run(write_run(tmp_path / "base", "run1", "t1", aligned()), GOLD)]
+    cond = [score_run(write_run(tmp_path / "cond", "run2", "t1", aligned(WORSE)), GOLD),
+            score_run(write_run(tmp_path / "cond", "run1", "t1", aligned()), GOLD)]
+    assert compare_conditions(cond, base, alpha=0.0125)["mean"] == 0.0
