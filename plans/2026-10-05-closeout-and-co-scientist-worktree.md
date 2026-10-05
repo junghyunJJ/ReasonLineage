@@ -39,8 +39,8 @@
 - [x] Archive ignored run and SDD records under `.archives/2026-10-05-gold-experiments/`.
 - [x] Verify archived files against the originals and record the archive SHA-256 and file inventory: 7,740 entries verified.
 - [x] Add `reports/2026-10-05-gold-experiments-closeout.md`, compact machine-readable results, and original progress/analysis notes.
-- [ ] Commit only the intended report/evidence files and this plan; leave `gb.html` untouched.
-- [ ] Obtain an independent review and address material findings before integration.
+- [x] Commit only the intended report/evidence files and this plan; leave `gb.html` untouched (`697a9ff`).
+- [x] Obtain an independent review and address material findings before integration: ready to merge; current measurement/preservation has no blocker. Record the important output-folder condition guard required before future reuse.
 
 ## Task 3: Integrate and prepare the next workspace
 
