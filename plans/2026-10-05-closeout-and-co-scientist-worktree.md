@@ -44,9 +44,9 @@
 
 ## Task 3: Integrate and prepare the next workspace
 
-- [ ] Update local `main` from the fetched `origin/main` using fast-forward only, then merge `gold-weather-l3` normally.
-- [ ] Verify the merged tree with the full offline suite.
-- [ ] Create `co-scientist-pilot` at `.worktrees/co-scientist-pilot` from merged `main`.
-- [ ] Verify the new worktree baseline with the full offline suite.
-- [ ] Delete only the merged `gold-weather-l3` branch; preserve the original checkout and local archive.
-- [ ] Record final commit IDs, workspace paths, test results, and unresolved research choices.
+- [x] Update local `main` from the fetched `origin/main` using fast-forward only, then merge `gold-weather-l3` normally (`3b58bc4`).
+- [x] Verify the merged tree with the full offline suite: 651 passed, 3 deselected in 20.05s.
+- [x] Create `co-scientist-pilot` at `.worktrees/co-scientist-pilot` from merged `main`.
+- [x] Verify the new worktree baseline with the full offline suite: 651 passed, 3 deselected in 20.27s, using a non-login shell.
+- [x] Delete only the merged `gold-weather-l3` branch; preserve the original checkout and local archive.
+- [x] Record final commit IDs, workspace paths, test results, and unresolved research choices in the closeout report and `reports/evidence/2026-10-05-gold-experiments/integration.json`.

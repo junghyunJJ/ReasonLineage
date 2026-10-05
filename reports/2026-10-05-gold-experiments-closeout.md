@@ -10,7 +10,7 @@
 
 이번 환경에서는 `python -B -m pytest -q -p no:cacheprovider`로 **651 passed, 3 deselected (20.08s)**를 확인했다. 실제 모델이나 서비스에 접속하는 `live` 테스트 3개는 제외했다. 이전 격리 환경에서 멈췄던 CLI·프로세스 테스트도 동일 코드로 **13 passed (2.42s)**를 확인했다. 격리 해제 후 통과한 관찰만으로 특정 엔진 결함을 단정하거나 소스를 수정하지 않았다.
 
-전체 결과는 [tests-feature.txt](evidence/2026-10-05-gold-experiments/tests-feature.txt)에 보존했다. 병합된 `main`과 새 워크트리에서도 동일 오프라인 검증을 수행하는 것이 통합 완료 조건이다.
+전체 결과는 [tests-feature.txt](evidence/2026-10-05-gold-experiments/tests-feature.txt)에 보존했다. 병합된 `main`은 651 passed, 3 deselected (20.05s), 새 워크트리는 651 passed, 3 deselected (20.27s)로 동일 오프라인 검증을 통과했다. 각각 [tests-main.txt](evidence/2026-10-05-gold-experiments/tests-main.txt)와 [tests-worktree.txt](evidence/2026-10-05-gold-experiments/tests-worktree.txt)에 보존했다.
 
 ## 데이터셋별 실제 진행 범위
 
@@ -83,6 +83,10 @@ CT Open은 정답지 구축과 리허설 기록이 있고 arXiv는 설계·계�
 
 [archive-manifest.json](evidence/2026-10-05-gold-experiments/archive-manifest.json)은 백업 경로·체크섬·항목 수를 기록한다. 상세 파일 목록은 로컬 백업 옆의 `file-inventory.json`에 있고 그 체크섬도 매니페스트에 있다. Git에는 압축 원자료를 넣지 않는다. 다른 기계에는 이 로컬 백업을 별도로 옮겨야 전체 기록을 복구할 수 있다.
 
-다음 작업 공간은 병합된 `main`을 기준으로 만드는 `co-scientist-pilot` 브랜치와 `.worktrees/co-scientist-pilot`이다. 본 체크아웃은 `main`과 기존 원자료의 보존 위치로 유지하고 `gb.html`은 건드리지 않는다. 원격 푸시와 공개 배포는 이번 작업에 포함하지 않는다.
+로컬 `main` 병합 커밋은 `3b58bc4`이며 사전등록 이력을 포함한 일반 병합이다. 병합된 `main`에서 `co-scientist-pilot` 브랜치와 `.worktrees/co-scientist-pilot`을 만들고 전체 오프라인 검증을 통과했다. 병합된 `gold-weather-l3` 브랜치만 삭제했고 다른 브랜치는 유지했다. 본 체크아웃은 `main`과 기존 원자료의 보존 위치로 유지하며, `gb.html`의 내용이 그대로임을 체크섬으로 확인했다. 원격 푸시와 공개 배포는 하지 않았다.
+
+[integration.json](evidence/2026-10-05-gold-experiments/integration.json)은 커밋·경로·검증 결과와 구현 및 측정 데이터의 Git 객체 동일성을 기록한다. 마지막 완료 기록 커밋은 문서·증거 파일만 갱신하며, 새 브랜치도 이 커밋으로 fast-forward하여 같은 기준으로 시작한다.
+
+새 워크트리의 로그인 셸 초기화에서 키 파일의 값이 오류 메시지로 도구 출력에 나타났다. 이후 명령은 로그인 초기화 없이 실행했고, 버전 관리되는 보고서와 테스트 출력에는 해당 형식의 키값이 없음을 확인했다. 전역 셸 설정이나 자격증명 파일은 이번 작업에서 수정하지 않았다. 노출된 자격증명은 별도로 교체하는 것이 권장된다.
 
 Co-Scientist의 ALS 입력 예시와 AML 약물 재창출 문제 중 첫 과제, 공통 근거 자료, 독립적인 초기·최종 평가 기준은 아직 선택하지 않았다. 논문과 공개된 출력은 이미 모델이 알고 있을 수 있어 새 발견의 증거와 구분해야 한다. 관련 논문: [Accelerating scientific discovery with Co-Scientist](https://www.nature.com/articles/s41586-026-10644-y).
