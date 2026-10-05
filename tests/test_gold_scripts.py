@@ -1,5 +1,6 @@
-"""The gold-set scripts: building repoDB task files from a curation record, the level-1 run script, and the
-level-2 script that replays generation 0 and evolves further."""
+"""The gold-set scripts: building repoDB task files from a curation record, the level-1 run script, the
+level-2 script that replays generation 0 and evolves further, and the level-3 scripts that judge generation 0
+again under one condition and compare it with recuse + isolated."""
 
 import json
 import os
@@ -9,6 +10,8 @@ import sys
 from pathlib import Path
 
 import pytest
+
+from test_gold_diagnose import GOLD, WORSE, aligned, write_run
 
 ROOT = Path(__file__).resolve().parents[1]
 POOL = [{"ind_id": "C1", "indication": "Disease X", "approved": ["Adrug"],
@@ -219,3 +222,119 @@ def test_evolve_stops_without_a_gold_file(tmp_path):
     result = run_evolve(root, env, tmp_path / "out", tmp_path / "missing.json", 3, "wx")
     assert result.returncode == 1 and "no gold file" in result.stderr
     assert not log.exists()
+
+
+# --- the level-3 scripts (weather level-3 design 6) ---
+
+def test_condition_script_is_valid_bash():
+    assert subprocess.run(["bash", "-n", str(ROOT / "scripts" / "run_gold_condition.sh")]).returncode == 0
+
+
+def condition_copy(tmp_path, gold_ids=("wx-01", "wx-03")):
+    root, gold, log, env = evolve_copy(tmp_path, gold_ids)
+    shutil.copy(ROOT / "scripts" / "run_gold_condition.sh", root / "scripts")
+    return root, gold, log, env
+
+
+def run_condition(root, env, *args):
+    return subprocess.run(["bash", str(root / "scripts" / "run_gold_condition.sh"), *map(str, args)],
+                          capture_output=True, text=True, env=env)
+
+
+def test_condition_judges_each_gold_task_again_from_its_generation_zero_then_scores(tmp_path):
+    root, gold, log, env = condition_copy(tmp_path)
+    out = tmp_path / "out"
+    result = run_condition(root, env, out, gold, "self", "isolated", "wx")
+    assert result.returncode == 0, result.stderr
+    calls = [line.split("|") for line in log.read_text().splitlines()]
+    assert {path for path, _ in calls} == {str(root / "src")}
+    runs = [args for _, args in calls if args.startswith("-m reasonlineage run ")]
+    assert runs == [f"-m reasonlineage run {root}/tasks/wx/{i}.json --gen0-from {root}/runs/gold-wx/20261003-120000-{i} "
+                    f"--judges self --context isolated --generations 0 --seed 1 --out {out}"
+                    for i in ("wx-01", "wx-03")]  # wx-02 is not in the gold file
+    assert calls[-1][1].startswith(f"-m reasonlineage gold --gold {gold} ")
+    assert calls[-1][1].endswith(f"--out {out}/report.json --analysis {out}/analysis.md")
+
+
+def test_condition_skips_finished_and_left_out_tasks(tmp_path):
+    root, gold, log, env = condition_copy(tmp_path, ("wx-01", "wx-02", "wx-03"))
+    out = tmp_path / "out"
+    done = out / "20261004-010000-wx-01"
+    done.mkdir(parents=True)
+    (done / "header.json").write_text("{}")
+    (done / "result.json").write_text("{}")
+    (out / "left_out.txt").write_text("wx-02\n")
+    result = run_condition(root, env, out, gold, "all", "isolated", "wx")
+    assert result.returncode == 0, result.stderr
+    assert "skip wx-01: already finished" in result.stdout and "skip wx-02: left out" in result.stdout
+    runs = [line for line in log.read_text().splitlines() if "reasonlineage run " in line]
+    assert len(runs) == 1 and "wx-03.json" in runs[0]
+
+
+def test_condition_stops_at_a_run_that_did_not_finish(tmp_path):
+    root, gold, log, env = condition_copy(tmp_path)
+    stopped = tmp_path / "out" / "20261004-010000-wx-01"
+    stopped.mkdir(parents=True)
+    (stopped / "header.json").write_text("{}")
+    result = run_condition(root, env, tmp_path / "out", gold, "self", "isolated", "wx")
+    assert result.returncode == 1 and "resume" in result.stderr and "wx-01" in result.stderr
+    assert not log.exists()
+
+
+def test_condition_stops_when_a_gold_task_has_an_unfinished_generation_zero(tmp_path):
+    root, gold, log, env = condition_copy(tmp_path)
+    (root / "runs" / "gold-wx" / "20261003-120000-wx-03" / "result.json").unlink()
+    result = run_condition(root, env, tmp_path / "out", gold, "self", "isolated", "wx")
+    assert result.returncode == 1 and "generation-0 run of wx-03" in result.stderr
+    assert "reasonlineage gold" not in (log.read_text() if log.exists() else "")
+
+
+@pytest.mark.parametrize("args, message", [
+    (("OUT", "GOLD", "self", "isolated"), "usage: scripts/run_gold_condition.sh OUT GOLD JUDGES CONTEXT SET"),
+    (("OUT", "missing.json", "self", "isolated", "wx"), "no gold file"),
+    (("OUT", "GOLD", "self", "isolated", "nope"), "no generation-0 runs in runs/gold-nope"),
+])
+def test_condition_refuses_wrong_arguments(tmp_path, args, message):
+    root, gold, log, env = condition_copy(tmp_path)
+    args = [tmp_path / "out" if a == "OUT" else gold if a == "GOLD" else a for a in args]
+    result = run_condition(root, env, *args)
+    assert result.returncode in (1, 2) and message in result.stderr
+    assert not log.exists()
+
+
+COMPARE = ROOT / "scripts" / "compare_conditions.py"
+
+
+def compare_folders(tmp_path):
+    """Baseline runs of t1-t3 in two folders; condition runs of t1-t2 whose best answer is half right, not right."""
+    for i in (1, 2, 3):
+        write_run(tmp_path / ("base-a" if i < 3 else "base-b"), f"20261003-12000{i}-t{i}", f"t{i}", aligned())
+    for i in (1, 2):
+        write_run(tmp_path / "cond", f"20261004-12000{i}-t{i}", f"t{i}", aligned(WORSE))
+    (tmp_path / "cond" / "report.json").write_text("{}")  # a file next to the runs is not a run
+    gold = tmp_path / "gold.json"
+    gold.write_text(json.dumps(GOLD))
+    return gold
+
+
+def test_compare_script_prints_the_verdict_and_writes_it(tmp_path):
+    gold = compare_folders(tmp_path)
+    result = subprocess.run([sys.executable, str(COMPARE), str(tmp_path / "cond"), "--baseline", str(tmp_path / "base-a"),
+                             str(tmp_path / "base-b"), "--gold", str(gold), "--out", str(tmp_path / "out.json")],
+                            capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert "condition 0.5, baseline 1.0" in result.stdout
+    assert "mean -0.500, better in 0 / worse in 2" in result.stdout
+    assert "unpaired, not compared: t3" in result.stdout
+    assert "Verdict (alpha 0.0125): no difference" in result.stdout  # 2 of 2 worse: p = 0.25
+    saved = json.loads((tmp_path / "out.json").read_text())
+    assert (saved["verdict"], saved["tasks"], saved["condition"]) == ("no difference", 2, str(tmp_path / "cond"))
+    assert saved["baseline"] == [str(tmp_path / "base-a"), str(tmp_path / "base-b")]
+
+
+def test_compare_script_stops_on_a_folder_without_finished_runs(tmp_path):
+    gold = compare_folders(tmp_path)
+    (tmp_path / "empty").mkdir()
+    result = subprocess.run([sys.executable, str(COMPARE), str(tmp_path / "empty"), "--baseline", str(tmp_path / "base-a"),
+                             "--gold", str(gold)], capture_output=True, text=True)
+    assert result.returncode == 1 and "no scored runs in" in result.stderr and "empty" in result.stderr
