@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Level-1 measurement of a gold set (gold design 7, gold v0 design 4.5): generation 0 only, one task at
-# a time, then the gold summary. A task that already has a finished run in OUT is skipped. A task
-# whose run stopped halfway stops the script: resume that run first, then run the script again.
+# a time, then the gold summary (report.json) and the level-1 analysis (analysis.md). A task that already
+# has a finished run in OUT is skipped. A task whose run stopped halfway stops the script: resume that run
+# first, then run the script again.
 #
 #   scripts/run_gold.sh SET [OUT]      # SET: a folder under tasks/ and gold/, e.g. repodb-dev; default OUT: runs/gold-SET
 set -euo pipefail
@@ -27,4 +28,5 @@ for task in "$ROOT"/tasks/"$SET"/*.json; do
   fi
   python -m reasonlineage run "$task" --generations 0 --seed 1 --out "$OUT"
 done
-python -m reasonlineage gold --gold "$ROOT/gold/$SET/gold.json" "$OUT"/*/ --out "$OUT/report.json"
+python -m reasonlineage gold --gold "$ROOT/gold/$SET/gold.json" "$OUT"/*/ --out "$OUT/report.json" \
+  --analysis "$OUT/analysis.md"

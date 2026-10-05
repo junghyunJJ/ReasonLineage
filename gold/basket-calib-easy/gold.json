@@ -1,0 +1,27 @@
+{
+  "source": {
+    "generator": "reasonlineage.gold.basket",
+    "set": "basket-calib-easy",
+    "band": "easy"
+  },
+  "tasks": {
+    "basket-calib-easy-01": {
+      "approved": [
+        "Store B"
+      ],
+      "failed": [
+        "Store A",
+        "Store C"
+      ]
+    },
+    "basket-calib-easy-02": {
+      "approved": [
+        "Store A"
+      ],
+      "failed": [
+        "Store B",
+        "Store C"
+      ]
+    }
+  }
+}

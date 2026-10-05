@@ -15,6 +15,8 @@ reasonlineage = "reasonlineage.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+# Building the synthetic gold set only (gold synth design 3); the engine needs none.
+gold = ["numpy>=1.26", "scipy>=1.11"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

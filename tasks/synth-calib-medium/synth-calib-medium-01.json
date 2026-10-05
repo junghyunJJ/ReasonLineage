@@ -1,0 +1,11 @@
+{
+  "id": "synth-calib-medium-01",
+  "question": "Cultured cells were exposed to a drug at 10 concentrations, and the drug effect was measured as a percentage of the maximal possible effect. Measurement error is Gaussian with SD 4.34 %.\nData:\n| concentration (µM) | effect (% of maximum) |\n| --- | --- |\n| 0.01 | 2.25 |\n| 0.0278 | 3.25 |\n| 0.0774 | 14.8 |\n| 0.215 | 35.8 |\n| 0.599 | 53.6 |\n| 1.67 | 65.7 |\n| 4.64 | 76.6 |\n| 12.9 | 78.8 |\n| 35.9 | 74.9 |\n| 100 | 75.9 |\nCandidate models (parameters unknown, all positive):\n- Log-linear model: E = m·ln(C/C0)\n- Hyperbolic Emax model: E = Emax·C/(EC50 + C)\n- Sigmoid Emax model (Hill coefficient 2): E = Emax·C²/(EC50² + C²)\nWhich candidate model most likely generated these data? Rank the candidates, and give the features of the data that decide it, the key evidence, and one further measurement that would best confirm the top pick.",
+  "candidates": [
+    "Log-linear model",
+    "Hyperbolic Emax model",
+    "Sigmoid Emax model (Hill coefficient 2)"
+  ],
+  "category": "analytical",
+  "data_sensitivity": "public"
+}

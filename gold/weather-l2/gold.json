@@ -1,0 +1,387 @@
+{
+  "source": {
+    "from": {
+      "weather-v1": {
+        "api": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000",
+        "months": [
+          7,
+          8
+        ],
+        "measures": [
+          "tavg",
+          "pcp"
+        ],
+        "pool_sha256": "0843cbd9a5f6e302ec401fc64ade67fe4f48c9136ece60578d90d2643447a41f",
+        "exclude_sets": [
+          "weather-calib-easy",
+          "weather-calib-medium",
+          "weather-calib-hard"
+        ],
+        "set": "weather-v1",
+        "band": "medium"
+      },
+      "weather-v2": {
+        "api": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000",
+        "months": [
+          7,
+          8
+        ],
+        "measures": [
+          "tavg",
+          "pcp"
+        ],
+        "pool_sha256": "0843cbd9a5f6e302ec401fc64ade67fe4f48c9136ece60578d90d2643447a41f",
+        "exclude_sets": [
+          "weather-calib-easy",
+          "weather-calib-medium",
+          "weather-calib-hard",
+          "weather-v1"
+        ],
+        "set": "weather-v2",
+        "band": "medium"
+      }
+    },
+    "left_out": [
+      "weather-v1-08",
+      "weather-v1-10",
+      "weather-v1-20"
+    ],
+    "why": "the question's premise was false: no candidate was above its 1901-2000 normal",
+    "design": "specs/2026-10-03-gold-weather-level2-design.md 4.1"
+  },
+  "tasks": {
+    "weather-v1-01": {
+      "approved": [
+        "California"
+      ],
+      "failed": [
+        "Indiana",
+        "Vermont"
+      ]
+    },
+    "weather-v1-02": {
+      "approved": [
+        "New York"
+      ],
+      "failed": [
+        "Louisiana",
+        "Utah"
+      ]
+    },
+    "weather-v1-03": {
+      "approved": [
+        "Utah"
+      ],
+      "failed": [
+        "Connecticut",
+        "Oregon"
+      ]
+    },
+    "weather-v1-04": {
+      "approved": [
+        "Maryland"
+      ],
+      "failed": [
+        "Michigan",
+        "Missouri"
+      ]
+    },
+    "weather-v1-05": {
+      "approved": [
+        "Michigan"
+      ],
+      "failed": [
+        "Alabama",
+        "Arkansas"
+      ]
+    },
+    "weather-v1-06": {
+      "approved": [
+        "West Virginia"
+      ],
+      "failed": [
+        "Florida",
+        "Wisconsin"
+      ]
+    },
+    "weather-v1-07": {
+      "approved": [
+        "California"
+      ],
+      "failed": [
+        "Massachusetts",
+        "Montana"
+      ]
+    },
+    "weather-v1-09": {
+      "approved": [
+        "New Mexico"
+      ],
+      "failed": [
+        "Delaware",
+        "Florida"
+      ]
+    },
+    "weather-v1-11": {
+      "approved": [
+        "Delaware"
+      ],
+      "failed": [
+        "Alabama",
+        "Tennessee"
+      ]
+    },
+    "weather-v1-12": {
+      "approved": [
+        "Nebraska"
+      ],
+      "failed": [
+        "Arizona",
+        "Washington"
+      ]
+    },
+    "weather-v1-13": {
+      "approved": [
+        "Idaho"
+      ],
+      "failed": [
+        "Vermont",
+        "Wisconsin"
+      ]
+    },
+    "weather-v1-14": {
+      "approved": [
+        "Delaware"
+      ],
+      "failed": [
+        "Georgia",
+        "Texas"
+      ]
+    },
+    "weather-v1-15": {
+      "approved": [
+        "North Carolina"
+      ],
+      "failed": [
+        "Illinois",
+        "Iowa"
+      ]
+    },
+    "weather-v1-16": {
+      "approved": [
+        "Wyoming"
+      ],
+      "failed": [
+        "Mississippi",
+        "New Hampshire"
+      ]
+    },
+    "weather-v1-17": {
+      "approved": [
+        "Oklahoma"
+      ],
+      "failed": [
+        "Massachusetts",
+        "Missouri"
+      ]
+    },
+    "weather-v1-18": {
+      "approved": [
+        "New Jersey"
+      ],
+      "failed": [
+        "Minnesota",
+        "Virginia"
+      ]
+    },
+    "weather-v1-19": {
+      "approved": [
+        "Nevada"
+      ],
+      "failed": [
+        "Kansas",
+        "Ohio"
+      ]
+    },
+    "weather-v2-01": {
+      "approved": [
+        "Nevada"
+      ],
+      "failed": [
+        "Kentucky",
+        "South Carolina"
+      ]
+    },
+    "weather-v2-02": {
+      "approved": [
+        "Texas"
+      ],
+      "failed": [
+        "Idaho",
+        "Vermont"
+      ]
+    },
+    "weather-v2-03": {
+      "approved": [
+        "Arkansas"
+      ],
+      "failed": [
+        "Connecticut",
+        "Michigan"
+      ]
+    },
+    "weather-v2-04": {
+      "approved": [
+        "Maryland"
+      ],
+      "failed": [
+        "Oregon",
+        "South Dakota"
+      ]
+    },
+    "weather-v2-05": {
+      "approved": [
+        "Idaho"
+      ],
+      "failed": [
+        "Arizona",
+        "Michigan"
+      ]
+    },
+    "weather-v2-06": {
+      "approved": [
+        "South Dakota"
+      ],
+      "failed": [
+        "Indiana",
+        "Washington"
+      ]
+    },
+    "weather-v2-07": {
+      "approved": [
+        "Maine"
+      ],
+      "failed": [
+        "Georgia",
+        "West Virginia"
+      ]
+    },
+    "weather-v2-08": {
+      "approved": [
+        "Nebraska"
+      ],
+      "failed": [
+        "Kansas",
+        "New Hampshire"
+      ]
+    },
+    "weather-v2-09": {
+      "approved": [
+        "Michigan"
+      ],
+      "failed": [
+        "North Carolina",
+        "Vermont"
+      ]
+    },
+    "weather-v2-10": {
+      "approved": [
+        "Pennsylvania"
+      ],
+      "failed": [
+        "Indiana",
+        "Washington"
+      ]
+    },
+    "weather-v2-11": {
+      "approved": [
+        "Massachusetts"
+      ],
+      "failed": [
+        "Florida",
+        "Illinois"
+      ]
+    },
+    "weather-v2-12": {
+      "approved": [
+        "Iowa"
+      ],
+      "failed": [
+        "Colorado",
+        "Oregon"
+      ]
+    },
+    "weather-v2-13": {
+      "approved": [
+        "Wisconsin"
+      ],
+      "failed": [
+        "Mississippi",
+        "New York"
+      ]
+    },
+    "weather-v2-14": {
+      "approved": [
+        "Tennessee"
+      ],
+      "failed": [
+        "Pennsylvania",
+        "South Dakota"
+      ]
+    },
+    "weather-v2-15": {
+      "approved": [
+        "Idaho"
+      ],
+      "failed": [
+        "Massachusetts",
+        "Mississippi"
+      ]
+    },
+    "weather-v2-16": {
+      "approved": [
+        "Kentucky"
+      ],
+      "failed": [
+        "North Carolina",
+        "Wisconsin"
+      ]
+    },
+    "weather-v2-17": {
+      "approved": [
+        "New Mexico"
+      ],
+      "failed": [
+        "Georgia",
+        "Ohio"
+      ]
+    },
+    "weather-v2-18": {
+      "approved": [
+        "West Virginia"
+      ],
+      "failed": [
+        "Arkansas",
+        "New Mexico"
+      ]
+    },
+    "weather-v2-19": {
+      "approved": [
+        "Arkansas"
+      ],
+      "failed": [
+        "Florida",
+        "Pennsylvania"
+      ]
+    },
+    "weather-v2-20": {
+      "approved": [
+        "Connecticut"
+      ],
+      "failed": [
+        "Missouri",
+        "New Mexico"
+      ]
+    }
+  }
+}

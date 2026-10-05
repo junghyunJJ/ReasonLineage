@@ -1,0 +1,51 @@
+{
+  "source": {
+    "api": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000",
+    "months": [
+      7,
+      8
+    ],
+    "measures": [
+      "tavg",
+      "pcp"
+    ],
+    "pool_sha256": "0843cbd9a5f6e302ec401fc64ade67fe4f48c9136ece60578d90d2643447a41f",
+    "exclude_sets": [],
+    "set": "weather-calib-easy",
+    "band": "easy"
+  },
+  "tasks": {
+    "weather-calib-easy-01": {
+      "month": 7,
+      "measure": "tavg",
+      "departures": {
+        "Louisiana": 1.7,
+        "North Dakota": 5.4,
+        "South Carolina": 3.0
+      },
+      "regions": {
+        "Louisiana": "South",
+        "North Dakota": "Northern Rockies and Plains",
+        "South Carolina": "Southeast"
+      },
+      "margin": 2.4,
+      "winner": "North Dakota"
+    },
+    "weather-calib-easy-02": {
+      "month": 7,
+      "measure": "pcp",
+      "departures": {
+        "Connecticut": 3.41,
+        "Idaho": -0.36,
+        "West Virginia": 0.08
+      },
+      "regions": {
+        "Connecticut": "Northeast",
+        "Idaho": "Northwest",
+        "West Virginia": "Ohio Valley"
+      },
+      "margin": 3.33,
+      "winner": "Connecticut"
+    }
+  }
+}

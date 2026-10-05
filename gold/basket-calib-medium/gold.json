@@ -1,0 +1,27 @@
+{
+  "source": {
+    "generator": "reasonlineage.gold.basket",
+    "set": "basket-calib-medium",
+    "band": "medium"
+  },
+  "tasks": {
+    "basket-calib-medium-01": {
+      "approved": [
+        "Store B"
+      ],
+      "failed": [
+        "Store A",
+        "Store C"
+      ]
+    },
+    "basket-calib-medium-02": {
+      "approved": [
+        "Store C"
+      ],
+      "failed": [
+        "Store A",
+        "Store B"
+      ]
+    }
+  }
+}

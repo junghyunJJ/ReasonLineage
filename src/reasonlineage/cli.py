@@ -8,6 +8,7 @@ import asyncio
 import json
 import os
 import random
+import signal
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -20,7 +21,7 @@ from .checks.base import Checker
 from .checks.gate import Gate
 from .checks.jev import JevChecker
 from .checks.local import LocalLLMChecker
-from .diagnose.gold import format_report, score_run, summarize
+from .diagnose.gold import format_analysis, format_report, score_run, summarize
 from .diagnose.j2 import load_gold_items, run_j2
 from .diagnose.pmid import efetch, run_pmid_check
 from .engine.calls import CallRecorder, ReplaySource, gen0_writing
@@ -99,6 +100,7 @@ def build_parser() -> argparse.ArgumentParser:
     gold.add_argument("run_dirs", nargs="+", metavar="RUN_DIR")
     gold.add_argument("--gold", required=True, help="JSON file: {\"tasks\": {task id: {\"approved\": [...], \"failed\": [...]}}}")
     gold.add_argument("--out", help="also write the summary to this JSON file")
+    gold.add_argument("--analysis", help="also write the level-1 analysis to this Markdown file")
     return parser
 
 
@@ -203,6 +205,26 @@ def cmd_resume(args: argparse.Namespace, services: Services) -> int:
     return _execute(run_dir, header, task, setup, options, protocol, checker, services, resume=True, warnings=warnings)
 
 
+STOP_SIGNALS = (signal.SIGTERM, signal.SIGHUP)
+
+
+async def _cancel_on_signals(coro):
+    """Run `coro`, cancelling it on SIGTERM or SIGHUP the way Ctrl-C does.
+
+    The CLIs run in their own sessions (backends/_subprocess.py), so a hangup or SIGTERM no longer reaches them;
+    cancelling takes the path that kills each call's process group.
+    """
+    loop = asyncio.get_running_loop()
+    task = asyncio.ensure_future(coro)
+    for sig in STOP_SIGNALS:
+        loop.add_signal_handler(sig, task.cancel)
+    try:
+        return await task
+    finally:
+        for sig in STOP_SIGNALS:
+            loop.remove_signal_handler(sig)
+
+
 def _execute(run_dir: Path, header: Mapping[str, Any], task: Task, setup: Setup, options: RunOptions,
              protocol: ProtocolSpec, checker: Checker | None, services: Services, *, resume: bool,
              warnings: Sequence[str]) -> int:
@@ -222,13 +244,17 @@ def _execute(run_dir: Path, header: Mapping[str, Any], task: Task, setup: Setup,
     runner = Runner(run_dir=run_dir, run_id=header["run_id"], task=task, members=setup.panel, backends=backends,
                     protocol=protocol, options=options, events=events, recorder=recorder, gate=gate, policies=FixedPolicies())
     try:
-        summary = asyncio.run(runner.run())
+        summary = asyncio.run(_cancel_on_signals(runner.run()))
     except RunStopped as stop:
         print(f"Run stopped: {stop}\nFix the cause, then run: reasonlineage resume {run_dir}", file=sys.stderr)
         return 2
     except (ResumeMismatch, RunCorrupted) as exc:
         print(f"Cannot continue {run_dir}: {exc}", file=sys.stderr)
         return 1
+    except asyncio.CancelledError:
+        print(f"Run interrupted by a signal; its CLI calls were stopped. Continue with: reasonlineage resume {run_dir}",
+              file=sys.stderr)
+        return 143
     print(f"Done: {run_dir} (best {summary['best']['id']} by {summary['best']['author']}, fitness {summary['best']['fitness']:.3f})")
     return 0
 
@@ -272,6 +298,10 @@ def cmd_gold(args: argparse.Namespace, services: Services) -> int:
     print(format_report(report))
     if args.out:
         Path(args.out).write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if args.analysis:
+        scored = [run for run in runs if run["status"] == "scored"]
+        Path(args.analysis).write_text(format_analysis(scored) if scored else "# Level 1 analysis\n\nNo scored runs.\n",
+                                       encoding="utf-8")
     return 0
 
 
