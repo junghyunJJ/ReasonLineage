@@ -1,0 +1,95 @@
+{
+  "proposals": [
+    {
+      "id": "P8f86c76341",
+      "case": "aml",
+      "method": "reasonlineage",
+      "stage": "initial",
+      "candidate": "c003",
+      "content_sha256": "4841e78f35288b026867983b85860a79c16dddeabcdff32bbd06951259b22372"
+    },
+    {
+      "id": "P63b0584a19",
+      "case": "aml",
+      "method": "reasonlineage",
+      "stage": "final",
+      "candidate": "c006",
+      "content_sha256": "1250075a163c24b82fe67e63fa495856da2dc416b4854333463ce17102f07665"
+    },
+    {
+      "id": "P21965fb6a9",
+      "case": "als",
+      "method": "gpt",
+      "stage": "initial",
+      "candidate": "c002",
+      "content_sha256": "06fc82951ba611777a27c9f0233a8aa38067809d45ebbfd2d202fce9dda7e915"
+    },
+    {
+      "id": "P21965fb6a9",
+      "case": "als",
+      "method": "gpt",
+      "stage": "final",
+      "candidate": "c002",
+      "content_sha256": "06fc82951ba611777a27c9f0233a8aa38067809d45ebbfd2d202fce9dda7e915"
+    },
+    {
+      "id": "Pbf3502722f",
+      "case": "als",
+      "method": "grok",
+      "stage": "initial",
+      "candidate": "c003",
+      "content_sha256": "4306b74b57b3e83903b7b48d22a654362043b331acb87636b68ee8e865ad2bb6"
+    },
+    {
+      "id": "P85c6a67ef4",
+      "case": "als",
+      "method": "grok",
+      "stage": "final",
+      "candidate": "c009",
+      "content_sha256": "e02e7e34f17594c864a3e47663b81e06a53063fe3cd6f462e023befe11ce0178"
+    },
+    {
+      "id": "P5d945db729",
+      "case": "als",
+      "method": "glm",
+      "stage": "initial",
+      "candidate": "c002",
+      "content_sha256": "ccfa86900f66f1a7ab59d351b4281950dc459c57229f0f8eb33a8aaa09f98cd7"
+    },
+    {
+      "id": "Pfde981170d",
+      "case": "als",
+      "method": "glm",
+      "stage": "final",
+      "candidate": "c005",
+      "content_sha256": "73ebea280a4a8bf3d92df1394870b724c1d5b70bbb9b45a1f9e294db72ceb4c9"
+    }
+  ],
+  "pairs": [
+    {
+      "id": "C08314347e9",
+      "case": "als",
+      "kind": "secondary",
+      "method": "grok",
+      "first": "Pbf3502722f",
+      "second": "P85c6a67ef4"
+    },
+    {
+      "id": "Ca39c6cf6d1",
+      "case": "als",
+      "kind": "secondary",
+      "method": "glm",
+      "first": "P5d945db729",
+      "second": "Pfde981170d"
+    },
+    {
+      "id": "C5f344023ca",
+      "case": "aml",
+      "kind": "secondary",
+      "method": "reasonlineage",
+      "first": "P8f86c76341",
+      "second": "P63b0584a19"
+    }
+  ],
+  "excluded": []
+}

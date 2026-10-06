@@ -1,0 +1,93 @@
+{
+  "proposals": [
+    {
+      "id": "R37d5de98f6",
+      "case": "als",
+      "method": "reasonlineage",
+      "stage": "initial",
+      "source": "runs/als-reasonlineage/status.json#initial",
+      "content_sha256": "bc60099612e246d5ac8b951106f8e5e47298eb0ff2b3eee310dfa69d0af4a14a"
+    },
+    {
+      "id": "Rf40aa50ea5",
+      "case": "als",
+      "method": "reasonlineage",
+      "stage": "latest_public_generation_2",
+      "source": "runs/als-reasonlineage/calls/g2/mutate/c007/grok.json",
+      "content_sha256": "89e143141bea756bd0e49ae6dcc652f6b9645c462b97b468b27d9635c5368cb1"
+    },
+    {
+      "id": "Rf72caf9d0f",
+      "case": "aml",
+      "method": "gpt",
+      "stage": "initial",
+      "source": "runs/aml-gpt/status.json#initial",
+      "content_sha256": "ef46cfd4246ba845984339e3b45e5ebeda99e233883d5a9a544bf583f9fe33f0"
+    },
+    {
+      "id": "R1971391d44",
+      "case": "aml",
+      "method": "gpt",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-gpt/calls/g1/mutate/c005/gpt.json",
+      "content_sha256": "e46672d209b7405b92fe4b3dce663fd893ca86547f9a93d03ebbd0dae4cffa05"
+    },
+    {
+      "id": "Rb3b5ded45b",
+      "case": "aml",
+      "method": "gpt",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-gpt/calls/g1/mutate/c006/gpt.json",
+      "content_sha256": "d08dbbed48ca8cc5bdb5c143231fdeb5221123416b072c21856ddfaeddf90d1e"
+    },
+    {
+      "id": "R1dab24a304",
+      "case": "aml",
+      "method": "grok",
+      "stage": "initial",
+      "source": "runs/aml-grok/status.json#initial",
+      "content_sha256": "0ff3a9ff0fe7e290be2aa58ea05aa3b817f9101dc7315644bfdff70769b8fb2b"
+    },
+    {
+      "id": "R8de0a59976",
+      "case": "aml",
+      "method": "grok",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-grok/calls/g1/mutate/c005/grok.json",
+      "content_sha256": "74779141d87a1309b350a19a104add5d47b8d83ff6fe8a90a1384f878555499a"
+    },
+    {
+      "id": "R16754a443a",
+      "case": "aml",
+      "method": "grok",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-grok/calls/g1/mutate/c006/grok.json",
+      "content_sha256": "2e8d678c2941c3c5dea5d863f7d0089e26f586380ef86bd95fdbf7df3a9a116e"
+    },
+    {
+      "id": "Refe5717d20",
+      "case": "aml",
+      "method": "glm",
+      "stage": "initial",
+      "source": "runs/aml-glm/status.json#initial",
+      "content_sha256": "7e51808adaa000d32fdb7d11eb676bdc71a39ec18f95a0c590629cf605fdd193"
+    },
+    {
+      "id": "Rb5e93e51c8",
+      "case": "aml",
+      "method": "glm",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-glm/calls/g1/mutate/c005/glm.json",
+      "content_sha256": "39fb5a6d409c505431f0342d3fcdf4593bd811ec2b754c047b29325fab44426f"
+    },
+    {
+      "id": "Rad289d6103",
+      "case": "aml",
+      "method": "glm",
+      "stage": "latest_public_generation_1",
+      "source": "runs/aml-glm/calls/g1/mutate/c006/glm.json",
+      "content_sha256": "9be21d889b9d202ea5fc019f4ed8aaab25898b8b0adad38ba58c5e54505ac824"
+    }
+  ],
+  "excluded": []
+}

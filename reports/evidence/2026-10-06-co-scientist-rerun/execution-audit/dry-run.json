@@ -1,0 +1,80 @@
+{
+  "schedule": [
+    {
+      "case": "als",
+      "method": "reasonlineage"
+    },
+    {
+      "case": "aml",
+      "method": "reasonlineage"
+    },
+    {
+      "case": "als",
+      "method": "gpt"
+    },
+    {
+      "case": "aml",
+      "method": "gpt"
+    },
+    {
+      "case": "als",
+      "method": "grok"
+    },
+    {
+      "case": "aml",
+      "method": "grok"
+    },
+    {
+      "case": "als",
+      "method": "glm"
+    },
+    {
+      "case": "aml",
+      "method": "glm"
+    }
+  ],
+  "code_commit": "f4eb61da6b21bf2b30ca92ad0ba8ab7a253f4022",
+  "tracked_changes": true,
+  "relaxed": true,
+  "scheduling": "sequential multi-model, concurrent independent provider chains",
+  "protocol_directory": "protocol-relaxed",
+  "code_sha256": "4dcda62ed67e06e9fd08b5b0d5e9720891cb97b3c1eb8b9c6a1a607fa21a9fed",
+  "config_sha256": "4511266ba86a675ffb84380c0c68d1fa73f723441476792235a41f5d2ed4b1f2",
+  "evidence_sha256": {
+    "als": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+    "aml": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8"
+  },
+  "protocol_sha256": "403d0e9fa61e4a4871784445a6032c2ced11957d4386010180b2ba6d4d95d1ed",
+  "models": [
+    {
+      "name": "gpt",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "backend": "codex"
+    },
+    {
+      "name": "grok",
+      "model": "grok-4.7",
+      "effort": "xhigh",
+      "backend": "grok"
+    },
+    {
+      "name": "glm",
+      "model": "glm-5.3-flash",
+      "effort": "max",
+      "backend": "http"
+    }
+  ],
+  "independent_model": "deepseek-v4.1-flash",
+  "independent_effort": "high",
+  "limits": {
+    "total_seconds": 14400,
+    "generation_seconds": 12000,
+    "run_seconds": 2700,
+    "run_tokens": 800000,
+    "run_calls": 30,
+    "total_calls": 248,
+    "controller_retries": 0
+  },
+  "usage_caveat": "reported input+output tokens, cache-inclusive; not measured FLOPs or billed cost"
+}

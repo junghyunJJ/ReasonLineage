@@ -1,0 +1,37 @@
+{
+  "prompt_kind": "same_als_request_error_diagnosis",
+  "exit_code": 1,
+  "subtype": "success",
+  "is_error": true,
+  "duration_seconds": 4.489412459079176,
+  "reported_usage": [
+    7571,
+    0,
+    7571
+  ],
+  "unknown_consumption": false,
+  "payload_keys": [
+    "duration_api_ms",
+    "stop_reason",
+    "session_id",
+    "total_cost_usd",
+    "usage",
+    "modelUsage",
+    "permission_denials",
+    "terminal_reason",
+    "fast_mode_state",
+    "fast_mode_disabled_reason",
+    "subagent_stats",
+    "is_error",
+    "num_turns",
+    "subtype",
+    "api_error_status",
+    "result",
+    "type",
+    "duration_ms",
+    "uuid",
+    "queued_turn_count",
+    "result_index"
+  ],
+  "public_error_message": "API Error: Opus 5.5's safeguards flagged this session (https://www.anthropic.com/legal/aup). You may be seeing this for the first time: Opus 5.5 is more capable and has stronger safeguards as a result, which can sometimes flag biology-research-adjacent work. We're improving these safeguards to reduce the amount of incorrectly flagged messages. Claude Code can't respond to your last message with Opus 5.5.\n\nTry rephrasing the request in a new session or change your model.\n\nLearn more: https://support.claude.com/en/articles/8106465\n\nDetails: `[bio]`\n\nRequest ID: req_011CfkbJ19u6R29dPv5pwjpr\n\nMessage ID: msg_011CfkbJ1aSfsHbYKhaok7Gy"
+}

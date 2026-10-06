@@ -1,0 +1,21 @@
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_relaxed_preserves_four_valid_points_without_extra_calls _________
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-903/test_relaxed_preserves_four_va0')
+
+    def test_relaxed_preserves_four_valid_points_without_extra_calls(tmp_path):
+        setup = load_setup(ROOT / 'configs/co-scientist-rerun.json')
+        result = asyncio.run(run_case(tmp_path / 'run', 'aml', 'glm', setup,
+                                     {'glm': FourPoints('glm')}, Budget(seconds=100),
+                                     root=ROOT, protocol_directory='protocol-relaxed'))
+>       assert result['status'] == 'completed'
+E       AssertionError: assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/test_pilot_critique_count.py:28: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pilot_critique_count.py::test_relaxed_preserves_four_valid_points_without_extra_calls
+1 failed, 1 passed in 0.19s
