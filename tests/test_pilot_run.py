@@ -14,8 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class FakeBackend:
-    def __init__(self, name, fail_at=None, malformed=False):
+    def __init__(self, name, fail_at=None, malformed=False, short=False):
         self.name, self.fail_at, self.malformed = name, fail_at, malformed
+        self.short = short
         self.requests = []
 
     async def complete(self, request):
@@ -24,7 +25,10 @@ class FakeBackend:
             raise BackendError('refused')
         if 'answer' in request.json_schema['properties']:
             title = f'Testable pore hypothesis {len(self.requests)}'
-            data = {'answer': title + '. Supported premise [S1]. Speculative bridge; falsifier stated.',
+            public = title + '. Supported premise [S1]. Speculative bridge; falsifier stated.'
+            if not self.short:
+                public += ' A stated alternative requires independent testing with a matched control.' * 40
+            data = {'answer': public,
                     'ranking': [{'item': title, 'promisingness': .7, 'confidence': .6, 'pmids': []}]}
             if self.malformed:
                 data['ranking'].append(dict(data['ranking'][0], item='second hypothesis'))
@@ -78,6 +82,13 @@ def test_invalid_output_fails_without_format_repair_or_retry(tmp_path):
     assert 'final' not in result
     assert len(services['gpt'].requests) == 4
     assert not (tmp_path / 'als-gpt' / 'result.json').exists()
+
+
+def test_too_short_answer_is_incomplete_without_extra_writing_calls(tmp_path):
+    result, services = execute(tmp_path, 'gpt', {'gpt': FakeBackend('gpt', short=True)})
+    assert result['status'] == 'failed'
+    assert 'final' not in result
+    assert len(services['gpt'].requests) == 4
 
 
 def test_judge_failure_preserves_initial_but_never_a_final(tmp_path):

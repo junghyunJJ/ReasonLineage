@@ -32,6 +32,9 @@ class PilotRunner(Runner):
         issues = fmt.validate_answer(data, None)
         if issues.hard or len(data['ranking']) != 1 or not data['answer'].strip():
             raise WritingFailed('invalid one-hypothesis output')
+        low, high = self.protocol.answer_words
+        if not low <= len(data['answer'].split()) <= high:
+            raise WritingFailed('proposal outside the agreed 400–800 word range')
         anomalies = []
         if issues.soft:
             anomalies.append({'kind': 'prose_mention', 'candidate': cid,
