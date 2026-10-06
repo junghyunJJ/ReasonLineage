@@ -103,3 +103,14 @@ def test_timeout_kills_the_process(fake_claude, monkeypatch):
     backend = ClaudeCLIBackend(binary=fake_claude, retries=0)
     with pytest.raises(BackendError, match="timed out"):
         asyncio.run(backend.complete(request(timeout_s=0.5)))
+
+
+def test_biology_safeguard_is_identified_before_exit_payload_truncation(tmp_path):
+    path = tmp_path / 'bio-error-cli'
+    payload = {'subtype': 'success', 'is_error': True,
+               'result': "API Error: Opus 5.5's safeguards flagged this session. Details: [bio]",
+               'padding': 'x' * 1500}
+    path.write_text('#!' + sys.executable + '\nimport sys\nprint(' + repr(json.dumps(payload)) + ')\nsys.exit(1)\n')
+    path.chmod(0o755)
+    with pytest.raises(BackendError, match='biology safeguard'):
+        asyncio.run(ClaudeCLIBackend(binary=str(path), retries=0).complete(request()))

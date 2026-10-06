@@ -64,6 +64,8 @@ def safe_error(error: BaseException) -> str:
     message = str(error).lower()
     if isinstance(error, BudgetExceeded):
         return str(error)
+    if '[bio]' in message or 'biology safeguard' in message:
+        return 'provider biology safeguard blocked request [bio]'
     if any(word in message for word in ('refus', 'safety', 'cannot assist', 'declin')):
         return 'provider refused request'
     if 'timeout' in message or 'timed out' in message:

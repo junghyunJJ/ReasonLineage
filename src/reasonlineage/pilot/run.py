@@ -3,6 +3,7 @@
 import asyncio
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from ..core.state import EvolutionState
@@ -26,6 +27,23 @@ def save_json(path, value):
 class PilotRunner(Runner):
     initial = None
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        population = self.protocol.data.get('pilot', {}).get('initial_population')
+        if population is not None:
+            self.config = replace(self.config, population_limit=population, survivor_count=population - 2)
+
+    async def _generation_zero(self):
+        population = self.protocol.data.get('pilot', {}).get('initial_population')
+        if population is None:
+            return await super()._generation_zero()
+        offset = 0 if self.task.id == 'als' else 1
+        jobs = [(self._new_id(), self.names[(i + offset) % len(self.names)]) for i in range(population)]
+        written = await gather_all(self._write_or_substitute(0, 'write', cid, actor, self._seed_prompt(None))
+                                  for cid, actor in jobs)
+        return EvolutionState(self.config, [self._record_candidate(cid, w, 'seed', (), 0)
+                                           for (cid, _), w in zip(jobs, written)])
+
     async def _write(self, gen, role, cid, author, prompt):
         name = f'g{gen}/{role}/{cid}/{author}'
         data = await self._author_call(name, author, prompt)
@@ -33,9 +51,13 @@ class PilotRunner(Runner):
         if issues.hard or len(data['ranking']) != 1 or not data['answer'].strip():
             raise WritingFailed('invalid one-hypothesis output')
         low, high = self.protocol.answer_words
-        if not low <= len(data['answer'].split()) <= high:
-            raise WritingFailed('proposal outside the agreed 400–800 word range')
         anomalies = []
+        if not low <= len(data['answer'].split()) <= high:
+            if self.protocol.data['answer'].get('length_enforcement', 'strict') != 'warn':
+                raise WritingFailed('proposal outside the agreed 400–800 word range')
+            anomalies.append({'kind': 'answer_length', 'candidate': cid,
+                              'detail': {'words': len(data['answer'].split()), 'target': [low, high]},
+                              'action': 'kept valid hypothesis; length is advisory'})
         if issues.soft:
             anomalies.append({'kind': 'prose_mention', 'candidate': cid,
                               'detail': list(issues.soft), 'action': 'proceed without repair'})
@@ -73,7 +95,8 @@ class SoloRunner(PilotRunner):
     async def _score(self, state):
         # Distinct names create fresh requests, seeds and records for every critic.
         actor = self.names[0]
-        judges = [f'{actor}-r{i}' for i in range(3)]
+        count = self.protocol.data.get('pilot', {}).get('self_critics', 3)
+        judges = [f'{actor}-r{i}' for i in range(count)]
         for judge in judges:
             self.members[judge] = self.members[actor]
             self.backends[judge] = self.backends[actor]
@@ -93,17 +116,19 @@ class SoloRunner(PilotRunner):
         self._remember_initial(state)
 
 
-async def run_case(run_dir, case, method, setup, services, shared, *, root, seconds=1200, tokens=400000):
+async def run_case(run_dir, case, method, setup, services, shared, *, root, seconds=1200, tokens=400000,
+                   protocol_directory='protocol'):
     if case not in ('als', 'aml') or method not in ('reasonlineage', 'gpt', 'opus', 'grok', 'glm'):
         raise ValueError('unknown pilot case or method')
     run_dir, root = Path(run_dir), Path(root)
     run_dir.mkdir(parents=True, exist_ok=False)
     evidence = (root / f'research/co-scientist-pilot/{case}-evidence.md').read_bytes()
-    protocol = load_protocol(root / 'research/co-scientist-pilot/protocol')
+    protocol = load_protocol(root / 'research/co-scientist-pilot' / protocol_directory)
     members = setup.panel if method == 'reasonlineage' else tuple(m for m in setup.panel if m.name == method)
-    if len(members) != (4 if method == 'reasonlineage' else 1):
-        raise ValueError('pilot requires the pinned four-model roster')
-    local = Budget(seconds=seconds, tokens=tokens, calls=40, lazy=True)
+    policy = protocol.data.get('pilot', {})
+    if len(members) != (policy.get('panel_size', 4) if method == 'reasonlineage' else 1):
+        raise ValueError('pilot requires the configured model roster')
+    local = Budget(seconds=seconds, tokens=tokens, calls=policy.get('call_limit', 40), lazy=True)
     backends = {m.name: MeteredBackend(services[m.name], local, shared, concurrency=setup.concurrency) for m in members}
     header = {'case': case, 'method': method, 'evidence_sha256': hashlib.sha256(evidence).hexdigest(),
               'protocol_sha256': protocol.hash, 'protocol_version': protocol.version,
@@ -112,7 +137,7 @@ async def run_case(run_dir, case, method, setup, services, shared, *, root, seco
     save_json(run_dir / 'header.json', header)
     task = Task(case, evidence.decode('utf-8'), None, 'biomedical', 'public')
     events = EventLog(run_dir / 'events.jsonl')
-    recorder = CallRecorder(run_dir, events, run_seed=20261005, attempts=1)
+    recorder = CallRecorder(run_dir, events, run_seed=policy.get('run_seed', 20261005), attempts=1)
     runner_type = PilotRunner if method == 'reasonlineage' else SoloRunner
     runner = runner_type(run_dir=run_dir, run_id=f'{case}-{method}', task=task, members=members,
                          backends=backends, protocol=protocol, options=RunOptions(), events=events, recorder=recorder)

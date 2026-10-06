@@ -17,6 +17,7 @@ from ..protocol import load_protocol
 from .budget import Budget, MeteredBackend, safe_error
 from .review import citation_audit, comparable, export_expert, review_schema, validate_review
 from .run import run_case, save_json
+from ..engine.runner import gather_all
 
 SCHEDULE = [{'case': case, 'method': method} for method in ('reasonlineage', 'gpt', 'opus', 'grok', 'glm')
             for case in ('als', 'aml')]
@@ -29,24 +30,30 @@ def evaluator_member(setup):
                   base_url=glm.base_url, family='deepseek', api_key_file=glm.api_key_file)
 
 
-def dry_plan(root):
+def dry_plan(root, *, relaxed=False):
     root = Path(root)
-    config = root / 'configs/co-scientist-pilot.json'
+    config = root / ('configs/co-scientist-rerun.json' if relaxed else 'configs/co-scientist-pilot.json')
     setup = load_setup(config)
+    schedule = [{'case': c, 'method': m} for m in ('reasonlineage', *(member.name for member in setup.panel))
+                for c in ('als', 'aml')]
+    protocol_directory = 'protocol-relaxed' if relaxed else 'protocol'
     digest = hashlib.sha256()
     for path in sorted((root / 'src/reasonlineage').rglob('*.py')):
         digest.update(path.relative_to(root).as_posix().encode() + b'\0' + path.read_bytes())
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
     dirty = subprocess.run(['git', 'diff', '--quiet', 'HEAD'], cwd=root).returncode != 0
-    return {'schedule': SCHEDULE, 'code_commit': revision, 'tracked_changes': dirty,
+    return {'schedule': schedule, 'code_commit': revision, 'tracked_changes': dirty, 'relaxed': relaxed,
+            'scheduling': 'sequential multi-model, concurrent independent provider chains' if relaxed else 'sequential',
+            'protocol_directory': protocol_directory,
             'code_sha256': digest.hexdigest(), 'config_sha256': hashlib.sha256(config.read_bytes()).hexdigest(),
             'evidence_sha256': {case: hashlib.sha256((root / f'research/co-scientist-pilot/{case}-evidence.md').read_bytes()).hexdigest()
                                 for case in ('als', 'aml')},
-            'protocol_sha256': load_protocol(root / 'research/co-scientist-pilot/protocol').hash,
+            'protocol_sha256': load_protocol(root / 'research/co-scientist-pilot' / protocol_directory).hash,
             'models': [{'name': m.name, 'model': m.model, 'effort': m.effort, 'backend': m.backend} for m in setup.panel],
             'independent_model': INDEPENDENT_MODEL, 'independent_effort': 'high',
-            'limits': {'total_seconds': 14400, 'generation_seconds': 12000, 'run_seconds': 1200,
-                       'run_tokens': 400000, 'run_calls': 40, 'total_calls': 404, 'controller_retries': 0},
+            'limits': {'total_seconds': 14400, 'generation_seconds': 12000, 'run_seconds': 2700 if relaxed else 1200,
+                       'run_tokens': 800000 if relaxed else 400000, 'run_calls': 30 if relaxed else 40,
+                       'total_calls': 248 if relaxed else 404, 'controller_retries': 0},
             'usage_caveat': 'reported input+output tokens, cache-inclusive; not measured FLOPs or billed cost'}
 
 
@@ -123,10 +130,12 @@ def cost_summary(destination):
 
 
 async def run_study(destination, root, *, setup=None, services=None, evaluator=None,
-                    generation_seconds=12000, total_seconds=14400):
+                    generation_seconds=12000, total_seconds=14400, relaxed=False, preflight_directory=None):
     destination, root = Path(destination), Path(root)
     destination.mkdir(parents=True, exist_ok=False)
-    plan = dry_plan(root)
+    plan = dry_plan(root, relaxed=relaxed)
+    schedule = plan['schedule']
+    protocol_directory = plan['protocol_directory']
     save_json(destination / 'frozen-plan.json', plan)
     frozen = destination / 'frozen-inputs'
     packet_root = frozen / 'research/co-scientist-pilot'
@@ -136,26 +145,53 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
         source = root / f'research/co-scientist-pilot/{case}-evidence.md'
         shutil.copy2(source, packet_root / source.name)
         evidence[case] = (packet_root / source.name).read_text(encoding='utf-8')
-    shutil.copytree(root / 'research/co-scientist-pilot/protocol', packet_root / 'protocol')
-    setup = setup or load_setup(root / 'configs/co-scientist-pilot.json')
+    shutil.copytree(root / 'research/co-scientist-pilot' / protocol_directory, packet_root / protocol_directory)
+    setup = setup or load_setup(root / ('configs/co-scientist-rerun.json' if relaxed else 'configs/co-scientist-pilot.json'))
     save_json(frozen / 'models.json', plan['models'])
-    shared = StudyBudget(destination, seconds=generation_seconds, calls=404, tokens=None, lazy=True)
+    shared = StudyBudget(destination, seconds=generation_seconds, calls=plan['limits']['total_calls'], tokens=None, lazy=True)
+    if preflight_directory is not None:
+        preflight = Path(preflight_directory)
+        shutil.copytree(preflight, destination / 'preflight')
+        clock = json.loads((preflight / 'clock.json').read_text())
+        shared.started = clock['monotonic']
+        save_json(destination / 'clock.json', {**clock, 'first_model_dispatch': 'preflight diagnostic'})
+        receipts = list(preflight.glob('*receipt.json'))
+        if len(receipts) > 4:
+            raise ValueError('diagnostic attempt limit exceeded')
+        for receipt_file in receipts:
+            receipt = json.loads(receipt_file.read_text())
+            shared.calls_used += 1
+            counts = receipt.get('reported_usage')
+            shared.record(tuple(counts) if counts is not None else None)
     statuses, evaluations = [], []
     cancelled, study_error = False, None
     try:
         services = services if services is not None else {m.name: build_backend(m, setup.concurrency) for m in setup.panel}
         evaluator = evaluator if evaluator is not None else build_backend(evaluator_member(setup), 1)
-        for slot in SCHEDULE:
+        async def execute_slot(slot):
             if shared.remaining <= 0:
                 statuses.append({'header': slot, 'status': 'unstarted', 'reason': 'generation deadline'})
-                continue
+                return
             print(f"Starting {slot['case']} / {slot['method']}", flush=True)
             outcome = await run_case(destination / 'runs' / f"{slot['case']}-{slot['method']}",
-                                     slot['case'], slot['method'], setup, services, shared, root=frozen)
+                                     slot['case'], slot['method'], setup, services, shared, root=frozen,
+                                     seconds=plan['limits']['run_seconds'], tokens=plan['limits']['run_tokens'],
+                                     protocol_directory=protocol_directory)
             statuses.append(outcome)
             save_json(destination / 'generation-status.json', statuses)
             print(f"{slot['case']} / {slot['method']}: {outcome['status']}; "
                   f"{outcome['usage']['backend_calls']} calls, {outcome['usage']['reported_tokens']} reported tokens", flush=True)
+        if relaxed:
+            for slot in schedule[:2]:
+                await execute_slot(slot)
+            async def provider_chain(name):
+                for slot in schedule:
+                    if slot['method'] == name:
+                        await execute_slot(slot)
+            await gather_all(provider_chain(member.name) for member in setup.panel)
+        else:
+            for slot in schedule:
+                await execute_slot(slot)
         shared.seconds = total_seconds
     except asyncio.CancelledError:
         cancelled = True
@@ -164,7 +200,7 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
     finally:
         # Recover a cancelled slot's durable status; retain all planned missing slots.
         existing = {(s['header']['case'], s['header']['method']) for s in statuses}
-        for slot in SCHEDULE:
+        for slot in schedule:
             key = slot['case'], slot['method']
             if key in existing:
                 continue
@@ -172,7 +208,7 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
             statuses.append(json.loads(status_file.read_text()) if status_file.exists() else
                             {'header': slot, 'status': 'unstarted', 'reason': study_error or 'study cancelled'})
         ordered = {(s['header']['case'], s['header']['method']): s for s in statuses}
-        statuses = [ordered[s['case'], s['method']] for s in SCHEDULE]
+        statuses = [ordered[s['case'], s['method']] for s in schedule]
         packet = export_expert(destination / 'review-materials', statuses, evidence)
         audits = []
         mapping = json.loads((destination / 'review-materials/analyst/mapping.json').read_text())
@@ -194,7 +230,7 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
                 for c in ('als', 'aml') for o in ('forward', 'reverse')]
         comparisons = []
         for case in ('als', 'aml'):
-            for method in ('gpt', 'opus', 'grok', 'glm'):
+            for method in (member.name for member in setup.panel):
                 comparisons.append({'case': case, 'solo': method,
                                     **comparable(ordered[case, 'reasonlineage'], ordered[case, method])})
         result = {'runs': statuses, 'independent_evaluations': evaluations, 'expert_status': 'pending',

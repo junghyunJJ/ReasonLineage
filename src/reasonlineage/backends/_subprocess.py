@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 from typing import Any, Mapping
 
-from .base import BackendError, ModelRequest, ModelResponse
+from .base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 
 
 class SubprocessBackend:
@@ -25,6 +25,8 @@ class SubprocessBackend:
             try:
                 async with self._semaphore:
                     return await self._run_once(request)
+            except ProviderRefusal:
+                raise
             except BackendError as exc:
                 errors.append(str(exc))
         raise BackendError(f"{self.name}/{request.model} failed after {len(errors)} attempt(s): {errors}")
