@@ -34,7 +34,7 @@ def test_relaxed_three_model_run_completes_thirty_calls_and_retains_long_answer(
     assert len([e for e in events if e['event'] == 'candidate.created']) == 10
     assert len([e for e in events if e['event'] == 'judge.scored']) == 20
     assert any(e['event'] == 'anomaly' and e['kind'] == 'answer_length' for e in events)
-    assert result['header']['budgets']['call_limit'] == 30
+    assert result['header']['budgets']['call_limit'] == 40
 
 
 def test_relaxed_solo_keeps_four_seeds_two_fresh_critics_and_no_crossover(tmp_path):

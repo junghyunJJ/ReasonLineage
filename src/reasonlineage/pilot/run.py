@@ -14,7 +14,7 @@ from ..engine.errors import RunStopped
 from ..engine.events import EventLog
 from ..engine.runner import Runner, Written, WritingFailed, gather_all
 from ..protocol import load_protocol
-from .budget import Budget, MeteredBackend
+from .budget import Budget, MeteredBackend, public_data
 
 
 def save_json(path, value):
@@ -137,7 +137,10 @@ async def run_case(run_dir, case, method, setup, services, shared, *, root, seco
     save_json(run_dir / 'header.json', header)
     task = Task(case, evidence.decode('utf-8'), None, 'biomedical', 'public')
     events = EventLog(run_dir / 'events.jsonl')
-    recorder = CallRecorder(run_dir, events, run_seed=policy.get('run_seed', 20261005), attempts=1)
+    format_retry = policy.get('format_retry', False)
+    recorder = CallRecorder(run_dir, events, run_seed=policy.get('run_seed', 20261005),
+                            attempts=2 if format_retry else 1, retry_backend_errors=False,
+                            unusable_sanitizer=public_data if format_retry else None)
     runner_type = PilotRunner if method == 'reasonlineage' else SoloRunner
     runner = runner_type(run_dir=run_dir, run_id=f'{case}-{method}', task=task, members=members,
                          backends=backends, protocol=protocol, options=RunOptions(), events=events, recorder=recorder)

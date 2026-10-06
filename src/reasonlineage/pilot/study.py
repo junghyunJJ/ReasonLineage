@@ -1,8 +1,9 @@
-"""Ten fixed pilot slots, independent reviews, and a hard process deadline."""
+"""Fixed pilot slots, independent reviews, and a hard process deadline."""
 
 import asyncio
 import hashlib
 import json
+import math
 import shutil
 import subprocess
 import time
@@ -30,19 +31,43 @@ def evaluator_member(setup):
                   base_url=glm.base_url, family='deepseek', api_key_file=glm.api_key_file)
 
 
-def dry_plan(root, *, relaxed=False):
+def _prior_attempt(directory):
+    directory = Path(directory).resolve()
+    usage = json.loads((directory / 'study.json').read_text())['usage']
+    counters = ('backend_calls', 'reported_input_tokens', 'reported_output_tokens',
+                'reported_tokens', 'unknown_usage_calls')
+    if not isinstance(usage, dict) or any(
+            not isinstance(usage.get(key), int) or isinstance(usage[key], bool) or usage[key] < 0
+            for key in counters):
+        raise ValueError('prior study usage must contain nonnegative integer counters')
+    if (usage['reported_input_tokens'] + usage['reported_output_tokens'] != usage['reported_tokens']
+            or usage['unknown_usage_calls'] > usage['backend_calls']):
+        raise ValueError('prior study usage counters are inconsistent')
+    clock = json.loads((directory / 'clock.json').read_text())
+    started = clock.get('monotonic') if isinstance(clock, dict) else None
+    if not isinstance(started, (int, float)) or isinstance(started, bool) or not math.isfinite(started):
+        raise ValueError('prior run clock must contain a finite monotonic start')
+    return {'directory': str(directory), 'usage': usage, 'clock': clock}
+
+
+def dry_plan(root, *, relaxed=False, prior_run_directory=None):
     root = Path(root)
     config = root / ('configs/co-scientist-rerun.json' if relaxed else 'configs/co-scientist-pilot.json')
     setup = load_setup(config)
     schedule = [{'case': c, 'method': m} for m in ('reasonlineage', *(member.name for member in setup.panel))
                 for c in ('als', 'aml')]
+    prior = _prior_attempt(prior_run_directory) if prior_run_directory is not None else None
+    carried_calls = prior['usage']['backend_calls'] if prior else (4 if relaxed else 0)
+    total_calls = carried_calls + len(schedule) * 40 + 4
+    if total_calls > 404:
+        raise ValueError('planned backend call ceiling exceeds original 404-call authorization')
     protocol_directory = 'protocol-relaxed' if relaxed else 'protocol'
     digest = hashlib.sha256()
     for path in sorted((root / 'src/reasonlineage').rglob('*.py')):
         digest.update(path.relative_to(root).as_posix().encode() + b'\0' + path.read_bytes())
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
     dirty = subprocess.run(['git', 'diff', '--quiet', 'HEAD'], cwd=root).returncode != 0
-    return {'schedule': schedule, 'code_commit': revision, 'tracked_changes': dirty, 'relaxed': relaxed,
+    plan = {'schedule': schedule, 'code_commit': revision, 'tracked_changes': dirty, 'relaxed': relaxed,
             'scheduling': 'sequential multi-model, concurrent independent provider chains' if relaxed else 'sequential',
             'protocol_directory': protocol_directory,
             'code_sha256': digest.hexdigest(), 'config_sha256': hashlib.sha256(config.read_bytes()).hexdigest(),
@@ -53,8 +78,11 @@ def dry_plan(root, *, relaxed=False):
             'independent_model': INDEPENDENT_MODEL, 'independent_effort': 'high',
             'limits': {'total_seconds': 14400, 'generation_seconds': 12000, 'run_seconds': 2700 if relaxed else 1200,
                        'run_tokens': 800000 if relaxed else 400000, 'run_calls': 30 if relaxed else 40,
-                       'total_calls': 248 if relaxed else 404, 'controller_retries': 0},
+                       'max_run_calls': 40, 'total_calls': total_calls, 'controller_retries': 0},
             'usage_caveat': 'reported input+output tokens, cache-inclusive; not measured FLOPs or billed cost'}
+    if prior is not None:
+        plan['prior_attempt'] = prior
+    return plan
 
 
 class StudyBudget(Budget):
@@ -130,10 +158,20 @@ def cost_summary(destination):
 
 
 async def run_study(destination, root, *, setup=None, services=None, evaluator=None,
-                    generation_seconds=12000, total_seconds=14400, relaxed=False, preflight_directory=None):
+                    generation_seconds=12000, total_seconds=14400, relaxed=False, preflight_directory=None,
+                    prior_run_directory=None):
     destination, root = Path(destination), Path(root)
+    if destination.exists():
+        raise FileExistsError(destination)
+    if prior_run_directory is not None and preflight_directory is not None:
+        raise ValueError('prior run and preflight directories are mutually exclusive')
+    if prior_run_directory is not None and destination.resolve().is_relative_to(Path(prior_run_directory).resolve()):
+        raise ValueError('new output cannot be inside prior run directory')
+    plan = dry_plan(root, relaxed=relaxed, prior_run_directory=prior_run_directory)
+    if prior_run_directory is not None:
+        generation_seconds = min(generation_seconds, plan['limits']['generation_seconds'])
+        total_seconds = min(total_seconds, plan['limits']['total_seconds'])
     destination.mkdir(parents=True, exist_ok=False)
-    plan = dry_plan(root, relaxed=relaxed)
     schedule = plan['schedule']
     protocol_directory = plan['protocol_directory']
     save_json(destination / 'frozen-plan.json', plan)
@@ -149,7 +187,19 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
     setup = setup or load_setup(root / ('configs/co-scientist-rerun.json' if relaxed else 'configs/co-scientist-pilot.json'))
     save_json(frozen / 'models.json', plan['models'])
     shared = StudyBudget(destination, seconds=generation_seconds, calls=plan['limits']['total_calls'], tokens=None, lazy=True)
-    if preflight_directory is not None:
+    if prior_run_directory is not None:
+        prior = plan['prior_attempt']
+        prior_directory = Path(prior['directory'])
+        shutil.copytree(prior_directory, destination / 'prior-attempt')
+        shutil.copy2(prior_directory / 'clock.json', destination / 'clock.json')
+        shared.started = prior['clock']['monotonic']
+        usage = prior['usage']
+        shared.calls_used = usage['backend_calls']
+        shared.reported_input = usage['reported_input_tokens']
+        shared.reported_output = usage['reported_output_tokens']
+        shared.reported_tokens = usage['reported_tokens']
+        shared.unknown = usage['unknown_usage_calls']
+    elif preflight_directory is not None:
         preflight = Path(preflight_directory)
         shutil.copytree(preflight, destination / 'preflight')
         clock = json.loads((preflight / 'clock.json').read_text())

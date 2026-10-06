@@ -9,9 +9,9 @@ import hashlib
 import json
 from dataclasses import asdict, replace
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
-from ..backends.base import BackendError, ModelBackend, ModelRequest, ModelResponse
+from ..backends.base import BackendError, ModelBackend, ModelRequest, ModelResponse, ProviderRefusal
 from .errors import RunCorrupted, RunStopped
 from .events import EventLog, read_events
 
@@ -79,6 +79,12 @@ def _unusable(check: Callable[[ModelResponse], Any] | None, response: ModelRespo
     return None
 
 
+def _provider_refused(response: ModelResponse) -> bool:
+    """Explicit provider refusal markers; do not infer refusals from ordinary prose."""
+    return (isinstance(response.data, Mapping) and bool(response.data.get('refusal'))
+            or (response.raw or {}).get('finish_reason') == 'content_filter')
+
+
 class ReplaySource:
     """Answers recorded by another run, offered by cache key. When both runs use the same call
     name the matching call is used; otherwise identical requests are matched in order.
@@ -114,17 +120,22 @@ class ReplaySource:
 
 class CallRecorder:
     def __init__(self, run_dir: str | Path, events: EventLog, run_seed: int,
-                 replay: ReplaySource | None = None, attempts: int = 2) -> None:
+                 replay: ReplaySource | None = None, attempts: int = 2, *,
+                 retry_backend_errors: bool = True,
+                 unusable_sanitizer: Callable[[Any], Any] | None = None) -> None:
         self.run_dir = Path(run_dir)
         self.events = events
         self.run_seed = run_seed
         self.replay = replay
         self.attempts = attempts
+        self.retry_backend_errors = retry_backend_errors
+        self.unusable_sanitizer = unusable_sanitizer
 
     async def call(self, name: str, member: str, backend: ModelBackend, request: ModelRequest,
                    check: Callable[[ModelResponse], Any] | None = None) -> ModelResponse:
-        """`check` raises ValueError for output the engine cannot use; that counts as a failed attempt,
-        so it is retried with a new seed and never stored as the call's answer."""
+        """`check` raises ValueError for output the engine cannot use. It may be retried with
+        a new seed, but never becomes the call's answer. An optional sanitizer enables a
+        separate audit of unusable outputs. Provider refusals are never retried."""
         key = cache_key(member, request)
         if self.events.recorded_call(name) is not None:
             if self.replay is not None:
@@ -143,22 +154,48 @@ class CallRecorder:
                 raise RunStopped(f"{name} must come from {self.replay.run_dir}, which has no matching answer; "
                                  "generation 0 is shared only between runs of the same task, protocol, and panel")
         errors = []
+        terminal_error = None
         first = self.events.failed_attempts(name)  # after a resume, the attempts go on with new seeds
         for attempt in range(first, first + self.attempts):
             seed = derive_seed(self.run_seed, name, attempt)
+            audit = {}
             try:
                 response = await backend.complete(replace(request, seed=seed))
             except BackendError as exc:
                 error = str(exc)
+                if isinstance(exc, ProviderRefusal) or not self.retry_backend_errors:
+                    terminal_error = exc
             else:
-                error = _unusable(check, response)
+                if _provider_refused(response):
+                    error = 'provider refused request'
+                    terminal_error = ProviderRefusal(error)
+                else:
+                    error = _unusable(check, response)
                 if error is None:
                     return self._save(name, member, request, key, response, seed, replayed=False)
+                if self.unusable_sanitizer is not None:
+                    path = self._save_unusable(name, member, request, response, seed, attempt, error)
+                    audit['file'] = path.relative_to(self.run_dir).as_posix()
             errors.append(error)
-            self.events.append_call("call.failed", name=name, member=member, attempt=attempt, error=error[:500])
-        message = f"{name} failed after {self.attempts} attempt(s): {errors}"
+            self.events.append_call("call.failed", name=name, member=member, attempt=attempt, error=error[:500], **audit)
+            if terminal_error is not None:
+                break
+        message = f"{name} failed after {len(errors)} attempt(s): {errors}"
         self.events.append_call("call.gave_up", name=name, member=member, error=message)
+        if terminal_error is not None:
+            raise terminal_error
         raise BackendError(message)
+
+    def _save_unusable(self, name: str, member: str, request: ModelRequest,
+                       response: ModelResponse, seed: int, attempt: int, error: str) -> Path:
+        path = self.run_dir / 'unusable' / name / f'attempt-{attempt}.json'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        record = {'attempt': attempt, 'error': error,
+                  'request': {'member': member, **asdict(replace(request, seed=seed))},
+                  'response': asdict(response)}
+        record = self.unusable_sanitizer(record)
+        path.write_text(json.dumps(record, ensure_ascii=False, default=str, indent=1), encoding='utf-8')
+        return path
 
     def _save(self, name: str, member: str, request: ModelRequest, key: str,
               response: ModelResponse, seed: int | None, replayed: bool) -> ModelResponse:
