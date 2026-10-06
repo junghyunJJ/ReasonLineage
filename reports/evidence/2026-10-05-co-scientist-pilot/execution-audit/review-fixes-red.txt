@@ -1,0 +1,195 @@
+...........FF.....FFFFF....F                                             [100%]
+=================================== FAILURES ===================================
+_____________ test_queued_calls_recheck_tokens_at_actual_admission _____________
+
+    def test_queued_calls_recheck_tokens_at_actual_admission():
+        class Serial(Service):
+            def __init__(self):
+                super().__init__()
+                self.semaphore = asyncio.Semaphore(1)
+
+            async def complete(self, request):
+                async with self.semaphore:
+                    await asyncio.sleep(.001)
+                    return await super().complete(request)
+        service = Serial()
+        local = Budget(tokens=1, calls=10)
+        backend = MeteredBackend(service, local, Budget(calls=10))
+        async def invoke():
+            return await asyncio.gather(*(backend.complete(ModelRequest('s', 'p', 'fake')) for _ in range(5)),
+                                        return_exceptions=True)
+        outcomes = asyncio.run(invoke())
+>       assert len(service.requests) == 1
+E       AssertionError: assert 5 == 1
+E        +  where 5 = len([ModelRequest(system='s', prompt='p', model='fake', effort=None, json_schema=None, timeout_s=480.0, seed=None, max_tok...ompt='p', model='fake', effort=None, json_schema=None, timeout_s=480.0, seed=None, max_tokens=None, top_logprobs=None)])
+E        +    where [ModelRequest(system='s', prompt='p', model='fake', effort=None, json_schema=None, timeout_s=480.0, seed=None, max_tok...ompt='p', model='fake', effort=None, json_schema=None, timeout_s=480.0, seed=None, max_tokens=None, top_logprobs=None)] = <test_pilot_budget.test_queued_calls_recheck_tokens_at_actual_admission.<locals>.Serial object at 0x1554e7c4e060>.requests
+
+tests/test_pilot_budget.py:130: AssertionError
+________ test_unknown_successful_usage_stops_new_token_bounded_dispatch ________
+
+    def test_unknown_successful_usage_stops_new_token_bounded_dispatch():
+        class Unreported(Service):
+            async def complete(self, request):
+                return replace(await super().complete(request), raw={})
+        service = Unreported()
+        backend = MeteredBackend(service, Budget(), Budget(tokens=None))
+        async def invoke():
+            first = await backend.complete(ModelRequest('s', 'p', 'fake'))
+            assert first.text == 'public answer'
+            with pytest.raises(BackendError, match='usage'):
+                await backend.complete(ModelRequest('s', 'p', 'fake'))
+>       asyncio.run(invoke())
+
+tests/test_pilot_budget.py:146:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../../../miniconda3/envs/r_441/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+../../../../miniconda3/envs/r_441/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+../../../../miniconda3/envs/r_441/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    async def invoke():
+        first = await backend.complete(ModelRequest('s', 'p', 'fake'))
+        assert first.text == 'public answer'
+>       with pytest.raises(BackendError, match='usage'):
+E       Failed: DID NOT RAISE <class 'reasonlineage.backends.base.BackendError'>
+
+tests/test_pilot_budget.py:144: Failed
+___________ test_public_packet_does_not_reveal_the_comparison_graph ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_public_packet_does_not_re0')
+
+    def test_public_packet_does_not_reveal_the_comparison_graph(tmp_path):
+        packet = export_expert(tmp_path, statuses(), {'als': 'Evidence'})
+>       assert packet['pairs'] == []
+E       AssertionError: assert [{'case': 'al...Pac800c7632'}] == []
+E
+E         Left contains 3 more items, first extra item: {'case': 'als', 'id': 'Cbff6b2140d', 'left': 'Pac800c7632', 'right': 'P482e26b088'}
+E         Use -v to get more diff
+
+tests/test_pilot_review.py:77: AssertionError
+_ test_explicit_model_alias_or_stage_disclosure_is_quarantined[As GPT, I propose this.] _
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_explicit_model_alias_or_s0')
+text = 'As GPT, I propose this.'
+
+    @pytest.mark.parametrize('text', ['As GPT, I propose this.', 'As Claude I propose this.',
+                                      'This final revision improves my initial proposal.'])
+    def test_explicit_model_alias_or_stage_disclosure_is_quarantined(tmp_path, text):
+        data = statuses()[:1]
+        data[0]['initial'] = proposal(text)
+        data[0]['final'] = proposal(text)
+        packet = export_expert(tmp_path, data, {'als': 'Evidence'})
+>       assert packet['proposals'] == []
+E       AssertionError: assert [{'case': 'al...'Hypothesis'}] == []
+E
+E         Left contains one more item: {'case': 'als', 'id': 'Pa27e0fc254', 'text': 'As GPT, I propose this.', 'title': 'Hypothesis'}
+E         Use -v to get more diff
+
+tests/test_pilot_review.py:90: AssertionError
+_ test_explicit_model_alias_or_stage_disclosure_is_quarantined[As Claude I propose this.] _
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_explicit_model_alias_or_s1')
+text = 'As Claude I propose this.'
+
+    @pytest.mark.parametrize('text', ['As GPT, I propose this.', 'As Claude I propose this.',
+                                      'This final revision improves my initial proposal.'])
+    def test_explicit_model_alias_or_stage_disclosure_is_quarantined(tmp_path, text):
+        data = statuses()[:1]
+        data[0]['initial'] = proposal(text)
+        data[0]['final'] = proposal(text)
+        packet = export_expert(tmp_path, data, {'als': 'Evidence'})
+>       assert packet['proposals'] == []
+E       AssertionError: assert [{'case': 'al...'Hypothesis'}] == []
+E
+E         Left contains one more item: {'case': 'als', 'id': 'Pb52165e8a1', 'text': 'As Claude I propose this.', 'title': 'Hypothesis'}
+E         Use -v to get more diff
+
+tests/test_pilot_review.py:90: AssertionError
+_ test_explicit_model_alias_or_stage_disclosure_is_quarantined[This final revision improves my initial proposal.] _
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_explicit_model_alias_or_s2')
+text = 'This final revision improves my initial proposal.'
+
+    @pytest.mark.parametrize('text', ['As GPT, I propose this.', 'As Claude I propose this.',
+                                      'This final revision improves my initial proposal.'])
+    def test_explicit_model_alias_or_stage_disclosure_is_quarantined(tmp_path, text):
+        data = statuses()[:1]
+        data[0]['initial'] = proposal(text)
+        data[0]['final'] = proposal(text)
+        packet = export_expert(tmp_path, data, {'als': 'Evidence'})
+>       assert packet['proposals'] == []
+E       AssertionError: assert [{'case': 'al...'Hypothesis'}] == []
+E
+E         Left contains one more item: {'case': 'als', 'id': 'P1235d6869c', 'text': 'This final revision improves my initial proposal.', 'title': 'Hypothesis'}
+E         Use -v to get more diff
+
+tests/test_pilot_review.py:90: AssertionError
+_________ test_biological_gpt_and_statistical_glm_terms_remain_public __________
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_biological_gpt_and_statis0')
+
+    def test_biological_gpt_and_statistical_glm_terms_remain_public(tmp_path):
+        data = statuses()[:1]
+        data[0]['initial'] = data[0]['final'] = proposal('GPT-dependent transamination is measured using a GLM estimator.')
+        assert len(export_expert(tmp_path, data, {'als': 'Evidence'})['proposals']) == 1
+>       b['usage']['reported_tokens'] = 100
+E       NameError: name 'b' is not defined
+
+tests/test_pilot_review.py:97: NameError
+___ test_cancelled_review_preserves_previous_ratings_and_all_review_statuses ___
+
+tmp_path = PosixPath('/tmp/pytest-of-jungj2/pytest-876/test_cancelled_review_preserve0')
+
+    def test_cancelled_review_preserves_previous_ratings_and_all_review_statuses(tmp_path):
+        class CancelSecond(Independent):
+            async def complete(self, request):
+                if len(self.requests) == 1:
+                    raise asyncio.CancelledError
+                return await super().complete(request)
+        setup = load_setup(ROOT / 'configs/co-scientist-pilot.json')
+        services = {m.name: FakeBackend(m.name) for m in setup.panel}
+        out = tmp_path / 'study'
+        with pytest.raises(asyncio.CancelledError):
+            asyncio.run(run_study(out, ROOT, setup=setup, services=services, evaluator=CancelSecond()))
+        result = json.loads((out / 'study.json').read_text())
+>       assert [e['status'] for e in result['independent_evaluations']] == ['completed', 'cutoff', 'unstarted', 'unstarted']
+E       AssertionError: assert [] == ['completed',..., 'unstarted']
+E
+E         Right contains 4 more items, first extra item: 'completed'
+E         Use -v to get more diff
+
+tests/test_pilot_study.py:100: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Starting als / reasonlineage
+als / reasonlineage: completed; 40 calls, 1000 reported tokens
+Starting aml / reasonlineage
+aml / reasonlineage: completed; 40 calls, 1000 reported tokens
+Starting als / gpt
+als / gpt: completed; 40 calls, 1000 reported tokens
+Starting aml / gpt
+aml / gpt: completed; 40 calls, 1000 reported tokens
+Starting als / opus
+als / opus: completed; 40 calls, 1000 reported tokens
+Starting aml / opus
+aml / opus: completed; 40 calls, 1000 reported tokens
+Starting als / grok
+als / grok: completed; 40 calls, 1000 reported tokens
+Starting aml / grok
+aml / grok: completed; 40 calls, 1000 reported tokens
+Starting als / glm
+als / glm: completed; 40 calls, 1000 reported tokens
+Starting aml / glm
+aml / glm: completed; 40 calls, 1000 reported tokens
+=========================== short test summary info ============================
+FAILED tests/test_pilot_budget.py::test_queued_calls_recheck_tokens_at_actual_admission
+FAILED tests/test_pilot_budget.py::test_unknown_successful_usage_stops_new_token_bounded_dispatch
+FAILED tests/test_pilot_review.py::test_public_packet_does_not_reveal_the_comparison_graph
+FAILED tests/test_pilot_review.py::test_explicit_model_alias_or_stage_disclosure_is_quarantined[As GPT, I propose this.]
+FAILED tests/test_pilot_review.py::test_explicit_model_alias_or_stage_disclosure_is_quarantined[As Claude I propose this.]
+FAILED tests/test_pilot_review.py::test_explicit_model_alias_or_stage_disclosure_is_quarantined[This final revision improves my initial proposal.]
+FAILED tests/test_pilot_review.py::test_biological_gpt_and_statistical_glm_terms_remain_public
+FAILED tests/test_pilot_study.py::test_cancelled_review_preserves_previous_ratings_and_all_review_statuses
+8 failed, 20 passed in 1.33s
