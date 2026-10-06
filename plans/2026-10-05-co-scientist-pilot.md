@@ -25,7 +25,7 @@
 ## Review focus
 
 - Cached input must be accounted for without double-counting reasoning or cache subsets.
-- A cutoff, unknown consumption, failure or malformed output must not become a completed final proposal.
+- A cutoff, failure or malformed output must not become a completed final proposal. Unknown successful usage stops new token-bounded admission; an already completed valid sequence may be retained, with usage comparability explicitly unavailable (design section 6).
 - Fresh critic replicas must produce three separately recorded calls, not one cached response.
 - Anonymous materials must exclude model/method/stage mapping and automatic evaluation scores.
 - Deadline cancellation and process shutdown must prevent additional dispatch; preserve already completed data.
@@ -60,7 +60,7 @@ Produces: dry-run plan; ten isolated generation slots; anonymous proposals, pair
 - [x] Test anonymous identity isolation, duplicate reuse, initial/final pairing, response ID validation and bibliography checks.
 - [x] Test dry-run without backend calls, refuse output reuse, bounded partial scheduling and total call accounting using real runners with fake services.
 - [x] Implement after failing tests; run full offline suite and CLI dry-run.
-- [ ] Commit; obtain one read-only independent review; fix material findings with regression tests.
+- [x] Commit; obtain one read-only independent review; fix material findings with regression tests.
 
 ## Task 4: Live pilot and reporting
 

@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from reasonlineage.pilot.review import export_expert, validate_review, citation_audit, comparable
+from reasonlineage.pilot.review import export_expert, validate_review, citation_audit, comparable, derive_preferences
 
 
 def proposal(text):
@@ -27,7 +27,7 @@ def test_anonymous_export_deduplicates_and_hides_identity_stages_and_scores(tmp_
     public = ''.join(p.read_text() for p in (tmp_path / 'expert').rglob('*') if p.is_file())
     for secret in ('reasonlineage', 'gpt', 'c001', 'fitness', 'promisingness', 'confidence'):
         assert secret not in public.lower()
-    assert len(packet['pairs']) == 3
+    assert packet['pairs'] == []
     assert len({p['id'] for p in packet['proposals']}) == 3
     with pytest.raises(FileExistsError):
         export_expert(tmp_path, data, {'als': 'Shared evidence'})
@@ -73,3 +73,38 @@ def test_usage_comparison_does_not_infer_same_budget_from_call_counts():
     b['usage']['reported_tokens'] = 100
     b['usage']['unknown_usage_calls'] = 1
     assert not comparable(a, b)['comparable_usage']
+
+
+def test_public_packet_does_not_reveal_the_comparison_graph(tmp_path):
+    packet = export_expert(tmp_path, statuses(), {'als': 'Evidence'})
+    assert packet['pairs'] == []
+    ratings = json.loads((tmp_path / 'expert/ratings.json').read_text())
+    assert ratings['overall_ordering'][0]['tie_groups'] == []
+    assert len(json.loads((tmp_path / 'analyst/mapping.json').read_text())['pairs']) == 3
+
+
+@pytest.mark.parametrize('text', ['As GPT, I propose this.', 'As Claude I propose this.',
+                                  'This final revision improves my initial proposal.'])
+def test_explicit_model_alias_or_stage_disclosure_is_quarantined(tmp_path, text):
+    data = statuses()[:1]
+    data[0]['initial'] = proposal(text)
+    data[0]['final'] = proposal(text)
+    packet = export_expert(tmp_path, data, {'als': 'Evidence'})
+    assert packet['proposals'] == []
+
+
+def test_biological_gpt_and_statistical_glm_terms_remain_public(tmp_path):
+    data = statuses()[:1]
+    data[0]['initial'] = data[0]['final'] = proposal('GPT-dependent transamination is measured using a GLM estimator.')
+    assert len(export_expert(tmp_path, data, {'als': 'Evidence'})['proposals']) == 1
+
+
+def test_blinded_overall_order_derives_planned_pairs_with_ties_and_unknowns():
+    ordering = [{'case': 'als', 'tie_groups': [['a'], ['b', 'c']], 'unrankable_ids': ['d']}]
+    pairs = [{'id': '1', 'case': 'als', 'first': 'a', 'second': 'b'},
+             {'id': '2', 'case': 'als', 'first': 'b', 'second': 'c'},
+             {'id': '3', 'case': 'als', 'first': 'a', 'second': 'd'}]
+    result = derive_preferences(ordering, pairs)
+    assert [r['preference'] for r in result] == ['first', 'tie', 'unsure']
+    with pytest.raises(ValueError):
+        derive_preferences([{'case': 'als', 'tie_groups': [['a'], ['a']]}], pairs)

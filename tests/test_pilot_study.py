@@ -83,3 +83,19 @@ def test_supervisor_enforces_deadline_even_when_worker_ignores_sigterm(tmp_path)
     start = time.monotonic()
     assert supervise([sys.executable, '-c', code], marker, max_seconds=.05, grace_seconds=.05, poll_seconds=.01) != 0
     assert time.monotonic() - start < 2
+
+
+def test_cancelled_review_preserves_previous_ratings_and_all_review_statuses(tmp_path):
+    class CancelSecond(Independent):
+        async def complete(self, request):
+            if len(self.requests) == 1:
+                raise asyncio.CancelledError
+            return await super().complete(request)
+    setup = load_setup(ROOT / 'configs/co-scientist-pilot.json')
+    services = {m.name: FakeBackend(m.name) for m in setup.panel}
+    out = tmp_path / 'study'
+    with pytest.raises(asyncio.CancelledError):
+        asyncio.run(run_study(out, ROOT, setup=setup, services=services, evaluator=CancelSecond()))
+    result = json.loads((out / 'study.json').read_text())
+    assert [e['status'] for e in result['independent_evaluations']] == ['completed', 'cutoff', 'unstarted', 'unstarted']
+    assert result['independent_evaluations'][0]['ratings']

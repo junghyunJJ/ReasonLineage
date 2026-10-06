@@ -107,6 +107,8 @@ class Budget:
             raise BudgetExceeded('budget call limit')
         if self.tokens is not None and self.reported_tokens >= self.tokens:
             raise BudgetExceeded('budget token limit')
+        if self.tokens is not None and self.unknown:
+            raise BudgetExceeded('budget usage unavailable; token cap cannot be verified')
 
     def reserve(self) -> None:
         self.check()
@@ -136,11 +138,17 @@ def _numeric_tree(value: Any) -> Any:
 
 
 class MeteredBackend:
-    def __init__(self, service, local: Budget, shared: Budget) -> None:
+    def __init__(self, service, local: Budget, shared: Budget, *, concurrency: int = 1) -> None:
         self.service, self.local, self.shared = service, local, shared
         self.name = service.name
+        # Match the underlying service's capacity, so it has no hidden queue.
+        self.admission = asyncio.Semaphore(concurrency)
 
     async def complete(self, request: ModelRequest) -> ModelResponse:
+        async with self.admission:
+            return await self._complete_admitted(request)
+
+    async def _complete_admitted(self, request: ModelRequest) -> ModelResponse:
         # Both checks occur before either counter changes; no await between them.
         self.local.check()
         self.shared.check()

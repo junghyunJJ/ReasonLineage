@@ -108,3 +108,40 @@ def test_timeout_cancels_inflight_service_and_does_not_dispatch_again():
     with pytest.raises(BackendError):
         asyncio.run(backend.complete(ModelRequest('s', 'p', 'fake-model')))
     assert len(service.requests) == 1
+
+
+def test_queued_calls_recheck_tokens_at_actual_admission():
+    class Serial(Service):
+        def __init__(self):
+            super().__init__()
+            self.semaphore = asyncio.Semaphore(1)
+
+        async def complete(self, request):
+            async with self.semaphore:
+                await asyncio.sleep(.001)
+                return await super().complete(request)
+    service = Serial()
+    local = Budget(tokens=1, calls=10)
+    backend = MeteredBackend(service, local, Budget(calls=10))
+    async def invoke():
+        return await asyncio.gather(*(backend.complete(ModelRequest('s', 'p', 'fake')) for _ in range(5)),
+                                    return_exceptions=True)
+    outcomes = asyncio.run(invoke())
+    assert len(service.requests) == 1
+    assert len([r for r in outcomes if isinstance(r, BackendError)]) == 4
+    assert local.calls_used == 1
+
+
+def test_unknown_successful_usage_stops_new_token_bounded_dispatch():
+    class Unreported(Service):
+        async def complete(self, request):
+            return replace(await super().complete(request), raw={})
+    service = Unreported()
+    backend = MeteredBackend(service, Budget(), Budget(tokens=None))
+    async def invoke():
+        first = await backend.complete(ModelRequest('s', 'p', 'fake'))
+        assert first.text == 'public answer'
+        with pytest.raises(BackendError, match='usage'):
+            await backend.complete(ModelRequest('s', 'p', 'fake'))
+    asyncio.run(invoke())
+    assert len(service.requests) == 1

@@ -95,6 +95,13 @@ async def independent_reviews(destination, packet, evidence, service, shared):
                 outcomes.append({'case': case, 'order': order, 'status': 'failed', 'reason': safe_error(error)})
                 if order == 'forward':
                     failed_forward = True
+            except asyncio.CancelledError:
+                outcomes.append({'case': case, 'order': order, 'status': 'cutoff', 'reason': 'study deadline or signal'})
+                seen = {(e['case'], e['order']) for e in outcomes}
+                outcomes.extend({'case': c, 'order': o, 'status': 'unstarted', 'reason': 'study cancelled'}
+                                for c in ('als', 'aml') for o in ('forward', 'reverse') if (c, o) not in seen)
+                save_json(destination / 'status.json', {'evaluations': outcomes, 'usage': local.snapshot()})
+                raise
             save_json(destination / 'status.json', {'evaluations': outcomes, 'usage': local.snapshot()})
     save_json(destination / 'status.json', {'evaluations': outcomes, 'usage': local.snapshot()})
     return outcomes
@@ -180,6 +187,11 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
                 evaluations = await independent_reviews(destination / 'independent', packet, evidence, evaluator, shared)
             except asyncio.CancelledError:
                 cancelled = True
+        if not evaluations:
+            durable = destination / 'independent/status.json'
+            evaluations = json.loads(durable.read_text())['evaluations'] if durable.exists() else [
+                {'case': c, 'order': o, 'status': 'unstarted', 'reason': study_error or 'study cancelled before review'}
+                for c in ('als', 'aml') for o in ('forward', 'reverse')]
         comparisons = []
         for case in ('als', 'aml'):
             for method in ('gpt', 'opus', 'grok', 'glm'):

@@ -104,7 +104,7 @@ async def run_case(run_dir, case, method, setup, services, shared, *, root, seco
     if len(members) != (4 if method == 'reasonlineage' else 1):
         raise ValueError('pilot requires the pinned four-model roster')
     local = Budget(seconds=seconds, tokens=tokens, calls=40, lazy=True)
-    backends = {m.name: MeteredBackend(services[m.name], local, shared) for m in members}
+    backends = {m.name: MeteredBackend(services[m.name], local, shared, concurrency=setup.concurrency) for m in members}
     header = {'case': case, 'method': method, 'evidence_sha256': hashlib.sha256(evidence).hexdigest(),
               'protocol_sha256': protocol.hash, 'protocol_version': protocol.version,
               'models': [{'name': m.name, 'model': m.model, 'effort': m.effort} for m in members],
