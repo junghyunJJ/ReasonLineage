@@ -12,11 +12,11 @@ Run the two multi-model cases first, sequentially. Then run three independent pr
 
 Compare neutral/simple-schema, neutral/original-schema and unchanged ALS/original-schema requests. Record safe failure categories/public outputs and numeric usage; no raw private reasoning or credentials. Confirm whether the unchanged biomedical request is currently supported before launching full runs. Do not infer an old cause from absent stderr.
 
-Keep the initial population at four for both methods. Rotate the duplicated multi-model seed author across cases. Two non-author critics per multi-model candidate and two fresh self-critics per solo candidate produce ten authored candidates and twenty critiques per run. Eight method/case runs plus four evaluations and four diagnostic attempts.
+Keep the initial population at four for both methods. Rotate the duplicated multi-model seed author across cases. Two non-author critics per multi-model candidate and two fresh self-critics per solo candidate produce ten authored candidates and twenty critiques per run. Eight method/case runs plus four evaluations and four diagnostic attempts. Opus is excluded from all generation and scoring.
 
 ## Task 2: Relaxed profile and controlled scheduling
 
-TDD: original strict behavior remains reproducible; relaxed writing retains 812/917-word valid hypotheses with warnings; malformed/empty output still stops. Profile fingerprints and budget limits are recorded. Fake full study completes 400 generation calls plus four held-out calls, consumes diagnostic usage without double counting, runs independent provider chains concurrently while maintaining one active run per backend, and stops/cancels at global limits. Implement a separate relaxed protocol/profile, not edits to old frozen inputs/default main.
+TDD: original strict behavior remains reproducible; relaxed writing retains 812/917-word valid hypotheses with warnings; malformed/empty output still stops. Profile fingerprints and budget limits are recorded. Fake full study completes 240 generation calls plus four held-out calls, consumes diagnostic usage without double counting, runs independent provider chains concurrently while maintaining one active run per backend, and stops/cancels at global limits. Implement a separate relaxed protocol/profile, not edits to old frozen inputs/default main.
 
 ## Task 3: Verification and bounded live rerun
 

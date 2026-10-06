@@ -1,4 +1,5 @@
 import asyncio
+import threading
 from dataclasses import replace
 
 import pytest
@@ -145,3 +146,42 @@ def test_unknown_successful_usage_stops_new_token_bounded_dispatch():
             await backend.complete(ModelRequest('s', 'p', 'fake'))
     asyncio.run(invoke())
     assert len(service.requests) == 1
+
+
+def test_cancelled_http_thread_retains_capacity_before_next_case_admission():
+    from reasonlineage.backends.http import HttpBackend
+    started, release = threading.Event(), threading.Event()
+    class BlockingHTTP(HttpBackend):
+        def __init__(self):
+            super().__init__('http', 'http://unused', max_concurrency=1)
+            self.calls = self.active = self.peak = 0
+        def _send(self, path, body, timeout_s):
+            self.calls += 1
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+            try:
+                if self.calls == 1:
+                    started.set()
+                    release.wait(2)
+                return {'choices': [{'message': {'content': 'public'}, 'finish_reason': 'stop'}],
+                        'usage': {'prompt_tokens': 1, 'completion_tokens': 1, 'total_tokens': 2}}
+            finally:
+                self.active -= 1
+    service = BlockingHTTP()
+    shared, next_budget = Budget(tokens=None), Budget()
+    async def exercise():
+        first = asyncio.create_task(MeteredBackend(service, Budget(), shared).complete(ModelRequest('s', 'p', 'fake')))
+        await asyncio.to_thread(started.wait, 1)
+        first.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await first
+        second = asyncio.create_task(MeteredBackend(service, next_budget, shared).complete(ModelRequest('s', 'p', 'fake')))
+        try:
+            await asyncio.sleep(.03)
+            assert service.calls == 1
+            assert next_budget.calls_used == 0
+        finally:
+            release.set()
+            await second
+        assert service.peak == 1
+    asyncio.run(exercise())

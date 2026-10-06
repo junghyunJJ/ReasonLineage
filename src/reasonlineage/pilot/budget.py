@@ -148,6 +148,9 @@ class MeteredBackend:
 
     async def complete(self, request: ModelRequest) -> ModelResponse:
         async with self.admission:
+            drain = getattr(self.service, 'wait_for_cancelled', None)
+            if drain is not None:
+                await drain()
             return await self._complete_admitted(request)
 
     async def _complete_admitted(self, request: ModelRequest) -> ModelResponse:
