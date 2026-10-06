@@ -25,8 +25,8 @@
     "safety and feasibility-centered"
   ],
   "timeouts_s": {
-    "write": 600,
-    "judge": 600,
+    "write": 2700,
+    "judge": 2700,
     "check": 120
   },
   "max_tokens": {

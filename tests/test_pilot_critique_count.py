@@ -7,6 +7,7 @@ from reasonlineage.engine.config import load_setup
 from reasonlineage.engine.events import read_events
 from reasonlineage.pilot.budget import Budget
 from reasonlineage.pilot.run import run_case
+from reasonlineage.protocol import load_protocol
 from test_pilot_run import FakeBackend, ROOT
 
 
@@ -16,6 +17,7 @@ POINTS = ['Check prior AML studies.', 'Measure free marrow exposure.',
 
 class FourPoints(FakeBackend):
     async def complete(self, request):
+        self.timeouts = getattr(self, 'timeouts', []) + [request.timeout_s]
         response = await super().complete(request)
         if 'critique' in request.json_schema['properties']:
             return replace(response, data={**response.data, 'critique': POINTS})
@@ -24,8 +26,9 @@ class FourPoints(FakeBackend):
 
 def test_relaxed_preserves_four_valid_points_without_extra_calls(tmp_path):
     setup = load_setup(ROOT / 'configs/co-scientist-rerun.json')
+    service = FourPoints('glm')
     result = asyncio.run(run_case(tmp_path / 'run', 'aml', 'glm', setup,
-                                 {'glm': FourPoints('glm')}, Budget(seconds=100),
+                                 {'glm': service}, Budget(seconds=100),
                                  root=ROOT, protocol_directory='protocol-relaxed'))
     assert result['status'] == 'completed'
     assert result['usage']['backend_calls'] == 30
@@ -35,6 +38,8 @@ def test_relaxed_preserves_four_valid_points_without_extra_calls(tmp_path):
     assert all(e['critique'] == POINTS for e in judgments)
     assert len([e for e in events if e['event'] == 'anomaly' and e['kind'] == 'critique_count']) == 20
     assert not any(e['event'] == 'call.failed' for e in events)
+    assert load_protocol(ROOT / 'research/co-scientist-pilot/protocol-relaxed').timeout('write') == 2700
+    assert all(0 < timeout <= 100 for timeout in service.timeouts)
 
 
 def test_strict_critique_count_contract_is_preserved(tmp_path):
