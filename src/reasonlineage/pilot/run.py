@@ -12,7 +12,7 @@ from ..engine.calls import CallRecorder
 from ..engine.config import RunOptions, Task
 from ..engine.errors import RunStopped
 from ..engine.events import EventLog
-from ..engine.runner import Runner, Written, WritingFailed, gather_all
+from ..engine.runner import Runner, Written, WritingFailed, JudgeScore, gather_all
 from ..protocol import load_protocol
 from .budget import Budget, MeteredBackend, public_data
 
@@ -73,6 +73,24 @@ class PilotRunner(Runner):
     async def _score(self, state):
         await super()._score(state)
         self._remember_initial(state)
+
+    def _parse_judge(self, judge, data):
+        advisory = self.protocol.data.get('pilot', {}).get('critique_count_enforcement') == 'warn'
+        points = data.get('critique') if isinstance(data, dict) else None
+        if (advisory and isinstance(points, list) and len(points) > 3
+                and all(isinstance(point, str) and point.strip() for point in points)):
+            # Validate every score with the unchanged parser, then retain every public point.
+            score = super()._parse_judge(judge, {**data, 'critique': points[:3]})
+            return replace(score, critique=tuple(points))
+        return super()._parse_judge(judge, data)
+
+    async def _judge(self, gen, candidate, judge, trace):
+        score = await super()._judge(gen, candidate, judge, trace)
+        if isinstance(score, JudgeScore) and len(score.critique) > 3:
+            self.events.emit('anomaly', kind='critique_count', candidate=candidate.id,
+                             detail={'count': len(score.critique), 'target': [1, 3]},
+                             action='kept all valid public critique points')
+        return score
 
 
 class SoloRunner(PilotRunner):

@@ -23,3 +23,7 @@ Recovery after the first relaxed attempt: preserve the interrupted output unchan
 ## Task 3: Verification and bounded live rerun
 
 Run targeted and full offline tests; dry-run; one fresh read-only independent reviewer before live execution. Fix material findings with regression tests. Freeze source/config/protocol and diagnostic accounting. Start a fresh output folder under the original diagnostic clock; do not overwrite past results. Verify actual completed/failed/unstarted slots, public traces, source hashes, full final comparisons, independent evaluations and expert packet. Report incomplete comparisons explicitly and keep the branch/worktree locally.
+
+## Task 4: Post-launch parser repair for the next execution
+
+The immutable live0.3 GLM/AML run returned four substantive public critique points; the inherited maximum-three parser rejected them, then the one format retry failed inside backend structured parsing. Record both failures, not a scientific quality verdict. Add a default-preserving judge-parser hook; under relaxed0.4 validate all scores and retain every nonempty public point when the preferred1–3 count is exceeded. Log an advisory anomaly. TDD proves four-point solo runs finish all30 calls with no retry, while strict profiles and malformed scores/empty points still fail. This is an offline repair only: the active study keeps its frozen0.3 inputs and original code commit; do not launch more generation slots or retroactively change its failed status.

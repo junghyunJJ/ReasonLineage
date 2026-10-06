@@ -345,6 +345,9 @@ class Runner:
             self.events.emit("candidate.scored", candidate=candidate.id, judges=[s.judge for s in panels[candidate.id]],
                              scores=scored.scores, fitness=scored.fitness)
 
+    def _parse_judge(self, judge: str, data: Any) -> JudgeScore:
+        return parse_judge(judge, data, self.dims)
+
     async def _judge(self, gen: int, candidate: Candidate, judge: str, trace: str) -> JudgeScore | JudgeFailure:
         member = self.members[judge]
         context = judge_context(self.options.context, author_model=self.members[candidate.author].model, trace=trace)
@@ -358,8 +361,8 @@ class Runner:
         )
         try:
             response = await self.recorder.call(f"g{gen}/judge/{candidate.id}/{judge}", judge, self.backends[judge], request,
-                                                check=lambda r: parse_judge(judge, r.data, self.dims))
-            return parse_judge(judge, response.data, self.dims)
+                                                check=lambda r: self._parse_judge(judge, r.data))
+            return self._parse_judge(judge, response.data)
         except (BackendError, ValueError) as exc:
             if self.options.mode == "experiment":
                 raise RunStopped(f"judge {judge} on {candidate.id} failed: {exc}") from exc

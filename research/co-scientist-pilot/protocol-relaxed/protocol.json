@@ -1,5 +1,5 @@
 {
-  "version": "co-scientist-rerun-0.3",
+  "version": "co-scientist-rerun-0.4",
   "generations": 3,
   "margins": {
     "tie": 0.03,
@@ -108,6 +108,7 @@
     "nominal_call_count": 30,
     "call_limit": 40,
     "format_retry": true,
+    "critique_count_enforcement": "warn",
     "run_seed": 20261006
   }
 }
