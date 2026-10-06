@@ -1,0 +1,324 @@
+{
+  "evaluations": [
+    {
+      "case": "als",
+      "order": "forward",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 5,
+          "specificity": 4,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P15dba4b43c",
+          "novelty_note": "Novel integration of an Nup98 phospho-switch with ALS transport failure and explicit stress-granule/TDP-43 alternatives; the kinase and phosphosites are gated assumptions, not packet-supported findings.",
+          "reason": "Uses S1-S4 accurately for nuclear-pore and transport dysfunction, and correctly labels the nucleoporin phosphorylation initiator as unsupported. The staged causal logic, deconfounded editing, and falsification criteria are unusually strong. Feasibility is limited by scarce motor-neuron phosphoproteomics and the need to first identify a kinase and site."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P7f42c4393d",
+          "novelty_note": "Similar upstream Nup98 stress-kinase hypothesis, but less gated than related proposals and more reliant on phosphomimetic sufficiency.",
+          "reason": "Premises from S1-S4 are represented fairly, and the upstream-versus-downstream distinction is testable. However, no supplied source establishes Nup98 phosphorylation, a kinase, or sites. Treating a negative phosphomimetic result as falsifying is weak because phosphomimetics can fail for structural reasons."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 2,
+          "id": "Pe8ee297abd",
+          "novelty_note": "Adds a calcium-calpain-p25-CDK5 upstream module to NUP98 phosphorylation in TARDBP-associated ALS; the long causal bridge is explicitly speculative and outside the packet.",
+          "reason": "The causal dissection is rigorous, with longitudinal thresholds, kinase-dependence tests, tether mediation, and alternative discrimination. But the TARDBP context, calcium-clearing defect, p25/CDK5 activation, and NUP98 phosphorylation are unsupported by S1-S4. Technical demands such as single-particle tracking and NUP98 tethering are high."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "Pda64ce7a46",
+          "novelty_note": "CDK5-NUP98 axis in TARDBP-mutant motor neurons, with import kinetics as the early endpoint; the TARDBP and CDK5-NUP98 premises are outside the packet.",
+          "reason": "The temporal and perturbational logic is clear, and phosphosite editing plus import-kinetics measurement could discriminate cause from consequence. However, the central CDK5-NUP98 relationship and TARDBP-mutant restriction are unsupported assumptions. Unknown sites make the required edits dependent on prior discovery."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 4,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "Pdcbbb67634",
+          "novelty_note": "Highly specified ERK2-to-Nup62 four-site phospho-switch after TDP-43 de-mixing; the exact residue list and kinase are stipulated rather than evidence-derived.",
+          "reason": "Placing phosphorylation downstream of TDP-43 de-mixing aligns with S3, and the quantitative thresholds and falsifiers are strong. But ERK2 and the four Nup62 residues are unsupported assumptions, and locking the AQUA panel to those residues risks missing the relevant modification. The design is complex but substantially in vitro."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 2,
+          "id": "P255c3d4421",
+          "novelty_note": "Allele-specific TARDBP-M337V, CDK5-dependent NUP98 hypothesis with reconstitution and tether-mediated causal tests; the allele and NUP98-CDK5 link are outside the supplied evidence.",
+          "reason": "This proposal has unusually rigorous causal mediation, temporal ordering, and alternative-pathway controls. However, TARDBP-M337V and the CDK5-NUP98 mechanism are unsupported by S1-S4, and the experimental program is technically demanding. It remains preclinical and allele-restricted."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P67a891ee11",
+          "novelty_note": "Positions Nup98 proline-directed phosphorylation as a downstream amplifier after TDP-43 assembly rather than the initiating ALS lesion; cautious and packet-aware.",
+          "reason": "The hypothesis is well bounded to experimental TDP-43 proteinopathy and explicitly distinguishes TDP-43 phosphorylation from nucleoporin phosphorylation. Alternatives from S2 and S4 are considered. However, the kinase and proline-directed sites are unspecified, and the amplifier role is less mechanistically detailed than the stronger upstream proposals."
+        }
+      ]
+    },
+    {
+      "case": "als",
+      "order": "reverse",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P67a891ee11",
+          "novelty_note": "Proposes Nup98 proline-directed phosphorylation as a pore-intrinsic amplifier after cytoplasmic TDP-43 assembly, linking the stress-granule-independent route in S3 to a nucleoporin modification not supplied by the packet.",
+          "reason": "The proposal uses S1/S3 well and explicitly labels Nup98, the kinase, and proline-directed sites as speculative. Causal staging is clear, with TDP-43 assembly initiating and Nup98 phosphorylation as a downstream pore-intrinsic step, but the central molecular event lacks packet evidence and no residues or kinase are identified."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 5,
+          "specificity": 3,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P255c3d4421",
+          "novelty_note": "Posits CDK5-dependent NUP98 FG-region phosphorylation as a pre-aggregate initiating import lesion in TARDBP-M337V motor neurons, a specific kinase-substrate causal chain absent from the packet.",
+          "reason": "The design is unusually strong for causal inference and alternative discrimination, including pore-resolved transport, phosphosite editing, tethering, and mediation controls. However, TARDBP-M337V, CDK5, NUP98 FG phosphorylation, and the initiating direction are unsupported outside knowledge, and no NUP98 residues are specified."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "Pdcbbb67634",
+          "novelty_note": "Highly specified ERK2-Nup62 four-serine phosphorylation as a selective NLS-import mediator downstream of TDP-43 de-mixing, with quantitative stoichiometry thresholds not present in the packet.",
+          "reason": "This is the most operationally specific proposal: kinase, substrate, residues, timing, stoichiometry, reporters, and falsifiers are prespecified. Yet ERK2, Nup62, the four Ser sites, Nup107 normalization, and selective-import effects are unsupported outside evidence, making the central mechanism packet-ungrounded and technically demanding."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "Pda64ce7a46",
+          "novelty_note": "Proposes CDK5-dependent NUP98 FG phosphorylation as an initiating pre-aggregate import defect in TARDBP-associated motor neurons, similar in class to other CDK5-NUP98 hypotheses but less molecularly specified.",
+          "reason": "The hypothesis clearly separates an initiating transport lesion from downstream TDP-43 mislocalization and includes reasonable falsification tests. However, the CDK5-NUP98 relationship, the ALS-associated TARDBP variant, and the proposed initiating role are not supported by the supplied packet and remain under-specified."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 5,
+          "specificity": 4,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "Pe8ee297abd",
+          "novelty_note": "Adds a calcium-calpain-p25-CDK5 upstream axis to NUP98 phosphorylation as an initiating TARDBP-associated transport failure, a multi-step causal chain not supplied by the packet.",
+          "reason": "The proposal has strong causal staging, mediation tests, and alternative discrimination, including calcium handling, p25:p35, NUP98 pore residence, tethering, and importin-beta re-blocking. However, the calcium-calpain-CDK5-NUP98 chain contains multiple unsupported bridges, and no NUP98 phosphosites or specific TARDBP variants are defined."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 4,
+          "specificity": 2,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P7f42c4393d",
+          "novelty_note": "Frames mitotic-like Nup98 phosphorylation by an unidentified stress kinase as an upstream initiator of transport failure across TDP-43-positive ALS, including C9orf72 and sporadic contexts.",
+          "reason": "The causal predictions are clear and testable, with plausible temporal and perturbation experiments. But the kinase, Nup98 sites, mitotic-program reactivation, and broad disease scope are unsupported; the proposal is deliberately site-agnostic and therefore less specific, and its broad context conflicts with the packet's caution about universal mechanisms."
+        },
+        {
+          "grounding": 2,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P15dba4b43c",
+          "novelty_note": "Improves the stress-kinase/Nup98 hypothesis by gating on phosphoproteomic mapping, proposing a pore-composition signature, and using post-mitotic editing rather than assuming a kinase or sites.",
+          "reason": "This version is epistemically careful: it gates later arms on Arm 0 mapping, distinguishes scaffold weakening from sequestration, and treats phosphomimetics cautiously. Still, Nup98 phosphorylation by a stress kinase remains outside the packet, and the approach depends on difficult phosphosite detection and advanced manipulations in motor neurons."
+        }
+      ]
+    },
+    {
+      "case": "aml",
+      "order": "forward",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P6548b52f23",
+          "novelty_note": "Repurposes leflunomide to DHODH-dependent AML differentiation; the DHODH-differentiation mechanism is already supported by S4, so novelty rests on approved-drug exposure, primary AML context, and selectivity rather than a new pathway.",
+          "reason": "The DHODH-differentiation premise is packet-supported via S4, and the proposal clearly labels leflunomide/teriflunomide pharmacology and exposure as unverified prior knowledge. It separates differentiation from bulk killing and includes uridine rescue plus normal progenitors, but the central drug-specific AML link remains outside the packet."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 3,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "P4b59bd90ed",
+          "novelty_note": "Bedaquiline as an OXPHOS/complex V disruptor in ROS-low LSC and residual AML; OXPHOS targeting is crowded and prior bedaquiline-cancer work is unruled, so novelty depends on BCL-2-independent complementarity.",
+          "reason": "S1/S2 support AML OXPHOS vulnerabilities, but bedaquiline's mammalian ATP-synthase inhibition and clinically achievable exposure are central unverified recallections. The falsification logic covers nonspecific toxicity and cardiac alternatives, but target-validation design is less rigorous and less quantitative than the sibling bedaquiline proposal."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P5e24fede6e",
+          "novelty_note": "Reframes novelty as exposure feasibility and residual oxidative-state susceptibility rather than DHODH differentiation itself; possible prior teriflunomide/leflunomide AML reports are explicitly acknowledged.",
+          "reason": "The proposal uses S4 and S2 well while labeling DHODH IC50, unbound exposure, and MS approval facts as unverified prior knowledge. Its go/no-go exposure gate, uridine rescue, DHODH knockdown, resistant-DHODH replacement, and succinate-bypass controls make the causal discrimination strong, though the experimental workload is substantial."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 4,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P5f84862197",
+          "novelty_note": "Adds salvage-poor post-cytarabine stratification to DHODH-directed differentiation; it overlaps prior DHODH-inhibition mechanisms and sibling salvage proposals, so novelty is incremental context definition.",
+          "reason": "Packet-supported DHODH and residual oxidative premises are kept distinct from unverified teriflunomide pharmacology. Salvage-flux preclassification, exposure ceilings, target perturbations, and separate propagation/apoptosis endpoints are strong, though target attribution is somewhat less multi-pronged than the best sibling designs."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P4a13ff23be",
+          "novelty_note": "Repositions teriflunomide for oxidative, salvage-limited residual AML; the mechanism is not new and largely overlaps sibling proposals, leaving novelty in the specific residual-disease context.",
+          "reason": "The hypothesis cleanly separates packet evidence from unverified approval, pharmacology, and binding claims. It distinguishes induced differentiation from selective survival and includes washout and transplantation assays, but is less quantitative and less target-discriminating than the more detailed salvage-stratification siblings."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "Pbc56a51881",
+          "novelty_note": "Proposes a causally tested uridine-salvage-reserve index for DHODH-directed differentiation in residual AML; it is incremental over S4 and overlaps sibling salvage proposals.",
+          "reason": "This is the strongest causal design among the teriflunomide proposals: an operational salvage-reserve index, prespecified interaction testing, orthogonal DHODH perturbations, target-resistant rescue, and numeric success/falsification thresholds. It still relies on unverified teriflunomide exposure and salvage assumptions but labels them as such."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P52ddc65202",
+          "novelty_note": "Bedaquiline as a complex V inhibitor in ROS-low LSC/residual AML with BCL-2-independent complementarity; OXPHOS targeting is crowded and a prior-art scan is required, so novelty narrows to target/exposure and complementarity claims.",
+          "reason": "S1/S2 support OXPHOS-dependent AML populations, but bedaquiline-mammalian ATP-synthase inhibition and the free-Cmax arithmetic are unverified outside the packet. The proposal nevertheless specifies target validation, engineered resistance, cardiac testing, venetoclax-complementarity, and quantitative go/no-go thresholds with unusually strong falsification criteria."
+        }
+      ]
+    },
+    {
+      "case": "aml",
+      "order": "reverse",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P52ddc65202",
+          "novelty_note": "Repurposes bedaquiline as a mammalian ATP-synthase inhibitor for OXPHOS-dependent/BCL-2-independent AML; central novelty is contingent on unverified target-exposure claims and prior cancer/AML art.",
+          "reason": "Packet supports OXPHOS dependencies (S1/S2) and a comparator (S3), but bedaquiline's mammalian ATP-synthase inhibition and human exposure are unverified outside knowledge; strengths are quantitative exposure gates, target-engagement tests, and falsifiers."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "Pbc56a51881",
+          "novelty_note": "Salvage-reserve-stratified teriflunomide/DHODH differentiation in cytarabine-persistent AML; mechanism is established by S4, so novelty rests on salvage-limitation causal modifier and residual-disease context.",
+          "reason": "Directly builds on S4 with S2 residual context, explicitly labels teriflunomide/MS pharmacology as unverified, and provides prespecified salvage-reserve cutoffs, factorial causal tests, and falsifying outcomes."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P4a13ff23be",
+          "novelty_note": "Teriflunomide-induced differentiation in salvage-poor residual AML; incremental over S4 primarily through context and salvage reasoning, though less quantitatively specified than stronger versions.",
+          "reason": "Grounded in S4 and S2 with clear unverified prior-knowledge labels; causal discrimination and rescue logic are sound but less quantitatively specified than the strongest related proposals."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P5f84862197",
+          "novelty_note": "Exposure-bounded, adaptive-salvage-stratified teriflunomide differentiation in post-cytarabine AML; incremental as a translational exposure and stratification test, not as a new DHODH-differentiation mechanism.",
+          "reason": "Uses S4 as direct mechanistic premise and S2 for residual context, with explicit unverified pharmacology; provides quantitative exposure and salvage gates, factorial perturbations, and clear falsifiers."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P5e24fede6e",
+          "novelty_note": "Repositions teriflunomide from mechanism discovery to an unbound-exposure feasibility test in oxidative residual AML, with pyrimidine-versus-electron-flux discrimination.",
+          "reason": "Strong on S4 and S2, labels prior potency/PK as unverified, and defines exposure gates plus succinate/CoQ-binding controls; novelty limited by prior DHODH differentiation and possible leflunomide AML reports."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "P4b59bd90ed",
+          "novelty_note": "Bedaquiline ATP-synthase repurposing for ROS-low LSC and cytarabine-resistant OXPHOS AML; similar to the other bedaquiline proposal but with less developed exposure and target-validation positioning.",
+          "reason": "Same packet-based OXPHOS rationale as the more detailed bedaquiline proposal, but relies on unverified bedaquiline target/exposure claims and lacks quantitative exposure gate, target-binding competition, and differentiation control arm."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P6548b52f23",
+          "novelty_note": "Leflunomide, a rheumatoid-arthritis-approved DHODH inhibitor prodrug, for differentiation-arrested AML; conceptually close to established DHODH-differentiation mechanism, so novelty hinges on prior leflunomide/AML work and exposure verification.",
+          "reason": "Directly uses S4 DHODH-differentiation evidence and distinguishes differentiation from killing; prior leflunomide/teriflunomide approval, exposure, and AML literature remain unverified and no quantitative exposure gate is defined."
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "backend_calls": 4,
+    "reported_input_tokens": 39782,
+    "reported_output_tokens": 24207,
+    "reported_tokens": 63989,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 94.098,
+    "remaining_seconds": 2305.902,
+    "token_limit": null,
+    "call_limit": 4,
+    "seconds_limit": 2400
+  }
+}
