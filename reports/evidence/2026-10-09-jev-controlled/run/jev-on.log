@@ -1,0 +1,17 @@
+Starting als / reasonlineage
+als / reasonlineage: completed; 27 calls, 356805 reported tokens
+Starting aml / reasonlineage
+aml / reasonlineage: completed; 27 calls, 334115 reported tokens
+Starting als / gpt
+Starting als / grok
+Starting als / glm
+als / glm: completed; 28 calls, 270140 reported tokens
+Starting aml / glm
+aml / glm: completed; 27 calls, 249549 reported tokens
+als / grok: completed; 27 calls, 526168 reported tokens
+Starting aml / grok
+als / gpt: failed; 27 calls, 302141 reported tokens
+Starting aml / gpt
+aml / gpt: completed; 27 calls, 297749 reported tokens
+aml / grok: failed; 27 calls, 539996 reported tokens
+Study recorded: /common/jungj2/project/ReasonLineage/.worktrees/co-scientist-pilot/runs/jev-controlled-2026-10-09/jev-on/study.json

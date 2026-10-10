@@ -1,0 +1,50 @@
+{
+  "case": "aml",
+  "method": "glm",
+  "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+  "protocol_sha256": "45a2a266077cbfe34d179321d3b76f80129d8f7000fb24e40ea893e56f3676e4",
+  "protocol_version": "co-scientist-jev-combined-0.7",
+  "models": [
+    {
+      "name": "glm",
+      "model": "glm-5.3-flash",
+      "effort": "max"
+    }
+  ],
+  "options": {
+    "mode": "experiment",
+    "judges": "recuse",
+    "context": "isolated",
+    "generations": 3,
+    "seed": 0,
+    "replay_from": null,
+    "gen0_from": null
+  },
+  "budgets": {
+    "backend_calls": 0,
+    "reported_input_tokens": 0,
+    "reported_output_tokens": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 0.0,
+    "remaining_seconds": 2700,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "checker": {
+    "name": "jev",
+    "version": "jev-1.13.0",
+    "j1_enforce": true,
+    "thresholds": {
+      "proposal": 0.5,
+      "adequacy": 0.5
+    }
+  },
+  "evolution": {
+    "initial_candidates": 3,
+    "population_limit": 4,
+    "survivor_count": 2,
+    "generations": 3
+  }
+}

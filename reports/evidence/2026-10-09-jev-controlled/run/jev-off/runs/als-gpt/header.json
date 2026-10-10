@@ -1,0 +1,41 @@
+{
+  "case": "als",
+  "method": "gpt",
+  "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+  "protocol_sha256": "332fa467ee18de45527550acb9716cae8386468745c955084239ac082e0f909b",
+  "protocol_version": "co-scientist-jev-control-0.7",
+  "models": [
+    {
+      "name": "gpt",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh"
+    }
+  ],
+  "options": {
+    "mode": "experiment",
+    "judges": "recuse",
+    "context": "isolated",
+    "generations": 3,
+    "seed": 0,
+    "replay_from": null,
+    "gen0_from": null
+  },
+  "budgets": {
+    "backend_calls": 0,
+    "reported_input_tokens": 0,
+    "reported_output_tokens": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 0.0,
+    "remaining_seconds": 2700,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "evolution": {
+    "initial_candidates": 3,
+    "population_limit": 4,
+    "survivor_count": 2,
+    "generations": 3
+  }
+}
