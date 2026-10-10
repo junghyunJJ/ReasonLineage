@@ -41,3 +41,25 @@ __pycache__/
 # Local attachments and optional figure-rendering libraries/binaries
 .orca/
 .superpowers/figure-animation-deps/
+
+# Keep published README downloads and report figures; ignore local variants.
+/reports/figures/**
+!/reports/figures/reasonlineage-jev-simple-types/
+!/reports/figures/2026-10-07-als-diagram-prompts.md
+!/reports/figures/2026-10-07-als-diagram-verification.json
+!/reports/figures/2026-10-07-als-evolution-detail-v3.png
+!/reports/figures/2026-10-07-als-full-workflow-v1.png
+!/reports/figures/2026-10-09-jev-controlled-evolution.png
+!/reports/figures/reasonlineage-jev-simple-types/README.md
+!/reports/figures/reasonlineage-jev-simple-types/animation.gif
+!/reports/figures/reasonlineage-jev-simple-types/animation.html
+!/reports/figures/reasonlineage-jev-simple-types/animation.mp4
+!/reports/figures/reasonlineage-jev-simple-types/imagegen-prompt.txt
+!/reports/figures/reasonlineage-jev-simple-types/lineage.json
+!/reports/figures/reasonlineage-jev-simple-types/overview-native.png
+!/reports/figures/reasonlineage-jev-simple-types/overview.png
+!/reports/figures/reasonlineage-jev-simple-types/overview.svg
+!/reports/figures/reasonlineage-jev-simple-types/verification.json
+
+# Local figure-generation and animation iteration helpers
+/.superpowers/figure-animation/
