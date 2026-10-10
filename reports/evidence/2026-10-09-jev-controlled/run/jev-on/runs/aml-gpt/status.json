@@ -1,0 +1,139 @@
+{
+  "header": {
+    "case": "aml",
+    "method": "gpt",
+    "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+    "protocol_sha256": "45a2a266077cbfe34d179321d3b76f80129d8f7000fb24e40ea893e56f3676e4",
+    "protocol_version": "co-scientist-jev-combined-0.7",
+    "models": [
+      {
+        "name": "gpt",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    },
+    "checker": {
+      "name": "jev",
+      "version": "jev-1.13.0",
+      "j1_enforce": true,
+      "thresholds": {
+        "proposal": 0.5,
+        "adequacy": 0.5
+      }
+    },
+    "evolution": {
+      "initial_candidates": 3,
+      "population_limit": 4,
+      "survivor_count": 2,
+      "generations": 3
+    }
+  },
+  "status": "completed",
+  "final": {
+    "id": "c008",
+    "author": "gpt",
+    "fitness": 0.8730000000000001,
+    "scores": {
+      "evidenceCoverage": 0.88,
+      "specificity": 0.94,
+      "novelty": 0.74,
+      "actionability": 0.895
+    },
+    "answer": {
+      "answer": "Atovaquone-induced pyrimidine starvation differentiates oxidative, uridine-salvage-poor AML persisters\n\nHypothesis. Sequential atovaquone after cytarabine will impair complex-III–ubiquinone–DHODH coupling, causing pyrimidine depletion that drives genuine myeloid differentiation and durable clonogenic loss preferentially in oxidative residual AML with low functional uridine-salvage reserve. The effect must occur at achievable unbound marrow exposure. Residual cells are not assumed to be leukemia stem cells.\n\nSupported premises. Cytarabine-resistant cells displayed oxidative-metabolism-associated properties without consistent enrichment for immature, quiescent stem cells [S2]. DHODH inhibition promoted differentiation in experimental AML [S4]. BCL-2 inhibition affected oxidative phosphorylation in ROS-low, functionally defined leukemia stem cells [S1]; this supports analyzing that population separately, not assuming atovaquone selectivity. Venetoclax–azacitidine is an established metabolic comparator, not the repurposing discovery [S3].\n\nDrug-specific evidentiary gap. Atovaquone is recalled as approved for Pneumocystis pneumonia treatment and prevention; that original indication and approval status are unverified prior knowledge here. Reported complex-III inhibition and mammalian DHODH dependence on oxidized ubiquinone are also unverified prior knowledge. The packet establishes neither relevant mammalian pharmacology nor human exposure. Before efficacy interpretation, verify approval/formulation, mammalian target engagement, protein binding, and human pharmacokinetics, then measure unbound plasma and marrow exposure in the model. Audit prior atovaquone–AML and complex-III–DHODH literature. Novelty is provisional and restricted to the post-cytarabine, low-salvage-reserve context and its causal differentiation prediction—not atovaquone activity against AML generally. The speculative bridge is that pyrimidine restriction releases differentiation blockade before generalized energy failure dominates.\n\nContext and stratification. Use paired untreated and cytarabine-residual primary AML from patient-derived models, with independent donors as biological replicates. Low fractional uridine labeling does not establish poor salvage: quantify absolute uridine-to-pyrimidine flux using uptake, tracer kinetics, precursor enrichment, and pool sizes. Measure reserve capacity under graded physiologically relevant uridine concentrations during independently validated DHODH blockade. Define oxidative-state and salvage-reserve thresholds in a separate pilot and lock them before validation. Compare all strata rather than selecting only predicted responders; preferential response in oxidative, low-reserve residuals is the prespecified context prediction.\n\nControls and endpoints. Compare sequential atovaquone with vehicle, an independently validated DHODH inhibitor, venetoclax–azacitidine, and a viability-matched cytotoxic control. Include normal donor CD34-positive progenitors under matched conditions. Measure early mammalian complex-III activity, ubiquinone redox state, respiration, dihydroorotate/orotate balance, and pyrimidine pools before substantial apoptosis. Record bulk survival separately from differentiation and functional depletion.\n\nFate attribution. Single-cell trajectories cannot exclude selective survival of pre-existing mature cells. Prospectively index-track initially immature individual blasts and their descendants, using longitudinal imaging followed by morphology and multiple maturation-marker measurements. Count actual immature-to-mature transitions alongside death events; transcriptional trajectories are supplementary evidence. Assess colony formation after washout using equal viable-cell inputs. Analyze ROS-low fractions separately, and measure leukemia-initiating activity by limiting-dilution transplantation: maturation or bulk depletion alone does not demonstrate stem-cell elimination.\n\nCausal discrimination. Initiate rescue before maturation. Supply uridine only when uptake and pyrimidine-pool restoration are demonstrated; poor salvage makes failed supplementation uninterpretable. Otherwise use a biochemically validated respiratory-chain-independent DHODH bypass with an inactive-construct control. The critical prediction is that pyrimidine restoration prevents maturation and clonogenic loss while complex-III inhibition and respiratory suppression persist. Genetic DHODH suppression should phenocopy differentiation with documented pathway engagement. Complex-III inhibition may reduce respiration before pyrimidine depletion; the required temporal ordering is depletion before differentiation, not depletion before any respiratory decline.\n\nAlternatives and falsification. Generalized energy failure, unrelated drug effects, or selective blast killing could explain apparent efficacy. Verified, preemptive pyrimidine restoration that leaves maturation and clonogenic loss unchanged despite persistent respiratory suppression falsifies the proposed pyrimidine-mediated mechanism. Differentiation without preceding pyrimidine depletion also contradicts it. Failure of the prespecified context interaction rejects the claimed oxidative/low-reserve specificity, even if nonspecific activity remains. Activity confined to supraclinical unbound exposure defeats the exposure-constrained proposal.\n\nLimitations. Formulation, protein binding, marrow distribution, donor heterogeneity, and extracellular uridine may prevent translation. Normal cells may share the vulnerability; normal colony formation and long-term hematopoietic engraftment must support a therapeutic window before claiming selectivity. Neither pathway rescue nor xenograft activity establishes clinical benefit, and the frozen packet cannot resolve drug-level feasibility or novelty.",
+      "ranking": [
+        {
+          "item": "Atovaquone-induced pyrimidine starvation differentiates oxidative, uridine-salvage-poor AML persisters",
+          "promisingness": 0.58,
+          "confidence": 0.34,
+          "pmids": [
+            "28416471",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "initial": {
+    "id": "c001",
+    "author": "gpt",
+    "fitness": 0.8610000000000001,
+    "scores": {
+      "evidenceCoverage": 0.875,
+      "specificity": 0.925,
+      "novelty": 0.745,
+      "actionability": 0.86
+    },
+    "answer": {
+      "answer": "Atovaquone-induced pyrimidine starvation differentiates oxidative, uridine-salvage-poor AML persisters\n\nHypothesis. Sequential atovaquone exposure after cytarabine will induce DHODH-mediated pyrimidine depletion and genuine myeloid differentiation, reducing durable clonogenicity in residual AML cells with high oxidative metabolism and weak extracellular-uridine salvage. The predicted effect must occur at achievable unbound marrow exposure, not merely at a high nominal culture concentration. This is not a claim that all residual cells are leukemia stem cells.\n\nSupported premises. Cytarabine-resistant cells in the studied models displayed oxidative-metabolism-associated properties without consistent enrichment for immature, quiescent stem cells [S2]. DHODH inhibition promoted differentiation in experimental AML systems [S4]. Separately, BCL-2 inhibition affected oxidative phosphorylation in ROS-low, functionally defined leukemia stem cells [S1]. That observation motivates examining selectivity but does not establish atovaquone’s activity or therapeutic window. Venetoclax–azacitidine supplies an established metabolic comparator, not the proposed repurposing discovery [S3].\n\nUnverified prior knowledge and speculative bridge. Atovaquone is recalled as approved for Pneumocystis pneumonia treatment and prevention, its non-AML indication; this approval requires verification. Its reported inhibition of mitochondrial complex III and mammalian DHODH’s dependence on oxidized ubiquinone are also unverified prior knowledge. The proposed causal chain is that atovaquone limits ubiquinone reoxidation, thereby restricting DHODH-dependent pyrimidine synthesis sufficiently to release a differentiation blockade before generalized energy failure. This chain is an assumption, not an S1–S4 finding. High respiration alone need not predict susceptibility; inadequate uridine salvage is proposed as the additional vulnerability.\n\nDiscriminating preclinical tests. Use paired untreated and cytarabine-residual primary AML cells generated in patient-derived models, with independent donors as biological replicates. Measure respiration and isotope-labeled extracellular-uridine contribution to pyrimidine pools before treatment. Prospectively stratify residual cells by oxidative metabolism and salvage capacity rather than surface phenotype alone. Profile ROS-low fractions separately without inferring stem-cell activity from phenotype.\n\nCompare sequential atovaquone with vehicle, an independently validated DHODH inhibitor, and venetoclax–azacitidine. Anchor concentrations to independently verified human unbound exposure, then establish whether corresponding marrow exposure is achievable in the animal model. Include normal donor CD34-positive progenitors under matched conditions and physiologically relevant extracellular uridine concentrations.\n\nCollect early complex-III activity, ubiquinone redox state, respiration, dihydroorotate/orotate balance, and pyrimidine-pool measurements before substantial apoptosis. Subsequently measure morphology, multiple maturation markers, and single-cell trajectories to distinguish differentiation from selective survival of pre-existing mature cells. Assess colony formation after washout using equal viable-cell inputs. Measure residual leukemia-initiating activity by limiting-dilution transplantation separately: neither maturation nor bulk-cell depletion alone demonstrates stem-cell elimination.\n\nFor causal discrimination, restore pyrimidine pools with uridine while verifying uptake. Where salvage cannot support rescue, test a biochemically validated respiratory-chain-independent DHODH bypass, with an inactive-construct control. The critical prediction is that pyrimidine restoration prevents atovaquone-induced maturation and clonogenic loss while complex-III inhibition and respiratory suppression persist. Genetic DHODH suppression should phenocopy the maturation component, with pathway engagement documented.\n\nAlternatives and falsification. Apparent efficacy could instead reflect generalized energy depletion, unrelated drug effects, or selective killing of blasts. Consequently, rescue must correct pyrimidine pools without correcting respiration. At an exposure producing maturation before appreciable cell death, if verified pyrimidine restoration leaves maturation and clonogenic loss unchanged, the proposed DHODH-mediated mechanism is falsified. A respiratory decline without preceding pyrimidine depletion would likewise contradict the specified causal sequence.\n\nLimitations. Protein binding, formulation, marrow distribution, and relevant achievable exposure are unresolved here, not assumed favorable. Activity requiring supraclinical unbound concentrations would defeat the exposure-constrained proposal. Compare normal colony formation and long-term hematopoietic engraftment before claiming selectivity; normal cells may share the vulnerability. Donor heterogeneity and extracellular uridine could erase the predicted response. These experiments could establish or reject a context-specific mechanism, but would not establish clinical benefit.",
+      "ranking": [
+        {
+          "item": "Atovaquone-induced pyrimidine starvation differentiates oxidative, uridine-salvage-poor AML persisters",
+          "promisingness": 0.58,
+          "confidence": 0.34,
+          "pmids": [
+            "28416471",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 27,
+    "reported_input_tokens": 202990,
+    "reported_output_tokens": 94759,
+    "reported_tokens": 297749,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 2235.617,
+    "remaining_seconds": 464.383,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "j1": {
+    "status": "completed",
+    "unique_checks": 9,
+    "failed_checks": 0,
+    "needs_review": 0,
+    "remaining_defects": 0
+  },
+  "diagnostics": {
+    "status": "completed",
+    "outcome_mention": "skipped: no gold outcome list supplied",
+    "records": 27
+  },
+  "checker_usage": {
+    "backend_calls": 36,
+    "reported_input_tokens": 58457,
+    "reported_output_tokens": 2457,
+    "reported_tokens": 60914,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 2238.662,
+    "remaining_seconds": 461.338,
+    "token_limit": null,
+    "call_limit": 70,
+    "seconds_limit": 2700
+  }
+}

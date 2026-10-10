@@ -33,7 +33,10 @@ __pycache__/
 .venv/
 
 # Run outputs (smoke tests, experiments)
-runs/
+/runs/
+
+# Frozen evidence includes execution logs and nested run snapshots.
+!reports/evidence/**/*.log
 
 # Local attachments and optional figure-rendering libraries/binaries
 .orca/

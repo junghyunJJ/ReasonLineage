@@ -1,0 +1,143 @@
+{
+  "header": {
+    "case": "aml",
+    "method": "glm",
+    "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+    "protocol_sha256": "45a2a266077cbfe34d179321d3b76f80129d8f7000fb24e40ea893e56f3676e4",
+    "protocol_version": "co-scientist-jev-combined-0.7",
+    "models": [
+      {
+        "name": "glm",
+        "model": "glm-5.3-flash",
+        "effort": "max"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    },
+    "checker": {
+      "name": "jev",
+      "version": "jev-1.13.0",
+      "j1_enforce": true,
+      "thresholds": {
+        "proposal": 0.5,
+        "adequacy": 0.5
+      }
+    },
+    "evolution": {
+      "initial_candidates": 3,
+      "population_limit": 4,
+      "survivor_count": 2,
+      "generations": 3
+    }
+  },
+  "status": "completed",
+  "final": {
+    "id": "c005",
+    "author": "glm",
+    "fitness": 0.8380000000000001,
+    "scores": {
+      "evidenceCoverage": 0.875,
+      "specificity": 0.935,
+      "novelty": 0.6,
+      "actionability": 0.875
+    },
+    "answer": {
+      "answer": "Title: Conditionally repurposing bedaquiline, an approved antitubercular agent, to collapse oxidative phosphorylation in cytarabine-resistant, oxidative-metabolism-dependent residual AML — gated on verified human mitochondrial ATP-synthase inhibition and achievable free-drug exposure\n\nHypothesis (stated as a condition, not a premise). IF, at clinically achievable unbound concentrations, bedaquiline directly inhibits mammalian mitochondrial F1Fo-ATP synthase in AML cells, THEN it will deplete ATP at the terminal oxidative-phosphorylation (OXPHOS) step and preferentially eliminate the post-cytarabine residual, oxidative-metabolism-dependent disease state — cells not enriched for leukemia stem cells (LSCs), yet dependent on oxidative metabolism with fatty-acid-oxidation features [S2] — with co-coverage of the ROS-low, BCL-2-high quiescent LSC fraction [S1] tracked as a separate endpoint. Human complex-V inhibition is deliberately carried as a conditional test rather than a fact: it is unverified prior knowledge, verified first, before any AML work. Bedaquiline's original indication is multidrug-resistant tuberculosis, but every drug-level fact (approval, protein binding, half-life, QT prolongation, human complex-V potency) is unverified prior knowledge requiring regulatory and pharmacology confirmation. This is a direct-inhibition analogue of the venetoclax-azacitidine metabolic-disruption comparator [S3]; reproducing that regimen is not the proposal.\n\nSupported premises (within packet limits). (1) An OXPHOS-linked, ROS-low, BCL-2-high LSC subset exists, and OXPHOS reduction affected quiescent LSCs; within the packet this dependency is demonstrated only for the tested BCL-2 inhibitor, and the BCL-2-OXPHOS relationship there is an association, not a proven causal ordering [S1]. (2) Cytarabine-resistant residual cells are not necessarily LSCs but require oxidative metabolism; altering that state changed response [S2], mandating separate bulk-versus-LSC endpoints. (3) Disrupting LSC energy metabolism is clinically attainable, as shown for the comparator combination [S3]. (4) Metabolic inhibition can promote differentiation rather than killing, so myeloid differentiation is monitored as an outcome channel [S4].\n\nSpeculative bridges, each with a pre-committed test. (a) Target bridge (assumption): recalled prior knowledge attributes bedaquiline's antitubercular effect to mycobacterial F-ATP synthase, and preclinical literature reportedly claims low-micromolar inhibition of human complex V; external input also suggests bedaquiline may already have been explored in oncology as a mammalian ATP-synthase agent. All of this is unverified and becomes the gating experiment. (b) Exposure bridge with a quantitative gate (assumption): regulatory PK at the approved dose (Cmax, free fraction; to be verified) will be converted to a projected unbound range, which must approach the measured intact-cell IC50 for oligomycin-sensitive respiration; margin will be allowed only for quantified intracellular/tissue accumulation, since extreme protein binding and slow clearance make this the weakest link. (c) Dependency bridge: residual oxidative cells may lack glycolytic reserve; tested directly by methyl-pyruvate/glycolytic rescue with ECAR/OCR in the actual residual population. (d) LSC bridge: direct complex-V inhibition is an extrapolation beyond the only OXPHOS dependency supported in the packet (BCL-2 inhibition, an association); explicitly speculative.\n\nPrior-art delta. OXPHOS collapse as an AML strategy is derivative of S1-S3 and of tool-compound (oligomycin) logic. The only element claimed as novel is the drug-context pair: direct mammalian complex-V inhibition to eliminate post-cytarabine residual disease with LSC co-coverage. Targeted search criteria: (bedaquiline OR TMC207) crossed with (acute myeloid leukemia; ATP synthase/cancer stem cells; residual disease). Pre-committed consequences: confirmed prior bedaquiline-AML preclinical data reframes this as a residual-disease-context extension, not first-in-context; oncology complex-V data without AML residual data restricts novelty to the context and LSC co-coverage; if both exist, retention requires the discriminating residual-versus-LSC design below.\n\nAlternative explanations. Killing could reflect cationic-amphiphile lysosomotropic stress, electron-transport backlog with ROS rather than ATP depletion, nonspecific lipophilic cytotoxicity, or differentiation without net killing [S4].\n\nDiscriminating preclinical strategy (ordered gates; failure halts progression). Gate 1, target: purified/recombinant human complex-V activity assay plus intact-cell IC50 for oligomycin-sensitive respiration, before any AML viability work. Gate 2, exposure: measured potency versus verified PK-derived unbound range for the approved dose; failure here falsifies the drug-level claim, not merely the context claim. Gate 3, mechanism and dependency in cytarabine-surviving residual populations from S2-type models and primary specimens stratified for ROS-low LSC content: galactose medium forcing OXPHOS reliance should sensitize; ATP5A1/ATP5B knockdown should phenocopy and occlude further drug effect; oligomycin should show concordant signatures; methyl-pyruvate rescue should reverse killing if ATP depletion is causal, and its failure in residual cells tests bridge (c). Gate 4, context: bedaquiline administered after, not before, cytarabine should shrink residual oxidative-metabolism disease, reduce LSC frequency in limiting-dilution assays, induce CD11b/CD14 differentiation [S4], and be benchmarked against venetoclax-azacitidine comparator cultures [S3]. Gate 5, window: paired normal CD34+ colony assays, cardiomyocyte/myotube ATP suppression, and a patient-derived xenograft residual-disease experiment with human-matched unbound exposure, serial ATP measurements, residual burden, LSC frequency, differentiation, and cardiac safety readouts, checking whether ATP depletion precedes death.\n\nFalsifying observations (any single result blocks the drug-mechanism-context link). Cytotoxicity without suppression of oligomycin-sensitive or ATP-linked respiration (off-target mechanism); combined failure of galactose sensitization, knockdown phenocopy/occlusion, and oligomycin concordance (complex V not causal); methyl-pyruvate restoration of ATP and viability in residual cells (bridge c falsified); measured intact-cell IC50 exceeding the verified achievable unbound range (bridge b falsified at drug level); equal killing of glycolysis-reliant bulk cells and normal CD34+ progenitors at or below achievable free concentrations (no dependency or no therapeutic window); or residual-bulk shrinkage without LSC-frequency reduction (context claim falsified, consistent with the S2 caution).\n\nLimitations. S1 and S2 are model-dependent and AML genotype heterogeneity is unaddressed. All bedaquiline-specific facts are unverified prior knowledge pending confirmation against regulatory and pharmacology sources. Direct complex-V inhibition plausibly threatens cardiac and skeletal muscle, and tissue accumulation complicates exposure modeling and combination scheduling. Confirmed prior bedaquiline-AML or oncology work changes novelty only through the pre-committed reframing above. This is a mechanistic hypothesis, not a treatment recommendation; established regimens remain standard of care.",
+      "ranking": [
+        {
+          "item": "Conditionally repurposing bedaquiline, an approved antitubercular agent, to collapse oxidative phosphorylation in cytarabine-resistant, oxidative-metabolism-dependent residual AML — gated on verified human mitochondrial ATP-synthase inhibition and achievable free-drug exposure",
+          "promisingness": 0.55,
+          "confidence": 0.5,
+          "pmids": [
+            "23333149",
+            "28416471",
+            "30420752",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "initial": {
+    "id": "c003",
+    "author": "glm",
+    "fitness": 0.812,
+    "scores": {
+      "evidenceCoverage": 0.85,
+      "specificity": 0.88,
+      "novelty": 0.59,
+      "actionability": 0.875
+    },
+    "answer": {
+      "answer": "RESEARCH PROPOSAL\n\nTitle: Repurposing teriflunomide (approved for relapsing multiple sclerosis) as a DHODH inhibitor that couples pyrimidine starvation to oxidative-metabolism collapse and myeloid differentiation in cytarabine-residual, OXPHOS-high AML.\n\nHypothesis and biological context. I propose testing teriflunomide — the active metabolite of the rheumatoid-arthritis drug leflunomide and, per unverified recollection requiring confirmation, an approved oral therapy for relapsing forms of multiple sclerosis — as a single-agent dihydroorotate dehydrogenase (DHODH) inhibitor in AML contexts where oxidative phosphorylation (OXPHOS) is prominent: ROS-low leukemia stem cell (LSC) fractions (S1) and cytarabine-surviving OXPHOS/fatty-acid-oxidation-high residual cells (S2). Mechanistic claim: clinically achievable teriflunomide exposures inhibit DHODH, depleting de novo pyrimidines while collapsing the respiratory-chain-coupled metabolic state these cells share, and thereby force myeloid differentiation or loss of LSC function rather than nonspecific bulk killing.\n\nSupported premises (from the packet). S1: ROS-low LSCs are enriched for BCL-2 and OXPHOS dependency, and metabolic targeting can eliminate them in studied specimens. S2: cytarabine-resistant residual cells are OXPHOS/FAO-high, are not necessarily LSC-enriched, and altering their metabolic state changed response in those models. S4: DHODH inhibition promotes myeloid differentiation in experimental AML, linking metabolism to a non-cytotoxic outcome — with the caution that not every approved drug touching this pathway reproduces it. S3: venetoclax–azacitidine disrupts TCA-cycle/OXPHOS in LSCs and is the established mechanistic comparator; teriflunomide must be benchmarked against, not conflated with, that regimen.\n\nMechanistic bridge. DHODH resides in the inner mitochondrial membrane and transfers electrons to coenzyme Q (general biochemistry; verify independently), so pyrimidine synthesis is coupled to respiratory-chain flux. Supported-by-S4 premise: DHODH inhibition can trigger differentiation. Speculative bridges: (1) teriflunomide free plasma exposure reaches DHODH-inhibitory levels in marrow at approved dosing (PK recollection, needs verification); (2) inhibition drains pyrimidine pools with an antiproliferative, uridine-rescuable component while a separable differentiation component persists (recalled from the brequinar literature, unverified); (3) cytarabine survivors (S2) are at least as dependent on de novo pyrimidines as bulk blasts, which salvage pathways may negate.\n\nAlternative explanations. Observed differentiation could reflect cytotoxic selection of already-mature cells; teriflunomide has reported non-DHODH activities at higher concentrations (e.g., tyrosine-kinase effects, unverified); primary ETC disruption could make this venetoclax-like killing rather than DHODH-specific differentiation; genotypes with high nucleoside salvage may be refractory.\n\nDiscriminating preclinical strategy. (1) Ex vivo dose-response in genotypically diverse primary AML (FLT3-ITD, NPM1-mutant, TP53-mutant, MLL-rearranged) versus normal CD34+ HSPCs: CD11b/CD14/CD64 staining, viability, and S1-style CD34+CD38− ROS-low LSC gating. (2) On-target engagement: LC-MS pyrimidine pools, dihydroorotate accumulation, Seahorse OCR; uridine/pyrimidine-nucleoside rescue; DHODH knockout and rescue with an inhibitor-resistant DHODH allele. (3) Residual-disease assay: cytarabine pulse to generate S2-like survivors, then teriflunomide; ask whether survivors are killed or differentiated. (4) Comparator arms: brequinar (experimental reference DHODH inhibitor), venetoclax–azacitidine (S3), vehicle, cytarabine alone. (5) In vivo NSG xenografts of primary AML with LSC frequency by limiting dilution, plus toxicity testing in human CD34+–engrafted mice. (6) Exposure reconciliation: compare ex vivo IC50 with achievable free plasma concentrations from verified pharmacokinetic data.\n\nFalsifying observation. The hypothesis fails if (a) teriflunomide at clinically achievable concentrations does not induce differentiation or reduce LSC frequency in the majority of primary specimens; (b) all phenotypes are fully uridine-rescuable, indicating pure antiproliferative cytotoxicity; (c) DHODH genetic manipulation neither recapitulates nor protects the effect, indicating an off-target mechanism; (d) normal HSPCs are more sensitive than blasts without a differentiation readout, indicating no therapeutic window; or (e) required exposures exceed tolerable human levels while brequinar shows the expected on-target profile.\n\nLimitations. Teriflunomide approval status, dosing, long half-life, and safety liabilities (teratogenicity, hepatotoxicity, immunosuppression) are outside the packet and must be verified; ex vivo differentiation assays may not predict marrow behavior; de novo pyrimidine dependence is heterogeneous; and positive preclinical results would not establish clinical efficacy or any advantage over the established regimen in S3.\n\nVerified facts are the packet summaries [S1]-[S4]; all approval, pharmacokinetic, and literature-recall statements above are labeled unverified prior knowledge requiring direct checking.",
+      "ranking": [
+        {
+          "item": "Repurposing teriflunomide (approved for relapsing multiple sclerosis) as a DHODH inhibitor that couples pyrimidine starvation to oxidative-metabolism collapse and myeloid differentiation in cytarabine-residual, OXPHOS-high AML",
+          "promisingness": 0.62,
+          "confidence": 0.55,
+          "pmids": [
+            "23333149",
+            "28416471",
+            "30420752",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 27,
+    "reported_input_tokens": 83108,
+    "reported_output_tokens": 166441,
+    "reported_tokens": 249549,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 586.596,
+    "remaining_seconds": 2113.404,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "j1": {
+    "status": "completed",
+    "unique_checks": 9,
+    "failed_checks": 0,
+    "needs_review": 0,
+    "remaining_defects": 0
+  },
+  "diagnostics": {
+    "status": "completed",
+    "outcome_mention": "skipped: no gold outcome list supplied",
+    "records": 27
+  },
+  "checker_usage": {
+    "backend_calls": 36,
+    "reported_input_tokens": 71520,
+    "reported_output_tokens": 2457,
+    "reported_tokens": 73977,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 589.631,
+    "remaining_seconds": 2110.369,
+    "token_limit": null,
+    "call_limit": 70,
+    "seconds_limit": 2700
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "header": {
+    "case": "aml",
+    "method": "reasonlineage",
+    "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+    "protocol_sha256": "332fa467ee18de45527550acb9716cae8386468745c955084239ac082e0f909b",
+    "protocol_version": "co-scientist-jev-control-0.7",
+    "models": [
+      {
+        "name": "gpt",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      },
+      {
+        "name": "grok",
+        "model": "grok-4.7",
+        "effort": "xhigh"
+      },
+      {
+        "name": "glm",
+        "model": "glm-5.3-flash",
+        "effort": "max"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    },
+    "evolution": {
+      "initial_candidates": 3,
+      "population_limit": 4,
+      "survivor_count": 2,
+      "generations": 3
+    }
+  },
+  "j1": {
+    "status": "disabled"
+  },
+  "diagnostics": {
+    "status": "disabled"
+  },
+  "status": "completed",
+  "final": {
+    "id": "c009",
+    "author": "grok",
+    "fitness": 0.8175000000000001,
+    "scores": {
+      "evidenceCoverage": 0.8600000000000001,
+      "specificity": 0.905,
+      "novelty": 0.6,
+      "actionability": 0.84
+    },
+    "answer": {
+      "answer": "Salvage-Reserve-Stratified Teriflunomide for DHODH-Dependent Differentiation of Post-Cytarabine Residual AML\n\nHypothesis. In post-cytarabine residual AML whose pyrimidine economy is salvage-limited under physiological uridine, teriflunomide at verified unbound marrow exposure will occupy DHODH, lower UTP and CTP, and produce durable myeloid differentiation with reduced leukemia-propagating frequency, while proliferation-matched normal CD34-positive progenitors retain at least a threefold functional margin. Salvage reserve alone defines enrollment. Oxidative and ROS-low states are interaction covariates. Teriflunomide is recalled, as unverified prior knowledge, as an oral agent approved for relapsing multiple sclerosis and as a DHODH inhibitor; approval, protein binding, half-life, marrow distribution, and labeled safety require primary-source confirmation. A literature search for teriflunomide and leflunomide in AML is required before any drug-level novelty claim. If either agent already induces AML differentiation, the incremental claim is only the locked salvage-reserve contrast. Brequinar is recalled, unverified, as a DHODH inhibitor that has entered AML testing. A quantitative free-exposure and occupancy comparison with its clinical pharmacology is a drug-choice gate: clear inferiority of teriflunomide on unbound marrow exposure, occupancy, and tolerability stops or pivots the agent and leaves the salvage-stratified hypothesis intact.\n\nSupported premises. DHODH inhibition promoted myeloid differentiation and affected disease endpoints in experimental AML [S4]; the packet assigns that result to the pathway, and to other inhibitors, rather than to teriflunomide. Cytarabine-residual cells were not consistently enriched for immature quiescent leukemia stem cells, showed mitochondrial and fatty-acid-oxidation features, and changed response when that state was perturbed [S2]. Those data justify residual disease as the setting and oxidative phenotype as a covariate. They do not show salvage limitation. Often ROS-low, BCL-2-high leukemia stem cells were sensitive to BCL-2 inhibition through reduced oxidative phosphorylation [S1]. Venetoclax–azacitidine altered leukemia-stem-cell TCA-cycle and oxidative-phosphorylation metabolism and is an established metabolic comparator [S3]. Repeating that regimen is outside this proposal. [S3] supports stem-cell metabolic effects and does not establish differentiation as its endpoint.\n\nSpeculative bridges. No packet evidence shows residual AML to be salvage-limited, or oxidative metabolism to equal de novo pyrimidine demand. The assumptions are that a measurable donor subset cannot refill pyrimidines from physiological uridine, that partial depletion releases differentiation ahead of generalized killing, and that normal progenitors keep the stated margin at the same free exposure. Expression of DHODH, UMPS, and nucleoside transporters versus chemotherapy state is only a plausibility screen.\n\nOperational rules. In a training cohort, lock three metabolic cutoffs with no reference to drug response: de novo-to-salvage isotope-flux ratio at least 3:1, UTP plus CTP at or below 50 percent of the paired pretreatment median, and uridine refill of nucleotide pools below a cutoff taken from that training distribution at physiological uridine. Apply the locked rules to held-out residual donors and paired pretreatment samples. Continue only if at least 20 percent of at least 20 independent residual donors qualify; lower prevalence is a feasibility stop. Durable differentiation means, after 72 hours of exposure and 96 hours of washout at equal viable leukemic input, a concurrent at least twofold rise in CD11b/CD14-positive fraction and mean fluorescence plus a blinded morphologic maturation score in genotype-confirmed leukemic cells, with at least 50 percent reductions in colony output and limiting-dilution propagating frequency. Selectivity fails if proliferation-matched normal CD34 long-term culture-initiating cells or competitive repopulation fall by at least 50 percent, or if the normal-colony IC50 to AML differentiation EC50 ratio is below 3, at protein-adjusted, pharmacokinetics-capped exposure.\n\nValidation. Gate A confirms pharmacology and requires modeled free marrow trough to reach the occupancy linked to differentiation-range pyrimidine depletion, benchmarked against brequinar. Gate B is the locked-cutoff prevalence pilot with salvage-enzyme measurements. Gate C tests held-out salvage-limited versus salvage-replete residual AML and paired pretreatment cells against matched normal CD34 cells in stromal coculture, resting and proliferation-matched, inside the exposure ceiling. Occupancy and nucleotide depletion are recorded before maturation, apoptosis, and proliferation. Comparators are vehicle, an orthogonal DHODH inhibitor, DHODH knockdown, venetoclax–azacitidine [S3], and a fatty-acid-oxidation or complex-I inhibitor matched for viability. Gate D is a patient-derived xenograft with controlled uridine and nutrients, measured plasma and marrow exposure, occupancy-versus-maturation correlation, limiting-dilution propagation, and normal competitive repopulation. Mediator proof requires documented restoration of UTP and CTP by uridine and a catalytically functional teriflunomide-resistant DHODH construct. Time-resolved tracking of initially immature leukemic cells separates maturation from selective loss of immature cells.\n\nFalsification and stops. Biological disconfirmation is verified occupancy and pyrimidine depletion at achievable free exposure without the prespecified maturation and propagation changes; differentiation that persists after documented nucleotide-pool restoration; equal maturation and propagating-frequency effects in held-out salvage-replete cells at matched occupancy; or a fatty-acid-oxidation or complex-I inhibitor matching those effects at equal viability. Feasibility stops, kept separate from mechanism, are prevalence below 20 percent, free trough below the occupancy threshold, or failure to reach marrow exposure. Prior art that already shows the same salvage-stratified result removes the incremental claim.\n\nLimitations. Donor heterogeneity, culture-conditioned salvage, marrow nutrients, and xenograft artifacts limit inference. The cited studies are model- and cohort-specific. Positive preclinical results would justify further study only.",
+      "ranking": [
+        {
+          "item": "Salvage-Reserve-Stratified Teriflunomide for DHODH-Dependent Differentiation of Post-Cytarabine Residual AML",
+          "promisingness": 0.5,
+          "confidence": 0.44,
+          "pmids": [
+            "23333149",
+            "28416471",
+            "30420752",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "initial": {
+    "id": "c003",
+    "author": "gpt",
+    "fitness": 0.808,
+    "scores": {
+      "evidenceCoverage": 0.88,
+      "specificity": 0.85,
+      "novelty": 0.63,
+      "actionability": 0.815
+    },
+    "answer": {
+      "answer": "DHODH-Dependent Differentiation of Pyrimidine-Salvage-Limited Residual AML with Teriflunomide\n\nHypothesis. In post-cytarabine residual AML with high oxidative metabolism and limited pyrimidine-salvage capacity, teriflunomide will induce durable myeloid differentiation through DHODH-dependent pyrimidine depletion, reducing leukemia-propagating capacity at exposures that spare normal hematopoietic progenitors. This proposes a phenotype-restricted repurposing opportunity, not universal AML activity or a claim of previously undiscovered drug–AML effects.\n\nSupported premises. Cytarabine-resistant AML cells displayed oxidative-metabolism-associated features in the investigated models, but were not consistently enriched for immature, quiescent leukemia stem cells [S2]. Separately, DHODH inhibition promoted differentiation and affected disease-related endpoints in experimental AML [S4]. These findings justify testing differentiation in metabolically characterized residual disease; they do not establish that oxidative metabolism predicts DHODH dependence. BCL-2-associated oxidative-phosphorylation dependence in functionally defined, frequently ROS-low leukemia stem cells provides additional motivation for metabolic targeting, without establishing a therapeutic window for another agent [S1]. Venetoclax–azacitidine is an established metabolic comparator, not the proposed repurposing discovery [S3].\n\nUnverified prior knowledge. Teriflunomide is recalled to be approved for relapsing forms of multiple sclerosis and to inhibit DHODH, an enzyme supporting de novo pyrimidine synthesis. Extracellular uridine is recalled to permit bypass through pyrimidine salvage. These drug, indication, and biochemical facts are outside the packet and require independent confirmation before implementation. No approved-dose marrow exposure or AML-selective concentration is established here.\n\nSpeculative bridges. The central assumption is that some oxidative residual AML populations remain dependent on de novo pyrimidine production because salvage cannot meet their requirements. A second assumption is that partial depletion releases a differentiation blockade before causing generalized injury. A third is that normal progenitors possess a sufficient functional margin at clinically attainable exposure. None follows automatically from [S2] or [S4]. Low salvage must therefore be measured rather than inferred from oxygen consumption, stem-cell markers, or treatment resistance.\n\nDiscriminating preclinical strategy. Obtain paired pretreatment and post-cytarabine patient-derived AML populations across independent donors, retaining matched untreated controls. Measure oxygen consumption, de novo-versus-salvage pyrimidine flux, and nucleotide pools before drug exposure. Prespecify oxidative, low-salvage residual cells as the primary context; include oxidative, high-salvage cells and nonoxidative residual cells as biological comparators. Establish concentration ceilings using verified human unbound pharmacokinetics and measured marrow exposure, rather than nominal culture concentrations. Test protein-adjusted exposures in stromal coculture alongside normal marrow CD34-positive cells, including resting and proliferation-matched conditions.\n\nMeasure biochemical DHODH inhibition and pyrimidine depletion before assessing maturation, early apoptosis, and proliferation. Require concordant morphology and differentiation-marker changes in genotype-confirmed leukemic cells, not merely expansion of contaminating normal cells. After washout, assess persistence of maturation, clonogenic output, and limiting-dilution leukemia propagation using equal viable leukemic-cell inputs. Reduced bulk viability alone does not demonstrate differentiation or stem-cell depletion. Include vehicle, an independently validated DHODH inhibitor, genetic DHODH suppression, and venetoclax–azacitidine as comparators. Test uridine rescue after demonstrating salvage uptake; where technically achievable, use a biochemically validated, catalytically functional teriflunomide-resistant DHODH rescue to strengthen target attribution.\n\nAlternatives and falsification. Apparent maturation could reflect preferential killing of immature cells, nonspecific mitochondrial injury, proliferation differences, or stromal effects. Time-resolved tracking of initially immature leukemic cells and target-rescue experiments distinguish these explanations. The mechanistic hypothesis would be falsified if verified DHODH inhibition and pyrimidine depletion at attainable exposure fail to induce durable leukemic differentiation in the prespecified context. Persistence of the differentiation effect despite restoration of pyrimidine pools would contradict the proposed mediator. Equivalent impairment of normal progenitor function would falsify the proposed selective window even if AML differentiation occurred.\n\nLimitations. Donor heterogeneity, culture-dependent salvage, marrow nutrient availability, and transplantation artifacts may restrict interpretation. Approval records, pharmacology, protein binding, marrow distribution, and systemic toxicity require verification. Positive preclinical findings would support further investigation, not establish clinical efficacy or justify off-label treatment.",
+      "ranking": [
+        {
+          "item": "DHODH-Dependent Differentiation of Pyrimidine-Salvage-Limited Residual AML with Teriflunomide",
+          "promisingness": 0.61,
+          "confidence": 0.36,
+          "pmids": [
+            "23333149",
+            "28416471",
+            "30420752",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 27,
+    "reported_input_tokens": 160231,
+    "reported_output_tokens": 152000,
+    "reported_tokens": 312231,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 1665.045,
+    "remaining_seconds": 1034.955,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  }
+}
