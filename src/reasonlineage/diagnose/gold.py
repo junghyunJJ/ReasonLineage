@@ -17,6 +17,12 @@ from ..engine.events import read_events
 CEILING = 0.8
 MIN_PAIRS = 10
 SIGNAL = 0.7
+# Level-2 rule, fixed before the level-2 run (weather level-2 design 5.1). Do not change it after seeing results.
+GAIN = 0.10
+ALPHA = 0.05
+# Level-3 rule, fixed before the level-3 run (weather level-3 design 4): the same size, alpha 0.05 over 4 conditions.
+CONDITION_ALPHA = 0.0125
+CONDITION_VERDICT = {"gain": "condition better", "loss": "recuse+isolated better", "no change": "no difference"}
 _EPS = 1e-9
 
 
@@ -97,17 +103,23 @@ def sign_test(concordant: int, discordant: int) -> float | None:
     return sum(comb(n, k) for k in range(concordant, n + 1)) / 2 ** n
 
 
+def _counted(runs: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    """The run each task counts with: its earliest run folder by name (gold design 6.2)."""
+    kept: dict[str, Mapping[str, Any]] = {}
+    for run in sorted(runs, key=lambda r: r["run"]):
+        kept.setdefault(run["task"], run)
+    return list(kept.values())
+
+
 def level1(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """Does generation-0 fitness follow correctness? The verdict follows gold design 6.2 in order.
 
     Each task counts once (gold design 6.2: its four generation-0 answers). When a task has several runs,
     for example a replay that continues it, the earliest run folder by name counts; the rest are set aside.
     """
-    kept: dict[str, Mapping[str, Any]] = {}
-    for run in sorted(runs, key=lambda r: r["run"]):
-        kept.setdefault(run["task"], run)
-    set_aside = sorted(run["run"] for run in runs if kept[run["task"]] is not run)
-    runs = list(kept.values())
+    counted = _counted(runs)
+    set_aside = sorted(run["run"] for run in runs if run not in counted)
+    runs = counted
     groups = [[a for a in run["answers"] if a["generation"] == 0 and a["correctness"] is not None] for run in runs]
     answers = [a for group in groups for a in group]
     unscorable = sum(1 for run in runs for a in run["answers"] if a["generation"] == 0 and a["correctness"] is None)
@@ -158,7 +170,7 @@ def level2(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
     for run in evolved:
         by_id = {a["id"]: a for a in run["answers"]}
         first = [a for a in run["answers"] if a["generation"] == 0]
-        best_first = max(first, key=lambda a: a["fitness"])  # ties go to the earlier answer
+        best_first = _gen0_best(run)
         best_final = max((by_id[i] for i in run["final"]), key=lambda a: a["fitness"])
         vote = borda([a["ranking"] for a in first], run["candidates"])
         per_task.append({"task": run["task"], "gen0_best": best_first["correctness"], "final_best": best_final["correctness"],
@@ -168,9 +180,54 @@ def level2(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
                 generations[a["generation"]]["fitness"].append(a["fitness"])
                 generations[a["generation"]]["correctness"].append(a["correctness"])
     means = {key: _mean([t[key] for t in per_task if t[key] is not None]) for key in ("gen0_best", "final_best", "gen0_vote")}
+    diffs = [t["final_best"] - t["gen0_best"] for t in per_task if t["final_best"] is not None and t["gen0_best"] is not None]
     return {"tasks": len(evolved), "per_task": per_task, "mean": means,
             "by_generation": {str(g): {"fitness": _mean(v["fitness"]), "correctness": _mean(v["correctness"]),
-                                       "answers": len(v["fitness"])} for g, v in sorted(generations.items())}}
+                                       "answers": len(v["fitness"])} for g, v in sorted(generations.items())},
+            "change": change_verdict(diffs) | {"left_out": len(per_task) - len(diffs)}}
+
+
+def _gen0_best(run: Mapping[str, Any]) -> Mapping[str, Any]:
+    """The generation-0 answer with the top fitness; ties go to the earlier answer."""
+    return max((a for a in run["answers"] if a["generation"] == 0), key=lambda a: a["fitness"])
+
+
+def change_verdict(diffs: Sequence[float], alpha: float = ALPHA) -> dict[str, Any]:
+    """Did evolution change the best answer's correctness? d = final best minus generation-0 best, one per task.
+
+    Gain or loss needs both a mean change of at least GAIN and a one-sided sign test below `alpha` (weather level-2
+    design 5.1); tasks where d is 0 leave the sign test.
+    """
+    up = sum(d > _EPS for d in diffs)
+    down = sum(d < -_EPS for d in diffs)
+    mean = _mean(list(diffs))
+    p_up, p_down = sign_test(up, down), sign_test(down, up)
+    if mean is not None and mean >= GAIN - _EPS and p_up is not None and p_up < alpha:
+        verdict = "gain"
+    elif mean is not None and mean <= -GAIN + _EPS and p_down is not None and p_down < alpha:
+        verdict = "loss"
+    else:
+        verdict = "no change"
+    return {"tasks": len(diffs), "mean": mean, "up": up, "down": down, "p_up": p_up, "p_down": p_down,
+            "verdict": verdict, "rules": {"gain": GAIN, "alpha": alpha}}
+
+
+def compare_conditions(condition: Sequence[Mapping[str, Any]], baseline: Sequence[Mapping[str, Any]],
+                       alpha: float = CONDITION_ALPHA) -> dict[str, Any]:
+    """Does a judging condition pick a better or worse generation-0 best than recuse + isolated (weather level-3
+    design 3, 4)? d = the condition's best minus the baseline's best, for each task scored in both; `condition` and
+    `baseline` are `score_run` results. The earliest run of a task counts; gold tasks in only one of them, or not
+    scored in one of them, are unpaired."""
+    def best(runs):
+        return {run["task"]: _gen0_best(run)["correctness"] for run in _counted([r for r in runs if r["status"] == "scored"])}
+    cond, base = best(condition), best(baseline)
+    tasks = sorted(cond.keys() & base.keys())
+    scorable = [t for t in tasks if cond[t] is not None and base[t] is not None]
+    change = change_verdict([cond[t] - base[t] for t in scorable], alpha)
+    unpaired = {run["task"] for run in (*condition, *baseline) if run["status"] not in ("not_a_run", "no_gold")} - set(tasks)
+    return change | {"verdict": CONDITION_VERDICT[change["verdict"]], "left_out": len(tasks) - len(scorable),
+                     "unpaired": sorted(unpaired), "mean_condition": _mean([cond[t] for t in scorable]),
+                     "mean_baseline": _mean([base[t] for t in scorable])}
 
 
 def summarize(runs: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -207,4 +264,83 @@ def format_report(report: Mapping[str, Any]) -> str:
                      f"final best {mean['final_best']}, gen-0 vote {mean['gen0_vote']}")
         lines.append("  by generation: " + ", ".join(f"{g}: fitness {v['fitness']} correctness {v['correctness']}"
                                                   for g, v in two["by_generation"].items()))
+        lines.append(f"  change in the best answer (final - generation 0): {_change_summary(two['change'])} "
+                     f"-> {two['change']['verdict']}")
     return "\n".join(lines)
+
+
+def _p(value: float | None) -> str:
+    return "n/a" if value is None else f"{value:.3g}"
+
+
+def _change_summary(change: Mapping[str, Any]) -> str:
+    mean = "n/a" if change["mean"] is None else f"{change['mean']:+.3f}"
+    left = f"; {change['left_out']} task(s) left out because an answer left out a gold item" if change["left_out"] else ""
+    return (f"mean {mean} over {change['tasks']} task(s), {change['up']} up / {change['down']} down, "
+            f"sign test p = {_p(change['p_up'])} (up) / {_p(change['p_down'])} (down){left}")
+
+
+def author_judge(runs: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, float]]:
+    """The mean weighted score each judge gave each author's generation-0 answers, over the runs level 1 counts."""
+    cells: dict[tuple[str, str], list[float]] = defaultdict(list)
+    for run in _counted(runs):
+        for answer in run["answers"]:
+            if answer["generation"] == 0:
+                for judge, score in answer["judges"].items():
+                    cells[(answer["author"], judge)].append(score)
+    table: dict[str, dict[str, float]] = defaultdict(dict)
+    for (author, judge), values in sorted(cells.items()):
+        table[author][judge] = sum(values) / len(values)
+    return dict(table)
+
+
+_MARK = {1.0: "✓", 0.5: "½", 0.0: "✗"}
+
+
+def format_analysis(runs: Sequence[Mapping[str, Any]]) -> str:
+    """Level 1 as a Markdown report: the verdict, correctness by author, concordance by judge, the judge-by-author
+    score table and every task's generation-0 answers. `runs` are scored runs (`score_run`)."""
+    one = level1(runs)
+    rate = "n/a" if one["concordance"] is None else f"{one['concordance']:.2f}"
+    p = "" if one["sign_test_p"] is None else f", sign test p = {one['sign_test_p']:.3g}"
+    rules = one["rules"]
+    lines = ["# Level 1 analysis", "",
+             f"**Verdict: {one['verdict']}.** {one['answers']} answers in {one['tasks']} tasks: "
+             f"{one['share_correct']:.0%} fully correct, {one['pairs']} pairs with different correctness, "
+             f"concordance {rate}{p}.",
+             f"Rules fixed before the run: ceiling {rules['ceiling']:.0%}, at least {rules['min_pairs']} pairs, "
+             f"signal at concordance {rules['signal']:.2f}.", "",
+             "## Correctness by author", "", "| Author | Mean correctness |", "|---|---|"]
+    lines += [f"| {m} | {v:.2f} |" for m, v in one["by_model"].items()]
+    lines += ["", "## Concordance by judge", "", "| Judge | Pairs | Concordance |", "|---|---|---|"]
+    lines += [f"| {j} | {v['pairs']} | {'n/a' if v['concordance'] is None else format(v['concordance'], '.2f')} |"
+              for j, v in one["by_judge"].items()]
+    table = author_judge(runs)
+    judges = sorted({j for row in table.values() for j in row})
+    lines += ["", "## Mean judge score by author", "",
+              "Rows: the answer's author. Columns: the judge. Generation 0, weighted rubric score; "
+              "\"—\" where the judge did not score that author (recusal).", "",
+              "| Author \\ Judge | " + " | ".join(judges) + " |", "|---|" + "---|" * len(judges)]
+    lines += [f"| {a} | " + " | ".join(f"{row[j]:.3f}" if j in row else "—" for j in judges) + " |"
+              for a, row in table.items()]
+    two = level2(runs)
+    if two:
+        change, mean = two["change"], two["mean"]
+        rules = change["rules"]
+        lines += ["", "## Level 2 (evolution)", "",
+                  f"**Verdict: {change['verdict']}.** Change in the best answer (final - generation 0): "
+                  f"{_change_summary(change)}.",
+                  f"Rule fixed before the run: gain or loss needs a mean change of at least {rules['gain']:.2f} and a "
+                  f"one-sided sign test p below {rules['alpha']:.2f}.",
+                  f"Mean correctness: generation-0 best {mean['gen0_best']}, final best {mean['final_best']}, "
+                  f"generation-0 vote {mean['gen0_vote']}.", "",
+                  "| Generation | Answers | Mean fitness | Mean correctness |", "|---|---|---|---|"]
+        lines += [f"| {g} | {v['answers']} | {v['fitness']} | {v['correctness']} |" for g, v in two["by_generation"].items()]
+    lines += ["", "## Tasks", "", "Each cell: the author's top pick, its correctness (✓ 1, ½ 0.5, ✗ 0) and the "
+              "answer's fitness.", ""]
+    for run in sorted(_counted(runs), key=lambda r: r["task"]):
+        cells = [f"{a['author']}: {a['ranking'][0] if a['ranking'] else '-'} "
+                 f"{_MARK.get(a['correctness'], '?')} {a['fitness'] if a['fitness'] is None else format(a['fitness'], '.3f')}"
+                 for a in sorted(run["answers"], key=lambda a: a["author"]) if a["generation"] == 0]
+        lines.append(f"- **{run['task']}** (truth {', '.join(run['truth']['approved'])}): " + "; ".join(cells))
+    return "\n".join(lines) + "\n"

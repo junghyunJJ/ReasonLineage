@@ -1,0 +1,16 @@
+{
+  "state": "- The CDK5–NUP98 nomination rests on unverified priors, with no defined phosphosite or prior-work comparison. Add a supported selection rationale and literature comparison to substantiate originality and sharpen the displacement mechanism.\n- Targeted CDK5 recruitment is not NUP98-specific sufficiency: neighboring pore substrates could contribute despite phospho-null resistance. Verify equivalent recruitment and local kinase activity, and add an orthogonal NUP98-specific phosphorylation or reconstitution experiment.\n- Restoring nuclear TDP-43 at fixed total abundance also reduces cytoplasmic TDP-43, confounding nuclear-function rescue with reduced cytoplasmic toxicity. Include matched cytoplasmic-depletion controls and a nuclear-function rescue that preserves cytoplasmic TDP-43 and assembly burden.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

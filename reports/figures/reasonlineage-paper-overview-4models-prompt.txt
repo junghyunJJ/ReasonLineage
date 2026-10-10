@@ -1,0 +1,26 @@
+Use case: infographic-diagram edit.
+Input image: edit target, the simplified ReasonLineage paper overview.
+Primary request: Update this existing figure to show FOUR explicitly named LLMs and their providers, using the exact names supplied below. Keep the simplified four-stage publication layout, title, white background, restrained colors, central jev block, fitness strip, evolutionary logic, Repeat loop and terminal output. This is a four-model architecture overview, not an experimental-results plot. Do not add dataset names, run statistics, scores, claims that an experiment was completed, or footnotes.
+
+Changes:
+1. In stage 1 "Multi-LLM generation", replace the three generic chips "LLM A", "LLM B", "LLM C" with FOUR vertically arranged source chips. Each chip has exactly TWO lines, model name larger and bold, provider below it smaller. From top to bottom, render these names VERBATIM:
+   "Opus 5.5"
+   "Anthropic"
+
+   "GPT-6.1 sol"
+   "OpenAI"
+
+   "Grok 4.7"
+   "xAI"
+
+   "GLM-5.3-flash"
+   "Z.ai"
+
+Do not substitute other names, do not add Claude to Opus, do not change "GPT-6.1 sol" to another spelling, do not change xAI capitalization, do not omit the dot in Z.ai. Require accurate legible typography.
+2. Each of the FOUR model chips must point to its own hypothesis card. There are FOUR initial cards in G₀, one per model. Give the added fourth card its own subtle lineage color, distinct from the green jev block. Re-space the left-stage rows elegantly so all four model/provider pairs and their cards are readable and fit inside the existing wide canvas. It is acceptable to modestly increase canvas height if needed, but preserve ample white space.
+3. In the "Select" subpanel of stage 3, represent FOUR incoming hypothesis cards instead of three: TWO retained parent cards with checks, TWO faded rejected cards with crosses. Retain the two existing parent lineage colors for mutation and crossover downstream. This is schematic selection, not a claim about real model performance. No scores or model labels on selected/rejected cards.
+4. The next-generation pool stays at FOUR cards: two retained parents, one mutant, one crossover. Do not expand it to five or six. Mutation stays with "Original author"; crossover stays with "Other LLM".
+5. Preserve all other labels EXACTLY, including "ReasonLineage Overview", "jev", "Structural evaluation", "Structure", "Completeness", "Testability", "Feedback", "LLM critique → fitness", "Selection & evolution", "Mutation", "Crossover", "Next generation", "Repeat", "Final hypothesis" and "After evaluation".
+
+Accuracy constraints: Four models generate four initial hypotheses; two parents are selected; one mutation plus one crossover are added; subsequent generation size remains four. Jev is a STRUCTURAL evaluator, while LLM critiques supply fitness. Do not add jev as a fifth generator, do not depict provider companies as extra models, and do not remove the critic fitness strip. Preserve the correct parent/offspring arrows and the evaluation qualifier before final output.
+Finish as a polished publication-ready English figure, with four readable model/provider pairs and no crowding.

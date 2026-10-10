@@ -1,0 +1,16 @@
+{
+  "state": "- The central molecular premise (NUP98 Ser606 as a direct, pathologically relevant CDK1 target in motor neurons) is admittedly drawn from unverified prior knowledge with zero support in the supplied packet; the entire residue-level hypothesis could rest on a misnumbered or non-physiological site. Fix: make the site nomination evidence-anchored by pre-registering the site-resolved NUP98 phosphoproteomics as a discovery step that can redirect the hypothesis to whichever early-changing, CDK1-dependent phosphorylation site is actually observed, rather than committing in advance to one unverifiable residue.\n- The premise of 'sustained CDK1 activity' in post-mitotic spinal motor neurons is not separately labeled or justified, though it is as speculative as the phosphorylation step; aberrant CDK1 reactivation in neurons is itself an unvalidated bridging claim. Fix: add a dedicated premise check (e.g., validated CDK1 activity probe in edited and unedited patient versus isogenic neurons) with a pre-specified activity threshold, and treat neuronal CDK1 reactivation as its own assumption.\n- The stress-granule discrimination arm central to falsifying S4 is underspecified: 'an approach validated for the neuronal system' names no intervention (e.g., G3BP1/2 double knockout versus a pharmacologic agent), so the decision rule 'rescue by that perturbation without early S606A protection favors sequestration' is not yet executable as written. Fix: name the specific stress-granule perturbation, its validation criteria in this neuronal system, and the quantitative effect-size/timing thresholds that would count as rescue.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

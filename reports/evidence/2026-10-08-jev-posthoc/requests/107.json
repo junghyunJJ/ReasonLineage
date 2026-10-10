@@ -1,0 +1,16 @@
+{
+  "state": "- The kinase and phosphorylation sites remain underspecified. Identify candidate Nup98 residues and the responsible kinase before interpreting perturbations; also label the proposed TDP-43 hyperphosphorylation-to-demixing sequence as untested rather than established by S3.\n- Import failure does not demonstrate increased passive pore permeability, and stress-granule suppression cannot exclude S3’s granule-independent sequestration mechanism. Add size-resolved permeability assays, transport-factor localization, direct TDP-43-demixing perturbation, and a neuronal function or survival endpoint.\n- Inducible TDP-43 stress risks imposing the proposed downstream event first, while an ineffective phosphomimetic is not a valid falsifier without functional validation. Test spontaneous disease-associated defects in defined ALS/control neurons, validate mutant behavior and baseline pore integrity, and include wild-type rescue.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

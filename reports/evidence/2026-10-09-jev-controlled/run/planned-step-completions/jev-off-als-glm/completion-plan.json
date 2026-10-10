@@ -1,0 +1,30 @@
+{
+  "source": "/common/jungj2/project/ReasonLineage/.worktrees/co-scientist-pilot/runs/jev-controlled-2026-10-09/jev-off/runs/als-glm",
+  "case": "als",
+  "method": "glm",
+  "missing_generation": [
+    "g3/mutate/c009/glm"
+  ],
+  "allowed_fresh_calls": [
+    "g3/mutate/c009/glm",
+    "g3/judge/c008/glm-r0",
+    "g3/judge/c008/glm-r1",
+    "g3/judge/c009/glm-r0",
+    "g3/judge/c009/glm-r1"
+  ],
+  "maximum_new_hypotheses": 1,
+  "new_generations": 0,
+  "original_model_calls": 23,
+  "original_unknown_usage_calls": 1,
+  "retry_seed_attempt": 1,
+  "original_failures": [
+    {
+      "ts": "2026-10-09T15:09:37+00:00",
+      "event": "call.failed",
+      "name": "g3/mutate/c009/glm",
+      "member": "glm",
+      "attempt": 0,
+      "error": "invalid or truncated structured response"
+    }
+  ]
+}

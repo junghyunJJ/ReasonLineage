@@ -7,6 +7,7 @@ version.
 
 import asyncio
 import json
+import math
 import urllib.error
 import urllib.request
 from typing import Any, Mapping, Sequence
@@ -34,6 +35,8 @@ class JevChecker:
 
     async def ask(self, state: str, questions: Sequence[Question]) -> CheckResult:
         payload = await asyncio.to_thread(self._post, self.body(state, questions))
+        if self.api_key in json.dumps(payload, ensure_ascii=False):
+            raise CheckerError('jev response included credential material; details suppressed')
         return parse_jev(payload, questions)
 
     def _post(self, body: Mapping[str, Any]) -> dict[str, Any]:
@@ -46,9 +49,11 @@ class JevChecker:
             with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
                 return json.load(response)
         except urllib.error.HTTPError as exc:
-            raise CheckerError(f"jev HTTP {exc.code}: {exc.read().decode(errors='replace')[:300]}") from None
+            code = exc.code
+            exc.close()
+            raise CheckerError(f"jev HTTP {code}; response details suppressed") from None
         except (urllib.error.URLError, OSError, ValueError) as exc:
-            raise CheckerError(f"jev request failed: {exc}") from None
+            raise CheckerError("jev request failed; external details suppressed") from None
 
 
 def parse_jev(payload: Mapping[str, Any], questions: Sequence[Question]) -> CheckResult:
@@ -65,5 +70,20 @@ def parse_jev(payload: Mapping[str, Any], questions: Sequence[Question]) -> Chec
             else:
                 answers[question.name] = CheckAnswer(question.kind, {str(k): float(v) for k, v in raw["probabilities"].items()})
     except (KeyError, TypeError, ValueError, AttributeError):
-        raise CheckerError(f"unexpected jev response: {str(payload)[:300]}") from None
-    return CheckResult(model=model, answers=answers)
+        raise CheckerError("unexpected jev response; payload suppressed") from None
+    if not isinstance(model, str):
+        raise CheckerError("unexpected jev response model")
+    for question in questions:
+        probabilities = answers[question.name].probabilities
+        labels = ({'yes', 'no'} if question.kind == 'noul' else
+                  {name for name, _ in question.choices} if question.kind == 'choice' else
+                  {str(i) for i in range(len(question.levels))})
+        if (not probabilities or not set(probabilities).issubset(labels) or
+                any(not math.isfinite(p) or not 0 <= p <= 1 for p in probabilities.values()) or
+                not math.isclose(sum(probabilities.values()), 1.0, abs_tol=.02)):
+            raise CheckerError('unexpected jev response probabilities')
+    raw_usage = payload.get('usage')
+    usage = ({name: value for name, value in raw_usage.items()
+              if isinstance(value, int) and not isinstance(value, bool) and value >= 0}
+             if isinstance(raw_usage, Mapping) else None)
+    return CheckResult(model=model, answers=answers, usage=usage)

@@ -1,0 +1,16 @@
+{
+  "state": "- The hypothesis's pivotal premise—that approved-dose atovaquone achieves partial mammalian complex-III inhibition in marrow with an ATP-sparing window—rests entirely on unlabeled-to-packet prior knowledge and is the weakest link; add an explicit up-front go/no-go comparing published/approved free-dose pharmacokinetic data against the required in-window complex-III IC, rather than only testing exposure after model selection, and abandon the claim if the required window exceeds achievable marrow exposure.\n- The 'salvage-poor' eligibility gate is defined retrospectively (UTP non-maintenance under reference DHODH blockade), so eligible residual cells cannot be prospectively identified, and NPM1-mutant restriction is admitted to lack responder-biomarker evidence; propose baseline predictors (e.g., baseline dihydroorotate:orotate ratio, de novo flux, salvage-pathway gene expression) so patient/model enrollment is testable a priori.\n- Novelty conflict-checking is left open ('neither result can be identified from this packet'), but prior atovaquone-in-AML and ETC-inhibition/differentiation literature may exist outside the packet; commit to a specific verification step (systematic search of atovaquone–AML and complex III–differentiation reports) with explicit criteria for what prior finding retires the claim.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -34,3 +34,7 @@ __pycache__/
 
 # Run outputs (smoke tests, experiments)
 runs/
+
+# Local attachments and optional figure-rendering libraries/binaries
+.orca/
+.superpowers/figure-animation-deps/

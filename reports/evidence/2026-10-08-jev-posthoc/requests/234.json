@@ -1,0 +1,16 @@
+{
+  "state": "- The decisive URA1 rescue is assigned to primary cytarabine-residual blasts, where stable inducible expression is rarely achievable and cell numbers cannot support the full flux panel. Put URA1 rescue in an engineered salvage-limited line that has already cleared the unbound-exposure and pyrimidine-before-ATP gates, and limit primary specimens to uridine rescue, ubiquinone redox, and isolated-enzyme selectivity.\n- Eligibility leaves “elevated respiration” qualitative and genotype unrestricted, so the oxidative-residual context and the stated S4 transfer limit are not operational. Prespecify respiration and isotope-traced fatty-acid-oxidation cutoffs versus matched normal CD34+ cells, and add a genotype stratum or an explicit genotype-transfer falsifier.\n- Novelty is postponed to a later literature search, so the ranking does not show what is incremental beyond known complex-III and direct DHODH biology. State in the ranked claim that the proposal is exposure-limited complex III inhibition timed to oxidized-ubiquinone restriction and DHODH-dependent maturation in salvage-poor cytarabine-residual cells, and name which published atovaquone–OXPHOS or ETC–DHODH differentiation result would retire it.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

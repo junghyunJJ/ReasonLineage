@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty remains unresolved: DHODH-driven differentiation and salvage bypass are established premises. Check teriflunomide/leflunomide–AML prior art and identify a genuinely untested prediction attributable to adaptive, demand-adjusted salvage in residual AML.\n- R(t) risks repackaging its defining endpoint—pyrimidine depletion after DHODH challenge. Specify flux estimation, standardize reference-inhibitor engagement, account for residual de novo synthesis, and test incremental predictive utility over depletion alone; this tests biomarker novelty, not whether salvage biology is valid.\n- Reciprocal salvage perturbations, lineage-confirmed maturation and mechanism-specific falsifiers provide exceptional specificity, but execution gates remain qualitative. Populate the proposed exposure gate with verified numerical bounds, practical schedules, assay criteria and donor-level go/no-go effect sizes.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

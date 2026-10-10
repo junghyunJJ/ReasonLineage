@@ -1,0 +1,16 @@
+{
+  "state": "- Nup98 is named, but no phosphosite or kinase is specified, so the modification treated as the required intermediate is not a concrete target. Pre-register a candidate site cluster or a discovery gate with an explicit decision rule, and add a kinase perturbation that blocks that phosphorylation while cytoplasmic TDP-43 assemblies remain intact.\n- The step from phosphorylation to sustained import failure is left as altered FG-repeat interactions or altered NPC composition, and the readouts do not isolate either branch. Pair the allele swap with one assay of a single favored step and state which result retires that step.\n- The C9orf72 contrast is judged by whether the import defect stays “largely intact,” which is not a discriminating threshold. Set a quantitative bound on how large an Nup98-genotype effect is allowed in the C9orf72 arm relative to the stress-granule-independent TDP-43 arm before the context-specific claim fails.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

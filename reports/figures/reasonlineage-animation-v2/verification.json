@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "kind": "conceptual_animation",
+  "source_svg_frames": 376,
+  "gif": {
+    "dimensions": [
+      960,
+      540
+    ],
+    "encoded_frames": 245,
+    "duration_seconds": 25.0,
+    "infinite_loop": true
+  },
+  "mp4": {
+    "dimensions": [
+      1280,
+      720
+    ],
+    "fps": 15.0,
+    "decoded_frames": 375,
+    "codec": "h264",
+    "duration_seconds": 25.0
+  },
+  "player": {
+    "status": "passed",
+    "chapters": 14,
+    "controls": [
+      "play",
+      "pause",
+      "previous",
+      "next",
+      "seek",
+      "speed",
+      "repeat",
+      "end",
+      "reduced-motion"
+    ],
+    "actual_browser_automation": false
+  },
+  "lineage": "initial4/select2/mutation1/crossover1/retain2/new2/reevaluate-new-only/2generations/final-response verified",
+  "actual_model_calls": 0,
+  "uses_empirical_model_scores": false,
+  "source_bitmap_modified": false,
+  "verification_images": [
+    "frame-075.png",
+    "frame-145.png",
+    "frame-374.png"
+  ]
+}

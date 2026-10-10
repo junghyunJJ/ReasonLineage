@@ -1,0 +1,16 @@
+{
+  "state": "- The bridge from cytarabine-residual oxidative metabolism in S2 to DHODH-dependent maturation treats fatty-acid oxidation and respiration as evidence for a pyrimidine-limited state. Insert a pre-drug gate in the same residual models: matched free atovaquone must raise dihydroorotate:orotate and lower UTP, while genetic fatty-acid-oxidation interruption that leaves complex III intact must leave that pyrimidine signature and maturation unchanged.\n- NPM1 eligibility and the fixed cutoffs of 30% UTP depletion, 80% ATP retention, 1.5-fold respiration, 80% immature cells, and a threefold drop in initiating-cell frequency are operational choices without study-derived or variance-derived justification. Derive each threshold from assay variance or from effect sizes in the DHODH and cytarabine-residual models, preregister a sensitivity analysis, and analyze NPM1 as a stratification factor with a salvage-by-genotype interaction.\n- The maturation endpoint and the claim of indirect DHODH restriction are broader than the mechanism they must discriminate. Specify the gain-of-maturation marker set, morphologic score, and absolute mature versus immature counts from index-sorted cells, and require isolated complex III and purified DHODH assays at the same free concentration with a ubiquinone-site competition control before any xenograft experiment.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

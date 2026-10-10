@@ -1,0 +1,16 @@
+{
+  "state": "- The hypothesis lists two candidate kinases (p38 MAPK or JNK) and vague 'FG-domain S/TP sites' without naming specific Nup98 residues or prioritizing one kinase, leaving the phospho-null CRISPR design under-determined. Fix: specify the top 2–3 candidate residues by cross-referencing known mitotic Nup98 phospho-acceptor positions with p38/JNK consensus motifs and design alleles against named sites.\n- The causal chain asserts phosphorylation precedes nuclear TDP-43 depletion and cytoplasmic aggregation, but S1 and S3 document the reverse direction—cytoplasmic TDP-43 assemblies disrupt nucleoporin localization and import. The hypothesis offers no mechanistic rationale for why stress kinases would phosphorylate Nup98 before rather than consequent to TDP-43-driven pore perturbation, making temporal primacy a bare assertion without even a speculative bridge explaining the direction.\n- The phospho-mimetic prediction ('impairs import without stress') assumes S/T-to-D/E substitution at one or a few sites reproduces the effect of multi-site phosphorylation on a disordered FG-domain; for intrinsically disordered regions, phospho-mimetic substitutions often fail to recapitulate phosphate charge distribution and steric effects, making a negative phospho-mimetic result ambiguous (inadequate mimicry vs. hypothesis failure). The answer flags imperfect mimicry in limitations but does not specify how such a result would be interpreted.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

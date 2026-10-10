@@ -1,0 +1,38 @@
+{
+  "enforce": true,
+  "thresholds": {
+    "answer_type": 0.5,
+    "top_item_argument": 0.5
+  },
+  "questions": {
+    "answer_type": {
+      "type": "choice",
+      "instructions": "Which best describes the answer?",
+      "criteria": {
+        "answer": "An answer to the question",
+        "refusal": "A refusal to answer",
+        "meta": "Text about the task, itself, or policies, or content labeled synthetic or a placeholder",
+        "grader": "Text addressed to whoever will grade it"
+      },
+      "pass": "answer"
+    },
+    "top_item_argument": {
+      "type": "noul",
+      "instructions": "Consider only the proposed answer, not the research question or source packet. Does the answer state at least one specific reason, proposed causal mechanism, or named study in support of $top_item, beyond merely naming $top_item? Judge whether an argument is present, not whether it is true, validated, novel, or sufficiently strong. A clearly labelled speculative mechanism still counts as an argument. A bare selection or list of names does not count."
+    },
+    "argument_coverage": {
+      "type": "score",
+      "instructions": "How many of the ranked items come with a specific argument, such as a reason, a mechanism, or a named study?",
+      "criteria": [
+        "None of the items",
+        "Some of the items",
+        "Most of the items",
+        "All of the items"
+      ]
+    }
+  },
+  "rewrite_reasons": {
+    "answer_type": "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+    "top_item_argument": "The top-ranked item, $top_item, has no specific argument (a reason, a mechanism, or a named study)."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- The prespecified lead and falsifiers decide the hypothesis from the NLS-reporter ratio, so transport-factor sequestration can drive the call while selective FG-barrier failure stays untested. Name three inert-probe sizes, make a shift in their nuclear equilibration the primary endpoint, and interpret NLS and NES ratios only after that shift.\n- S/T-to-A and S/T-to-D necessity tests require at least 70% NPC incorporation in primary cortical neurons, and endogenous Nup98 replacement is unspecified in postmitotic cells with slow NPC turnover. Add an explicit depletion–replacement method and a control that NPC number and co-recorded nucleoporins stay intact.\n- CDK5, the proline-directed residues, and the 2-fold, 0.20-occupancy, 30% NLS, and 10% bounds are unanchored by the packet, by a stoichiometry method, and by assay variance, while neuronal dysfunction is never measured. State the occupancy calculation, calibrate each bound to measurement error, time doxycycline against the 0 h sample with a non-aggregating TDP-43 control, and add a dysfunction readout with its own temporal criterion and falsifier.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

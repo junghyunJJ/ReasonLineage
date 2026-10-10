@@ -1,0 +1,735 @@
+[
+  {
+    "header": {
+      "case": "als",
+      "method": "reasonlineage",
+      "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "gpt",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh"
+        },
+        {
+          "name": "grok",
+          "model": "grok-4.7",
+          "effort": "xhigh"
+        },
+        {
+          "name": "glm",
+          "model": "glm-5.3-flash",
+          "effort": "max"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "failed",
+    "reason": "cross c008 by gpt failed: model timeout at remaining budget",
+    "initial": {
+      "id": "c002",
+      "author": "grok",
+      "fitness": 0.8345000000000001,
+      "scores": {
+        "evidenceCoverage": 0.88,
+        "specificity": 0.865,
+        "novelty": 0.74,
+        "actionability": 0.815
+      },
+      "answer": {
+        "answer": "Nup98 FG-region phosphorylation initiates nuclear-import failure and subsequent nuclear TDP-43 loss in TDP-43 proteinopathy models of ALS\n\nHypothesis. In human and rodent neuronal models of TDP-43 proteinopathy, corresponding to TDP-43-positive ALS, phosphorylation of the FG-nucleoporin Nup98 is proposed as an initiating, pore-intrinsic cause of selective nuclear-import failure. Loss of nuclear TDP-43, cytoplasmic TDP-43 assembly, broader nucleoporin mislocalization, and neuronal death are treated as downstream responses. The claim is limited to this TDP-43 context.\n\nSupported premises. Disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport in cell models, and related pore pathology is present in ALS tissue; nuclear-pore and transport components associate with insoluble TDP-43 [S1]. These observations support a TDP-43-transport connection and leave the initiating chemical event open [S1]. Persistent cytoplasmic TDP-43 assemblies can arise independently of conventional stress granules, recruit or mislocalize transport-associated proteins, impair nuclear import, deplete nuclear TDP-43, and lead to cell death [S3]. Phosphorylated TDP-43 accumulates in those assemblies; that finding concerns TDP-43 and is separate from nucleoporin phosphorylation [S3]. Stress-granule assembly can sequester transport factors and impair transport, and altering stress-granule assembly changes transport and model phenotypes [S4]. C9orf72 repeat RNA alters RanGAP localization and nuclear import in a genotype-specific manner [S2]. No supplied source establishes nucleoporin phosphorylation as an ALS initiator.\n\nSpeculative bridges. Named kinases, sites, and phospho-dependent contacts are assumptions. Unverified prior knowledge holds that FG-nucleoporins, including Nup98, form the selective central-channel barrier and that proline-directed phosphorylation of FG-nucleoporins during mitosis disperses that barrier. The speculative chain places the same class of modification in stressed motor neurons: a proline-directed stress kinase, with CDK5 and p38 MAPK as candidates for empirical identification, phosphorylates Ser/Thr residues in the N-terminal FG region of Nup98. The phosphate is assumed to weaken FG-mediated selectivity and slow facilitated import of NLS cargo, including TDP-43. The initiating mechanism is Nup98 phosphorylation and the immediate change in pore selectivity. The downstream response is failed nuclear replenishment of TDP-43, cytoplasmic de-mixing, secondary incorporation of additional nucleoporins into insoluble material, and cell death. TDP-43 phosphorylation sits in that downstream assembly state [S3].\n\nAlternative explanations. Sequestration of transport factors inside stress granules can impair import with an unmodified pore [S4]. Cytoplasmic TDP-43 assemblies can inhibit import and mislocalize transport proteins, placing any later Nup98 phosphorylation downstream of TDP-43 pathology [S3][S1]. C9orf72 repeat RNA can impair import through RanGAP mislocalization [S2]. Broad cellular stress can also slow import, leaving Nup98 phosphorylation as a correlated stress mark.\n\nDiscriminating preclinical test. FG-region phosphosites on Nup98 are mapped by phosphoproteomics in iPSC-derived motor neurons that express an ALS-linked TDP-43 variant and in a paired inducible cytoplasmic TDP-43 de-mixing system; sites are unknown until that map exists. Parallel time series then record phosphosite occupancy, NLS-reporter import rate, nuclear and cytoplasmic TDP-43, nucleoporin localization, and a stress-granule marker. The hypothesis predicts that Nup98 phosphorylation rises before import falls and before nuclear TDP-43 is lost. Replacement by phospho-null Nup98, with Ser/Thr changed to Ala at the mapped FG-region sites, is predicted to preserve import and nuclear TDP-43. Phospho-mimetic Nup98, with Ser/Thr changed to Asp, is predicted to slow import and lower nuclear TDP-43 in neurons that still lack stress granules and cytoplasmic TDP-43 assemblies. Combining the mimetic with suppression of stress-granule assembly tests sequestration: an import defect that remains favors intrinsic pore modification [S4]. Combining the null allele with forced cytoplasmic TDP-43 assemblies tests order: preserved import under those assemblies separates the proposed initiator from an assembly-only mechanism [S3]. A wild-type Nup98 replacement arm controls damage from nucleoporin replacement itself. C9orf72-repeat neurons are a boundary cohort [S2]; rescue in that genotype lies outside this claim.\n\nFalsifying observation. In this TDP-43 model the hypothesis is falsified if Nup98 FG-region phosphorylation remains at baseline while import declines and nuclear TDP-43 falls, or if the phospho-null allele leaves the size and timing of those transport changes unchanged while the phospho-mimetic allele leaves import intact in stress-granule-negative cells that lack cytoplasmic TDP-43 assemblies. Phosphorylation detected only after import failure, and without an effect of either allele, is a downstream correlate.\n\nLimitations. The choice of Nup98, the kinase, and the sites rests on unverified prior knowledge and on mitotic analogy, outside [S1]-[S4]. Phospho-mimetic side chains approximate phosphate only roughly. Acute stress in iPSC motor neurons omits aging and non-cell-autonomous contributions. A result in TDP-43 proteinopathy models leaves RanGAP-linked C9orf72 import failure [S2] and ALS without TDP-43 pathology unresolved [S1]. Insoluble TDP-43 can amplify pore injury after an earlier event, so co-aggregation alone cannot order cause and consequence [S1]. The design is a preclinical causal test and stops short of a validated treatment or clinical biomarker.",
+        "ranking": [
+          {
+            "item": "Nup98 FG-region phosphorylation initiates nuclear-import failure and subsequent nuclear TDP-43 loss in TDP-43 proteinopathy models of ALS",
+            "promisingness": 0.38,
+            "confidence": 0.27,
+            "pmids": []
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 20,
+      "reported_input_tokens": 106520,
+      "reported_output_tokens": 138910,
+      "reported_tokens": 245430,
+      "unknown_usage_calls": 1,
+      "elapsed_seconds": 1227.69,
+      "remaining_seconds": 1472.31,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "aml",
+      "method": "reasonlineage",
+      "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "gpt",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh"
+        },
+        {
+          "name": "grok",
+          "model": "grok-4.7",
+          "effort": "xhigh"
+        },
+        {
+          "name": "glm",
+          "model": "glm-5.3-flash",
+          "effort": "max"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "completed",
+    "final": {
+      "id": "c006",
+      "author": "grok",
+      "fitness": 0.8440000000000001,
+      "scores": {
+        "evidenceCoverage": 0.875,
+        "specificity": 0.895,
+        "novelty": 0.7150000000000001,
+        "actionability": 0.85
+      },
+      "answer": {
+        "answer": "Title: Atovaquone differentiates salvage-limited, differentiation-blocked cytarabine-residual AML by collapsing ubiquinone-dependent DHODH activity before ATP loss.\n\nHypothesis and context. In post-cytarabine residual AML that still shows a differentiation block, relies on de novo pyrimidine synthesis, and retains oxidative metabolism, atovaquone at a verified unbound exposure will inhibit respiratory complex III, shrink the oxidized ubiquinone pool, and thereby restrict DHODH long enough to induce genotype-confirmed myeloid maturation and lower leukemia propagation. The intended mediator is pyrimidine depletion with ATP still intact. The original indication is treatment and prophylaxis of Pneumocystis pneumonia, and atovaquone plus proguanil for malaria; those label facts, reported protein binding above 99.9%, and any mammalian complex III potency are unverified prior knowledge and must be confirmed before exposure claims are made.\n\nSupported premises. Cytarabine-resistant cells in the studied models were not consistently enriched for immature quiescent leukemia stem cells; they showed mitochondrial and fatty-acid-oxidation-linked oxidative metabolism, and changing that state changed response [S2]. Separately, DHODH inhibition promoted myeloid differentiation and affected disease endpoints in experimental AML [S4]. ROS-low, BCL-2-high quiescent leukemia stem cells are a distinct population and a selectivity benchmark [S1]. Venetoclax–azacitidine is only the established metabolic comparator [S3]. Nothing in [S2] or [S4] shows that residual cells are DHODH-dependent or salvage-limited; that gap is a go/no-go, not an assumption.\n\nSpeculative bridges. Bridge 1: ubiquinone redox restriction will suppress DHODH before nonspecific energetic failure at unbound levels that do not exceed label-verified unbound Cmax. Bridge 2: residual cells that pass the gates below will mature, whereas normal progenitors in a matched cycling state will keep colony-forming capacity. Bridge 3: a functional respiratory chain can support DHODH, so an oxidative phenotype is a complex III entry point, while pyrimidine dependence is set by de novo-versus-salvage flux. Human DHODH use of oxidized ubiquinone, uridine bypass of de novo synthesis, and the properties of Saccharomyces cerevisiae URA1 (cytosolic, fumarate-linked, respiratory-chain-independent type 1 DHODH) are unverified prior knowledge. Teriflunomide, the active metabolite of leflunomide (rheumatoid arthritis; teriflunomide itself approved for relapsing multiple sclerosis; unverified prior knowledge), is the reference DHODH inhibitor, not the repurposing claim.\n\nPreclinical strategy. Lock gates on the same primary specimens before any atovaquone attribution. Eligibility requires a cytarabine pulse and washout, residual oxygen consumption with an etomoxir-sensitive fraction at least 1.5-fold matched pretreatment blasts, proliferation recorded as a covariate, baseline CD11b and CD14 each below 20% of genotype-confirmed cells with blast morphology, and salvage limitation defined by tracer partitioning (at least half of UTP from the de novo route) or by uridine reversing at least 70% of the reference inhibitor’s nucleotide and maturation effects. Labeled-uridine incorporation is only a cycling covariate. ROS-low leukemia stem cells [S1] and pretreatment bulk blasts are separate arms. The go/no-go requires teriflunomide, in protein-containing medium, to raise dihydroorotate:orotate at least twofold and CD11b by at least 15 percentage points while ATP stays within 20% of vehicle, with uridine reversing both. Failure aborts the atovaquone test in that context. Isolated-enzyme assays must show atovaquone inhibits complex III and spares DHODH, and teriflunomide the reverse. Measure free atovaquone; the translational claim fails if the free EC50 for a twofold dihydroorotate:orotate shift exceeds label-verified unbound Cmax. A time gate must show ubiquinone reduction and pyrimidine-flux change while ATP loss is still under 20% and before maturation. Coincident ATP collapse makes the run uninterpretable and stops it. In an engineered line, induce URA1 only after the residual state is established and prove that pyrimidine restoration leaves complex III and ubiquinone inhibition intact. Uridine and URA1 must first reverse teriflunomide; if either rescue fails against teriflunomide, stop. Later endpoints are morphology plus the marker panel, absolute viable counts, apoptosis, and post-washout clonogenicity. Selectivity fails if normal CD34-positive colony inhibition at the free EC50 is within threefold of AML. Only after these gates, cytarabine-primed xenografts test marrow free drug, differentiation, limiting-dilution initiating-cell frequency (prespecified threefold reduction), and normal hematopoietic recovery. A documented search must separate this residual-state, salvage-gated, ubiquinone-timed claim from any published atovaquone or leflunomide AML work; this packet does not establish novelty.\n\nAlternatives and falsification. Apparent maturation can reflect preferential loss of immature cells, delayed cytarabine injury, direct DHODH binding, other atovaquone targets, or ATP collapse. The relationship is falsified, even if atovaquone remains cytotoxic, if validated uridine and URA1 rescues restore pyrimidine pools and leave complex III and ubiquinone inhibition intact yet differentiation and at least a threefold clonogenic loss persist, while the same rescues reverse teriflunomide.\n\nLimitations. Protein binding may leave no unbound window; proliferating normal progenitors may be equally sensitive; differentiation need not durably clear leukemia; [S2] models may differ from clinical marrow; [S4] does not transfer across genotypes; murine pyrimidine metabolism may diverge. Exposure, construct biochemistry, and prior AML studies require external verification.",
+        "ranking": [
+          {
+            "item": "Atovaquone differentiates salvage-limited, differentiation-blocked cytarabine-residual AML by collapsing ubiquinone-dependent DHODH activity before ATP loss",
+            "promisingness": 0.44,
+            "confidence": 0.36,
+            "pmids": [
+              "28416471",
+              "27641501",
+              "23333149"
+            ]
+          }
+        ]
+      }
+    },
+    "initial": {
+      "id": "c003",
+      "author": "gpt",
+      "fitness": 0.81,
+      "scores": {
+        "evidenceCoverage": 0.85,
+        "specificity": 0.86,
+        "novelty": 0.6699999999999999,
+        "actionability": 0.815
+      },
+      "answer": {
+        "answer": "Atovaquone-driven DHODH restriction induces differentiation in oxidative cytarabine-residual AML\n\nHypothesis: At clinically attainable unbound exposure, atovaquone will inhibit respiratory-complex-III-supported DHODH activity sufficiently to induce differentiation and reduce leukemia propagation in cytarabine-residual AML with persistent oxidative metabolism and limited pyrimidine salvage. The predicted effect is mediated by pyrimidine depletion, rather than generalized ATP collapse. This concerns a defined residual-cell context, not all AML or an assumed leukemia-stem-cell population.\n\nSupported premises: Cytarabine-resistant AML cells displayed oxidative-metabolism-associated features in the studied models, but were not consistently enriched for immature, quiescent leukemia stem cells [S2]. Separately, DHODH inhibition promoted myeloid differentiation in experimental AML systems [S4]. Together, these findings motivate testing a respiratory-to-pyrimidine connection; they do not establish that oxidative residual cells are especially DHODH-dependent. The ROS-low, BCL-2-associated population described in [S1] should be assessed separately rather than used as a synonym for residual disease. Venetoclax–azacitidine provides an established metabolic comparator, not the proposed repurposing discovery [S3].\n\nDrug rationale and speculative bridges: Unverified prior knowledge requiring independent checking is that atovaquone was originally approved for treatment of Pneumocystis pneumonia, can inhibit mammalian mitochondrial complex III under some experimental conditions, and has substantial protein binding. Also unverified within this packet are the biochemical premises that mitochondrial DHODH requires oxidized ubiquinone and that uridine salvage can bypass de novo pyrimidine synthesis. The central speculative bridge is that atovaquone-induced restriction of ubiquinone oxidation will suppress DHODH before causing nonspecific energetic failure. A second, explicitly uncertain bridge is that salvage-limited residual AML will differentiate under this restriction while normal hematopoietic progenitors retain sufficient functional capacity. Neither bridge follows automatically from an oxidative phenotype.\n\nDiscriminating preclinical strategy: Use multiple primary AML specimens exposed to a cytarabine pulse followed by washout, alongside matched untreated AML and normal marrow progenitors in comparable cycling states. Before testing response, classify residual samples by oxygen consumption and labeled-uridine incorporation, with a prespecified oxidative, salvage-low subgroup. Measure free atovaquone in protein-containing culture conditions and restrict translational conclusions to independently verified achievable unbound exposures. Early measurements should include complex III activity, ubiquinone redox state, dihydroorotate-to-orotate balance, pyrimidine-synthesis flux, nucleotide pools, ATP, and apoptosis. Separate biochemical assays of complex III and DHODH should test whether the drug acts through respiration rather than directly inhibiting DHODH.\n\nLater endpoints should distinguish maturation from selective killing: follow leukemia-genotype-confirmed cells through morphology and a prespecified myeloid differentiation-marker panel, track absolute viable cell numbers, and assess clonogenicity after drug washout. Compare vehicle, a reference DHODH inhibitor, and venetoclax–azacitidine as the established comparator [S3]. The decisive epistasis experiments are uridine supplementation and expression of a validated respiratory-chain-independent DHODH construct. Both should restore pyrimidine pools and prevent atovaquone-induced maturation and propagation loss without restoring respiratory inhibition. Rescue performance must first be validated against the reference DHODH inhibitor. If these conditions hold, extend testing to patient-derived xenografts, measuring marrow exposure, differentiation, secondary-transplant leukemia initiation, and normal hematopoietic recovery. Reduced bulk viability alone would not establish differentiation or stem-cell elimination.\n\nAlternatives and falsification: Apparent maturation could reflect preferential death of immature cells, delayed cytarabine injury, direct DHODH inhibition, or unrelated atovaquone targets. Genotype-resolved cell tracking, direct enzyme assays, temporal ordering, and pyrimidine rescue distinguish these possibilities. A decisive falsifying observation would be persistent differentiation and propagation loss despite both validated rescues restoring pyrimidine pools, while the same rescues reverse the reference inhibitor’s effects. That result would reject the proposed DHODH-dependent mechanism even if atovaquone remained cytotoxic.\n\nLimitations: Physiological uridine availability, marrow exposure, heterogeneous metabolic states, and injury to proliferating normal progenitors may eliminate any therapeutic window. Effects occurring only above achievable unbound exposure would reject translational feasibility; comparable normal-progenitor damage would reject predicted selectivity. Differentiation need not produce durable leukemia control. Approval details, human exposure, rescue-construct properties, and existing AML studies of atovaquone require verification outside this frozen packet; novelty is therefore not established.",
+        "ranking": [
+          {
+            "item": "Atovaquone-driven DHODH restriction induces differentiation in oxidative cytarabine-residual AML",
+            "promisingness": 0.54,
+            "confidence": 0.32,
+            "pmids": [
+              "28416471",
+              "27641501",
+              "23333149",
+              "30420752"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 30,
+      "reported_input_tokens": 178990,
+      "reported_output_tokens": 235384,
+      "reported_tokens": 414374,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 1467.245,
+      "remaining_seconds": 1232.755,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "als",
+      "method": "glm",
+      "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "glm",
+          "model": "glm-5.3-flash",
+          "effort": "max"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "completed",
+    "final": {
+      "id": "c005",
+      "author": "glm",
+      "fitness": 0.8710000000000001,
+      "scores": {
+        "evidenceCoverage": 0.88,
+        "specificity": 0.9,
+        "novelty": 0.8,
+        "actionability": 0.885
+      },
+      "answer": {
+        "answer": "Title: Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.\n\nHypothesis. In sporadic ALS motor neurons with TDP-43 proteinopathy, sustained stress activates a kinase that phosphorylates Nup98 at FG/GLFG-region sites, weakening the NPC permeability barrier and the rate of facilitated NLS-cargo import. This initiating pore modification reduces nuclear retention and import of TDP-43; cytoplasmic TDP-43 de-mixing, stress-granule-driven sequestration of transport factors, Ran-gradient collapse, and cell death are downstream amplifiers, not the first cause. C9orf72-initiated disease (S2 context) is excluded from scope, though convergence is permitted.\n\nSupported premises (packet only). S1: NPC/transport disruption accompanies TDP-43 pathology in ALS tissue and experimental systems; co-occurrence, not direction. S3: stress-granule-independent cytoplasmic TDP-43 assemblies impair import, deplete nuclear TDP-43, and recruit/mislocalize transport proteins — the downstream arm. S4: SG assembly sequesters transport factors and impairs transport — both the sequestration alternative and the reason a phospho-null cannot be predicted to fully preserve import, since SGs independently impair transport. S2: transport dysfunction in the C9 genetic context only.\n\nAssumptions (no packet support). A1: a stress-activated kinase (p38/JNK as candidates) phosphorylates Nup98 in adult motor neurons. A2: candidate residues are 2–3 clustered Ser/Thr sites in/near GLFG repeats and adjacent linkers, nominated a priori from mitotic Nup98 phospho-mapping; this sourcing is unverified prior knowledge and analogy, to be re-confirmed by MS before use. A3: the directional claim that phosphorylation precedes TDP-43 egress, inverted from S1's co-occurrence. A4: specificity to TDP-43-proteinopathy ALS. Asp/Glu phosphomimetic substitutions are acknowledged as chemically poor phosphate mimics and will anchor no conclusion.\n\nCausal chain (revised). Initiating: kinase activation → Nup98 FG phosphorylation → increased passive permeability and reduced facilitated NLS-import at the pore. Secondary: reduced nuclear TDP-43 retention → cytoplasmic de-mixing (S3) → SG formation and transport-factor sequestration (S4) → Ran-gradient dissipation → cell death. Ran gradient is deliberately decoupled from the initiating lesion: RanGAP/RCC1 localization primarily maintain it, so gradient changes are used as downstream readouts, not bundled into the initiation claim.\n\nAlternative explanations. (1) Sequestration-first: SGs or TDP-43 assemblies deplete soluble import machinery; phosphorylation is absent or irrelevant. (2) Physical displacement: insoluble TDP-43 directly distorts pores (consistent with S1), phosphorylation a bystander. (3) Genetic route: C9orf72 repeat RNA/DPR mechanisms (S2). (4) Reverse causality: late phosphorylation secondary to stress or disassembly.\n\nDiscriminating strategy.\n• Modification validation first: knock in endogenous tagged Nup98; map phosphorylation sites by MS of purified nuclear-envelope fractions across a stress time course; validate phosphopeptide-specific antibodies against mapped sites, or use chemically inducible kinase recruitment to tagged Nup98 for acute, reversible gain-of-function — this replaces reliance on Asp/Glu phosphomimetics, which remain secondary only.\n• Direct attribution: digitonin-permeabilized neurons reconstituted with recombinant phosphorylated versus phospho-null Nup98 (FG-region constructs MS-verified) to measure passive tracer flux and NLS-import kinetics directly attributable to the modification, separating pore effects from import-factor or Ran effects.\n• Temporal tests: (i) stress-onset course of Nup98 phospho-occupancy, NLS-reporter import, and TDP-43 localization; (ii) stress pulse–washout: if phosphorylation initiates, the phospho-signal should dissipate before import recovers; import failure persisting after phospho-loss supports a sequestration-first alternative and counters late-bystander phosphorylation.\n• Perturbational test with graded predictions: a CRISPR multi-site phospho-null panel (clustered Ala substitutions across the nominated GLFG cluster), interpreted only after MS verification that candidate-site phospho-occupancy is suppressed. Outcome metric: NLS-import decline normalized to SG burden and soluble importin availability, quantified across mild-to-strong stress. Graded prediction: phospho-null neurons show a significantly attenuated early-phase import decline versus wild type at matched SG burden — not full preservation, because S4 establishes SG-independent-of-phosphorylation impairment. Late-phase failure in phospho-null neurons is expected and non-discriminating; only the early phosphorylation-attributable component counts. Interpretation rule: verified occupancy suppression plus an indistinguishable early normalized decline falsifies the hypothesis; failure to suppress occupancy (compensatory kinases/buffering) makes the test uninformative, not falsifying.\n• Staged in vivo arm: only after in vitro discrimination, neuron-targeted multi-site Nup98 editing or kinase inhibition in a conditional TDP-43-mislocalization mouse, with import markers, TDP-43 localization, motor behavior, and survival as endpoints; post-mortem ALS tissue immunostained with the validated phospho-Nup98 reagent in neurons lacking cytoplasmic TDP-43 inclusions (early) versus affected neurons (late), as corroboration only.\n\nFalsifying observation. With MS-verified suppression of the targeted Nup98 phospho-cluster (and no compensating phosphorylation at other mapped sites), mild stress produces an early-phase normalized import decline equal to wild type at matched SG burden and soluble importin availability; and in pulse–washout, import failure precedes or outlasts detectable Nup98 phosphorylation. Together these falsify initiating phosphorylation. Phosphomimetic results alone would not count toward falsification.\n\nLimitations. Scoped to TDP-43-proteinopathy ALS; the S2 context is excluded. Packet evidence for pore involvement is associative; kinase identity, residues, and direction remain assumptions pending MS confirmation. Asp/Glu mimicry is weak, so gain-of-function relies on inducible kinase recruitment. Buffering is addressed only for the nominated cluster; broader nucleoporin compensation remains possible. iPSC and mouse models may not reproduce decades-long onset; post-mortem tissue is late-stage; phospho-signals are transient.",
+        "ranking": [
+          {
+            "item": "Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.",
+            "promisingness": 0.46,
+            "confidence": 0.62,
+            "pmids": [
+              "29311743",
+              "26308891",
+              "30853299",
+              "29628143"
+            ]
+          }
+        ]
+      }
+    },
+    "initial": {
+      "id": "c002",
+      "author": "glm",
+      "fitness": 0.8580000000000001,
+      "scores": {
+        "evidenceCoverage": 0.89,
+        "specificity": 0.87,
+        "novelty": 0.79,
+        "actionability": 0.86
+      },
+      "answer": {
+        "answer": "Title: Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.\n\nHypothesis statement. In vulnerable motor neurons of ALS characterized by TDP-43 proteinopathy (scoping to sporadic disease; C9orf72-initiated disease is intentionally excluded as a separate context), sustained cellular stress activates a nuclear kinase that phosphorylates the FG-repeat nucleoporin Nup98 at interphase sites. This phosphorylation weakens the NPC permeability barrier and Ran-dependent selective import - the initiating lesion. TDP-43 egress to the cytoplasm and transport-factor sequestration are downstream amplifiers, not the first cause.\n\nSupported premises (from the packet only).\n- S1: in ALS/FTD tissue and experimental systems, NPC components associate with insoluble TDP-43, and disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport. This establishes that pore/transport dysfunction accompanies TDP-43 pathology, but not its direction.\n- S3: persistent, stress-granule-independent cytoplasmic TDP-43 assemblies impair nuclear import, deplete nuclear TDP-43, recruit or mislocalize transport proteins, and are associated with cell death. This supports the downstream amplification arm.\n- S4: stress granules sequester transport factors and impair transport; altering SG assembly modifies transport phenotypes. This defines the sequestration-based alternative my hypothesis must be discriminated from.\n- S2: C9orf72 repeat RNA mislocalizes RanGAP and impairs import in patient-derived neurons. This supports transport dysfunction in that genetic context only; the hypothesis does not claim to cover it, though convergence is allowed.\n\nAssumptions and speculative bridges (unverified by any supplied source).\n- A1: an interphase kinase phosphorylates Nup98 in adult motor neurons. Candidate assumption: stress-activated p38/JNK; alternative assumption: ectopic mitotic-like kinase activity. No packet source supports any kinase.\n- A2: the relevant phospho-sites cluster in or near Nup98 FG repeats and phosphorylation there raises passive permeability and lowers selective import. This is motivated by unverified prior knowledge that Nup98 is multiply phosphorylated during mitotic NPC disassembly - analogy only, not packet evidence.\n- A3 (directional inversion): pore phosphorylation precedes TDP-43 egress. S1 documents co-occurrence, not direction.\n- A4: the mechanism is specific to TDP-43-proteinopathy ALS rather than universal.\n\nCausal chain. Initiating: stress kinase activation -> Nup98 phosphorylation -> weakening of the FG network -> passive leak plus selective import decline plus Ran-gradient dissipation -> failure to retain/import nuclear TDP-43. Downstream: cytoplasmic TDP-43 de-mixing (S3-type, SG-independent), SG-mediated transport-factor sequestration (S4-type), further transport collapse, cell death.\n\nAlternative explanations to discriminate.\n1. Sequestration-first: SGs or TDP-43 assemblies deplete soluble import machinery; phosphorylation is absent or irrelevant.\n2. Physical displacement: insoluble TDP-43 directly anchors to or distorts pores (consistent with S1), with phosphorylation as a bystander.\n3. Genetic route: C9orf72 repeat RNA/DPR mechanisms (S2) produce the same transport phenotype independently.\n4. Reverse causality: phosphorylation is a late consequence of stress or of pore disassembly, not an initiator.\n\nDiscriminating preclinical strategy (temporal plus perturbational).\n- Models: isogenic human iPSC-derived motor neurons with TDP-43-proteinopathy phenotypes (sporadic patient lines; optionally inducible nuclear TDP-43 depletion) and healthy isogenic controls.\n- Temporal test: time-resolved phosphoproteomics of purified nuclear-envelope fractions plus high-content imaging of phospho-Nup98 signal, NLS-reporter import, Ran-gradient integrity, and TDP-43 localization across stress onset. Hypothesis predicts the Nup98 phospho-signal rises before import declines and before TDP-43 egress; sequestration-first predicts soluble transport-factor depletion precedes any detectable Nup phosphorylation.\n- Perturbational test: CRISPR knock-in of phospho-null (Ser/Thr to Ala) and phosphomimetic (Ser/Thr to Asp/Glu) Nup98 alleles. Support: phospho-null preserves import and nuclear TDP-43 even with stress granules assembling normally, and phosphomimetic Nup98 acutely impairs import in unstressed neurons without inducing TDP-43 aggregates. Contra-support: phospho-null fails to rescue while SG dissolution rescues transport with no Nup phospho-dependence.\n- Kinase test: small-molecule blockade plus a conditional kinase-null allele; require concordant rescue to control off-targets; monitor SG formation in parallel so kinase effects on granules are not confounded with pore phosphorylation.\n- Mechanistic separation: co-measure passive NPC permeability (small-tracer flux), facilitated import rates, and Ran gradient, distinguishing pore modification from transport-factor depletion rather than relying on timing alone.\n- In vivo and tissue: neuron-targeted Nup98 phospho-site editing or kinase inhibition in a conditional TDP-43 mislocalization mouse model, with motor-neuron import markers, TDP-43 localization, and motor behavior/ survival as endpoints; post-mortem ALS motor cortex/spinal cord immunostained for phospho-Nup98 in neurons lacking cytoplasmic TDP-43 inclusions (early) versus affected neurons (late).\n\nFalsifying observation. In phospho-null Nup98 knock-in stressed motor neurons, nuclear import still fails and TDP-43 still mislocalizes, while soluble transport factors are depleted from the nucleoplasm temporally before any detectable Nup98 phosphorylation; additionally, phosphomimetic Nup98 leaves import kinetics unchanged in healthy neurons. Both outcomes together would falsify the initiating-phosphorylation hypothesis.\n\nLimitations. The hypothesis is scoped to TDP-43-proteinopathy ALS and may not generalize to C9orf72-initiated disease (S2 context). Packet evidence for pore involvement is associative; kinase identity, sites, and direction are assumptions. Nucleoporin redundancy may buffer single-site mutations; iPSC and mouse models may not reproduce decades-long onset; post-mortem tissue is late-stage; phospho-signals may be transient.",
+        "ranking": [
+          {
+            "item": "Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.",
+            "promisingness": 0.45,
+            "confidence": 0.6,
+            "pmids": [
+              "29311743",
+              "26308891",
+              "30853299",
+              "29628143"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 30,
+      "reported_input_tokens": 86448,
+      "reported_output_tokens": 174613,
+      "reported_tokens": 261061,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 645.903,
+      "remaining_seconds": 2054.097,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "aml",
+      "method": "glm",
+      "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "glm",
+          "model": "glm-5.3-flash",
+          "effort": "max"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "failed",
+    "reason": "judge glm-r1 on c005 failed: invalid or truncated structured response",
+    "initial": {
+      "id": "c004",
+      "author": "glm",
+      "fitness": 0.8160000000000001,
+      "scores": {
+        "evidenceCoverage": 0.875,
+        "specificity": 0.885,
+        "novelty": 0.575,
+        "actionability": 0.865
+      },
+      "answer": {
+        "answer": "Title: Repurposing the approved multiple-sclerosis drug teriflunomide as a DHODH inhibitor to reactivate myeloid differentiation in de novo pyrimidine-dependent AML blasts while sparing quiescent ROS-low leukemia stem cells\n\nHypothesis\nTeriflunomide — recalled as an approved drug for relapsing forms of multiple sclerosis and as the active molecule of the rheumatoid-arthritis prodrug leflunomide; these approval and pharmacology facts are unverified prior knowledge requiring checking — will inhibit dihydroorotate dehydrogenase (DHODH) in AML blasts that retain dependence on de novo pyrimidine synthesis, deplete intracellular pyrimidine pools, and reactivate granulocytic differentiation rather than merely kill growing cells. Because this anti-proliferative mechanism requires DNA replication, I predict relative sparing of the quiescent, ROS-low leukemia stem cell (LSC) fraction, distinguishing it from oxidative-phosphorylation-targeting comparators.\n\nMechanism and supported premises\n1) S4 (PMID 27641501) is the mechanistic anchor: DHODH inhibition promoted myeloid differentiation in experimental AML systems and affected disease-related endpoints. 2) S2 (PMID 28416471) defines a plausible context: cytarabine-resistant residual cells were not reliably enriched for immature LSCs but showed oxidative-metabolism and fatty-acid-oxidation features; such committed, still-cycling cells plausibly retain strong dependence on de novo pyrimidine supply, making them testable targets. 3) S1 (PMID 23333149) defines the contrasting population: functionally defined LSCs were frequently ROS-low, quiescent, and BCL-2-high, implying a different dependency and a predicted differential effect of a replication-dependent mechanism. 4) S3 (PMID 30420752) supplies the established comparator: venetoclax with azacitidine alters LSC energy metabolism (TCA cycle, oxidative phosphorylation); that regimen is not the proposal here, and any teriflunomide effect must be shown to be non-redundant. Verified from the packet: DHODH inhibition links pyrimidine synthesis to differentiation [S4]; residual-cell and LSC metabolic states differ [S1, S2].\n\nExplicitly speculative bridges\n(i) Clinically achievable marrow exposure of teriflunomide inhibits DHODH sufficiently in patient blasts; packet data provide no exposure facts, and standard teriflunomide dosing, long half-life, and slow clearance are recalled and unverified. (ii) The differentiation program seen with experimental DHODH inhibitors in S4 generalizes pharmacologically to this approved molecule in vivo. (iii) Residual post-cytarabine disease remains salvage-insufficient and DHODH-dependent in the marrow niche. (iv) Sequencing teriflunomide after cytarabine could convert residual cycling cells toward differentiation; this translational sequencing claim is speculative.\n\nAlternative explanations\nOff-target actions of teriflunomide, including recalled reports of activity beyond DHODH on kinase pathways (unverified prior knowledge), could drive observed biology. Nonspecific pyrimidine starvation might kill cycling cells, with apparent differentiation merely reflecting selective survival of more mature cells rather than lineage reprogramming. The dominant residual-cell dependency could instead be oxidative phosphorylation/fatty-acid oxidation [S2], better targeted by a different drug class; DHODH activity, though coupled to the respiratory chain, is upstream of respiration. Normal hematopoietic progenitors may be equally sensitive, giving myelosuppression without a therapeutic window. Salvage-pathway heterogeneity across patients may blunt efficacy in subsets.\n\nDiscriminating preclinical validation strategy\nTest a panel of primary AML specimens (de novo and relapsed/refractory, diverse genetics) plus normal CD34+ progenitor controls. Arms: teriflunomide; a reference DHODH inhibitor of the S4 type (e.g., brequinar-class); a venetoclax-containing arm as metabolic comparator per S3. Concentrations should be anchored to verified human plasma exposure before interpretation. Readouts: (a) on-target pharmacology — LC-MS measurement of intracellular pyrimidine/UMP pools and uridine add-back rescue; if exogenous uridine rescues both growth suppression and differentiation-marker induction, the mechanism is DHODH-dependent, whereas failure to rescue indicates off-target activity; (b) differentiation endpoints — CD11b/CD14/CD15 induction, morphology, colony-forming and serial-replating assays; (c) stem-cell endpoints — frequency of the ROS-low, HSC-marker-enriched LSC population before and after treatment, framed by S1, alongside TCA/OXPHOS signatures to test nonredundancy with S3-like effects; (d) residual-disease arm — cytarabine pretreatment followed by teriflunomide on residual cells, with survival and differentiation endpoints per S2; (e) normal-cell window — CFU-GM and long-term culture of normal CD34+ cells, with a required differential between AML and normal progenitors.\n\nFalsifying observation (any one disconfirms)\nTeriflunomide fails to deplete pyrimidine pools or induce differentiation markers at clinically achievable concentrations; uridine add-back fails to rescue, indicating the effect is not DHODH-mediated; activity appears only far above verified human exposure; normal progenitors are as sensitive as AML blasts; or cytarabine-pretreated residual cells show neither differentiation nor burden reduction, rejecting the proposed drug–mechanism–context relationship.\n\nLimitations\nExposure, half-life, and safety facts (including teratogenicity and slow drug elimination) are recollections requiring verification. Ex vivo systems may not reproduce the marrow niche; S4 does not guarantee that every approved DHODH-affecting drug reproduces the effect or achieves suitable exposure [S4]. This hypothesis addresses differentiation and bulk/residual disease; it does not claim eradication of quiescent ROS-low LSCs [S1], so durable effects might still require combination with established regimens — a separate question. Clinical development of other DHODH inhibitors in AML is plausible prior knowledge and must be verified to keep this proposal distinct from novel-agent trials rather than a repackaged standard approach.",
+        "ranking": [
+          {
+            "item": "Repurposing the approved multiple-sclerosis drug teriflunomide as a DHODH inhibitor to reactivate myeloid differentiation in de novo pyrimidine-dependent AML blasts while sparing quiescent ROS-low leukemia stem cells",
+            "promisingness": 0.6,
+            "confidence": 0.65,
+            "pmids": [
+              "27641501",
+              "28416471",
+              "23333149"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 19,
+      "reported_input_tokens": 50108,
+      "reported_output_tokens": 112704,
+      "reported_tokens": 162812,
+      "unknown_usage_calls": 1,
+      "elapsed_seconds": 445.482,
+      "remaining_seconds": 2254.518,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "als",
+      "method": "gpt",
+      "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "gpt",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "completed",
+    "final": {
+      "id": "c002",
+      "author": "gpt",
+      "fitness": 0.8610000000000001,
+      "scores": {
+        "evidenceCoverage": 0.925,
+        "specificity": 0.865,
+        "novelty": 0.75,
+        "actionability": 0.87
+      },
+      "answer": {
+        "answer": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons\n\nHypothesis. In human TARDBP-mutant motor neurons, increased p38α-dependent phosphorylation of pore-associated NUP62 reduces its retention at nuclear pores, initiating nuclear-import failure before persistent cytoplasmic TDP-43 assemblies appear. Reduced import then promotes nuclear TDP-43 depletion, cytoplasmic accumulation, and neuronal dysfunction. This proposes an initiating event for transport failure within a defined ALS context, not the earliest cause of ALS or a universal mechanism across subtypes.\n\nSupported premises. Disease-linked TDP-43 can disrupt nucleoporin localization and nuclear transport, and relevant pore pathology occurs in ALS tissue [S1]. Persistent cytoplasmic TDP-43 assemblies can recruit or mislocalize transport-associated proteins, accompany nuclear TDP-43 depletion, and cause transport failure independently of conventional stress granules [S3]. Stress-granule-associated sequestration provides another route to transport impairment [S4]. C9orf72-repeat-associated RanGAP abnormalities establish a distinct, genetic-context-specific route [S2]. None of these observations establishes NUP62 phosphorylation as an initiating event; phosphorylated TDP-43 in [S3] is not evidence of phosphorylated NUP62.\n\nSpeculative bridges. The choice of p38α, its direct phosphorylation of NUP62, and phosphorylation-dependent loss of pore retention are explicit assumptions. The proposed sequence is phosphorylation, altered pore composition, impaired import, TDP-43 redistribution, and neuronal dysfunction. Upstream cellular stress could activate the proposed event without making it merely a downstream consequence of transport failure. Exact NUP62 residues are not established by the packet and must be identified experimentally rather than asserted.\n\nPreclinical strategy. Compare patient-derived TARDBP-mutant induced-pluripotent-stem-cell motor neurons with isogenic corrected controls, using independent clones and differentiations. Combine longitudinal imaging of import kinetics and TDP-43 localization with matched-culture measurements of pore-associated NUP62 phosphorylation, pore occupancy, conventional stress granules, persistent nongranular TDP-43 assemblies, electrophysiological function, and survival. Monitor cellular energy status and viability to identify import defects occurring before broad physiological collapse. Targeted mass spectrometry should identify increased NUP62 phosphorylation; purified-protein kinase experiments with inactive-kinase controls should test whether p38α can directly generate those modifications. Fix the candidate phosphosite set before subsequent causal comparisons. The hypothesis predicts increased phosphorylation and reduced pore occupancy before import impairment, followed by TDP-43 redistribution and functional decline.\n\nCausal perturbation. Introduce phosphorylation-resistant substitutions at the mapped endogenous NUP62 sites, alongside wild-type revertant controls. Confirm that these substitutions block the candidate modification without changing basal NUP62 abundance, pore occupancy, or import. Complement this substrate-specific intervention with genetic p38α suppression. Protection by phosphorylation-resistant NUP62 despite persistent upstream stress would support a causal pore modification rather than a nonspecific benefit of kinase inhibition. Acute p38α activation in corrected neurons should produce early import impairment only when NUP62 remains phosphorylatable. Because kinase activation affects other substrates, that experiment is persuasive only together with NUP62-site dependence, direct biochemical phosphorylation, and the predicted pore-occupancy change.\n\nDiscriminating alternatives. The principal alternative is that TDP-43 assemblies or stress granules sequester soluble transport machinery first, while NUP62 phosphorylation follows as a stress response [S3, S4]. Independently perturb conventional stress-granule assembly and persistent TDP-43 assemblies, verifying which structures are affected rather than treating them as equivalent. Test import in washed, permeabilized nuclei supplied with identical soluble transport components: persistence of a phosphosite-dependent defect would support a pore-intrinsic contribution, whereas normalization would favor deficient soluble-factor availability. This assay is supportive rather than conclusive because retained assemblies could still affect isolated nuclei. Rescue confined to assembly suppression, with no protection from phosphorylation-resistant NUP62, would favor sequestration over the proposed initiating mechanism.\n\nFalsification and limitations. The hypothesis would be falsified in this context if verified elimination of the candidate NUP62 phosphorylation, with normal baseline pore function, leaves early import failure and subsequent neuronal dysfunction unchanged. A reproducible sequence in which import failure precedes phosphorylation would also contradict its initiating role. Limitations include imperfect temporal resolution, possible structural effects of site substitutions, difficulty separating pore-bound from soluble NUP62, and incomplete maturation of cultured neurons. Even a positive result would establish a mechanism in the tested TARDBP context, not validate a treatment or explain all ALS.",
+        "ranking": [
+          {
+            "item": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons",
+            "promisingness": 0.65,
+            "confidence": 0.3,
+            "pmids": [
+              "29311743",
+              "26308891",
+              "30853299",
+              "29628143"
+            ]
+          }
+        ]
+      }
+    },
+    "initial": {
+      "id": "c002",
+      "author": "gpt",
+      "fitness": 0.8610000000000001,
+      "scores": {
+        "evidenceCoverage": 0.925,
+        "specificity": 0.865,
+        "novelty": 0.75,
+        "actionability": 0.87
+      },
+      "answer": {
+        "answer": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons\n\nHypothesis. In human TARDBP-mutant motor neurons, increased p38α-dependent phosphorylation of pore-associated NUP62 reduces its retention at nuclear pores, initiating nuclear-import failure before persistent cytoplasmic TDP-43 assemblies appear. Reduced import then promotes nuclear TDP-43 depletion, cytoplasmic accumulation, and neuronal dysfunction. This proposes an initiating event for transport failure within a defined ALS context, not the earliest cause of ALS or a universal mechanism across subtypes.\n\nSupported premises. Disease-linked TDP-43 can disrupt nucleoporin localization and nuclear transport, and relevant pore pathology occurs in ALS tissue [S1]. Persistent cytoplasmic TDP-43 assemblies can recruit or mislocalize transport-associated proteins, accompany nuclear TDP-43 depletion, and cause transport failure independently of conventional stress granules [S3]. Stress-granule-associated sequestration provides another route to transport impairment [S4]. C9orf72-repeat-associated RanGAP abnormalities establish a distinct, genetic-context-specific route [S2]. None of these observations establishes NUP62 phosphorylation as an initiating event; phosphorylated TDP-43 in [S3] is not evidence of phosphorylated NUP62.\n\nSpeculative bridges. The choice of p38α, its direct phosphorylation of NUP62, and phosphorylation-dependent loss of pore retention are explicit assumptions. The proposed sequence is phosphorylation, altered pore composition, impaired import, TDP-43 redistribution, and neuronal dysfunction. Upstream cellular stress could activate the proposed event without making it merely a downstream consequence of transport failure. Exact NUP62 residues are not established by the packet and must be identified experimentally rather than asserted.\n\nPreclinical strategy. Compare patient-derived TARDBP-mutant induced-pluripotent-stem-cell motor neurons with isogenic corrected controls, using independent clones and differentiations. Combine longitudinal imaging of import kinetics and TDP-43 localization with matched-culture measurements of pore-associated NUP62 phosphorylation, pore occupancy, conventional stress granules, persistent nongranular TDP-43 assemblies, electrophysiological function, and survival. Monitor cellular energy status and viability to identify import defects occurring before broad physiological collapse. Targeted mass spectrometry should identify increased NUP62 phosphorylation; purified-protein kinase experiments with inactive-kinase controls should test whether p38α can directly generate those modifications. Fix the candidate phosphosite set before subsequent causal comparisons. The hypothesis predicts increased phosphorylation and reduced pore occupancy before import impairment, followed by TDP-43 redistribution and functional decline.\n\nCausal perturbation. Introduce phosphorylation-resistant substitutions at the mapped endogenous NUP62 sites, alongside wild-type revertant controls. Confirm that these substitutions block the candidate modification without changing basal NUP62 abundance, pore occupancy, or import. Complement this substrate-specific intervention with genetic p38α suppression. Protection by phosphorylation-resistant NUP62 despite persistent upstream stress would support a causal pore modification rather than a nonspecific benefit of kinase inhibition. Acute p38α activation in corrected neurons should produce early import impairment only when NUP62 remains phosphorylatable. Because kinase activation affects other substrates, that experiment is persuasive only together with NUP62-site dependence, direct biochemical phosphorylation, and the predicted pore-occupancy change.\n\nDiscriminating alternatives. The principal alternative is that TDP-43 assemblies or stress granules sequester soluble transport machinery first, while NUP62 phosphorylation follows as a stress response [S3, S4]. Independently perturb conventional stress-granule assembly and persistent TDP-43 assemblies, verifying which structures are affected rather than treating them as equivalent. Test import in washed, permeabilized nuclei supplied with identical soluble transport components: persistence of a phosphosite-dependent defect would support a pore-intrinsic contribution, whereas normalization would favor deficient soluble-factor availability. This assay is supportive rather than conclusive because retained assemblies could still affect isolated nuclei. Rescue confined to assembly suppression, with no protection from phosphorylation-resistant NUP62, would favor sequestration over the proposed initiating mechanism.\n\nFalsification and limitations. The hypothesis would be falsified in this context if verified elimination of the candidate NUP62 phosphorylation, with normal baseline pore function, leaves early import failure and subsequent neuronal dysfunction unchanged. A reproducible sequence in which import failure precedes phosphorylation would also contradict its initiating role. Limitations include imperfect temporal resolution, possible structural effects of site substitutions, difficulty separating pore-bound from soluble NUP62, and incomplete maturation of cultured neurons. Even a positive result would establish a mechanism in the tested TARDBP context, not validate a treatment or explain all ALS.",
+        "ranking": [
+          {
+            "item": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons",
+            "promisingness": 0.65,
+            "confidence": 0.3,
+            "pmids": [
+              "29311743",
+              "26308891",
+              "30853299",
+              "29628143"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 30,
+      "reported_input_tokens": 225283,
+      "reported_output_tokens": 125521,
+      "reported_tokens": 350804,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 2361.727,
+      "remaining_seconds": 338.273,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "als",
+      "method": "grok",
+      "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "grok",
+          "model": "grok-4.7",
+          "effort": "xhigh"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "completed",
+    "final": {
+      "id": "c009",
+      "author": "grok",
+      "fitness": 0.7905,
+      "scores": {
+        "evidenceCoverage": 0.855,
+        "specificity": 0.8200000000000001,
+        "novelty": 0.7,
+        "actionability": 0.74
+      },
+      "answer": {
+        "answer": "Nup98 phosphorylation by pre-registered CDK5 initiates selective nuclear-pore barrier failure in a TDP-43 proteinopathy model of ALS\n\nHypothesis. In doxycycline-inducible primary mouse cortical neurons expressing cytoplasmic human TDP-43, a model of ALS and ALS/FTD with TDP-43 proteinopathy, CDK5 phosphorylation of Nup98 is the proposed initiating, pore-intrinsic cause of selective nucleocytoplasmic-transport failure. Nup98 is an FG-nucleoporin by unverified prior knowledge. Impaired NLS import, altered NES export, loss of nuclear TDP-43, growth of cytoplasmic TDP-43 assemblies, and later neuronal dysfunction are the proposed downstream responses. The CDK5–Nup98 step is an uncited assumption and remains an untested candidate cause.\n\nSupported premises. Nuclear-pore and transport components associate with insoluble TDP-43, and disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport in cell systems, with related pore pathology in ALS tissue [S1]. Those findings support a TDP-43–pore connection while the initiating biochemical event and cross-subtype generality stay unresolved [S1]. In a separate genetic context, expanded C9orf72 repeat RNA is linked to altered RanGAP localization and impaired nuclear import, and transport or repeat-RNA manipulations modify model phenotypes [S2]. Persistent cytoplasmic TDP-43 assemblies can form independently of conventional stress granules, mislocalize transport-associated proteins, and accompany import failure, nuclear TDP-43 depletion, and cell death; phosphorylated TDP-43 accumulates in the assemblies [S3]. That mark is on TDP-43 [S3]. Cellular stress recruits transport factors into stress granules and impairs transport, and changing stress-granule assembly modifies transport defects and disease-model phenotypes [S4].\n\nSpeculative bridges. CDK5, the residue list, and causal order are assumptions. Unverified prior knowledge, outside this packet and given no citation identifier, is that Nup98 phosphorylation during mitotic or stress signaling can relax pore selectivity, and that passive exclusion is size-dependent in the tens-of-kilodaltons range. The pre-registered sequence is CDK5 activation, phosphorylation of Nup98 at proline-directed sites locked by the mass-spectrometry gate, altered NPC barrier function, and only then transport-factor enrichment in separately scored compartments plus loss of nuclear TDP-43. Import failure and cell death are downstream responses of the kind reported with cytoplasmic TDP-43 assemblies [S3]. Scope is this TDP-43 model. C9orf72-ALS retains RanGAP mislocalization as a separate entry point [S2]. ERK2 is a specificity control. Failure of the CDK5 gate rejects this hypothesis rather than licensing a substitute kinase.\n\nAlternative explanations. Sequestration of transport receptors and Ran regulators into stress granules [S4], or into stress-granule-independent TDP-43 assemblies [S3], can impair import while nucleoporins remain unmodified. Nucleoporin mislocalization can follow binding to insoluble TDP-43 [S1]. Broad cellular stress can degrade transport in the absence of a Nup98 phospho-event. Repeat RNA and RanGAP pathology can account for transport failure in C9orf72 models [S2].\n\nDiscriminating preclinical test. Primary system: primary mouse cortical neurons with doxycycline-inducible cytoplasmic human TDP-43, sampled at 0, 8, 16, 24, and 48 h. A C9orf72 repeat-RNA neuronal culture is only a context comparator. NPC-fraction phosphoproteomics first locks Nup98 sites whose occupancy rises on this time course. CDK5 is assigned only if CDK5 genetic loss reduces occupancy of those sites by at least half while ERK2 genetic loss leaves occupancy within 10% of the CDK5-intact course. S/T-to-A and S/T-to-D alleles are built only at those mapped residues. Import data are interpreted only after imaging or fractionation shows NPC incorporation of at least 70% of wild-type Nup98. Probes, recorded separately: NLS-reporter nuclear/cytoplasmic ratio, NES-reporter nuclear/cytoplasmic ratio, and nuclear equilibration of inert probes at three sizes spanning the unverified size-dependent barrier. Compartments, recorded separately: NPC Nup98 occupancy and localization; G3BP1-positive stress granules; G3BP1-negative cytoplasmic TDP-43 assemblies. The prespecified lead is a mapped-site increase of at least 2-fold and at least 0.20 absolute occupancy, occurring at least one 8 h interval before the NLS ratio falls by at least 30% from baseline, and before transport-factor intensity rises in granules and, on a separate score, in G3BP1-negative TDP-43 assemblies. Necessity is tested only on this TDP-43 time course: NPC-incorporated non-phosphorylatable Nup98 should keep the NLS ratio within 10% of baseline through 48 h. Stress-granule induction is the alternative arm. Granule blockade should return the NLS ratio to within 10% of baseline when Nup98 is wild-type [S4]. The same blockade, or blockade of early TDP-43 de-mixing [S3], should leave a residual NLS drop of at least 30% when phosphomimetic Nup98 is already NPC-incorporated. CDK5 inhibition should match the non-phosphorylatable result only while the mapped sites remain intact.\n\nFalsifying observation. Initiation is rejected in this model if the NLS ratio falls by at least 30% while mapped NPC-fraction Nup98 occupancy stays below 1.25-fold and below a 0.20 absolute change at every sample. It is rejected if NPC-incorporated non-phosphorylatable Nup98 leaves the first interval meeting the 30% NLS criterion, and the size of that drop, within 10% of wild-type Nup98, while granule blockade or TDP-43-assembly blockade restores the NLS ratio to within 10% of baseline. It is rejected if phosphomimetic Nup98 produces a 30% NLS drop only while transport factors are enriched in granules or TDP-43 assemblies and that drop resolves when those compartments are cleared. A rise meeting the 2-fold criterion in the C9orf72 comparator, with the TDP-43 model inside the flat-course bounds, rejects the proposed disease context.\n\nLimitations. CDK5 and the sites stay assumed until the gate passes, and phosphorylation may be a later mark of pore injury. Cultures omit glia, aging, and circuits. Partial replacement is withheld from import claims by the 70% incorporation rule. Phospho-reagents can cross-react with phosphorylated TDP-43 or other FG-nucleoporins, so mass spectrometry is the occupancy source. Preserved import after non-phosphorylatable Nup98 would still leave other nucleoporins and the RanGAP axis [S2] open. The experiment tests a mechanism and does not validate a treatment.\n\nScores. Promisingness 0.37 equals 0.40 for the packet-supported TDP-43–pore and transport connection [S1, S3], minus 0.15 because [S3] and [S4] already supply sequestration routes to the same late phenotypes, plus 0.12 for the uncited CDK5–Nup98 initiation step. Confidence 0.48 equals 0.40 because the premises map to PMIDs 29311743, 26308891, 30853299, and 29628143, plus 0.20 because the model, intervals, occupancy change, and 30% import boundary are pre-specified, minus 0.12 because the kinase and residues remain gated assumptions.",
+        "ranking": [
+          {
+            "item": "Nup98 phosphorylation by pre-registered CDK5 initiates selective nuclear-pore barrier failure in a TDP-43 proteinopathy model of ALS",
+            "promisingness": 0.37,
+            "confidence": 0.48,
+            "pmids": [
+              "29311743",
+              "26308891",
+              "30853299",
+              "29628143"
+            ]
+          }
+        ]
+      }
+    },
+    "initial": {
+      "id": "c003",
+      "author": "grok",
+      "fitness": 0.789,
+      "scores": {
+        "evidenceCoverage": 0.865,
+        "specificity": 0.775,
+        "novelty": 0.715,
+        "actionability": 0.77
+      },
+      "answer": {
+        "answer": "Nup98 phosphorylation by a stress-responsive proline-directed kinase initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS\n\nHypothesis. In neuronal models of TDP-43 proteinopathy, a setting relevant to ALS and ALS/FTD cases that accumulate cytoplasmic TDP-43, phosphorylation of Nup98, an FG-nucleoporin by unverified prior knowledge, is proposed as the initiating, pore-intrinsic cause of selective nucleocytoplasmic-transport failure. Impaired nuclear import, loss of nuclear TDP-43, growth of cytoplasmic TDP-43 assemblies, and later neuronal dysfunction are the proposed downstream responses. Nucleoporin phosphorylation remains an untested candidate cause.\n\nSupported premises. Nuclear-pore and transport components associate with insoluble TDP-43, and disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport in cell systems, with related pore pathology in ALS tissue [S1]. Those findings support a TDP-43-pore connection while leaving the initiating biochemical event and cross-subtype generality unresolved [S1]. In a separate genetic context, expanded C9orf72 repeat RNA is linked to altered RanGAP localization and impaired nuclear import in models and patient-derived neurons, and transport or repeat-RNA manipulations modify model phenotypes [S2]. This is a C9orf72-specific route and leaves both sporadic ALS and any nucleoporin phosphorylation step unresolved [S2]. Persistent cytoplasmic TDP-43 assemblies can form independently of conventional stress granules, mislocalize transport-associated proteins, and accompany import failure, nuclear TDP-43 depletion, and cell death; phosphorylated TDP-43 accumulates in the assemblies [S3]. That phosphorylation mark is on TDP-43, and the experiments leave open other physiological trajectories [S3]. Cellular stress recruits transport factors into stress granules and impairs transport, and changing stress-granule assembly modifies transport defects and disease-model phenotypes [S4].\n\nSpeculative bridges. The kinase, the residues, and the causal order are assumptions. Unverified prior knowledge, held outside this packet and given no citation identifier, is that Nup98 phosphorylation during mitotic or stress signaling can relax nuclear-pore selectivity. The working assumption is that a proline-directed stress-responsive kinase, provisionally CDK5 or ERK1/2, phosphorylates Nup98 FG-repeat or C-terminal residues in post-mitotic neurons expressing pathogenic TDP-43. The proposed sequence is kinase activation, Nup98 phosphorylation, altered NPC barrier function, and only then sequestration of transport factors plus loss of nuclear TDP-43. Nup98 phosphorylation is the initiating pore event. Import failure, nuclear TDP-43 depletion, and cell death are downstream responses of the kind reported with cytoplasmic TDP-43 assemblies [S3]. Scope is limited to TDP-43 proteinopathy models. C9orf72-ALS retains RanGAP mislocalization as a separate entry point [S2].\n\nAlternative explanations. Sequestration of transport receptors and Ran regulators into stress granules [S4], or into stress-granule-independent TDP-43 assemblies [S3], can impair import while nucleoporins themselves remain unmodified. Nucleoporin mislocalization can follow binding to insoluble TDP-43 [S1]. Broad cellular stress can degrade transport without a Nup98 phospho-event. Repeat RNA and RanGAP pathology can account for transport failure in C9orf72 models [S2]. Shared late phenotypes, reduced import and nuclear TDP-43 loss, therefore fail to identify which event came first.\n\nDiscriminating preclinical test. Use a neuronal TDP-43 proteinopathy model that develops transport defects, and run a C9orf72 repeat model only as a context comparator. On a time course, measure Nup98 phosphorylation in nuclear-pore fractions by mass spectrometry and phospho-specific blot, Nup98 localization at NPCs, nuclear import of a reporter and of endogenous TDP-43, stress-granule markers, and stress-granule-independent cytoplasmic TDP-43 assemblies. The prediction is that Nup98 phosphorylation rises before import falls and before transport factors accumulate in either compartment. A non-phosphorylatable Nup98 that incorporates into NPCs should preserve import when stress granules are induced [S4] and when early cytoplasmic TDP-43 de-mixing is present [S3]. A phosphomimetic Nup98 in otherwise unstressed neurons should impair import without stress granules and before large TDP-43 aggregates. Kinase inhibition should copy the non-phosphorylatable Nup98 result only while those Nup98 sites are intact. If phosphomimetic Nup98 is already installed, blocking stress-granule assembly or TDP-43 de-mixing should leave a residual import defect. The sequestration alternatives predict the complementary pattern: phosphomimetic Nup98 is inert when transport factors remain free, and blocking granules or TDP-43 assemblies restores import regardless of the Nup98 phospho-state.\n\nFalsifying observation. Reject the hypothesis in this model if import failure and nuclear TDP-43 loss occur with a flat Nup98 phosphorylation time course. Reject it if NPC-incorporated non-phosphorylatable Nup98 leaves the onset and size of the transport defect unchanged while stress-granule or TDP-43-assembly interventions fully account for that defect. Reject it if phosphomimetic Nup98 impairs import only when transport factors are sequestered. A phospho-Nup98 rise confined to the C9orf72 comparator, with no rise in the TDP-43 model, rejects the proposed disease context.\n\nLimitations. Sites and kinase identity are assumed, and phosphorylation may be a later mark of pore injury rather than its start. Neuronal cultures omit glia, aging, and circuit context, and partial Nup98 replacement can mask an effect. Phospho-specific reagents can cross-react with phosphorylated TDP-43 or other FG-nucleoporins. Preservation of import by non-phosphorylatable Nup98 would still leave other nucleoporins and the RanGAP axis [S2] open. The experiment tests a mechanism and does not validate a treatment.",
+        "ranking": [
+          {
+            "item": "Nup98 phosphorylation by a stress-responsive proline-directed kinase initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS",
+            "promisingness": 0.37,
+            "confidence": 0.48,
+            "pmids": []
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 30,
+      "reported_input_tokens": 204167,
+      "reported_output_tokens": 335289,
+      "reported_tokens": 539456,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 2425.52,
+      "remaining_seconds": 274.48,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "aml",
+      "method": "grok",
+      "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "grok",
+          "model": "grok-4.7",
+          "effort": "xhigh"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "failed",
+    "reason": "mutate c008 by grok failed: model timeout at remaining budget",
+    "initial": {
+      "id": "c002",
+      "author": "grok",
+      "fitness": 0.73,
+      "scores": {
+        "evidenceCoverage": 0.7749999999999999,
+        "specificity": 0.765,
+        "novelty": 0.575,
+        "actionability": 0.765
+      },
+      "answer": {
+        "answer": "Teriflunomide, approved for multiple sclerosis, promotes uridine-rescued myeloid differentiation in differentiation-blocked AML through DHODH inhibition\n\nThe hypothesis is that teriflunomide induces myeloid differentiation in primary human AML blasts that retain a differentiation block and depend on de novo pyrimidine synthesis. The biological context is preclinical culture of patient blasts, with xenograft initiating assays only where cell numbers allow. Bulk viability, differentiation, and stem or progenitor function are separate endpoints. The approved indication, relapsing multiple sclerosis, is unverified prior knowledge and is not stated in the packet. Venetoclax plus azacitidine is an established comparator and is not the proposed regimen.\n\nSupported premises are limited to the packet. DHODH inhibition promotes myeloid differentiation in experimental AML and affects disease-related endpoints in the models tested, linking metabolism to release of a differentiation block [S4]. That study does not show that every approved drug affecting the pathway matches this result or achieves selective exposure [S4]. Functionally defined leukemia stem cells in the specimens examined often had low reactive oxygen species and elevated BCL-2; BCL-2 inhibition reduced oxidative phosphorylation and affected quiescent leukemia stem cells [S1]. This supports a specific dependency question and withholds any claim that an arbitrary mitochondrial inhibitor has a therapeutic window [S1]. After cytarabine, residual cells were not consistently enriched for immature quiescent leukemia stem cells; they carried oxidative-metabolism features, including mitochondrial and fatty-acid-oxidation-related properties, and altering that state changed response in those models [S2]. Venetoclax with azacitidine perturbs TCA-cycle and oxidative-phosphorylation metabolism in leukemia stem cells in the reported patient-associated and experimental work [S3].\n\nUnverified prior knowledge, which must be checked before the experiment is interpreted, includes the following points. Teriflunomide is approved for multiple sclerosis. Leflunomide is approved for rheumatoid arthritis, and teriflunomide is its circulating active metabolite. The metabolite inhibits DHODH and de novo pyrimidine synthesis. Uridine salvage can bypass a DHODH block. Steady-state exposures from multiple-sclerosis dosing are the intended concentration anchors. [S1] through [S4] do not establish these facts.\n\nThe speculative bridges are explicit. Bridge one: concentrations compatible with approved teriflunomide dosing inhibit DHODH in primary AML blasts enough to reproduce experimental DHODH-inhibitor differentiation [S4]. Bridge two: those blasts are more dependent on de novo pyrimidine synthesis than normal hematopoietic progenitors, so selectivity is plausible. Bridge three: cytarabine-residual cells with oxidative features [S2] can differentiate under DHODH blockade even when they differ from the ROS-low, BCL-2-high stem cells in [S1]. These are assumptions.\n\nAlternative accounts remain open. Apparent maturation may be selective loss of immature blasts with persistence of already mature cells. Growth suppression may reflect off-target kinase or inflammatory effects, or apoptosis from nucleotide stress, with no requirement for DHODH. Lower initiating activity may instead follow the BCL-2 and oxidative-phosphorylation vulnerability in [S1] or the oxidative residual state in [S2]. Matched injury to normal progenitors would block a therapeutic reading of any blast reduction.\n\nThe discriminating preclinical strategy runs differentiation-blocked primary AML in parallel with normal CD34-positive hematopoietic cells. Terifoclax is not used. Teriflunomide spans a range that includes verified approved-use exposures. A tool DHODH inhibitor is the pathway control. Venetoclax, with or without azacitidine, is only the established metabolic comparator [S3]. Required readouts are differentiation by surface markers, morphology, and a functional maturation assay; bulk viability and cell cycle; ROS-low versus ROS-high fractions kept as distinct populations [S1][S2]; and colony formation, plus xenograft initiation in a subset, with the colony assay repeated on normal progenitors. Uridine co-treatment tests on-target action. The hypothesis predicts that uridine prevents teriflunomide-driven differentiation and any DHODH-dependent, AML-selective growth effect. A comparator effect that tracks BCL-2 and oxidative phosphorylation in ROS-low cells [S1][S3] is expected to remain during uridine supplementation. Fatty-acid-oxidation markers may be covariates of the residual state [S2] and are not evidence that teriflunomide blocks fatty-acid oxidation.\n\nFalsifying observations at exposure compatible with approved use are as follows. Differentiation-blocked samples produce no myeloid maturation. Uridine leaves both maturation and growth effects intact, which indicates an off-target mechanism. Normal CD34-positive colony formation falls in parallel with AML colony formation. Or the dominant pattern is uridine-insensitive loss of ROS-low stem cells resembling the BCL-2 comparator [S1][S3], with flat differentiation markers, which assigns the result to oxidative phosphorylation rather than to DHODH-dependent differentiation [S4].\n\nLimitations are substantial. [S4] does not identify teriflunomide, human exposure, or activity across AML genotypes. [S1] and [S2] describe related oxidative phenotypes that are not interchangeable, and neither supplies clinical efficacy for this drug. Protein binding, marrow free drug, class-associated immunosuppression, and the distance from short-term differentiation to durable disease control are unverified. This is a falsifiable preclinical hypothesis, not a claim of clinical benefit.",
+        "ranking": [
+          {
+            "item": "Teriflunomide, approved for multiple sclerosis, promotes uridine-rescued myeloid differentiation in differentiation-blocked AML through DHODH inhibition",
+            "promisingness": 0.58,
+            "confidence": 0.46,
+            "pmids": [
+              "27641501"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 20,
+      "reported_input_tokens": 118035,
+      "reported_output_tokens": 135114,
+      "reported_tokens": 253149,
+      "unknown_usage_calls": 2,
+      "elapsed_seconds": 1158.596,
+      "remaining_seconds": 1541.404,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  {
+    "header": {
+      "case": "aml",
+      "method": "gpt",
+      "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+      "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+      "protocol_version": "co-scientist-rerun-0.3",
+      "models": [
+        {
+          "name": "gpt",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh"
+        }
+      ],
+      "options": {
+        "mode": "experiment",
+        "judges": "recuse",
+        "context": "isolated",
+        "generations": 3,
+        "seed": 0,
+        "replay_from": null,
+        "gen0_from": null
+      },
+      "budgets": {
+        "backend_calls": 0,
+        "reported_input_tokens": 0,
+        "reported_output_tokens": 0,
+        "reported_tokens": 0,
+        "unknown_usage_calls": 0,
+        "elapsed_seconds": 0.0,
+        "remaining_seconds": 2700,
+        "token_limit": 800000,
+        "call_limit": 40,
+        "seconds_limit": 2700
+      }
+    },
+    "status": "failed",
+    "reason": "mutate c008 by gpt failed: model timeout at remaining budget",
+    "initial": {
+      "id": "c003",
+      "author": "gpt",
+      "fitness": 0.8650000000000001,
+      "scores": {
+        "evidenceCoverage": 0.9,
+        "specificity": 0.93,
+        "novelty": 0.69,
+        "actionability": 0.89
+      },
+      "answer": {
+        "answer": "Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML\n\nHypothesis. In cytarabine-persistent AML blasts that retain high oxidative metabolism and depend predominantly on de novo pyrimidine synthesis under physiological uridine conditions, atovaquone at clinically attainable unbound exposure will inhibit mitochondrial complex III, constrain DHODH flux, and induce sustained myeloid differentiation. This will reduce leukemia-propagating capacity without comparable injury to normal hematopoietic progenitors. The predicted benefit is differentiation, not simply mitochondrial poisoning.\n\nSupported premises. Cytarabine-resistant cells in the studied models displayed oxidative-metabolism-associated features but were not consistently enriched for immature, quiescent leukemia stem cells [S2]. Separately, BCL-2 inhibition impaired oxidative phosphorylation in studied ROS-low leukemia-stem-cell populations; this does not establish a therapeutic window for arbitrary mitochondrial inhibitors [S1]. DHODH inhibition promoted differentiation in experimental AML systems [S4]. Venetoclax–azacitidine provides an established metabolism-linked comparator, not the proposed repurposing discovery [S3]. None of these sources establishes atovaquone efficacy in AML.\n\nUnverified prior knowledge requiring confirmation. Atovaquone is recalled as an approved treatment for Pneumocystis pneumonia, its original non-AML indication. Its recalled pharmacology includes complex-III inhibition. Mammalian DHODH is recalled to use oxidized ubiquinone, while extracellular uridine can potentially replenish pyrimidines through salvage. These outside-packet premises require verification, particularly potency against human complex III, protein binding, achievable unbound exposure, and marrow distribution. Antiparasitic activity alone cannot establish human AML target engagement.\n\nSpeculative bridges and alternatives. The proposal assumes that partial complex-III inhibition can restrict DHODH-supported pyrimidine production before catastrophic energy failure, and that the selected residual blasts retain differentiation competence. Neither assumption follows directly from the packet. Dependence on de novo synthesis is a proposed enrichment feature, not an established response biomarker. Alternative explanations include ATP-depletion cytotoxicity, unrelated drug targets, selective survival of pre-existing mature cells, or effective compensation through pyrimidine salvage. Oxidative metabolism alone may therefore be insufficient to predict response.\n\nDiscriminating preclinical strategy. Use paired primary AML samples before and after ex vivo cytarabine exposure, with confirmation in cytarabine-treated patient-derived xenografts. Prospectively classify residual cells using respiration normalized to viable-cell number and independently measured isotope-traced de novo-versus-salvage pyrimidine flux. Include oxidative-low residual samples rather than studying only predicted responders. Do not infer stem-cell identity from persistence or respiratory phenotype. Verify the recalled pharmacology before interpreting efficacy, and restrict translational claims to concentrations justified by subsequently verified human unbound-exposure data. Measure free medium and intracellular drug under physiological albumin and uridine conditions.\n\nEstablish temporal ordering through complex-III activity, ubiquinone redox state, dihydroorotate/orotate ratios, pyrimidine pools, respiration, ATP, apoptosis, and differentiation measurements. Require maturation of initially immature viable cells, supported by morphology, appropriate myeloid markers, functional maturation, and persistence after drug washout. Lineage tracking should distinguish genuine maturation from selective killing. Include vehicle, a selective DHODH inhibitor, and DHODH suppression as mechanistic controls; use venetoclax–azacitidine as the established metabolic comparator [S3]. Assay direct DHODH inhibition separately to distinguish an upstream respiratory mechanism from direct enzyme inhibition. Uridine rescue is interpretable only after demonstrating intracellular pyrimidine restoration: it should prevent differentiation and preserve leukemia-propagating activity while respiratory inhibition remains. Quantify propagation by limiting-dilution transplantation after washout using equal numbers of viable cells, separating this endpoint from bulk-cell survival. Test healthy-donor CD34-positive progenitors under both resting and proliferative conditions for colony formation and engraftment at identical exposure.\n\nFalsification and limitations. Confirmed restoration of pyrimidine pools that fails to prevent differentiation and loss of propagation would falsify the proposed pyrimidine-depletion mechanism. Death without sustained viable-cell maturation would fail the differentiation prediction. Failure to engage the proposed pathway within verified attainable exposure would defeat the translational premise, even if high-dose activity occurred. Comparable normal-progenitor injury would defeat the proposed selectivity. AML heterogeneity, treatment-dependent metabolic states, salvage capacity, differentiation competence, and uncertain human marrow exposure may sharply restrict applicability. Reduced xenograft propagation would not itself establish clinical efficacy or definitive leukemia-stem-cell eradication.",
+        "ranking": [
+          {
+            "item": "Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML",
+            "promisingness": 0.55,
+            "confidence": 0.33,
+            "pmids": [
+              "23333149",
+              "28416471",
+              "30420752",
+              "27641501"
+            ]
+          }
+        ]
+      }
+    },
+    "usage": {
+      "backend_calls": 20,
+      "reported_input_tokens": 132626,
+      "reported_output_tokens": 66820,
+      "reported_tokens": 199446,
+      "unknown_usage_calls": 2,
+      "elapsed_seconds": 1222.409,
+      "remaining_seconds": 1477.591,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  }
+]

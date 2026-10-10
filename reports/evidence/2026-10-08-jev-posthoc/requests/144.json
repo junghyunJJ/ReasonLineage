@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty is overstated relative to the core mechanism: DHODH-inhibition-driven AML differentiation is directly prefigured by S4, and the claimed 'pharmacodynamic uniqueness' contrasts continuous teriflunomide dosing against an unverified characterization of investigational DHODH inhibitors' dosing while the teriflunomide PK inputs (total levels, ≥99% binding) are themselves flagged unverified. Fix: perform step 1 (precedent and PK verification) before any uniqueness claim, and demote the exposure-durability advantage to a testable hypothesis quantified head-to-head against brequinar rather than an asserted differentiator.\n- The responsive-subset biomarker panel contains a likely factual error: uracil phosphoribosyltransferase is not a canonical human salvage enzyme (mammalian cells largely lack UPRT activity; uridine/uracil salvage runs through UPP1, UCK1/2 and nucleoside transporters). Fix: replace it with verified human salvage-pathway markers (e.g., UCK1/2, UPP1, SLC28A family) and lean on the functional uridine-uptake and LC-MS flux readouts, which are already strong, so the stratification assay panel is experimentally defensible as written.\n- The quantitative go/no-go gate (free AUC ≥3× blast DHODH IC50 in ≥70% of simulated patients) is fragile: it combines an estimated free fraction (~0.01–0.1 µM derived from two unverified numbers) with an unmeasured blast IC50 for A77 1726, and plausibly reported potency ranges sit at or above that free-drug window, so the gate may fail or pass purely as an artifact of binding assumptions. Fix: prespecify a sensitivity analysis over protein binding, half-life, and IC50 ranges showing under which combinations the window opens or closes, and state which measured value first decides the fate of the proposal.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+run,id,generation,author,operator,parents,fitness,title
+als-glm,c001,0,glm,seed,,0.8170000000000001,Stress-triggered interphase phosphorylation of the FG-nucleoporin Nup98 as an initiating lesion preceding nuclear-import failure and TDP-43 mislocalization in ALS motor neurons
+als-glm,c002,0,glm,seed,,0.8300000000000001,Interphase phosphorylation of the FG-nucleoporin Nup98 is an initiating pore-intrinsic lesion that precedes cytoplasmic TDP-43 assembly in TDP-43-proteinopathy ALS motor neurons.
+als-glm,c003,0,glm,seed,,0.8480000000000001,Premature stress-kinase phosphorylation of Nup98 initiates nucleocytoplasmic transport failure upstream of TDP-43 mislocalization in ALS motor neurons
+als-glm,c004,0,glm,seed,,0.8390000000000001,"Stress-activated phosphorylation of the nucleoporin Nup98 as an initiating, pore-intrinsic defect in TDP-43-linked ALS motor-neuron transport failure"
+als-gpt,c001,0,gpt,seed,,0.8470000000000001,NUP98 Hyperphosphorylation Initiates Nuclear-Import Failure in TARDBP-Mutant Motor Neurons
+als-gpt,c002,0,gpt,seed,,0.8630000000000001,CDK5-dependent NUP98 phosphorylation as an initiating nuclear-import defect in TARDBP-mutant motor neurons
+als-gpt,c003,0,gpt,seed,,0.863,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-associated ALS
+als-gpt,c004,0,gpt,seed,,0.8600000000000001,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als-gpt,c005,1,gpt,mutation,c002,,CDK5-dependent NUP98 phosphorylation as an initiating nuclear-import defect in TARDBP-mutant motor neurons
+als-gpt,c006,1,gpt,mutation,c003,,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-associated ALS
+als-grok,c001,0,grok,seed,,0.734,Phosphorylation of channel FG-nucleoporins initiates import failure and nuclear TDP-43 loss in TDP-43 proteinopathy ALS
+als-grok,c002,0,grok,seed,,0.743,CDK5 phosphorylation of Nup62 initiates nuclear-import failure in TDP-43 proteinopathy
+als-grok,c003,0,grok,seed,,0.752,Phosphorylation of FG-nucleoporin Nup62 within assembled nuclear pores initiates selective import failure and nuclear TDP-43 loss in TDP-43 proteinopathy models of ALS
+als-grok,c004,0,grok,seed,,0.771,Phosphorylation of Nup98 at proline-directed sites amplifies nuclear-import failure after cytoplasmic TDP-43 assembly
+aml-glm,c001,0,glm,seed,,0.801,"Repurposing teriflunomide, a multiple-sclerosis-approved DHODH inhibitor associated with pyrimidine-depletion biology, to drive myeloid differentiation in chemotherapy-resistant and leukemia stem cell-enriched AML"
+aml-glm,c002,0,glm,seed,,0.8350000000000001,"Bedaquiline, an approved multidrug-resistant-tuberculosis drug, collapses ATP-synthase-dependent oxidative phosphorylation to selectively deplete ROS-low leukemia stem cells and cytarabine-resistant OXPHOS-high residual AML cells."
+aml-glm,c003,0,glm,seed,,0.811,"Repurposing teriflunomide, a relapsingâremitting multiple sclerosis drug, as a pharmacologic DHODH inhibitor that lifts the differentiation block of oxidative-metabolic AML blasts."
+aml-glm,c004,0,glm,seed,,0.796,Repurposing teriflunomide (an approved multiple-sclerosis immunomodulator) as a DHODH inhibitor that induces pyrimidine-depletion-driven myeloid differentiation in acute myeloid leukemia
+aml-gpt,c001,0,gpt,seed,,0.8180000000000001,Teriflunomide-induced differentiation in uridine-salvage-limited AML
+aml-gpt,c002,0,gpt,seed,,0.8410000000000001,"Teriflunomide-induced differentiation in uridine-salvage-limited, cytarabine-persistent AML"
+aml-gpt,c003,0,gpt,seed,,0.8570000000000001,Teriflunomide-induced differentiation of pyrimidine-salvage-poor residual AML after cytarabine
+aml-gpt,c004,0,gpt,seed,,0.8530000000000001,Teriflunomide-induced differentiation in uridine-salvage-limited residual AML
+aml-gpt,c005,1,gpt,mutation,c003,0.8510000000000001,Teriflunomide-induced differentiation of pyrimidine-salvage-poor residual AML after cytarabine
+aml-gpt,c006,1,gpt,mutation,c004,0.8360000000000001,Teriflunomide-induced differentiation in uridine-salvage-limited residual AML

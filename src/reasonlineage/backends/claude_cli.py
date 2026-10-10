@@ -8,7 +8,7 @@ default system prompt replaced, so the model sees only `request.system` and
 import json
 
 from ._subprocess import SubprocessBackend, response, structured_data
-from .base import BackendError, ModelRequest, ModelResponse
+from .base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 
 
 class ClaudeCLIBackend(SubprocessBackend):
@@ -32,9 +32,19 @@ class ClaudeCLIBackend(SubprocessBackend):
         return argv
 
     async def _run_once(self, request: ModelRequest) -> ModelResponse:
-        _, stdout, _, duration = await self._exec(
-            self.build_argv(request), stdin=request.prompt.encode(), timeout_s=request.timeout_s
+        code, stdout, stderr, duration = await self._exec(
+            self.build_argv(request), stdin=request.prompt.encode(), timeout_s=request.timeout_s, check=False
         )
+        if code:
+            try:
+                payload = json.loads(stdout)
+            except (ValueError, UnicodeDecodeError):
+                payload = None
+            if isinstance(payload, dict) and payload.get('is_error'):
+                # Read the typed result before generic subprocess truncation.
+                return self.parse(stdout.decode(), request, duration)
+            detail = (stderr or stdout).decode(errors='replace').strip()[-500:]
+            raise BackendError(f'exit {code}: {detail}')
         return self.parse(stdout.decode(), request, duration)
 
     def parse(self, stdout: str, request: ModelRequest, duration_s: float) -> ModelResponse:
@@ -43,6 +53,8 @@ class ClaudeCLIBackend(SubprocessBackend):
         except json.JSONDecodeError:
             raise BackendError(f"output is not JSON: {stdout[:200]!r}") from None
         if payload.get("is_error") or payload.get("subtype") != "success":
+            if '[bio]' in str(payload.get('result', '')).lower():
+                raise ProviderRefusal('provider biology safeguard blocked request [bio]')
             raise BackendError(f"error payload: subtype={payload.get('subtype')!r} result={str(payload.get('result'))[:300]!r}")
         text = payload.get("result") or ""
         data = structured_data(request, payload.get("structured_output"), text)

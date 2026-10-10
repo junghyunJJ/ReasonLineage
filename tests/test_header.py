@@ -41,7 +41,7 @@ def test_header_records_what_resume_needs():
     task = Task("t1", "Q?", ("a", "b"), "biomedical", "public")
     header = build_header(run_id="r1", task=task, setup=SETUP, options=RunOptions(seed=7), protocol=PROTOCOL,
                           versions={"claude": "2.1.285"}, commit="abc", checker="jev", checker_note=None)
-    assert header["protocol"] == {"version": "1.0.1", "hash": PROTOCOL.hash}
+    assert header["protocol"] == {"version": "1.0.5", "hash": PROTOCOL.hash}
     assert header["options"]["seed"] == 7 and header["task"]["candidates"] == ["a", "b"]
     assert header["setup"]["panel"][3]["base_url"] == "https://ollama.com/v1"
     assert header["j1_enforce"] is False and header["checker"] == "jev"

@@ -1,0 +1,16 @@
+{
+  "state": "- S1–S3 are listed as premises and ranking PMIDs for a teriflunomide–DHODH differentiation claim they do not support; they only describe ROS-low stem cells, cytarabine-residual oxidative cells, and venetoclax–azacitidine OXPHOS effects. Restrict the supporting premise to S4 plus the explicitly unverified pharmacology, and cite S1–S3 only as negative-control contexts.\n- The go/no-go requires unbound Cmax and marrow free level to exceed a dihydroorotate/UTP shift by threefold, which compares a concentration with a metabolite change. Lock two separate criteria: a uridine-rescueable fold DHO rise and UTP fall, and a margin in which clinical unbound Cmax and measured marrow free drug are at least threefold the albumin-matched free concentration that produces that shift.\n- The day-7 assay is not executable as written and one readout conflicts with the mechanism: culture cytokines, serum or stroma, venetoclax–azacitidine doses, and the ROS dye are unspecified; myeloid maturation often increases G0/G1, so demanding maturation beyond G0/G1 arrest can fail a true differentiation hit; and the pilot that sets the mean-plus-3-SD bar is not held out from the 12-donor 8/12 rule. Prespecify the culture system and comparator doses, score morphology plus surface markers with a cell-cycle pattern that allows maturation-associated G0, and freeze thresholds on an independent pilot.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

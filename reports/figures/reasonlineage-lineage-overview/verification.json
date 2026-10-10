@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "kind": "conceptual_method_overview",
+  "layout": "left-to-right G0/G1/G2/G3; small jev below",
+  "unique_responses": 10,
+  "displayed_candidate_instances": 16,
+  "parent_connections": 15,
+  "source_svg_frames": 421,
+  "static_png": [
+    2880,
+    1680
+  ],
+  "gif": {
+    "dimensions": [
+      1080,
+      630
+    ],
+    "encoded_frames": 154,
+    "duration_seconds": 28.0,
+    "loop": true
+  },
+  "mp4": {
+    "dimensions": [
+      1440,
+      840
+    ],
+    "decoded_frames": 420,
+    "fps": 15.0,
+    "codec": "h264",
+    "duration_seconds": 28.0
+  },
+  "player": {
+    "status": "passed",
+    "chapters": 20,
+    "frames": 421,
+    "duration": 28,
+    "controls": [
+      "play",
+      "pause",
+      "previous",
+      "next",
+      "seek",
+      "speed",
+      "repeat",
+      "reduced-motion"
+    ],
+    "actual_browser_automation": false
+  },
+  "mutation_author_inherits_parent": true,
+  "crossover_author_excludes_parent_authors": true,
+  "jev_before_critique_before_selection": true,
+  "retained_candidates_keep_saved_scores": true,
+  "source_image_modified": false,
+  "model_calls": 0,
+  "uses_actual_model_scores": false
+}

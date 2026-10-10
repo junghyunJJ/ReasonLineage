@@ -1,0 +1,16 @@
+{
+  "state": "- The context remains broad: differentiation arrest alone does not identify DHODH-sensitive AML. Prespecify dependency or salvage-capacity strata, exposure-matched unbound concentrations, treatment duration, and differentiation thresholds.\n- Novelty is mainly transferring S4’s established DHODH mechanism to a named drug. Check prior teriflunomide–AML literature and identify a distinct biomarker- or exposure-dependent prediction before claiming originality.\n- The proposed falsifiers are not fully discriminating: selective death can enrich mature markers, failed uridine salvage can prevent rescue, and normal differentiation is not necessarily toxicity. Track initially immature viable blasts, confirm intracellular pyrimidine restoration and DHODH engagement, and assess normal multilineage clonogenic function.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

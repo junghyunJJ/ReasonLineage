@@ -1,0 +1,16 @@
+{
+  "state": "- The CDK1-activation step is asserted but not testable as written: 'a CDK1 regulator or an opposing phosphatase' is never named, so the causal link from nuclear TDP-43 dysfunction to CDK1 activity on NUP98 is flagged as a bridge but has no manipulable molecular target or pre-registered order requirement of its own. Fix by naming candidate splicing targets (e.g., CDC25-family/Wee1-family transcripts or a known TDP-43 splicing substrate with CDK-axis function), requiring the splicing lesion to temporally precede NUP98 phosphorylation, and adding a rescue or occlusion experiment that normalizes CDK1 activity before the upstream bridge is accepted.\n- Causal-order detection is doubly vulnerable: t0 is defined retrospectively as the first sampled window with import divergence, so phosphorylation arising between windows is missed or misordered, and low-stoichiometry FG-region sites in bulk NPC phosphoproteomics may fall below detection, making the primary falsifier ('no qualifying FG-region phosphorylation precedes t0') prone to false negatives. Fix with denser time-course sampling around maturation, targeted LC-MS/MS (PRM/SRM) against synthetic phospho-peptide standards for candidate sites, and an acute, timed pre-t0 CDK1-inhibition window that must abolish the t0 transport lesion for the bridge to stand.\n- The in-cell sufficiency arm hinges on a phosphomimetic, but S->E substitution does not reproduce a phosphate's charge density or dynamics, which are exactly the properties the FG-cohesion/permeability mechanism depends on; an in vitro-validated mimetic therefore establishes the sufficiency of the mimetic, not of the native phosphosite at the native pore. Fix by adding an acute in-cell sufficiency test, e.g., a NUP98-targeted kinase-recruitment module or analog-sensitive CDK1 allele that installs and reverses the native modification on demand, with the phosphomimetic retained only as a lower-bound approximation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "kind": "illustrative_scored_lineage",
+  "empirical_scores": false,
+  "reviewers": {
+    "Opus 5.5": [
+      "GPT-6.1 sol",
+      "Grok 4.7",
+      "GLM-5.3-flash"
+    ],
+    "GPT-6.1 sol": [
+      "Opus 5.5",
+      "Grok 4.7",
+      "GLM-5.3-flash"
+    ],
+    "Grok 4.7": [
+      "Opus 5.5",
+      "GPT-6.1 sol",
+      "GLM-5.3-flash"
+    ],
+    "GLM-5.3-flash": [
+      "Opus 5.5",
+      "GPT-6.1 sol",
+      "Grok 4.7"
+    ]
+  },
+  "reviewer_count": 3,
+  "self_evaluation": false,
+  "illustrative_fitness": {
+    "O1": 0.62,
+    "S1": 0.58,
+    "G1": 0.55,
+    "L1": 0.49,
+    "M1": 0.66,
+    "X1": 0.64,
+    "M2": 0.67,
+    "X2": 0.7,
+    "M3": 0.72,
+    "X3": 0.71
+  },
+  "nodes": {
+    "O1": {
+      "author": "Opus 5.5",
+      "parents": [],
+      "operator": "Initial",
+      "generation": 0,
+      "illustrative_fitness": 0.62
+    },
+    "S1": {
+      "author": "GPT-6.1 sol",
+      "parents": [],
+      "operator": "Initial",
+      "generation": 0,
+      "illustrative_fitness": 0.58
+    },
+    "G1": {
+      "author": "Grok 4.7",
+      "parents": [],
+      "operator": "Initial",
+      "generation": 0,
+      "illustrative_fitness": 0.55
+    },
+    "L1": {
+      "author": "GLM-5.3-flash",
+      "parents": [],
+      "operator": "Initial",
+      "generation": 0,
+      "illustrative_fitness": 0.49
+    },
+    "M1": {
+      "author": "Opus 5.5",
+      "parents": [
+        "O1"
+      ],
+      "operator": "Mutation",
+      "generation": 1,
+      "illustrative_fitness": 0.66
+    },
+    "X1": {
+      "author": "Grok 4.7",
+      "parents": [
+        "O1",
+        "S1"
+      ],
+      "operator": "Crossover",
+      "generation": 1,
+      "illustrative_fitness": 0.64
+    },
+    "M2": {
+      "author": "Opus 5.5",
+      "parents": [
+        "M1"
+      ],
+      "operator": "Mutation",
+      "generation": 2,
+      "illustrative_fitness": 0.67
+    },
+    "X2": {
+      "author": "GPT-6.1 sol",
+      "parents": [
+        "M1",
+        "X1"
+      ],
+      "operator": "Crossover",
+      "generation": 2,
+      "illustrative_fitness": 0.7
+    },
+    "M3": {
+      "author": "GPT-6.1 sol",
+      "parents": [
+        "X2"
+      ],
+      "operator": "Mutation",
+      "generation": 3,
+      "illustrative_fitness": 0.72
+    },
+    "X3": {
+      "author": "Grok 4.7",
+      "parents": [
+        "X2",
+        "M2"
+      ],
+      "operator": "Crossover",
+      "generation": 3,
+      "illustrative_fitness": 0.71
+    }
+  },
+  "populations": [
+    [
+      "O1",
+      "S1",
+      "G1",
+      "L1"
+    ],
+    [
+      "O1",
+      "S1",
+      "M1",
+      "X1"
+    ],
+    [
+      "M1",
+      "X1",
+      "M2",
+      "X2"
+    ],
+    [
+      "X2",
+      "M2",
+      "M3",
+      "X3"
+    ]
+  ],
+  "selected": [
+    [
+      "O1",
+      "S1"
+    ],
+    [
+      "M1",
+      "X1"
+    ],
+    [
+      "X2",
+      "M2"
+    ],
+    [
+      "M3"
+    ]
+  ],
+  "fps": 15,
+  "duration": 28,
+  "jev_text": [
+    "Check new responses",
+    "Separate from fitness scoring"
+  ]
+}

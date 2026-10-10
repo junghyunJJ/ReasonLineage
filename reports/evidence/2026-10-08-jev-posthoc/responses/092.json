@@ -1,0 +1,60 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "answer_type": {
+      "type": "choice",
+      "choice": "answer",
+      "confidence": 0.97,
+      "probabilities": {
+        "answer": 0.98,
+        "refusal": 0.0,
+        "meta": 0.01,
+        "grader": 0.01
+      }
+    },
+    "top_item_argument": {
+      "type": "noul",
+      "noul": 0.95
+    },
+    "argument_coverage": {
+      "type": "score",
+      "score": 2.76,
+      "confidence": 0.76,
+      "legend": {
+        "0": "None of the items",
+        "1": "Some of the items",
+        "2": "Most of the items",
+        "3": "All of the items"
+      },
+      "probabilities": {
+        "0": 0.05,
+        "1": 0.03,
+        "2": 0.03,
+        "3": 0.89
+      }
+    },
+    "style_inflation": {
+      "type": "score",
+      "score": 0.66,
+      "confidence": 0.57,
+      "legend": {
+        "0": "Plain",
+        "1": "Occasional emphasis",
+        "2": "Frequent emphasis",
+        "3": "Mostly exaggeration",
+        "4": "Rhetoric dominates"
+      },
+      "probabilities": {
+        "0": 0.43,
+        "1": 0.48,
+        "2": 0.09,
+        "3": 0.0,
+        "4": 0.0
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 3506,
+    "output_tokens": 98
+  }
+}

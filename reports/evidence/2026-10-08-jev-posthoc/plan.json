@@ -1,0 +1,17 @@
+{
+  "model": "jev-1.13.0",
+  "logical_jobs": 240,
+  "max_new_calls": 240,
+  "request_seconds": 120,
+  "study_seconds": 3600,
+  "concurrency": 4,
+  "source_runs": 8,
+  "hypotheses": 80,
+  "critiques": 160,
+  "same_rubric_unique_proposals": 14,
+  "stage_links": 16,
+  "credential_source": "root .env; JEV_API_KEY; no interpolation or shell execution",
+  "automatic_retries": 0,
+  "generation_calls": 0,
+  "protocol_hash": "ef687030596d4fe11b158f48d205f96ea001b964ef12030f544ec290c65c5c26"
+}

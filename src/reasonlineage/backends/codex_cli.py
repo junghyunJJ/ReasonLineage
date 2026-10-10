@@ -20,6 +20,10 @@ DISABLED_FEATURES = (
     "sleep_tool", "tool_suggest", "skill_search", "goals", "personality",
 )
 ALLOWED_ITEMS = frozenset({"agent_message", "reasoning"})
+# The built-in "openai" provider drops a stream that stays silent past its idle limit, which cut off GPT's long
+# reasoning ("idle timeout waiting for websocket", 2026-10-01). Built-in providers cannot be overridden, so each
+# call uses this copy of it, with the ChatGPT login and an idle limit equal to the call's timeout.
+PROVIDER = "openai-long-idle"
 
 
 class CodexCLIBackend(SubprocessBackend):
@@ -35,6 +39,10 @@ class CodexCLIBackend(SubprocessBackend):
             "-c", f"model_instructions_file={json.dumps(str(instructions))}",
             "-c", 'web_search="disabled"',
             "-c", "project_doc_max_bytes=0",
+            "-c", (f'model_providers.{PROVIDER}={{name="OpenAI (long idle)", '
+                   f'base_url="https://chatgpt.com/backend-api/codex", wire_api="responses", requires_openai_auth=true, '
+                   f'supports_websockets=true, stream_idle_timeout_ms={int(request.timeout_s * 1000)}}}'),
+            "-c", f'model_provider="{PROVIDER}"',
             "-o", str(last),
         ]
         if request.effort:

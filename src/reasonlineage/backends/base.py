@@ -9,6 +9,10 @@ class BackendError(RuntimeError):
     """A model call failed after its retries (non-zero exit, timeout, error payload, bad output)."""
 
 
+class ProviderRefusal(BackendError):
+    """A provider safeguard declined the request; never retry automatically."""
+
+
 @dataclass(frozen=True)
 class ModelRequest:
     system: str

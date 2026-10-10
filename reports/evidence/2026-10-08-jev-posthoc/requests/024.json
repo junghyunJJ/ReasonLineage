@@ -1,0 +1,16 @@
+{
+  "state": "- The rescue test mutates 'predicted sites' in Nup98 that are never mapped or named; if the wrong residues are chosen, a negative result (falsifier b) becomes uninterpretable because it cannot distinguish a wrong-site mutation from a dispensable modification. Fix: derive the candidate sites from the time-course phosphoproteomics first, then test both non-phosphorylatable (S→A) and phosphomimetic (S→D/E) mutants at the mapped residues so causality is probed in both directions.\n- Falsifier (c) partially conflates the S4 stress-granule route with the S3 stress-granule-independent route on which the model is built: in a TDP-43-mislocalization model, rescue by blocking stress-granule assembly without Nup98 phosphorylation change does not uniquely prove 'sequestration alone is sufficient,' since S3 shows TDP-43 assemblies can sequester transport factors without conventional granules. Fix: pair the SG-block condition with a direct measurement of transport-factor availability (e.g., importin-β/Ran mobility or localization) so the conclusion is tied to factor sequestration rather than to granule presence per se.\n- Falsifier (a) rests entirely on phosphoproteomic temporal ordering, which the answer itself admits may lack resolution for transient phosphorylation events, making the initiating-vs-downstream discrimination fragile. Fix: add an orthogonal perturbational necessity test — acute stress-kinase inhibition (e.g., p38 inhibitor) applied before import decline with a rapid Nup98 phospho-readout — so the initiation claim does not depend solely on serial sampling.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

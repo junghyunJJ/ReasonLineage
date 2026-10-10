@@ -1,0 +1,22 @@
+{
+  "purpose": "Qualitative public-case comparison and demonstration of our generation/critique/revision/selection process; not paper-score matching",
+  "new_model_calls": 0,
+  "als_initial": "c004",
+  "als_final": "c006",
+  "als_final_author": "grok",
+  "als_final_parents": [
+    "c004",
+    "c003"
+  ],
+  "als_candidates": 10,
+  "als_titles_with_nup98": 10,
+  "aml_initial": "c003",
+  "aml_final": "c006",
+  "aml_same_drug_initial_final": true,
+  "paper_als_reference_stage": "initial Generation-agent example in Supplementary Note10.2, not an asserted final best",
+  "current_cases": [
+    "als",
+    "aml"
+  ],
+  "new_fibrosis_or_amr_outputs": false
+}

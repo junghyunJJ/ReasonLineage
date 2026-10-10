@@ -1,0 +1,80 @@
+{
+  "status": "partial",
+  "kind": "post_failure_planned_step_completion",
+  "source": "jev-off/runs/als-glm",
+  "original_status": "failed",
+  "initial": {
+    "id": "c002",
+    "author": "glm",
+    "fitness": 0.8430000000000001,
+    "scores": {
+      "evidenceCoverage": 0.855,
+      "specificity": 0.895,
+      "novelty": 0.74,
+      "actionability": 0.85
+    },
+    "answer": {
+      "answer": "Hypothesis: Nup153 FG-domain phosphorylation as a required pore-level mediator linking TDP-43 cytoplasmic de-mixing to nucleocytoplasmic transport failure in TDP-43 proteinopathy-associated ALS\n\nMECHANISM AND SUPPORTED PREMISES\n\nSupported premises from the evidence packet:\n1. TDP-43 pathology is associated with nucleoporin mislocalization and disrupted nucleocytoplasmic transport in ALS tissue and experimental systems [S1].\n2. Persistent cytoplasmic TDP-43 assemblies form independently of stress granules and impair nuclear import, deplete nuclear TDP-43, and cause cell death [S3].\n3. Stress granule assembly sequesters transport factors and impairs transport through a phosphorylation-independent sequestration mechanism [S4], representing the primary alternative.\n4. C9orf72 repeat expansion causes transport defects through repeat-RNA-associated mechanisms [S2], establishing that ALS transport failure is context-dependent; my hypothesis does not extrapolate to C9orf72 ALS.\n\nCausal chain proposed:\n1. Initiating event (supported by S3): Cytoplasmic TDP-43 de-mixing occurs in susceptible motor neurons, generating persistent cytoplasmic assemblies.\n2. Speculative bridge 1: These TDP-43 assemblies or the cellular stress they generate activate or recruit a kinase to the nuclear pore, or suppress a pore-associated phosphatase. Kinase identity is an assumption; candidates such as MAPK-family kinases are unverified prior knowledge outside this packet.\n3. Speculative bridge 2 (core hypothesis): The kinase phosphorylates the nuclear-basket nucleoporin Nup153 at one or more serine/threonine residues in its FG-repeat or adjacent linker region. This phosphorylation destabilizes Nup153's docked conformation or weakens its interaction with importin-β/Ran, functionally impairing the pore barrier even for Nup153 copies not physically sequestered by TDP-43 aggregates.\n4. Speculative bridge 3: Phosphorylation-mediated pore dysfunction is the required proximal cause of transport failure—without it, sequestration alone would yield only partial impairment because unphosphorylated Nup153 copies can compensate. Phosphorylation amplifies the defect to a threshold that causes nuclear TDP-43 depletion, creating a feed-forward loop: transport failure → reduced nuclear TDP-43 re-import → more cytoplasmic TDP-43 → more de-mixing.\n5. Downstream: Sustained nuclear TDP-43 depletion and transport collapse impair RNA processing, driving progressive motor neuron dysfunction and death.\n\nDISTINGUISHING INITIATING FROM DOWNSTREAM\n\nThe initiating mechanism is TDP-43 cytoplasmic de-mixing (supported by S3). Nup153 phosphorylation is hypothesized as the pore-level proximal cause of transport failure—not merely a downstream stress response. This is distinct from: (a) pure sequestration without phosphorylation being sufficient [S4 model], or (b) phosphorylation occurring as a passive consequence of transport failure or generalized stress without causal role.\n\nALTERNATIVE EXPLANATION\n\nStress granules and TDP-43 aggregates physically sequester Nup153 and other transport factors, causing transport failure purely through stoichiometric depletion, with any observed nucleoporin phosphorylation representing a non-causal stress-associated bystander [consistent with S4's framework]. In this alternative, preventing Nup153 phosphorylation does not rescue transport.\n\nEXPLICITLY SPECULATIVE BRIDGES (assumptions, not supported by supplied sources)\n- That Nup153 is phosphorylated at its FG/linker domain in ALS motor neurons.\n- That this phosphorylation is necessary for the transport defect (not merely correlated with stress).\n- That a specific kinase is recruited or activated by TDP-43 de-mixing.\n- That phosphorylation is sufficient to impair transport in the absence of TDP-43 aggregates.\n- General plausibility: nucleoporin phosphorylation is known to regulate NPC assembly/disassembly during mitosis (unverified prior knowledge recalled from outside this packet).\n\nDISCRIMINATING PRECLINICAL TEST STRATEGY\n\nStep 1: Establish inducible TDP-43 de-mixing in human iPSC-derived motor neurons (e.g., optogenetic TDP-43 clustering or inducible cytoplasmic TDP-43).\n\nStep 2: Map phosphorylation sites by phosphoproteomic mass spectrometry on immunoprecipitated Nup153 ± TDP-43 aggregate induction.\n\nStep 3 (core discriminating experiment):\n- Necessity test: Knock in phospho-null Nup153 (S/T→A at mapped sites) replacing endogenous Nup153 in TDP-43 aggregate-inducing neurons. Prediction (if hypothesis is correct): nuclear import (NLS-GFP flux) and nuclear TDP-43 retention are preserved despite TDP-43 aggregate presence. If phospho-null Nup153 does not rescue transport beyond wild-type, the phosphorylation-mediator hypothesis is disfavored.\n- Sufficiency test: Express phospho-mimetic Nup153 (S/T→D/E at mapped sites) in healthy neurons without TDP-43 pathology. Prediction (if hypothesis is correct): transport impairment occurs without TDP-43 aggregates. If phospho-mimetic Nup153 alone does not impair transport, phosphorylation is not sufficient and the hypothesis is incomplete.\n- Sequestration control: Test whether phospho-null Nup153 rescues transport in a pure stress-granule induction model [S4 framework]. If phospho-null Nup153 rescues transport in this model too, that distinguishes phosphorylation from sequestration for both contexts; if not, sequestration alone drives stress-granule-mediated defects while phosphorylation is specific to TDP-43 de-mixing.\n\nStep 4 (temporal): Live imaging of phospho-Nup153 signal and NLS-cargo import flux after inducing TDP-43 de-mixing. If phospho-Nup153 signal precedes measurable import decline, it supports an initiating-mediator role. If it lags import decline, it favors a bystander/consequence interpretation.\n\nFALSIFYING OBSERVATION\n\nIn TDP-43 aggregate-bearing motor neurons with confirmed transport impairment, replacing endogenous Nup153 with a phospho-null variant (properly localized to the nuclear basket at endogenous levels) fails to rescue any measured aspect of nuclear import or nuclear TDP-43 retention, while simultaneously (a) TDP-43 aggregate burden is unchanged and (b) phospho-mimetic Nup153 alone does not impair transport in healthy neurons. Together, these demonstrate that Nup153 phosphorylation is neither necessary nor sufficient for transport failure in this ALS subtype.\n\nLIMITATIONS\n- Phospho-null substitutions may alter Nup153 structure independently of removing phosphate groups.\n- Other nucleoporins may be simultaneously phosphorylated; rescuing only Nup153 may yield partial effects if multiple pore components require phosphorylation for the full defect.\n- This hypothesis is scoped to TDP-43 proteinopathy-associated ALS and does not address C9orf72-associated transport failure [S2], which likely involves repeat-RNA-mediated mechanisms.\n- iPSC motor neuron models may not capture chronic aging-associated context of human ALS.\n- The responsible kinase may act on additional substrates, limiting inhibitor-based discrimination.",
+      "ranking": [
+        {
+          "item": "Nup153 FG-domain phosphorylation as a required pore-level mediator linking TDP-43 cytoplasmic de-mixing to nucleocytoplasmic transport failure in TDP-43 proteinopathy-associated ALS",
+          "promisingness": 0.62,
+          "confidence": 0.45,
+          "pmids": [
+            "29311743",
+            "30853299",
+            "29628143"
+          ]
+        }
+      ]
+    }
+  },
+  "new_generations": 0,
+  "original_failure_retained": true,
+  "reason": "invalid or truncated structured response",
+  "completed_planned_hypotheses": 0,
+  "new_model_usage": {
+    "backend_calls": 1,
+    "reported_input_tokens": 0,
+    "reported_output_tokens": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 1,
+    "elapsed_seconds": 184.156,
+    "remaining_seconds": 715.844,
+    "token_limit": 585632,
+    "call_limit": 17,
+    "seconds_limit": 900
+  },
+  "new_checker_usage": {
+    "backend_calls": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 0
+  },
+  "new_total_usage": {
+    "backend_calls": 1,
+    "reported_input_tokens": 0,
+    "reported_output_tokens": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 1,
+    "elapsed_seconds": 184.156,
+    "remaining_seconds": 715.844,
+    "token_limit": null,
+    "call_limit": 17,
+    "seconds_limit": 900
+  },
+  "original_model_usage": {
+    "backend_calls": 23,
+    "reported_input_tokens": 68251,
+    "reported_output_tokens": 146117,
+    "reported_tokens": 214368,
+    "unknown_usage_calls": 1,
+    "elapsed_seconds": 769.937,
+    "remaining_seconds": 1930.063,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "original_checker_usage": {},
+  "cumulative_unknown_model_usage_calls": 2,
+  "cumulative_token_cap_verified": false
+}

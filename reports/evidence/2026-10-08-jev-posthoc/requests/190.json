@@ -1,0 +1,16 @@
+{
+  "state": "- The claim that multiple-sclerosis-compatible free exposure is sufficient has no source-anchored falsifier, so in vitro activity alone can be scored as support. After checking the approved dose, protein binding, and free Cmax, falsify the hypothesis when the uridine-reversible differentiation EC50 in primary blasts exceeds achievable free plasma or marrow concentration.\n- Differentiation is not operationally defined, so selective death of immature blasts can be recorded as maturation. Prespecify morphology plus a named marker panel such as CD11b, CD14, and CD15, require a viability-matched cell-cycle comparison, and set a minimum effect size versus the experimental DHODH-inhibitor control.\n- The title’s separability claim is softer than the assay rules: concurrent ROS-low killing and oxidative-phosphorylation collapse can still look like a win if any maturation marker rises. Add an explicit failure rule that uridine-resistant cytotoxicity plus loss of ROS-low cells and reduced oxygen consumption reassigns the result to the venetoclax–azacitidine comparator, and cite PMIDs 23333149, 28416471, and 30420752 with 27641501.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

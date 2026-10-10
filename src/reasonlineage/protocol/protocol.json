@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.5",
   "generations": 3,
   "margins": {"tie": 0.03, "dominance": 0.03, "stagnation": 0.03, "stagnation_window": 2},
   "answer": {"length_words": [400, 800], "open_question_items": [3, 10]},
@@ -9,8 +9,8 @@
     "genetic and omics evidence-centered",
     "safety and feasibility-centered"
   ],
-  "timeouts_s": {"write": 900, "judge": 480, "check": 120},
-  "max_tokens": {"write": 64000, "judge": 32000, "check": 8000},
+  "timeouts_s": {"write": 3600, "judge": 1800, "check": 120},
+  "max_tokens": {"write": 128000, "judge": 128000, "check": 8000},
   "j1": {
     "enforce": false,
     "thresholds": {"answer_type": 0.5, "top_item_argument": 0.5},

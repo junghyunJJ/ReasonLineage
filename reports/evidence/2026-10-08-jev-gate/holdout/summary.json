@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "cases": 30,
+  "correct": 30,
+  "false_positive": 0,
+  "false_negative": 0,
+  "missing_or_failed": 0,
+  "normal_cases": 6,
+  "defect_cases": 24,
+  "model": "jev-1.13.0",
+  "thresholds": {
+    "answer_type": 0.5,
+    "top_item_argument": 0.5
+  },
+  "holdout": true,
+  "questions_sha256": "1ecb4901a40639a0a8c55757c8eb6558f73161d5ca3dd051a74f4711ba5772f8",
+  "cases_sha256": "367d89233f114b4b826b8f3dd229f429759fe0ff4e23d532b2b77bc226229d01",
+  "backend_calls": 30,
+  "reported_input_tokens": 54711,
+  "reported_output_tokens": 2466,
+  "reported_tokens": 57177,
+  "unknown_usage_calls": 0,
+  "elapsed_seconds": 4.541,
+  "generator_calls": 0,
+  "deepseek_calls": 0,
+  "criterion": "all 30 labelled examples correct at fixed 0.5",
+  "limitation": "small manually labelled examples; not real-hypothesis correctness validation"
+}

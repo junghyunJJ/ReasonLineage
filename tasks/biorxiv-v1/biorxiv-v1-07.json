@@ -1,0 +1,11 @@
+{
+  "id": "biorxiv-v1-07",
+  "question": "Molecular testing in hematology requires different assays for disease subgroup identification, risk stratification and selection of appropriate treatment regimens. Yet, molecular tests are not necessarily standardized between diagnostic laboratories, resulting in varying turnaround times and potentially divergent results. To resolve this issue and enable single-assay molecular testing, we have developed a hierarchical classification framework that combines epigenetic and genetic data from whole genome nanopore sequencing (WGNS) with machine learning to determine disease entities, epigenetic subgroups (epitypes) and genetic aberrations in hematopoietic neoplasms. We curated DNA methylation data from 5,420 samples and trained a classifier allowing entity-level diagnostics featuring 21 conditions, including healthy controls, acute and chronic myeloid and lymphoid neoplasms. This classifier was subsequently combined with entity-specific epitype classifiers predicting 44 therapeutically or prognostically relevant states, followed by integration of genetic data.\n\nThree candidate results follow. Exactly one is what this study reported.\n- Result A: Benchmarking of the combined (epi-)genetic testing strategy using WGNS confirmed high accuracy in the detection of diagnostic groups and risk stratification, and identified therapy-relevant molecular alterations that were not reported by standard-of-care work-up.\n- Result B: Benchmarking of the combined (epi-)genetic testing strategy using WGNS confirmed high accuracy in the detection of diagnostic groups and risk stratification, and identified diagnosis-defining molecular alterations that were reported by standard-of-care work-up.\n- Result C: Benchmarking of the combined (epi-)genetic testing strategy using WGNS confirmed high accuracy in the detection of diagnostic groups and risk stratification, and identified diagnosis-defining molecular alterations that were not reported by standard-of-care work-up.\nWhich result did this study report? Rank the candidates, and give the mechanism, the key evidence, and a validation experiment for the top pick.",
+  "candidates": [
+    "Result A",
+    "Result B",
+    "Result C"
+  ],
+  "category": "analytical",
+  "data_sensitivity": "public"
+}

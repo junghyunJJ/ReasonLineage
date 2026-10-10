@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty remains unresolved: DHODH-mediated AML differentiation is established, and teriflunomide/leflunomide AML prior art is unaudited. Check that literature and identify precisely what the residual-state/salvage-capacity prediction adds.\n- Uridine rescue, nucleotide depletion, and genetic DHODH phenocopy do not uniquely establish direct teriflunomide–DHODH causality; upstream respiratory injury could produce similar results. Add direct DHODH engagement measurements and, if feasible, a validated drug-resistant DHODH rescue.\n- Prespecified flux thresholds, donor-level interactions, and serial-transplant falsifiers provide exceptional specificity. However, a single six-hour flux window may miss delayed salvage adaptation during seven-day treatment. Validate capacity longitudinally under sustained inhibition, and verify human unbound exposure before fixing executable dosing profiles.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

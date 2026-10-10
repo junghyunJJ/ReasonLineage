@@ -1,0 +1,184 @@
+{
+  "evaluations": [
+    {
+      "case": "als",
+      "order": "forward",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P85c6a67ef4",
+          "novelty_note": "Combines a pre-registered CDK5–Nup98 phosphosite gate with strict NPC-incorporation and temporal-ordering criteria in a primary TDP-43 proteinopathy model; novelty lies in the kinase/site-specific initiation claim and quantitative discrimination from stress-granule and TDP-43-assembly sequestration.",
+          "reason": "Strongly pre-specified and falsifiable design that maps Nup98 phosphosites, uses CDK5/ERK2 specificity controls, and separates pore-intrinsic from sequestration routes; however, CDK5–Nup98 initiation is explicitly uncited, so grounding rests on TDP-43–pore associations."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P21965fb6a9",
+          "novelty_note": "Proposes p38α-dependent NUP62 phosphorylation as an initiating event in TARDBP-mutant motor neurons and uses a pore-reconstitution/washout assay to discriminate pore modification from transport-factor sequestration.",
+          "reason": "Uses supported TDP-43–pore/transport premises and a clear p38α–NUP62–import causal chain, with phosphorylation-resistant NUP62 and permeabilized-nucleus assays to separate pore-intrinsic defects from soluble-factor sequestration; p38α, NUP62 sites, and direction remain unsupported assumptions."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "P5d945db729",
+          "novelty_note": "Positions stress-activated Nup98 FG-repeat phosphorylation upstream of TDP-43 egress and explicitly separates the initiating pore lesion from SG-dependent transport-factor sequestration.",
+          "reason": "Coherent Nup98-phosphorylation-first model scoped to sporadic TDP-43 proteinopathy, with temporal phosphoproteomics and phospho-null/mimetic perturbations; kinase, sites, and causal direction are assumptions, and the in vivo/tissue arm is ambitious."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "Pfde981170d",
+          "novelty_note": "Refines the Nup98-phosphorylation-first hypothesis with staged modification validation, direct reconstitution, and a pulse-washout discriminator that decouples transient phosphorylation from persistent sequestration-first import failure.",
+          "reason": "Most rigorous version: validates modification before causal claims, uses MS site mapping, inducible kinase recruitment instead of relying on Asp/Glu mimics, reconstituted permeabilized neurons, pulse-washout, and graded predictions at matched SG burden; central kinase/site/direction assumptions remain."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "Pbf3502722f",
+          "novelty_note": "Proposes a stress-responsive proline-directed kinase acting on Nup98 as the initiating pore-barrier lesion in TDP-43 proteinopathy, while leaving kinase identity open for discrimination between CDK5/ERK1/2 candidates.",
+          "reason": "Clear TDP-43 proteinopathy-scoped causal chain and falsifiable predictions, with Nup98 phosphorylation placed before import decline and TDP-43 redistribution; the kinase and phosphosites are left broad and unsupported, limiting specificity and mechanistic grounding."
+        }
+      ]
+    },
+    {
+      "case": "als",
+      "order": "reverse",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 3,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "Pbf3502722f",
+          "novelty_note": "Proposes Nup98 phospho-initiation by a stress kinase in TDP-43 proteinopathy; the packet contains no nucleoporin phosphorylation evidence, so the bridge is an untested extension.",
+          "reason": "Premises S1-S4 are used accurately and the initiating-vs-downstream distinction is explicit. However, Nup98 phosphorylation, kinase identity (CDK5/ERK1/2), and residue sites are unsupported by the supplied evidence; specificity is moderate because the kinase is provisional. Test and falsification are feasible in cell models, though phospho-reagent cross-reactivity and model limits remain."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 4,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "Pfde981170d",
+          "novelty_note": "Introduces a multi-site Nup98 FG/GLFG phospho-cluster as an initiating pore lesion and uses stress pulse-washout/reconstitution to separate it from sequestration; the packet lacks this modification.",
+          "reason": "Strong use of S1-S4 with explicit assumptions and downstream decoupling of Ran, stress granules, and TDP-43 assemblies. Causal discrimination is unusually rigorous: MS validation, phospho-null panel, graded predictions, and clear falsification. The digitonin reconstitution and staged in vivo arm lower feasibility, but the design is testable and highly specified."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "P5d945db729",
+          "novelty_note": "Proposes stress-kinase Nup98 phosphorylation upstream of TDP-43 mislocalization in sporadic ALS motor neurons; the packet provides only associative pore/transport and sequestration evidence.",
+          "reason": "The hypothesis is scoped to TDP-43 proteinopathy and cites S1-S4 appropriately. Kinase, sites, and direction remain unsupported assumptions, and phosphomimetic Asp/Glu interpretation is a weakness. Temporal and perturbational tests are reasonable, but iPSC plus in vivo endpoints are resource-intensive."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 3,
+          "id": "P21965fb6a9",
+          "novelty_note": "Shifts the nucleoporin/kinase pair to NUP62 and p38α in TARDBP-mutant motor neurons; the packet does not mention NUP62 phosphorylation or p38α.",
+          "reason": "Premises are correctly bounded and NUP62 phosphorylation is explicitly speculative. The causal chain and substrate-specific versus kinase-specific tests are well designed, with a clear falsifier. Feasibility is moderate because patient iPSC, MS, electrophysiology, and survival assays are demanding, and residues must be mapped."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P85c6a67ef4",
+          "novelty_note": "Pre-registers CDK5-dependent Nup98 phosphorylation as an initiating lesion in a doxycycline-inducible mouse TDP-43 model, with MS-locked sites and quantitative temporal thresholds; the packet lacks phospho-nucleoporin evidence.",
+          "reason": "Exceptionally specific and testable: it pre-specifies Nup98 sites, a CDK5 versus ERK2 gate, NPC incorporation, separate stress-granule and TDP-43 compartments, and numerical falsification criteria. The central kinase/site claim remains unsupported by S1-S4, and the primary-neuron phosphoproteomics and knock-in strategy are ambitious, reducing feasibility."
+        }
+      ]
+    },
+    {
+      "case": "aml",
+      "order": "forward",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 4,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 5,
+          "feasibility": 4,
+          "id": "P8f86c76341",
+          "novelty_note": "Repurposing atovaquone from Pneumocystis pneumonia to a salvage-limited, oxidative, cytarabine-residual AML context; the mechanism is a new combination of S2 oxidative-residual and S4 DHODH-differentiation premises, but novelty against existing atovaquone/DHODH AML literature is not established by the packet.",
+          "reason": "Anchors the context in S2/S4 and separates residual AML from ROS-low LSC, with explicit unverified drug/pharmacology claims. The differentiation-versus-killing endpoints and uridine/independent-DHODH rescue give strong falsification, though the complex III-DHODH-ubiquinone bridge remains speculative and the primary/xenograft program is demanding."
+        },
+        {
+          "grounding": 4,
+          "causal_rigor": 5,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P63b0584a19",
+          "novelty_note": "Also repurposes atovaquone for a gated oxidative, salvage-limited cytarabine-residual AML state; it adds explicit ubiquinone/DHODH temporal ordering and teriflunomide/URA1 controls, but novelty still depends on external literature search for prior atovaquone or leflunomide AML studies.",
+          "reason": "The causal design is unusually explicit: pre-specified eligibility, ATP-sparing time gate, enzyme selectivity, and uridine/URA1 rescue with teriflunomide validation distinguish DHODH-dependent differentiation from ATP collapse or direct DHODH inhibition. Several numeric gates are not derived from the packet, and the many sequential primary-specimen, engineered-line, and xenograft steps make feasibility lower."
+        }
+      ]
+    },
+    {
+      "case": "aml",
+      "order": "reverse",
+      "status": "completed",
+      "ratings": [
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 5,
+          "testability": 5,
+          "feasibility": 3,
+          "id": "P63b0584a19",
+          "novelty_note": "Novelty is not established in the packet; the salvage-gated, ubiquinone-timed differentiation framing may be distinctive, but any prior atovaquone or leflunomide AML work would need a documented search.",
+          "reason": "The proposal uses S2 and S4 to motivate oxidative residual AML and DHODH-linked differentiation, but it explicitly labels the key atovaquone, complex III, ubiquinone-DHODH, uridine-bypass and protein-binding claims as unverified prior knowledge. Its causal chain is unusually well ordered and it specifies prespecified gates, rescue epistasis, enzyme assays, free-drug exposure limits and a clear falsifying outcome, though the unbound-exposure window and normal-progenitor selectivity remain major translational risks."
+        },
+        {
+          "grounding": 3,
+          "causal_rigor": 4,
+          "specificity": 4,
+          "testability": 4,
+          "feasibility": 4,
+          "id": "P8f86c76341",
+          "novelty_note": "Novelty is not established; it closely tracks the same atovaquone-to-DHODH repurposing idea as the other candidate and would require a literature search to separate it from prior AML work.",
+          "reason": "The hypothesis is grounded in S2 oxidative residual metabolism and S4 DHODH-inhibition differentiation, while correctly flagging atovaquone, complex III inhibition, ubiquinone dependence and salvage limitation as unverified. It provides a coherent pyrimidine-depletion mechanism with uridine and respiratory-chain-independent DHODH rescue tests and a falsifier, but it is less detailed than the parallel proposal about timing, exposure thresholds, and selectivity gates."
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "backend_calls": 4,
+    "reported_input_tokens": 24102,
+    "reported_output_tokens": 20484,
+    "reported_tokens": 44586,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 69.097,
+    "remaining_seconds": 2330.903,
+    "token_limit": null,
+    "call_limit": 4,
+    "seconds_limit": 2400
+  }
+}

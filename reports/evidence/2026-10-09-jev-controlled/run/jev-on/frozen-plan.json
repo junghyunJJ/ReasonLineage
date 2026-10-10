@@ -1,0 +1,86 @@
+{
+  "schedule": [
+    {
+      "case": "als",
+      "method": "reasonlineage"
+    },
+    {
+      "case": "aml",
+      "method": "reasonlineage"
+    },
+    {
+      "case": "als",
+      "method": "gpt"
+    },
+    {
+      "case": "aml",
+      "method": "gpt"
+    },
+    {
+      "case": "als",
+      "method": "grok"
+    },
+    {
+      "case": "aml",
+      "method": "grok"
+    },
+    {
+      "case": "als",
+      "method": "glm"
+    },
+    {
+      "case": "aml",
+      "method": "glm"
+    }
+  ],
+  "code_commit": "cb4bb7c2fd5624d5eecdf7801d95186179333cfd",
+  "tracked_changes": true,
+  "relaxed": true,
+  "three_initial": true,
+  "jev": true,
+  "combined": true,
+  "control": false,
+  "scheduling": "sequential multi-model, concurrent independent provider chains",
+  "protocol_directory": "protocol-jev-combined",
+  "code_sha256": "0a2b06a28ef674eb179a9dca38e1c336e405783cb64e1483a13bb5e776c11e4b",
+  "config_sha256": "4511266ba86a675ffb84380c0c68d1fa73f723441476792235a41f5d2ed4b1f2",
+  "evidence_sha256": {
+    "als": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+    "aml": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8"
+  },
+  "protocol_sha256": "45a2a266077cbfe34d179321d3b76f80129d8f7000fb24e40ea893e56f3676e4",
+  "models": [
+    {
+      "name": "gpt",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "backend": "codex"
+    },
+    {
+      "name": "grok",
+      "model": "grok-4.7",
+      "effort": "xhigh",
+      "backend": "grok"
+    },
+    {
+      "name": "glm",
+      "model": "glm-5.3-flash",
+      "effort": "max",
+      "backend": "http"
+    }
+  ],
+  "independent_model": null,
+  "independent_effort": null,
+  "limits": {
+    "total_seconds": 14400,
+    "generation_seconds": 12000,
+    "run_seconds": 2700,
+    "run_tokens": 800000,
+    "run_calls": 27,
+    "max_checker_calls": 70,
+    "max_run_calls": 40,
+    "total_calls": 884,
+    "controller_retries": 0
+  },
+  "usage_caveat": "reported input+output tokens, cache-inclusive; not measured FLOPs or billed cost"
+}

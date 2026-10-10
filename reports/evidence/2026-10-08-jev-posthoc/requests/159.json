@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence handling is exceptional: S1–S4 are accurately bounded, and supported premises are clearly separated from speculation. However, drug-specific AML precedent is unexamined; check prior teriflunomide/leflunomide research before claiming novelty beyond salvage-based stratification.\n- Low baseline uridine-label incorporation does not establish limited adaptive salvage capacity. Define quantitative strata, measure salvage during DHODH inhibition, and manipulate salvage capacity. Prespecify failure of salvage status to predict differential response as a falsifier of the enrichment claim.\n- The mechanistically linked validation plan lacks operational decision thresholds. After verifying pharmacokinetics, specify exposure–duration limits and minimum durable differentiation, leukemia-initiating-cell reduction, and normal-progenitor preservation required for advancement.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

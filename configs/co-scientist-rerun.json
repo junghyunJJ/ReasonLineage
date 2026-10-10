@@ -1,0 +1,26 @@
+{
+  "panel": [
+    {
+      "name": "gpt",
+      "backend": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh"
+    },
+    {
+      "name": "grok",
+      "backend": "grok",
+      "model": "grok-4.7",
+      "effort": "xhigh"
+    },
+    {
+      "name": "glm",
+      "backend": "http",
+      "model": "glm-5.3-flash",
+      "effort": "max",
+      "base_url": "https://ollama.com/v1",
+      "family": "zai",
+      "api_key_file": "~/.config/reasonlineage/ollama.env"
+    }
+  ],
+  "concurrency_per_backend": 2
+}

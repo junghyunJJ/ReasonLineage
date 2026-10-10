@@ -1,0 +1,16 @@
+{
+  "state": "- CDK5 and the Nup98 sites are not a specified initiating event: nothing links cytoplasmic TDP-43 to CDK5 activation, and “mapped residues” are whatever later clears a 1.5-fold gate. Pre-specify the activation step (for example p35/p25 or a CDK5 activity assay that must precede the phospho gate) and a candidate S/T-P set, or mark the ranked claim as conditional on an independent discovery cohort.\n- ALS-related neuronal dysfunction is in the causal chain but absent from the discriminating readouts, which stop at NLS import and nuclear TDP-43, while the 1.5-fold, 30%, and 10% gates are not tied to barrier stoichiometry or assay error. Add a pre-specified dysfunction endpoint that must lag the phospho crossing, and derive those cutoffs from FG-repeat occupancy or measurement variance.\n- The alternative arm names “granule blockade” and “suppression of TDP-43 de-mixing” without an intervention, so a rescue cannot be assigned to S4 versus S3. Name the perturbations (for example G3BP1/2 loss versus an assembly-domain TDP-43 mutant) and require each to leave Nup98 phospho-occupancy unchanged if sequestration is independent of the phosphorylation path.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

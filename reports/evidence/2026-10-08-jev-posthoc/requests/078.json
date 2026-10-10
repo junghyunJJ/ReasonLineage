@@ -1,0 +1,16 @@
+{
+  "state": "- The necessity arm says NPC-incorporated non-phosphorylatable Nup98 should preserve import even when stress granules are induced, but S4's mechanism sequesters transport factors without any nucleoporin phosphorylation, so that rescue cannot show that Nup98 phosphorylation initiates the TDP-43-model defect. Test necessity only on the TDP-43 proteinopathy time course, and use granule induction only as the alternative arm: phosphomimetic Nup98 should leave a residual import defect after granules are blocked, whereas granule blockade should restore import when Nup98 is wild-type.\n- CDK5 versus ERK1/2 and 'FG-repeat or C-terminal residues' are disjunctions, so the non-phosphorylatable and phosphomimetic alleles cannot be built from the hypothesis as written. Pre-register one kinase and a mass-spectrometry gate that locks a residue list, then require quantified NPC incorporation of those alleles before any import interpretation.\n- The falsifiers 'rises before,' 'flat time course,' and 'unchanged onset and size' have no model, sampling times, phospho-occupancy change, or import effect-size boundary. Name the neuronal TDP-43 system and pre-specify those decision thresholds so a negative result can actually reject initiation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

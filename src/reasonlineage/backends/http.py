@@ -16,7 +16,7 @@ import urllib.request
 from typing import Any, Mapping
 
 from ._subprocess import response, structured_data
-from .base import BackendError, ModelRequest, ModelResponse
+from .base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 
 _THINK = re.compile(r"^\s*<think>.*?</think>\s*", re.S)
 _FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.S)
@@ -52,6 +52,7 @@ class HttpBackend:
         self.retries = retries
         self.api_key = api_key
         self._semaphore = asyncio.Semaphore(max_concurrency)
+        self._cancelled_requests: set[asyncio.Task] = set()
 
     def build_body(self, request: ModelRequest) -> dict[str, Any]:
         system = request.system
@@ -83,12 +84,34 @@ class HttpBackend:
     async def complete(self, request: ModelRequest) -> ModelResponse:
         errors = []
         for _ in range(self.retries + 1):
+            await self.wait_for_cancelled()
+            await self._semaphore.acquire()
+            # The operation owns capacity until the HTTP thread actually ends.
+            operation = asyncio.create_task(self._run_once(request))
+            operation.add_done_callback(self._request_finished)
             try:
-                async with self._semaphore:
-                    return await self._run_once(request)
+                return await asyncio.shield(operation)
+            except asyncio.CancelledError:
+                self._cancelled_requests.add(operation)
+                raise
+            except ProviderRefusal:
+                raise
             except BackendError as exc:
                 errors.append(str(exc))
         raise BackendError(f"{self.name}/{request.model} failed after {len(errors)} attempt(s): {errors}")
+
+    def _request_finished(self, operation):
+        self._semaphore.release()
+        self._cancelled_requests.discard(operation)
+        if not operation.cancelled():
+            operation.exception()  # consume failures even when the caller cancelled
+
+    async def wait_for_cancelled(self):
+        """Drain abandoned operations before accepting a new run's requests."""
+        while self._cancelled_requests:
+            pending = tuple(self._cancelled_requests)
+            await asyncio.gather(*(asyncio.shield(task) for task in pending), return_exceptions=True)
+            self._cancelled_requests.difference_update(pending)
 
     async def _run_once(self, request: ModelRequest) -> ModelResponse:
         started = time.monotonic()
@@ -119,6 +142,8 @@ class HttpBackend:
             message = choice["message"]
         except (KeyError, IndexError, TypeError):
             raise BackendError(f"unexpected response: {str(payload)[:300]!r}") from None
+        if choice.get("finish_reason") == "content_filter" or message.get("refusal"):
+            raise ProviderRefusal("provider refused request")
         if choice.get("finish_reason") == "length":
             raise BackendError("output was cut off at max_tokens")
         text = clean_content(message.get("content") or "")

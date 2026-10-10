@@ -1,0 +1,18 @@
+A. generation-0 calls not from the record: 0
+A2. tasks with more than one finished run: none
+B. level 1 from these runs: tasks 37 answers 148 share 0.5270 pairs 97 concordance 0.4948 -> no signal
+C. survivors' authors at each selection
+   selection after generation 0: {'gpt': 37, 'opus': 36, 'glm': 1}
+   selection after generation 1: {'opus': 33, 'grok': 26, 'gpt': 15}
+   selection after generation 2: {'opus': 34, 'grok': 20, 'gpt': 16, 'glm': 4}
+D. tasks whose final population still holds a fully correct answer: 23 of 37
+E. crossover offspring by synthesizer
+    opus:  14 written, survived the next selection 7/9, mean correctness 0.750
+     gpt:  25 written, survived the next selection 4/22, mean correctness 0.660
+    grok:  39 written, survived the next selection 26/37, mean correctness 0.744
+     glm:  33 written, survived the next selection 4/6, mean correctness 0.773
+F. hedging words per 1,000 characters, by generation
+   generation 0: 0.53 over 148 answers
+   generation 1: 1.35 over 74 answers
+   generation 2: 1.53 over 74 answers
+   generation 3: 1.27 over 74 answers

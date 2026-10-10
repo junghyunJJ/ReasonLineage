@@ -1,0 +1,16 @@
+{
+  "state": "- The promisingness formula adds 0.12 for the uncited CDK5–Nup98 assignment, so an unsupported assumption raises the evidence-weighted score. Recompute promisingness from the packet-supported TDP-43–pore, assembly, and sequestration premises only, and keep the kinase–substrate pair as a separate uncertainty term until the phosphoproteomic gate attributes the mapped sites to CDK5.\n- The stated initiating chain begins at CDK5 phosphorylation of Nup98 without a measurement of how cytoplasmic TDP-43 activates CDK5. Add a pre-registered CDK5 readout (p25/p35 ratio or kinase activity) on the same 0–48 h grid, and reject initiation if mapped Nup98 occupancy rises while that readout stays at baseline or rises only after the NLS drop.\n- Granule blockade, TDP-43 de-mixing blockade, the enriched transport factors, and the three inert-probe sizes are unnamed, and the 2-fold, 0.20 occupancy, 30% NLS, 10%, and 70% gates are not tied to cited effect sizes or a power calculation. Name the interventions, the scored factors, an off-target control for CDK5 activity and NPC composition, and the probe masses, and derive the numeric gates from pilot variance or published effects under a pre-registered statistical model.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

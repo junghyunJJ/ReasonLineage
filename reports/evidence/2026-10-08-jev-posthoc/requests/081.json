@@ -1,0 +1,16 @@
+{
+  "state": "- Nup98 is singled out without a packet-based or pre-registered reason to prefer it over other FG-nucleoporins. Fix: rank candidates by NPC-fraction phosphoproteomics ordered against cytoplasmic TDP-43 assemblies, and keep any single-gene claim provisional until that ranking exists.\n- The three-arm test leaves both the induction of stress-granule-independent TDP-43 assemblies and the method of stress-granule suppression unspecified, so either manipulation can alter transport by itself. Fix: lock induction to a defined de-mixing system and include an arm in which stress-granule suppression alone leaves NLS-reporter import unchanged.\n- Phospho-null and phospho-mimetic alleles depend on unmapped sites, and the falsifier list omits failure to detect assembly-linked Nup98 phosphorylation during import failure. Fix: prespecify site inclusion by NPC localization, stoichiometry, and precedence before death markers, and count absence of those sites as falsification.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence handling is exceptional: S1–S4 are accurately distinguished, and phosphorylated TDP-43 is not conflated with NUP98 phosphorylation. However, the TARDBP-to-NUP98 regulatory bridge remains undefined; specify the allele and test an explicit upstream kinase/phosphatase hypothesis.\n- Phosphorylation-resistant rescue would not uniquely establish phosphorylation-dependent loss of pore binding; substitutions could compensate through other structural effects. Add an orthogonal, acute manipulation of actual NUP98 phosphorylation and directly measure its effect on pore association.\n- The experiments test the initiating lesion better than the downstream chain. Firing rescue could involve cargos other than TDP-43; independently preserve nuclear TDP-43 and measure its RNA-processing function to test whether its depletion mediates neuronal dysfunction.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

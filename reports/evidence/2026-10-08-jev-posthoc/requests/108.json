@@ -1,0 +1,16 @@
+{
+  "state": "- The allele-edit and kinase-rescue arms stay non-executable because the kinase is only a CDK-family class and the edits target unnamed “mitosis-regulated” or “candidate” sites. Name a minimal residue set, or add a site-mapping step with pre-registered acceptance criteria before editing, and tie one primary kinase to a genetic perturbation.\n- S2 is restated as C9orf72 repeat RNA causing RanGAP mislocalization and as evidence that the Ran cycle is broadly vulnerable in ALS, and the causal chain cites S3 for cytoplasmic TDP-43 hyperphosphorylation as the step into demixing. Keep S2 as a C9orf72-restricted association, drop it from positive support for a TDP-43-proteinopathy initiator, and move TDP-43 hyperphosphorylation into the speculative bridges unless a packet sentence supports that order.\n- Temporal precedence cannot be measured as written: “single-cell time resolution” is assigned to bulk NPC-IP phosphoproteomics, and “inducible TDP-43 stress” has no named inducer, dose, or clock. Separate live-cell imaging from bulk phosphoproteomics and pre-register a specific TDP-43 induction system with sampling windows anchored to the first detectable import change.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

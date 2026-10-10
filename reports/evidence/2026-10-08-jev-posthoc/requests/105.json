@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence gap at the core premise: nothing in the packet (or cited anywhere) shows NUP98 or any nucleoporin is phosphorylated in post-mitotic neurons, in stressed iPSC motor neurons, or in ALS tissue, and the triggering 'stress-responsive kinase' is an unnamed placeholder, so the amplifier step rests purely on an analogy to mitotic pore disassembly in dividing cells. Fix: run a pilot phosphoproteomics or phospho-NUP98 detection assay in the three iPSC arms before committing to the full design, and specify candidate kinases so an orthogonal inhibitor/phosphatase arm can be added.\n- The central discriminator (endogenous replacement of NUP98 with non-phosphorylatable/phosphomimetic alleles) has unaddressed validity risks: Ser→Asp/Glu is an imperfect phosphate mimic and rewiring an essential FG-nucleoporin can alter pore composition and baseline transport, which would confound the 'same early phenotypes' comparisons the hypothesis depends on. Fix: verify endogenous-level expression, pore composition, and pre-stress import for each allele, and support the knock-in with an independent epistasis approach (e.g., kinase/phosphatase manipulation or site-specific base editing) rather than relying on one genetic perturbation.\n- Specificity and resolution gaps: phosphorylation sites are only 'assumed CDK-consensus serines' with no residues mapped, the inducible cytoplasmic TDP-43 de-mixing construct is never defined, and the amplifier prediction of 'prolongation' of defects lacks pre-specified timepoints or effect-size decision thresholds. Fix: map the actual NUP98 phosphosites, name the induction method, and pre-register quantitative criteria for what counts as preservation of the early import dip versus prolongation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

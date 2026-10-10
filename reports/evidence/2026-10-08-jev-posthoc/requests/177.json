@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty remains unresolved: the main extension is salvage/residual-state stratification of an established DHODH–AML differentiation premise. Complete the acknowledged teriflunomide/leflunomide precedent audit and identify a prediction beyond generic DHODH/salvage sensitivity.\n- Specificity is exceptional in its operational thresholds, clonal endpoints and carryover/homing controls. However, the powered contrast tests salvage dependence, not residual-state enrichment or respiration’s added predictive value. Prespecify those contrasts or narrow the contextual claim.\n- Persistent effects after confirmed uridine rescue reject pyrimidine-depletion mediation, not necessarily DHODH target mediation. Reword this falsifier and add a validated inhibitor-resistant DHODH rescue to distinguish other on-target effects from off-target activity.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

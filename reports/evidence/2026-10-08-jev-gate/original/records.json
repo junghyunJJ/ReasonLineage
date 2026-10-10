@@ -1,0 +1,1572 @@
+[
+  {
+    "id": "als-1-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "59de47faf5db5d97a4d2b86826020e889673179a536c6a730b29bd45ed4a9c88",
+    "candidate": "als-1-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.83,
+          "refusal": 0.0,
+          "meta": 0.16,
+          "grader": 0.01
+        },
+        "value": 0.83
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.69,
+          "no": 0.31
+        },
+        "value": 0.69
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.05,
+          "1": 0.04,
+          "2": 0.01,
+          "3": 0.9
+        },
+        "value": 2.76
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": false,
+    "reasons": [],
+    "enforced": false
+  },
+  {
+    "id": "als-1-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "a55634f330e886cf831535309f350f41ecaa0010ce6be2f3c8cea15149ae6964",
+    "candidate": "als-1-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.98,
+          "meta": 0.02,
+          "grader": 0.0
+        },
+        "value": 0.98
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.92,
+          "1": 0.03,
+          "2": 0.0,
+          "3": 0.05
+        },
+        "value": 0.18
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-1-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "456c547c8209c6ff59235c317a96b982a5aceda7e9da64d0b47194eb66c2c2e4",
+    "candidate": "als-1-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.0,
+          "meta": 1.0,
+          "grader": 0.0
+        },
+        "value": 1.0
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.05,
+          "no": 0.95
+        },
+        "value": 0.05
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.83,
+          "1": 0.09,
+          "2": 0.01,
+          "3": 0.07
+        },
+        "value": 0.32
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-1-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "90108e5c5c8423ce85f85b599ace30bf07b7db75e8465bf288d168bd5860d761",
+    "candidate": "als-1-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.04,
+          "refusal": 0.0,
+          "meta": 0.4,
+          "grader": 0.56
+        },
+        "value": 0.56
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.05,
+          "no": 0.95
+        },
+        "value": 0.05
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.84,
+          "1": 0.08,
+          "2": 0.01,
+          "3": 0.07
+        },
+        "value": 0.31
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-1-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "78f08727e24fee11cc64023e30d073f64104a56bdff88df0d68a41ad4cc06698",
+    "candidate": "als-1-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.33,
+          "refusal": 0.05,
+          "meta": 0.61,
+          "grader": 0.01
+        },
+        "value": 0.61
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.03,
+          "no": 0.97
+        },
+        "value": 0.03
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.97,
+          "1": 0.02,
+          "2": 0.0,
+          "3": 0.01
+        },
+        "value": 0.05
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-2-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:33+00:00",
+    "event": "check.j1",
+    "key": "c808a84a68aec0cd05f31b089e7a36a4e2ad86b1051e2380ec763554db6b3a77",
+    "candidate": "als-2-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.97,
+          "refusal": 0.0,
+          "meta": 0.03,
+          "grader": 0.0
+        },
+        "value": 0.97
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.45,
+          "no": 0.55
+        },
+        "value": 0.45
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.06,
+          "1": 0.04,
+          "2": 0.01,
+          "3": 0.89
+        },
+        "value": 2.73
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-2-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "2aef4809fc5b8211400daec2ef821f72d3470cee8d5dc7d6305b638fd41e60f6",
+    "candidate": "als-2-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 1.0,
+          "meta": 0.0,
+          "grader": 0.0
+        },
+        "value": 1.0
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.03,
+          "no": 0.97
+        },
+        "value": 0.03
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.89,
+          "1": 0.06,
+          "2": 0.01,
+          "3": 0.04
+        },
+        "value": 0.2
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-2-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "a00cdb1e5d06ed5d1dddd08a4149044cba8650309c139f6850dcc762247f5b93",
+    "candidate": "als-2-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.0,
+          "meta": 1.0,
+          "grader": 0.0
+        },
+        "value": 1.0
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.87,
+          "1": 0.08,
+          "2": 0.01,
+          "3": 0.04
+        },
+        "value": 0.22
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-2-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "304e8743f9f33d29c021f8948b34c8153c6b5b3f002fc518110897eb0ea6ec91",
+    "candidate": "als-2-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.01,
+          "refusal": 0.0,
+          "meta": 0.1,
+          "grader": 0.89
+        },
+        "value": 0.89
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.91,
+          "1": 0.04,
+          "2": 0.0,
+          "3": 0.05
+        },
+        "value": 0.19
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-2-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "cd098bc5d088f91b7e395f3a680afaa08b28582df172720225dd7dc97ce72aab",
+    "candidate": "als-2-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.72,
+          "refusal": 0.1,
+          "meta": 0.17,
+          "grader": 0.01
+        },
+        "value": 0.72
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.02,
+          "no": 0.98
+        },
+        "value": 0.02
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.98,
+          "1": 0.01,
+          "2": 0.0,
+          "3": 0.01
+        },
+        "value": 0.04
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-3-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "746d3d0e50ba67dce96402135ce44be811af4f5f5fd670b5152cf963bd6fc9e9",
+    "candidate": "als-3-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.96,
+          "refusal": 0.0,
+          "meta": 0.04,
+          "grader": 0.0
+        },
+        "value": 0.96
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.51,
+          "no": 0.49
+        },
+        "value": 0.51
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.07,
+          "1": 0.03,
+          "2": 0.01,
+          "3": 0.89
+        },
+        "value": 2.72
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": false,
+    "reasons": [],
+    "enforced": false
+  },
+  {
+    "id": "als-3-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:34+00:00",
+    "event": "check.j1",
+    "key": "cbf4f58eb40c5e7363da28d90691452f1ec2ac4fcf6e387b9227d7868b016181",
+    "candidate": "als-3-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 1.0,
+          "meta": 0.0,
+          "grader": 0.0
+        },
+        "value": 1.0
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.03,
+          "no": 0.97
+        },
+        "value": 0.03
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.88,
+          "1": 0.06,
+          "2": 0.01,
+          "3": 0.05
+        },
+        "value": 0.23
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-3-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "791070478e7e456a1d09e585a7239bcd4ff3d55d8cd34566fded002119dcfdbd",
+    "candidate": "als-3-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.0,
+          "meta": 1.0,
+          "grader": 0.0
+        },
+        "value": 1.0
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.03,
+          "no": 0.97
+        },
+        "value": 0.03
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.84,
+          "1": 0.09,
+          "2": 0.01,
+          "3": 0.06
+        },
+        "value": 0.29
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-3-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "05fdb6e16a9005d32c21f02c92534a8c9fad0776d23a766a7a6bbeb3ab15cdbb",
+    "candidate": "als-3-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.02,
+          "refusal": 0.0,
+          "meta": 0.11,
+          "grader": 0.87
+        },
+        "value": 0.87
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.92,
+          "1": 0.04,
+          "2": 0.0,
+          "3": 0.04
+        },
+        "value": 0.16
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "als-3-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "9cd8cc1bbb836e4fd9e4a8db45c4e4be991f35ac9932104ed654bbc0e4e2995f",
+    "candidate": "als-3-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "NUP98",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.75,
+          "refusal": 0.08,
+          "meta": 0.16,
+          "grader": 0.01
+        },
+        "value": 0.75
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.02,
+          "no": 0.98
+        },
+        "value": 0.02
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.98,
+          "1": 0.01,
+          "2": 0.0,
+          "3": 0.01
+        },
+        "value": 0.04
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The top-ranked item, NUP98, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-1-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "fcdd6f6d2f89ba28da8ea5e40564d00d8e0f71ce938ac4707eeb91a503dd45ad",
+    "candidate": "aml-1-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.83,
+          "refusal": 0.0,
+          "meta": 0.16,
+          "grader": 0.01
+        },
+        "value": 0.83
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.96,
+          "no": 0.04
+        },
+        "value": 0.96
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.01,
+          "2": 0.0,
+          "3": 0.98
+        },
+        "value": 2.95
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": false,
+    "reasons": [],
+    "enforced": false
+  },
+  {
+    "id": "aml-1-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "50b562b9497964c8e2352e2f7b9e4855c34378dc1bd5c8c473ef56d3734b6e96",
+    "candidate": "aml-1-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.95,
+          "meta": 0.05,
+          "grader": 0.0
+        },
+        "value": 0.95
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.06,
+          "no": 0.94
+        },
+        "value": 0.06
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.86,
+          "1": 0.06,
+          "2": 0.01,
+          "3": 0.07
+        },
+        "value": 0.29
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-1-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "2189c84cf03c0589be99d628f4be31985aef933b8ce1b76a12dce34c4c6e7ede",
+    "candidate": "aml-1-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.01,
+          "refusal": 0.0,
+          "meta": 0.99,
+          "grader": 0.0
+        },
+        "value": 0.99
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.08,
+          "no": 0.92
+        },
+        "value": 0.08
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.87,
+          "1": 0.06,
+          "2": 0.01,
+          "3": 0.06
+        },
+        "value": 0.26
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-1-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "85510c14a8d9f0cd5295e9c4ac03fbe51472f83be9480adb4856226e74659139",
+    "candidate": "aml-1-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.06,
+          "refusal": 0.0,
+          "meta": 0.38,
+          "grader": 0.56
+        },
+        "value": 0.56
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.08,
+          "no": 0.92
+        },
+        "value": 0.08
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.83,
+          "1": 0.07,
+          "2": 0.01,
+          "3": 0.09
+        },
+        "value": 0.36
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-1-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:35+00:00",
+    "event": "check.j1",
+    "key": "e8d733bab7bed1d352b659c0712b815bf9a025cb81649cb84ef4536e585684e5",
+    "candidate": "aml-1-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.46,
+          "refusal": 0.06,
+          "meta": 0.47,
+          "grader": 0.01
+        },
+        "value": 0.47
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.03,
+          "no": 0.97
+        },
+        "value": 0.03
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.95,
+          "1": 0.03,
+          "2": 0.0,
+          "3": 0.02
+        },
+        "value": 0.09
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-2-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "8d3dd3d468c0a4a018cd5681281db0116b9b6e26c49138217b8a52440c56ed8e",
+    "candidate": "aml-2-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.94,
+          "refusal": 0.0,
+          "meta": 0.05,
+          "grader": 0.01
+        },
+        "value": 0.94
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.96,
+          "no": 0.04
+        },
+        "value": 0.96
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.01,
+          "2": 0.0,
+          "3": 0.98
+        },
+        "value": 2.95
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": false,
+    "reasons": [],
+    "enforced": false
+  },
+  {
+    "id": "aml-2-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "cdc725e46f93fcb065caf96b124d971cce3933511e58be07871271967d83af5c",
+    "candidate": "aml-2-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.99,
+          "meta": 0.01,
+          "grader": 0.0
+        },
+        "value": 0.99
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.83,
+          "1": 0.1,
+          "2": 0.01,
+          "3": 0.06
+        },
+        "value": 0.3
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-2-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "e8b0f1873663bbe0b6b2f1922f22450c4ae2df531e546b1c2894f75859879395",
+    "candidate": "aml-2-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.01,
+          "meta": 0.99,
+          "grader": 0.0
+        },
+        "value": 0.99
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.05,
+          "no": 0.95
+        },
+        "value": 0.05
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.85,
+          "1": 0.09,
+          "2": 0.01,
+          "3": 0.05
+        },
+        "value": 0.26
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-2-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "b68dec31862c1550197717dd53c0ac2c7faa9a5b3489b8273c337810447dc15c",
+    "candidate": "aml-2-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.03,
+          "refusal": 0.0,
+          "meta": 0.11,
+          "grader": 0.86
+        },
+        "value": 0.86
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.06,
+          "no": 0.94
+        },
+        "value": 0.06
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.87,
+          "1": 0.05,
+          "2": 0.01,
+          "3": 0.07
+        },
+        "value": 0.28
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-2-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "f76fed86a0106892e816a6c4908df8b90fba3ce77b57c7d3d4f5bd7d1e835f0f",
+    "candidate": "aml-2-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.79,
+          "refusal": 0.09,
+          "meta": 0.11,
+          "grader": 0.01
+        },
+        "value": 0.79
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.02,
+          "no": 0.98
+        },
+        "value": 0.02
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.97,
+          "1": 0.02,
+          "2": 0.0,
+          "3": 0.01
+        },
+        "value": 0.05
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-3-normal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "373d53fd7f72ebdcd1befe5ad6ca006139968fc36af5e0c725ce1294be79e239",
+    "candidate": "aml-3-normal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.94,
+          "refusal": 0.0,
+          "meta": 0.05,
+          "grader": 0.01
+        },
+        "value": 0.94
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.95,
+          "no": 0.05
+        },
+        "value": 0.95
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.01,
+          "2": 0.0,
+          "3": 0.98
+        },
+        "value": 2.95
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": false,
+    "reasons": [],
+    "enforced": false
+  },
+  {
+    "id": "aml-3-refusal",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:36+00:00",
+    "event": "check.j1",
+    "key": "41d829373253c37772860343ab6cbbb7d05f2b85a73e580021d3b31d15861b14",
+    "candidate": "aml-3-refusal",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.98,
+          "meta": 0.02,
+          "grader": 0.0
+        },
+        "value": 0.98
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.04,
+          "no": 0.96
+        },
+        "value": 0.04
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.88,
+          "1": 0.06,
+          "2": 0.01,
+          "3": 0.05
+        },
+        "value": 0.23
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-3-meta",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:37+00:00",
+    "event": "check.j1",
+    "key": "c741b81638e71ffbfcfecb7e4d1e2c7fea996e67c75d907871072534e3ae6a3e",
+    "candidate": "aml-3-meta",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.0,
+          "refusal": 0.01,
+          "meta": 0.99,
+          "grader": 0.0
+        },
+        "value": 0.99
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.05,
+          "no": 0.95
+        },
+        "value": 0.05
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.87,
+          "1": 0.08,
+          "2": 0.01,
+          "3": 0.04
+        },
+        "value": 0.22
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-3-grader",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:37+00:00",
+    "event": "check.j1",
+    "key": "2b5da2cac8ce5d0f38c8fe147d36b1030d106f703ea8b19148125f2a25946d7b",
+    "candidate": "aml-3-grader",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.04,
+          "refusal": 0.0,
+          "meta": 0.12,
+          "grader": 0.84
+        },
+        "value": 0.84
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.06,
+          "no": 0.94
+        },
+        "value": 0.06
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.89,
+          "1": 0.04,
+          "2": 0.01,
+          "3": 0.06
+        },
+        "value": 0.24
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  },
+  {
+    "id": "aml-3-no_argument",
+    "status": "completed",
+    "ts": "2026-10-08T23:36:37+00:00",
+    "event": "check.j1",
+    "key": "8c677b1cb246b16e25eae9775f1f117a565791dc3872e51614538a5bf1669a40",
+    "candidate": "aml-3-no_argument",
+    "generation": 0,
+    "author": "anonymous",
+    "attempt": 0,
+    "checker": "jev",
+    "top_item": "atovaquone",
+    "model": "jev-1.13.0",
+    "answers": {
+      "answer_type": {
+        "kind": "choice",
+        "probabilities": {
+          "answer": 0.77,
+          "refusal": 0.1,
+          "meta": 0.12,
+          "grader": 0.01
+        },
+        "value": 0.77
+      },
+      "top_item_argument": {
+        "kind": "noul",
+        "probabilities": {
+          "yes": 0.02,
+          "no": 0.98
+        },
+        "value": 0.02
+      },
+      "argument_coverage": {
+        "kind": "score",
+        "probabilities": {
+          "0": 0.97,
+          "1": 0.02,
+          "2": 0.0,
+          "3": 0.01
+        },
+        "value": 0.05
+      }
+    },
+    "error": null,
+    "warning": null,
+    "replayed": false,
+    "would_rewrite": true,
+    "reasons": [
+      "The top-ranked item, atovaquone, has no specific argument (a reason, a mechanism, or a named study)."
+    ],
+    "enforced": false
+  }
+]

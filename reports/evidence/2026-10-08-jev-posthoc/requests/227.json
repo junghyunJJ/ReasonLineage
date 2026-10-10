@@ -1,0 +1,16 @@
+{
+  "state": "- Eligibility gates do not establish the claimed dependencies: substantial de novo UTP synthesis or uridine rescue does not demonstrate inadequate compensatory salvage, and etomoxir-sensitive respiration is not FAO-specific. Measure salvage under physiological pyrimidine availability and validate FAO with orthogonal genetic and flux assays.\n- Genotype-confirmed markers and morphology cannot fully distinguish induced differentiation from selective survival of pre-existing mature leukemic cells. Add longitudinal fate tracking and absolute counts of mature and immature genotype-positive populations.\n- Novelty remains unsubstantiated pending the proposed search. Compare existing atovaquone–AML and respiratory-chain–DHODH studies, identifying whether the residual-state mechanism and stratification—not merely the drug choice—are new.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

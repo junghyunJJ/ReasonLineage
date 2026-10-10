@@ -1,0 +1,57 @@
+{
+  "timestamp_utc": "2026-10-08T05:14:30.730356+00:00",
+  "purpose": "Two short availability probes on genuinely different non-biomedical ML research topics; no full multi-model study or training experiment",
+  "model": "claude-opus-5-5",
+  "effort": "xhigh",
+  "automatic_retries": 0,
+  "request_timeout_s": 300,
+  "topics": {
+    "grokking": {
+      "status": "completed",
+      "backend_calls": 1,
+      "prompt_sha256": "9865cdd149e671d3bbb0decb8f84eb0ad6d010ec21b13d855621452dcb5e7cfa",
+      "reported_usage": {
+        "input_tokens": 1640,
+        "output_tokens": 1493,
+        "total_tokens": 3133
+      },
+      "unknown_usage_calls": 0,
+      "exit_code": 0,
+      "duration_s": 18.456,
+      "cost_usd": 0.042971999999999996,
+      "public_response": {
+        "hypothesis": "Known: Nanda et al. (2023) reported that grokked modular-addition transformers use a sparse set of Fourier frequencies, and that a \"restricted loss\" fell before test accuracy rose. Liu et al. (Omnigrok) linked grokking to shrinking weight norm. Hypothesis (assumed, and only for this setting): during the plateau, a partial Fourier circuit already exists. Test accuracy stays low because high-norm memorization components outweigh it in the logits. The delay is therefore set by how fast those components are cleaned up. Weight norm drops at the same time, but the hypothesis says the norm is not the cause.",
+        "prediction": "At plateau checkpoints, keeping only the dominant Fourier frequencies of the current checkpoint should raise test accuracy well above chance. This should happen well before test accuracy rises on its own.",
+        "computational_test": "Across 3 or more seeds, save checkpoints throughout the plateau. Apply three interventions: (a) project the embedding, unembedding and MLP output onto the top-k frequencies, with k chosen from that checkpoint alone; (b) project onto k random frequencies, scaled to match the norm reduction of (a); (c) uniformly rescale the weights to match the norm after (a). Compare logits with temperature calibration. As a training-time version, apply (a) or (c) periodically and measure the change in grokking time. The norm-causal alternative predicts (c) ≈ (a).",
+        "falsifier": "The hypothesis is wrong if (a) gives no test gain until accuracy is already rising on its own, or if (c) or (b) match the effect of (a).",
+        "limitations": "Results cover one task and architecture. Projection pushes activations off-distribution, and choosing frequencies could leak information. Rescaling also changes the effective softmax temperature. A positive result shows that a masked circuit is enough to generalize, not that it explains grokking in general."
+      },
+      "word_count": 282
+    },
+    "flatness": {
+      "status": "completed",
+      "backend_calls": 1,
+      "prompt_sha256": "8a1bdef78509a0aefa9c925b0d30d4a614989d9194cb062b93ccbfc34d7fc650",
+      "reported_usage": {
+        "input_tokens": 1657,
+        "output_tokens": 2692,
+        "total_tokens": 4349
+      },
+      "unknown_usage_calls": 0,
+      "exit_code": 0,
+      "duration_s": 28.071,
+      "cost_usd": 0.067088,
+      "public_response": {
+        "hypothesis": "Known: Dinh et al. (2017) showed that scaling a hidden unit's incoming weights by α and its outgoing weights by 1/α leaves a ReLU network's function unchanged but can change Hessian sharpness by any amount. Raw sharpness therefore cannot be a criterion at the level of the function. Hypothesis (an assumption, not a result): generalization tracks curvature after this symmetry is removed. Criterion: rescale each network to a canonical \"balanced\" form, where every hidden unit's incoming and outgoing weight norms are equal, then measure the Gauss-Newton trace. Proposed mechanism: this measures how much predictions change under perturbations proportional to each unit's scale, which reflects how fragile the function is rather than an artifact of the coordinates.",
+        "prediction": "Compare networks trained to the same low training loss. Balanced sharpness should rank-correlate with the generalization gap more strongly than raw sharpness, parameter norm or path norm.",
+        "computational_test": "Train about 200 ReLU MLPs on subsets of CIFAR-10, varying learning rate, batch size, width and label noise. Stop each at a fixed training loss. Counterexample check: apply random per-unit α∈[0.1,10], confirm the outputs are identical, and record how much the raw Hessian trace shifts. Then compute Kendall τ for each measure, both across all networks and within groups where only one hyperparameter changes.",
+        "falsifier": "The hypothesis fails if, within groups, balanced sharpness's τ is no higher than that of path norm or margin. It also fails if directly minimizing balanced sharpness (SAM in balanced coordinates) does not shrink the gap at matched training loss. Alternative explanation: logit margin or the implicit regularization from the learning rate could drive both quantities; control for this with partial correlation.",
+        "limitations": "Balancing removes only rescaling symmetry. It does not handle BatchNorm scale invariance or other reparameterizations. Correlation does not establish causation, and results on small MLPs may not transfer to larger models. Related invariant measures already exist, such as adaptive sharpness and the Fisher-Rao norm, and have shown mixed correlations with generalization. This is a test, not a new finding."
+      },
+      "word_count": 328
+    }
+  },
+  "backend_calls": 2,
+  "reported_tokens": 7482,
+  "unknown_usage_calls": 0
+}

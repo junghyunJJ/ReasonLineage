@@ -1,0 +1,16 @@
+{
+  "state": "- Core commitments are deferred rather than made: Ser606 is explicitly 'unanchored' and the kinase is left unresolved, so the 'hypothesis' as stated functions as a conditional phosphoproteomics screen rather than a single falsifiable NUP98-site claim. Fix by pre-specifying the anchor evidence for the site (motif compatibility, conservation, independent-site validation criteria with quantitative thresholds) and by declaring in advance which kinase assignment is part of the hypothesis versus a separable add-on, since the answer itself notes failure of the JNK arm would not reject the NUP98 hypothesis.\n- The mechanistic direction is underspecified relative to the chosen target: NUP98 is an FG-nucleoporin central to nuclear-face scaffold contacts and mRNA export, yet the hypothesis frames the lesion almost solely as nuclear-import failure. Without planned mRNA-export-kinetic or nuclear-retention readouts, a retention defect could be misattributed to import cycles; add export-readout measurements and distinct predicted signatures for import-only versus export-coupled retention defects to sharpen the causal chain.\n- The decisive falsification depends on intervention completeness that is never quantified: 'verified prevention' of phosphorylation with preserved baseline pore function lacks a pre-specified site-occupancy reduction threshold or an explicit expected outcome under partial suppression, which could produce ambiguous intermediate phenotypes. Fix by pre-registering occupancy dose-response targets for both the phospho-resistant knock-in and the phosphatase-recruitment arm, with stated predictions for partial-versus-complete suppression.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

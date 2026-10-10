@@ -1,0 +1,155 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "answer_type": {
+      "type": "choice",
+      "choice": "answer",
+      "confidence": 0.97,
+      "probabilities": {
+        "meta": 0.01,
+        "refusal": 0.0,
+        "grader": 0.01,
+        "answer": 0.98
+      }
+    },
+    "top_item_argument": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "argument_coverage": {
+      "type": "score",
+      "score": 2.73,
+      "confidence": 0.73,
+      "legend": {
+        "0": "None of the items",
+        "1": "Some of the items",
+        "2": "Most of the items",
+        "3": "All of the items"
+      },
+      "probabilities": {
+        "0": 0.06,
+        "1": 0.04,
+        "2": 0.01,
+        "3": 0.89
+      }
+    },
+    "style_inflation": {
+      "type": "score",
+      "score": 0.7,
+      "confidence": 0.57,
+      "legend": {
+        "0": "Plain",
+        "1": "Occasional emphasis",
+        "2": "Frequent emphasis",
+        "3": "Mostly exaggeration",
+        "4": "Rhetoric dominates"
+      },
+      "probabilities": {
+        "0": 0.41,
+        "1": 0.48,
+        "2": 0.11,
+        "3": 0.0,
+        "4": 0.0
+      }
+    },
+    "grounding": {
+      "type": "score",
+      "score": 2.8,
+      "confidence": 0.45,
+      "legend": {
+        "0": "Rating 1: major defects",
+        "1": "Rating 2",
+        "2": "Rating 3",
+        "3": "Rating 4",
+        "4": "Rating 5: unusually strong"
+      },
+      "probabilities": {
+        "0": 0.03,
+        "1": 0.1,
+        "2": 0.14,
+        "3": 0.5,
+        "4": 0.23
+      }
+    },
+    "causal_rigor": {
+      "type": "score",
+      "score": 3.18,
+      "confidence": 0.5,
+      "legend": {
+        "0": "Rating 1: major defects",
+        "1": "Rating 2",
+        "2": "Rating 3",
+        "3": "Rating 4",
+        "4": "Rating 5: unusually strong"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.04,
+        "2": 0.07,
+        "3": 0.48,
+        "4": 0.39
+      }
+    },
+    "specificity": {
+      "type": "score",
+      "score": 3.52,
+      "confidence": 0.58,
+      "legend": {
+        "0": "Rating 1: major defects",
+        "1": "Rating 2",
+        "2": "Rating 3",
+        "3": "Rating 4",
+        "4": "Rating 5: unusually strong"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.02,
+        "2": 0.03,
+        "3": 0.3,
+        "4": 0.63
+      }
+    },
+    "testability": {
+      "type": "score",
+      "score": 3.45,
+      "confidence": 0.54,
+      "legend": {
+        "0": "Rating 1: major defects",
+        "1": "Rating 2",
+        "2": "Rating 3",
+        "3": "Rating 4",
+        "4": "Rating 5: unusually strong"
+      },
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.02,
+        "2": 0.02,
+        "3": 0.41,
+        "4": 0.54
+      }
+    },
+    "feasibility": {
+      "type": "score",
+      "score": 2.95,
+      "confidence": 0.57,
+      "legend": {
+        "0": "Rating 1: major defects",
+        "1": "Rating 2",
+        "2": "Rating 3",
+        "3": "Rating 4",
+        "4": "Rating 5: unusually strong"
+      },
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.06,
+        "2": 0.11,
+        "3": 0.58,
+        "4": 0.23
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 4147,
+    "output_tokens": 175
+  }
+}

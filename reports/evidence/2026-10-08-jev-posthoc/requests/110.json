@@ -1,0 +1,16 @@
+{
+  "state": "- The causal chain leaves its pivotal step a black box: it asserts that Ser606 phosphorylation 'weakens pore association' without any structural rationale (where Ser606 sits relative to the FG-repeat region or NUP96-anchoring domains) and without even a clearly labeled speculative kinase candidate for a post-mitotic neuron. Fix: map the residue within NUP98's pore-retention architecture and nominate a stress-activated kinase (e.g., GSK3beta or JNK) as a flagged assumption, paired with an inhibitor-rescue or kinase-occupancy arm that would give the TDP-43-to-phosphorylation bridge its own test rather than leaving it entirely inferred.\n- The program bets everything on one unverified site selected from prior knowledge outside the packet: the strategy verifies the expressed sequence and quantifies occupancy, but if Ser606 proves undetectable or non-differential between mutant and corrected neurons there is no revision path. Fix: lead with unbiased comparative NUP98 phosphoproteomics across the isogenic pair to ground the site (or relocate it) empirically before committing to S606A engineering and phosphatase-recruitment lines.\n- TDP-43-dependence of the phosphorylation change is tested only indirectly through the isogenic contrast, which cannot rule out that elevated Ser606 phosphorylation tracks generic mutant-cell burden (chronic proteostatic or metabolic stress) rather than a TDP-43-specific effect, and the design's general-stress readouts monitor this but do not resolve it. Fix: add a TDP-43-specific rescue arm, such as expression of a nuclear-retained WT construct in the mutant lines, to show phosphorylation normalization tracks TDP-43 nuclear dysfunction itself and not residual stress signatures.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

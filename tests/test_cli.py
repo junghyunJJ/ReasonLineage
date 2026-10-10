@@ -307,6 +307,18 @@ def test_gold_scores_runs_and_writes_the_report(tmp_path, capsys):
     assert all((d / "diagnostics" / "gold.jsonl").exists() for d in run_dirs(tmp_path))
 
 
+def test_gold_writes_the_level1_analysis(tmp_path):
+    task, setup = write_files(tmp_path)
+    main(["run", task, "--config", setup, "--seed", "1", "--generations", "0", "--out", str(tmp_path / "runs")], World().services)
+    gold = tmp_path / "gold.json"
+    gold.write_text(json.dumps({"tasks": {"ipf": {"approved": ["metformin"], "failed": ["imatinib", "sildenafil"]}}}))
+    analysis = tmp_path / "analysis.md"
+    paths = [str(p) for p in sorted((tmp_path / "runs").iterdir())]
+    assert main(["gold", "--gold", str(gold), *paths, "--analysis", str(analysis)], World().services) == 0
+    text = analysis.read_text()
+    assert text.startswith("# Level 1 analysis") and "**Verdict:" in text and "## Mean judge score by author" in text
+
+
 def test_gold_needs_a_readable_gold_file(tmp_path, capsys):
     assert main(["gold", "--gold", str(tmp_path / "missing.json"), str(tmp_path)], World().services) == 1
     assert "gold file" in capsys.readouterr().err

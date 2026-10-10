@@ -1,0 +1,79 @@
+Generation mode: built-in image_gen
+Scope: ALS, all four methods; actual protocol 0.3 records
+Data source: reports/evidence/2026-10-06-co-scientist-rerun/evolution.csv and independent-summary.json
+
+Use case: infographic-diagram.
+Asset type: one Korean landscape infographic showing ALS evolution results, with extremely readable exact scores. This is a companion to a clean white research infographic: blue for GPT, green for Grok, purple for GLM Flash, gray for multi-model, gold accent for a retained best candidate.
+Primary request: Show the OTHER task, ALS, across four methods. Show all initial candidate scores, each round's two new candidate scores, and the retained best score prominently. Multi-model was interrupted: do not invent a final answer.
+
+LAYOUT:
+A spacious landscape dashboard, preferably high resolution. Four METHOD ROWS and four STAGE COLUMNS. Column headings exactly "초기", "1라운드", "2라운드", "3라운드 / 최종".
+Row labels exactly "다중 모델", "GPT 단독", "Grok 단독", "GLM Flash 단독".
+Inside each stage cell, put the retained best candidate ID and its score in VERY LARGE BOLD type. Beneath that, show the newly evaluated candidates with smaller but legible four-decimal scores and parent IDs. In the initial cell, the four initial scores can be a compact two-by-two mini-grid beneath the large initial-best score.
+Connect only the large retained-best badges along each METHOD ROW with arrows. These are best-score timelines, NOT ancestry arrows. Parent IDs in the small entries describe the candidate relationships. Never connect different method rows.
+Highlight the final selected ID within each completed method. At the rightmost cell show a clear small "완료" badge and the exact initial-to-final delta. The interrupted multi-model row must have a red stop marker at ROUND 2 and a gray "미실행" cell at ROUND 3.
+
+VERBATIM TITLE:
+"ALS · 모델별 가설 진화와 점수"
+VERBATIM SUBTITLE:
+"각 라운드의 새 후보와 누적 1위 · 초기 가설은 방법별 4개"
+Label large scores: "누적 1위 · 기존 평가값".
+Small entries format: "c005 ← c002   0.8495". Initial scores use just ID and score. IDs are local to each method, not shared hypotheses across methods.
+
+EXACT DATA, preserve EVERY DIGIT:
+ROW 1, "다중 모델":
+Initial pool: c001 GPT 0.7810; c002 Grok 0.8345; c003 GLM Flash 0.7310; c004 GPT 0.7755.
+Large initial best: c002 0.8345.
+Round 1 new candidates: c005 (Grok, 수정, parent c002) 0.8065; c006 (GLM Flash, 결합, parents c002+c001) 0.8295.
+Large round 1 retained best: c002 0.8345.
+Round 2: display NO numeric best score; show "중단" and "c007: 반환 · 미평가" and "c008: GPT 결합 요청 시간 초과" and "요청별 10분 상한".
+Round 3: "미실행".
+Final: "최종 답 없음". Do NOT label 0.8345 as a final score or zero as the missing score.
+
+ROW 2, "GPT 단독":
+Initial pool: c001 0.8375; c002 0.8610; c003 0.8560; c004 0.8475.
+Large initial best: c002 0.8610.
+Round 1 new: c005 <- c002 0.8495; c006 <- c003 0.8605.
+Large round 1 best: c002 0.8610.
+Round 2 new: c007 <- c002 0.8605; c008 <- c006 0.8235.
+Large round 2 best: c002 0.8610.
+Round 3 new: c009 <- c002 0.8495; c010 <- c006 0.8270.
+Large round 3 final: c002 0.8610.
+Final delta: "+0.0000". Short note: "초기 1위 유지".
+
+ROW 3, "Grok 단독":
+Initial pool: c001 0.7540; c002 0.7285; c003 0.7890; c004 0.7750.
+Large initial best: c003 0.7890.
+Round 1 new: c005 <- c003 0.7585; c006 <- c004 0.7365.
+Large round 1 best: c003 0.7890.
+Round 2 new: c007 <- c003 0.7570; c008 <- c004 0.7625.
+Large round 2 best: c003 0.7890.
+Round 3 new: c009 <- c003 0.7905; c010 <- c004 0.7050.
+Large round 3 final: c009 0.7905.
+Final delta: "+0.0015". Short note: "3라운드에서 소폭 상승".
+
+ROW 4, "GLM Flash 단독":
+Initial pool: c001 0.7775; c002 0.8580; c003 0.8370; c004 0.8315.
+Large initial best: c002 0.8580.
+Round 1 new: c005 <- c002 0.8710; c006 <- c003 0.8410.
+Large round 1 best: c005 0.8710.
+Round 2 new: c007 <- c005 0.8575; c008 <- c002 0.8340.
+Large round 2 best: c005 0.8710.
+Round 3 new: c009 <- c005 0.8635; c010 <- c002 0.8480.
+Large round 3 final: c005 0.8710.
+Final delta: "+0.0130". Short note: "1라운드 후보 유지".
+
+SEPARATE LOWER BAND, clearly a DIFFERENT metric and scale, not part of the above timeline:
+Heading verbatim: "별도 LLM 참고 평가 · 5항목 평균 / 5"
+Three large readable mini-cards:
+"GPT  3.7 → 3.7"
+"Grok  3.6 → 4.3"
+"GLM Flash  3.6 → 4.3"
+Do not add a multi-model rating: no completed multi-model ALS final answer was evaluated.
+
+Footer text:
+"위 점수는 내부 fitness입니다. 평가 모델이 달라 방법 간 절대 점수만으로 우열을 판단하지 않습니다."
+"ALS 다중 모델은 미완료이므로 다중 모델의 우위는 판정할 수 없습니다."
+
+Accuracy constraints: This diagram is ALS ONLY. No AML scores such as 0.8440. No made-up data. Display exactly the given four-decimal scores, IDs, deltas, completed/interrupted states. Emphasize readable digits and the flat best-score plateaus. Do not exaggerate a tiny gain into dramatic growth; use flat arrows and score badges rather than a cropped-axis growth plot. No photos, logos, decorative lab objects, or long biological prose.
+

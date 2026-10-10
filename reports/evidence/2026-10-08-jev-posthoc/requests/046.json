@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence coverage is excellent because S1–S4 are accurately distinguished, including subtype limits and TDP-43 versus nucleoporin phosphorylation. However, selecting p38α/NUP62 lacks a comparative mechanistic rationale; explain why this pair merits priority over other kinase–nucleoporin combinations.\n- The TARDBP allele, phosphosite-selection criteria, and primary import assay remain unspecified. Name the allele(s), prespecify how discovered sites enter causal testing, and define the import pathway and primary endpoint.\n- Phosphosite-dependent rescue would not establish reduced pore retention as the causal mediator; substitutions could alter other stress-dependent interactions. Add an independent pore-retention rescue that preserves phosphorylation, with controls for pore integrity and passive permeability.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- The ranked claim names Nup98, but the discovery gate replaces it with whichever FG-nucleoporin ranks first, so the item is a screen rather than one nucleoporin hypothesis. Either commit the title to Nup98 plus one labeled speculative site, or rank an explicit top-ranked FG-nucleoporin claim and drop Nup98 until it wins the gate.\n- Occupancy cutoff, Arm 3 equivalence margin, and near-endogenous dosage are left to later preregistration, so a negative result can be absorbed by moving the cutoff. Lock provisional numeric gates to the import-rate and nuclear/cytoplasmic TDP-43 endpoints before the assay, and name the TDP-43 construct, dose, and timing that produce the S3 de-mixing phenotype.\n- The favored step treats phosphorylation as a stoichiometric NPC-composition change and retires it if import is rescued without a composition or localization shift, leaving FG-barrier permeability untested. State the positive prediction that phospho-null must restore import and shift the proposed mediator under assembly-matched conditions, and add a composition-independent barrier readout.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

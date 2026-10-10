@@ -1,0 +1,10 @@
+{
+  "archive": ".archives/2026-10-05-co-scientist-pilot/raw-records.tar.gz",
+  "bytes": 454814,
+  "sha256": "7d6651377627ad23f93708e2b3f0ad2725f6b2ac90648e44ae50c70d25cb3acd",
+  "public_call_records": 107,
+  "public_candidates": 24,
+  "expert_zip_sha256": "a62dd6551daaa6e60d52dfc959e2b9d33c6f417e2a3aeb3446206d5dc9b195fe",
+  "validation": "ten statuses, <=404 admitted attempts, public-only raw fields, matching frozen evidence hashes",
+  "original_execution_audit_sha256": "308d970efee57f3c33ea80668e6e8414ff12a5cd70004e2b301fee19315fb334"
+}

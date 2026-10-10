@@ -1,0 +1,9 @@
+method,stage,id,candidate,grounding,causal_rigor,specificity,testability,feasibility,descriptive_mean_over_five
+reasonlineage,initial,Pde9dce8958,c003,2.5,4,4,4.5,3,3.6
+reasonlineage,final,P26c29a1beb,c006,2.5,4.5,5,5,3,4.0
+gpt,initial,P37c0129eed,c004,3.5,4,4,5,3.5,4.0
+gpt,final,Pf3e8bf3aee,c005,3.5,5,5,5,3,4.3
+glm,initial,P35d556ddf1,c003,3.5,4.5,4.5,5,4,4.3
+glm,final,P35d556ddf1,c003,3.5,4.5,4.5,5,4,4.3
+grok,initial,P63ee678e5b,c004,3.5,3.5,3.5,4,4,3.7
+grok,final,P6854ecfc79,c006,3.5,4.5,5,5,4,4.4

@@ -1,0 +1,75 @@
+{
+  "header": {
+    "case": "aml",
+    "method": "grok",
+    "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+    "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+    "protocol_version": "co-scientist-rerun-0.3",
+    "models": [
+      {
+        "name": "grok",
+        "model": "grok-4.7",
+        "effort": "xhigh"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  "status": "failed",
+  "reason": "mutate c008 by grok failed: model timeout at remaining budget",
+  "initial": {
+    "id": "c002",
+    "author": "grok",
+    "fitness": 0.73,
+    "scores": {
+      "evidenceCoverage": 0.7749999999999999,
+      "specificity": 0.765,
+      "novelty": 0.575,
+      "actionability": 0.765
+    },
+    "answer": {
+      "answer": "Teriflunomide, approved for multiple sclerosis, promotes uridine-rescued myeloid differentiation in differentiation-blocked AML through DHODH inhibition\n\nThe hypothesis is that teriflunomide induces myeloid differentiation in primary human AML blasts that retain a differentiation block and depend on de novo pyrimidine synthesis. The biological context is preclinical culture of patient blasts, with xenograft initiating assays only where cell numbers allow. Bulk viability, differentiation, and stem or progenitor function are separate endpoints. The approved indication, relapsing multiple sclerosis, is unverified prior knowledge and is not stated in the packet. Venetoclax plus azacitidine is an established comparator and is not the proposed regimen.\n\nSupported premises are limited to the packet. DHODH inhibition promotes myeloid differentiation in experimental AML and affects disease-related endpoints in the models tested, linking metabolism to release of a differentiation block [S4]. That study does not show that every approved drug affecting the pathway matches this result or achieves selective exposure [S4]. Functionally defined leukemia stem cells in the specimens examined often had low reactive oxygen species and elevated BCL-2; BCL-2 inhibition reduced oxidative phosphorylation and affected quiescent leukemia stem cells [S1]. This supports a specific dependency question and withholds any claim that an arbitrary mitochondrial inhibitor has a therapeutic window [S1]. After cytarabine, residual cells were not consistently enriched for immature quiescent leukemia stem cells; they carried oxidative-metabolism features, including mitochondrial and fatty-acid-oxidation-related properties, and altering that state changed response in those models [S2]. Venetoclax with azacitidine perturbs TCA-cycle and oxidative-phosphorylation metabolism in leukemia stem cells in the reported patient-associated and experimental work [S3].\n\nUnverified prior knowledge, which must be checked before the experiment is interpreted, includes the following points. Teriflunomide is approved for multiple sclerosis. Leflunomide is approved for rheumatoid arthritis, and teriflunomide is its circulating active metabolite. The metabolite inhibits DHODH and de novo pyrimidine synthesis. Uridine salvage can bypass a DHODH block. Steady-state exposures from multiple-sclerosis dosing are the intended concentration anchors. [S1] through [S4] do not establish these facts.\n\nThe speculative bridges are explicit. Bridge one: concentrations compatible with approved teriflunomide dosing inhibit DHODH in primary AML blasts enough to reproduce experimental DHODH-inhibitor differentiation [S4]. Bridge two: those blasts are more dependent on de novo pyrimidine synthesis than normal hematopoietic progenitors, so selectivity is plausible. Bridge three: cytarabine-residual cells with oxidative features [S2] can differentiate under DHODH blockade even when they differ from the ROS-low, BCL-2-high stem cells in [S1]. These are assumptions.\n\nAlternative accounts remain open. Apparent maturation may be selective loss of immature blasts with persistence of already mature cells. Growth suppression may reflect off-target kinase or inflammatory effects, or apoptosis from nucleotide stress, with no requirement for DHODH. Lower initiating activity may instead follow the BCL-2 and oxidative-phosphorylation vulnerability in [S1] or the oxidative residual state in [S2]. Matched injury to normal progenitors would block a therapeutic reading of any blast reduction.\n\nThe discriminating preclinical strategy runs differentiation-blocked primary AML in parallel with normal CD34-positive hematopoietic cells. Terifoclax is not used. Teriflunomide spans a range that includes verified approved-use exposures. A tool DHODH inhibitor is the pathway control. Venetoclax, with or without azacitidine, is only the established metabolic comparator [S3]. Required readouts are differentiation by surface markers, morphology, and a functional maturation assay; bulk viability and cell cycle; ROS-low versus ROS-high fractions kept as distinct populations [S1][S2]; and colony formation, plus xenograft initiation in a subset, with the colony assay repeated on normal progenitors. Uridine co-treatment tests on-target action. The hypothesis predicts that uridine prevents teriflunomide-driven differentiation and any DHODH-dependent, AML-selective growth effect. A comparator effect that tracks BCL-2 and oxidative phosphorylation in ROS-low cells [S1][S3] is expected to remain during uridine supplementation. Fatty-acid-oxidation markers may be covariates of the residual state [S2] and are not evidence that teriflunomide blocks fatty-acid oxidation.\n\nFalsifying observations at exposure compatible with approved use are as follows. Differentiation-blocked samples produce no myeloid maturation. Uridine leaves both maturation and growth effects intact, which indicates an off-target mechanism. Normal CD34-positive colony formation falls in parallel with AML colony formation. Or the dominant pattern is uridine-insensitive loss of ROS-low stem cells resembling the BCL-2 comparator [S1][S3], with flat differentiation markers, which assigns the result to oxidative phosphorylation rather than to DHODH-dependent differentiation [S4].\n\nLimitations are substantial. [S4] does not identify teriflunomide, human exposure, or activity across AML genotypes. [S1] and [S2] describe related oxidative phenotypes that are not interchangeable, and neither supplies clinical efficacy for this drug. Protein binding, marrow free drug, class-associated immunosuppression, and the distance from short-term differentiation to durable disease control are unverified. This is a falsifiable preclinical hypothesis, not a claim of clinical benefit.",
+      "ranking": [
+        {
+          "item": "Teriflunomide, approved for multiple sclerosis, promotes uridine-rescued myeloid differentiation in differentiation-blocked AML through DHODH inhibition",
+          "promisingness": 0.58,
+          "confidence": 0.46,
+          "pmids": [
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 20,
+    "reported_input_tokens": 118035,
+    "reported_output_tokens": 135114,
+    "reported_tokens": 253149,
+    "unknown_usage_calls": 2,
+    "elapsed_seconds": 1158.596,
+    "remaining_seconds": 1541.404,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  }
+}

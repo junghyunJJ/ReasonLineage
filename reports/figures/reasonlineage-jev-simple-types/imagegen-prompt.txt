@@ -1,0 +1,11 @@
+Use case: text-localization
+Asset type: paper method overview, wide landscape
+Primary request: Modestly polish the provided native overview, keeping its compact three-step jev footer. The only new content relative to the earlier simplified figure is the three typed assessment labels inside step 1.
+Input image: canonical layout and exact scientific content to preserve.
+Style: crisp white academic vector-like diagram, restrained existing colors, readable type, generous whitespace.
+Text (verbatim) in the compact jev footer: "jev", "New responses"; "1 Check response" with THREE PARALLEL labels "Noul" / "Present?", "Score" / "Adequate?", "Choice" / "Priority gap?"; "2 Revise if needed" / "Same author · once"; "3 Recheck & record" / "Keep remaining flags"; "No confirmed gap → peer scoring"; "LLM peer scoring".
+Noul is spelled N-o-u-l. These are parallel assessments inside ONE Check response box. Do not turn them into three sequential workflow stages. Keep jev small underneath the main lineage. No equations, probability bars, thresholds, type tables, or additional boxes.
+Constraints: preserve the entire upper G0→G1→G2→G3 lineage and every connecting edge exactly. Preserve the initial 4×4 eligibility matrix with FOUR diagonal crosses and TWELVE off-diagonal checks. Model/provider labels: Opus 5.5 / Anthropic, GPT-6.1 sol / OpenAI, Grok 4.7 / xAI, GLM-5.3-flash / Z.ai. Keep all candidate IDs, parent descriptions, Selected badges and the Final response badge.
+Exact fitness: G0 O1 0.62, S1 0.58, G1 0.55, L1 0.49; G1 O1 0.62, S1 0.58, M1 0.66, X1 0.64; G2 M1 0.66, X1 0.64, M2 0.67, X2 0.70; G3 X2 0.70, M2 0.67, M3 0.72, X3 0.71. M3 is the Final response. Preserve all models and author assignments as reference.
+Keep title "ReasonLineage · Response evolution", gray retain edges, teal mutation edges, dashed gold crossover edges, and disclaimer "Illustrative fitness values (0–1) · not empirical model scores or correctness probabilities". Fitness is supplied by non-author LLM reviewers; jev provides structural feedback.
+Avoid: redesign, missing nodes or arrows, merged assessments, heavy jev detail, scientific hype, decorations, shadows, gradient fills.

@@ -1,0 +1,16 @@
+{
+  "state": "- The causal claim names Nup98 but leaves both the kinase and the phosphosites unregistered, so a negative result can be shifted onto another site or nucleoporin without falsifying the stated mechanism. Pre-register a finite FG/linker site panel and one primary proline-directed kinase-inhibition arm whose failure falsifies the activation bridge.\n- Selective import failure is not tied to measurements that separate facilitated import from export block, passive barrier loss, or the two proposed biophysical routes (FG cohesion versus karyopherin–FG binding). Pair the NLS reporter with an NES reporter, a passive permeability probe, and a karyopherin–FG binding or FG-cohesion assay.\n- Endogenous Nup98 replacement is required for the discriminating alleles, yet rodent spinal motor neurons and iPSC motor neurons are pooled without an edit, delivery, or stoichiometry plan. Specify iPSC knock-in before differentiation, a defined culture or in vivo editing route for rodent motor neurons, and occupancy thresholds for calling phospho-null and phosphomimetic effects.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

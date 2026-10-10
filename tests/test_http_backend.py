@@ -7,7 +7,10 @@ import pytest
 
 from fake_http import FakeServer
 from reasonlineage.backends import BackendError, ModelRequest
+from reasonlineage.backends.base import ProviderRefusal
 from reasonlineage.backends.http import HttpBackend, clean_content
+from reasonlineage.engine.calls import CallRecorder
+from reasonlineage.engine.events import EventLog
 
 SCHEMA = {"type": "object", "properties": {"score": {"type": "number"}}, "required": ["score"], "additionalProperties": False}
 
@@ -84,6 +87,20 @@ def test_http_error_and_truncation_raise(server):
     server.reply = chat_reply('{"score": 0.4', finish="length")
     with pytest.raises(BackendError, match="cut off"):
         asyncio.run(HttpBackend("qwen", server.url).complete(request(json_schema=SCHEMA)))
+
+
+@pytest.mark.parametrize('content,finish,refusal', [
+    (None, 'content_filter', None),
+    (None, 'stop', 'Provider declined the request'),
+    ('{"score": 0.7}', 'stop', 'Provider declined the request'),
+])
+def test_explicit_provider_refusal_stops_backend_and_recorder_retries(server, tmp_path, content, finish, refusal):
+    server.reply = chat_reply(content, finish=finish, refusal=refusal)
+    backend = HttpBackend('qwen', server.url, retries=2)
+    recorder = CallRecorder(tmp_path, EventLog(tmp_path/'events.jsonl'), 7, attempts=3)
+    with pytest.raises(ProviderRefusal):
+        asyncio.run(recorder.call('g0/write/c001/qwen', 'qwen', backend, request(json_schema=SCHEMA)))
+    assert len(server.requests) == 1
 
 
 def test_unreachable_server_raises_backend_error():

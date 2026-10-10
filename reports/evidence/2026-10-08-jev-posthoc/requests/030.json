@@ -1,0 +1,16 @@
+{
+  "state": "- The Phase-2 sufficiency arm has an attribution confound: recruiting a promiscuous proline-directed kinase (CDK5/p38) to the nuclear envelope will phosphorylate many NE-proximal substrates, so import failure there cannot be attributed to NUP98 even with site occupancy confirmed. Fix by crossing the arms: show phospho-null (S-to-A) knock-in neurons at Phase-1-confirmed sites are resistant to kinase-recruitment-induced import failure, which would isolate NUP98 as the relevant substrate.\n- Target selection for NUP98 rests entirely on unverified external knowledge (mitotic phosphosites); the packet never singles out NUP98 over other FG-nucleoporins (NUP62, NUP153, NUP93). Fix by pre-registering a broad FG-Nup panel in the Phase-1 phosphoproteomics so a negative finding on NUP98 routes the hypothesis to the next candidate rather than killing the whole class, and by citing S1's aggregate proteomics specifically if NUP98 appears in it.\n- The proposed mechanism bundles two distinct lesions ('weakens NUP98 attachment to the pore scaffold' and 'destabilizes the FG permeability barrier') without a designed discriminator between them, and the temporal acceptance criterion imports RanGAP mislocalization from the C9orf72 context [S2] into the TDP-43-positive context. Fix by naming a scaffold-vs-barrier readout (e.g., scaffold-anchored vs FG-permeability-specific assays at confirmed sites) and defining TDP-43-context-specific temporal landmarks instead of borrowing S2's.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

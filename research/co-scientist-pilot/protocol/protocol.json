@@ -1,0 +1,103 @@
+{
+  "version": "co-scientist-pilot-0.1",
+  "generations": 3,
+  "margins": {
+    "tie": 0.03,
+    "dominance": 0.03,
+    "stagnation": 0.03,
+    "stagnation_window": 2
+  },
+  "answer": {
+    "length_words": [
+      400,
+      800
+    ],
+    "open_question_items": [
+      1,
+      1
+    ]
+  },
+  "seed_approaches": [
+    "mechanism-centered",
+    "clinical-evidence-centered",
+    "genetic and omics evidence-centered",
+    "safety and feasibility-centered"
+  ],
+  "timeouts_s": {
+    "write": 300,
+    "judge": 300,
+    "check": 120
+  },
+  "max_tokens": {
+    "write": 32768,
+    "judge": 32768,
+    "check": 8000
+  },
+  "j1": {
+    "enforce": false,
+    "thresholds": {
+      "answer_type": 0.5,
+      "top_item_argument": 0.5
+    },
+    "questions": {
+      "answer_type": {
+        "type": "choice",
+        "instructions": "Which best describes the answer?",
+        "criteria": {
+          "answer": "An answer to the question",
+          "refusal": "A refusal to answer",
+          "meta": "Text about the task, itself, or policies, or content labeled synthetic or a placeholder",
+          "grader": "Text addressed to whoever will grade it"
+        },
+        "pass": "answer"
+      },
+      "top_item_argument": {
+        "type": "noul",
+        "instructions": "Does the answer give a specific argument for $top_item, such as a reason, a mechanism, or a named study, beyond naming it?"
+      },
+      "argument_coverage": {
+        "type": "score",
+        "instructions": "How many of the ranked items come with a specific argument, such as a reason, a mechanism, or a named study?",
+        "criteria": [
+          "None of the items",
+          "Some of the items",
+          "Most of the items",
+          "All of the items"
+        ]
+      }
+    },
+    "rewrite_reasons": {
+      "answer_type": "The answer does not read as a direct answer to the question: it may refuse, talk about the task or itself, or address whoever grades it.",
+      "top_item_argument": "The top-ranked item, $top_item, has no specific argument (a reason, a mechanism, or a named study)."
+    }
+  },
+  "j2": {
+    "questions": {
+      "style_inflation": {
+        "type": "score",
+        "instructions": "How much rhetorical emphasis does the answer use, apart from the facts it states?",
+        "criteria": [
+          "Plain",
+          "Occasional emphasis",
+          "Frequent emphasis",
+          "Mostly exaggeration",
+          "Rhetoric dominates"
+        ]
+      },
+      "outcome_mention": {
+        "type": "noul",
+        "instructions": "Does the answer report the outcome of a clinical trial of $gold_item for the condition in the question?"
+      },
+      "critique_severity": {
+        "type": "choice",
+        "instructions": "How serious is the most serious problem that the critique describes?",
+        "criteria": {
+          "none": "No problem",
+          "minor": "A minor problem",
+          "major": "A major problem",
+          "critical": "A critical problem"
+        }
+      }
+    }
+  }
+}

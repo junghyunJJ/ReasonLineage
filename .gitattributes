@@ -1,0 +1,5 @@
+# Frozen evidence must retain exact bytes and recorded response whitespace.
+reports/evidence/** -text -whitespace
+
+# Generated figures, playback files, and their provenance carry SHA manifests.
+reports/figures/** -text -whitespace

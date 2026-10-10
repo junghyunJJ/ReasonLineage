@@ -3,11 +3,13 @@
 import asyncio
 import contextlib
 import json
+import os
+import signal
 import time
 from pathlib import Path
 from typing import Any, Mapping
 
-from .base import BackendError, ModelRequest, ModelResponse
+from .base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 
 
 class SubprocessBackend:
@@ -23,6 +25,8 @@ class SubprocessBackend:
             try:
                 async with self._semaphore:
                     return await self._run_once(request)
+            except ProviderRefusal:
+                raise
             except BackendError as exc:
                 errors.append(str(exc))
         raise BackendError(f"{self.name}/{request.model} failed after {len(errors)} attempt(s): {errors}")
@@ -48,23 +52,32 @@ class SubprocessBackend:
             stderr=asyncio.subprocess.PIPE,
             cwd=cwd,
             env=dict(env) if env is not None else None,
+            start_new_session=True,  # its own process group, so a stop reaches the CLI's children too
         )
         try:
             stdout, stderr = await asyncio.wait_for(proc.communicate(stdin), timeout_s)
         except asyncio.TimeoutError:
-            proc.kill()
-            await proc.wait()
+            await _kill_group(proc)
             raise BackendError(f"timed out after {timeout_s:.0f}s") from None
         except asyncio.CancelledError:
             # Cancelled because another call failed, or Ctrl-C: do not leave the CLI running.
-            with contextlib.suppress(ProcessLookupError):
-                proc.kill()
-            await proc.wait()
+            await _kill_group(proc)
             raise
         if check and proc.returncode != 0:
             detail = (stderr or stdout).decode(errors="replace").strip()[-500:]
             raise BackendError(f"exit {proc.returncode}: {detail}")
         return proc.returncode, stdout, stderr, time.monotonic() - started
+
+
+async def _kill_group(proc: asyncio.subprocess.Process) -> None:
+    """Kill the CLI and every process it started.
+
+    Killing only the CLI is not enough: a child of it (codex runs a native binary under a node wrapper) keeps
+    stdout open, and the wait below then lasts until that child finishes on its own.
+    """
+    with contextlib.suppress(ProcessLookupError):
+        os.killpg(proc.pid, signal.SIGKILL)
+    await proc.wait()
 
 
 def structured_data(request: ModelRequest, structured: Any, text: str) -> Mapping[str, Any] | None:

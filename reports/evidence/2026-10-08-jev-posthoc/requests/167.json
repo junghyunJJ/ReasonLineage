@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence handling is exceptional in distinguishing S1 from S2 and supported premises from speculative bridges, but novelty remains unestablished. Check prior teriflunomide–AML and uridine-salvage studies; identify what is new beyond applying established DHODH biology to residual disease.\n- The drug–pathway–context–endpoint specification is unusually precise, but baseline uridine incorporation does not establish salvage capacity as the causal sensitivity determinant. Define a demand-adjusted salvage threshold and manipulate uridine transport or UCK activity, testing sensitivity at matched drug exposure and DHODH engagement.\n- Genotype-confirmed maturation cannot exclude selective survival of pre-existing mature leukemic cells. Track initially immature malignant cells longitudinally and transplant equal viable malignant-cell inputs after washout to distinguish differentiation-associated loss of propagation from cytotoxic depletion.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

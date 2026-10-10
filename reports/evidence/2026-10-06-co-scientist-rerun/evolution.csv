@@ -1,0 +1,65 @@
+case,method,id,author,generation,operator,parents,fitness,words,title
+als,reasonlineage,c001,gpt,0,seed,,0.7809999999999999,634,Stress-induced NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als,reasonlineage,c002,grok,0,seed,,0.8345000000000001,758,Nup98 FG-region phosphorylation initiates nuclear-import failure and subsequent nuclear TDP-43 loss in TDP-43 proteinopathy models of ALS
+als,reasonlineage,c003,glm,0,seed,,0.731,667,Stress-kinase hyperphosphorylation of FG-nucleoporin Nup98 initiates nucleocytoplasmic transport failure that precedes TDP-43 nuclear depletion in TDP-43-positive ALS motor neurons
+als,reasonlineage,c004,gpt,0,seed,,0.7755,600,NUP98 FG-region phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als,reasonlineage,c005,grok,1,mutation,c002,0.8065,777,Nup98 FG-region phosphorylation initiates nuclear-import failure and subsequent nuclear TDP-43 loss in TDP-43 proteinopathy models of ALS
+als,reasonlineage,c006,glm,1,crossover,"c002,c001",0.8295,798,Stress-activated kinase phosphorylation of pore-associated NUP98 initiates nuclear-import failure upstream of nuclear TDP-43 depletion in TARDBP-mutant human motor neurons
+aml,reasonlineage,c001,grok,0,seed,,0.747,779,"Teriflunomide at exposures used for multiple sclerosis induces uridine-rescuable myeloid differentiation in differentiation-blocked acute myeloid leukemia blasts, separable from BCL-2-linked oxidative phosphorylation suppression"
+aml,reasonlineage,c002,glm,0,seed,,0.7685000000000001,761,"Repurposing approved antirheumatic leflunomide (active metabolite teriflunomide) as a differentiation-inducing DHODH inhibitor for cytarabine-resistant, oxidative-metabolism-dependent AML residual disease"
+aml,reasonlineage,c003,gpt,0,seed,,0.81,628,Atovaquone-driven DHODH restriction induces differentiation in oxidative cytarabine-residual AML
+aml,reasonlineage,c004,grok,0,seed,,0.759,773,Teriflunomide at multiple-sclerosis-relevant exposure induces DHODH-dependent myeloid differentiation in differentiation-arrested acute myeloid leukemia blasts relative to normal CD34-positive progenitors
+aml,reasonlineage,c005,gpt,1,mutation,c003,0.765,662,Atovaquone-driven DHODH restriction induces differentiation in oxidative cytarabine-residual AML
+aml,reasonlineage,c006,grok,1,crossover,"c003,c002",0.8440000000000001,780,"Atovaquone differentiates salvage-limited, differentiation-blocked cytarabine-residual AML by collapsing ubiquinone-dependent DHODH activity before ATP loss"
+aml,reasonlineage,c007,grok,2,mutation,c006,0.8035,904,"Atovaquone differentiates salvage-limited, differentiation-blocked cytarabine-residual AML by collapsing ubiquinone-dependent DHODH activity before ATP loss"
+aml,reasonlineage,c008,glm,2,crossover,"c006,c003",0.8320000000000001,867,"Atovaquone restricts ubiquinone-dependent DHODH to induce differentiation in salvage-limited cytarabine-residual AML, gated by a pyrimidine-before-ATP separation"
+aml,reasonlineage,c009,grok,3,mutation,c006,0.8300000000000001,794,"Atovaquone differentiates salvage-limited, differentiation-blocked cytarabine-residual AML by collapsing ubiquinone-dependent DHODH activity before ATP loss."
+aml,reasonlineage,c010,gpt,3,crossover,"c006,c008",0.8195,631,Exposure-bounded atovaquone induces DHODH-dependent maturation in salvage-poor cytarabine-residual AML through complex III inhibition and oxidized-ubiquinone restriction before ATP failure
+als,gpt,c001,gpt,0,seed,,0.8375000000000001,637,NUP98 hyperphosphorylation initiates nuclear-import failure in TDP-43-associated ALS motor neurons
+als,gpt,c002,gpt,0,seed,,0.8610000000000001,645,p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons
+als,gpt,c003,gpt,0,seed,,0.8560000000000001,654,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als,gpt,c004,gpt,0,seed,,0.8475,623,NUP98 Hyperphosphorylation Initiates Nuclear-Import Failure in TARDBP-Mutant ALS Motor Neurons
+als,gpt,c005,gpt,1,mutation,c002,0.8495000000000001,659,p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-M337V Motor Neurons
+als,gpt,c006,gpt,1,mutation,c003,0.8605,650,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als,gpt,c007,gpt,2,mutation,c002,0.8605,653,p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons
+als,gpt,c008,gpt,2,mutation,c006,0.8235000000000001,669,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+als,gpt,c009,gpt,3,mutation,c002,0.8495000000000001,636,p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons
+als,gpt,c010,gpt,3,mutation,c006,0.8270000000000001,650,CDK5-dependent NUP98 phosphorylation initiates nuclear-import failure in TARDBP-mutant motor neurons
+aml,gpt,c001,gpt,0,seed,,0.8465000000000001,642,"Teriflunomide-induced differentiation of pyrimidine-salvage-low, cytarabine-persistent AML"
+aml,gpt,c002,gpt,0,seed,,0.8400000000000001,602,"Teriflunomide-driven differentiation of pyrimidine-salvage-poor, cytarabine-persistent AML"
+aml,gpt,c003,gpt,0,seed,,0.8650000000000001,621,"Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML"
+aml,gpt,c004,gpt,0,seed,,0.8520000000000001,618,"Teriflunomide-induced differentiation of pyrimidine-salvage-low, cytarabine-persistent AML"
+aml,gpt,c005,gpt,1,mutation,c003,0.8255,627,"Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML"
+aml,gpt,c006,gpt,1,mutation,c004,0.8625,644,"Teriflunomide-induced differentiation of pyrimidine-salvage-low, cytarabine-persistent AML"
+als,grok,c001,grok,0,seed,,0.754,755,Phosphorylation of FG-nucleoporin Nup98 after cytoplasmic TDP-43 demixing causes selective nuclear-import failure in TDP-43 proteinopathy models of ALS
+als,grok,c002,grok,0,seed,,0.7285,770,Phosphorylation of FG-nucleoporin NUP98 initiates nuclear-import failure in sporadic ALS motor neurons with TDP-43 proteinopathy
+als,grok,c003,grok,0,seed,,0.789,796,Nup98 phosphorylation by a stress-responsive proline-directed kinase initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS
+als,grok,c004,grok,0,seed,,0.775,713,Nup98 phosphorylation after stress-granule-independent cytoplasmic TDP-43 assembly sustains nuclear-import failure in TDP-43 proteinopathy
+als,grok,c005,grok,1,mutation,c003,0.7585,783,CDK5 phosphorylation of Nup98 initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS
+als,grok,c006,grok,1,mutation,c004,0.7365,782,Provisional Nup98 phosphorylation after stress-granule-independent cytoplasmic TDP-43 assembly sustains nuclear-import failure in TDP-43 proteinopathy.
+als,grok,c007,grok,2,mutation,c003,0.757,778,CDK5 phosphorylation of mapped Nup98 residues initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS
+als,grok,c008,grok,2,mutation,c004,0.7625,899,Provisional Nup98 phosphorylation after stress-granule-independent cytoplasmic TDP-43 assembly sustains nuclear-import failure in TDP-43 proteinopathy
+als,grok,c009,grok,3,mutation,c003,0.7905,992,Nup98 phosphorylation by pre-registered CDK5 initiates selective nuclear-pore barrier failure in a TDP-43 proteinopathy model of ALS
+als,grok,c010,grok,3,mutation,c004,0.705,773,Nup98 phosphorylation after stress-granule-independent cytoplasmic TDP-43 assembly sustains nuclear-import failure in TDP-43 proteinopathy
+aml,grok,c001,grok,0,seed,,0.697,736,Teriflunomide relief of differentiation-blocked acute myeloid leukemia through selective DHODH inhibition
+aml,grok,c002,grok,0,seed,,0.73,758,"Teriflunomide, approved for multiple sclerosis, promotes uridine-rescued myeloid differentiation in differentiation-blocked AML through DHODH inhibition"
+aml,grok,c003,grok,0,seed,,0.6835,733,"Leflunomide, approved for rheumatoid arthritis, relieves differentiation blockade in immature AML blasts through dihydroorotate dehydrogenase inhibition at exposures that preferentially spare normal hematopoietic progenitors"
+aml,grok,c004,grok,0,seed,,0.6885,793,Teriflunomide for DHODH-dependent myeloid differentiation in differentiation-arrested AML
+aml,grok,c005,grok,1,mutation,c002,0.7805,992,"Pending confirmation of non-AML approval, DHODH target engagement, and uridine-bypass pharmacology, teriflunomide is predicted to drive uridine-sensitive myeloid differentiation in primary AML with a retained differentiation block"
+aml,grok,c006,grok,1,mutation,c001,0.7384999999999999,769,Teriflunomide relief of differentiation-blocked acute myeloid leukemia through selective DHODH inhibition
+als,glm,c001,glm,0,seed,,0.7775000000000001,656,Stress-activated phosphorylation of the FG-nucleoporin Nup98 as an initiating lesion in nucleocytoplasmic transport failure in TDP-43-linked ALS motor neurons
+als,glm,c002,glm,0,seed,,0.8580000000000001,790,Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.
+als,glm,c003,glm,0,seed,,0.8370000000000001,685,Stress-activated phosphorylation of the FG-nucleoporin NUP98 initiates nuclear transport failure upstream of TDP-43 condensate sequestration in TDP-43-positive ALS motor neurons
+als,glm,c004,glm,0,seed,,0.8315000000000001,674,Stress-activated Nup98 phosphorylation within nuclear pores initiates nuclear import failure independently of stress-granule sequestration in TDP-43-positive ALS neurons
+als,glm,c005,glm,1,mutation,c002,0.8710000000000001,807,Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.
+als,glm,c006,glm,1,mutation,c003,0.8410000000000001,751,Stress-activated phosphorylation of the FG-nucleoporin NUP98 initiates nuclear transport failure upstream of TDP-43 condensate sequestration in TDP-43-positive ALS motor neurons
+als,glm,c007,glm,2,mutation,c005,0.8575000000000002,752,"Stress-regulated phosphorylation of a GLFG FG-nucleoporin (lead candidate Nup98) impairs karyopherin docking, initiating selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons"
+als,glm,c008,glm,2,mutation,c002,0.8340000000000001,722,Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.
+als,glm,c009,glm,3,mutation,c005,0.8635,794,"Stress-regulated phosphorylation of the FG-nucleoporin Nup98, a screen-gated lead candidate among karyopherin-docking FG-nucleoporins, initiates selective Transportin-1–dependent nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons."
+als,glm,c010,glm,3,mutation,c002,0.8480000000000001,833,Stress-activated phosphorylation of the FG-nucleoporin Nup98 initiates selective nuclear import failure upstream of TDP-43 mislocalization in TDP-43-proteinopathy motor neurons.
+aml,glm,c001,glm,0,seed,,0.8155,678,Repurposing the multiple-sclerosis-approved DHODH inhibitor teriflunomide to induce pyrimidine-depletion-driven myeloid differentiation in acute myeloid leukemia
+aml,glm,c002,glm,0,seed,,0.8130000000000001,763,"Repurposing leflunomide, an approved antirheumatic DHODH inhibitor, to re-activate myeloid differentiation in oxidatively dependent residual AML"
+aml,glm,c003,glm,0,seed,,0.799,884,Repurposing teriflunomide (an approved multiple sclerosis therapy) as a DHODH inhibitor to relieve the differentiation block in AML blasts
+aml,glm,c004,glm,0,seed,,0.8160000000000001,783,Repurposing the approved multiple-sclerosis drug teriflunomide as a DHODH inhibitor to reactivate myeloid differentiation in de novo pyrimidine-dependent AML blasts while sparing quiescent ROS-low leukemia stem cells
+aml,glm,c005,glm,1,mutation,c004,,808,"Repurposing teriflunomide (approved for relapsing multiple sclerosis) as a DHODH inhibitor to drive differentiation of cytarabine-resistant residual AML, selected prospectively by an ex vivo uridine-rescue phenotype, anchored to approved-exposure pyrimidine-pool pharmacodynamics, with a direct functional test of ROS-low leukemia-stem-cell sparing"
+aml,glm,c006,glm,1,mutation,c001,,881,Repurposing the multiple-sclerosis-approved DHODH inhibitor teriflunomide to induce pyrimidine-depletion-driven myeloid differentiation in acute myeloid leukemia

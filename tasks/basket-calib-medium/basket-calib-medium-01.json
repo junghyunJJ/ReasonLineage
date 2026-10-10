@@ -1,0 +1,11 @@
+{
+  "id": "basket-calib-medium-01",
+  "question": "You are buying the same shopping list from three online stores. Each store has its own unit prices and promotions. You have no tools: do the arithmetic in your own reasoning.\n\nEvery store applies its promotions in this order: the bundle offers, then the category coupon, then the percentage discount, then delivery. A coupon's category total is the amount after the bundle offers. A percentage discount's own threshold is checked on the amount after the coupon. The percentage never applies to the delivery fee, and every amount is a whole number of won.\n\nShopping list: apples x3, lettuce x1, rice x4, detergent x3\n\nStore A\n  unit prices (won): apples 5,700, lettuce 3,000, rice 18,400, detergent 9,300\n  - if the pantry items come to 67,500 won or more, take 9,700 won off the order\n  - delivery 2,900 won, free when the amount after the coupon is 109,800 won or more\n\nStore B\n  unit prices (won): apples 6,000, lettuce 2,900, rice 19,100, detergent 9,900\n  - if the order comes to 105,500 won or more, 4% off the order\n  - if the pantry items come to 59,000 won or more, take 17,300 won off the order\n  - delivery 4,500 won, free when the goods total before any discount is 126,000 won or more\n\nStore C\n  unit prices (won): apples 5,900, lettuce 3,100, rice 19,100, detergent 8,400\n  - if the order comes to 111,100 won or more, 5% off the order\n  - rice: 3 for the price of 2\n  - if the pantry items come to 71,800 won or more, take 14,700 won off the order\n  - delivery 3,500 won, free when the amount after all discounts is 124,700 won or more\n\nWhich store charges the least in total, including delivery? Rank the three stores from cheapest to most expensive, and give the steps that decide the order, the key comparison, and one check that would confirm your top pick.",
+  "candidates": [
+    "Store A",
+    "Store B",
+    "Store C"
+  ],
+  "category": "analytical",
+  "data_sensitivity": "public"
+}

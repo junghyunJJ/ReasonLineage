@@ -1,0 +1,16 @@
+{
+  "state": "- The initiating lesion asserts two distinct effects (weakened passive permeability barrier AND reduced facilitated NLS-cargo import) from one phosphorylation event, but no packet source or stated mechanism connects phosphorylated Nup98 to reduced karyopherin-mediated facilitated import; barrier leakiness alone does not explain it. Fix: add an explicit mechanistic node, e.g., direct measurement of importin/TNPO1 binding to phosphorylated versus phospho-null GLFG constructs, or measure passive flux and facilitated import as separately attributed outcomes in the reconstitution assay.\n- The stated falsifying observation bundles a non-decisive condition: import failure 'outlasting' phospho-loss is also predicted by an initiating-phosphorylation model in which phosphorylation triggers self-sustaining downstream lesions (TDP-43 aggregation, SG sequestration), and so does not falsify initiation; only failure PRECEDING detectable phosphorylation is decisive. Fix: designate the MS-verified phospho-null early-phase attenuation comparison (and precession of failure before phospho-signal) as the sole decisive falsifiers and downgrade pulse-washout persistence to supportive evidence.\n- Nup98 is nominated a priori without comparative justification against other FG-nucleoporins (e.g., Nup153, Nup50, Nup62) that mediate karyopherin docking and are plausibly perturbed in TDP-43-associated pore pathology under S1; the GLFG-cluster residue nominations rest solely on mitotic phosphorylation analogy, self-flagged as unverified. Fix: insert an upfront comparative phospho-proteomic screen of FG-nucleoporins in stressed motor neurons and nominate the target from stress-regulated occupancy data, or supply a documented basis for preferring Nup98.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

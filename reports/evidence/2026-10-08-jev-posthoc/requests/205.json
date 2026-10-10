@@ -1,0 +1,16 @@
+{
+  "state": "- The maturation cutoffs score only monocytic features (CD14 gain, forms past the promonocyte, a monocytic gene score), while the sole supporting study reports myeloid differentiation without a monocytic pattern. A CD11b- or granulocyte-dominant response consistent with that premise would miss the cutoffs and be recorded as falsified. Add pre-specified CD11b, CD15, and lineage-agnostic morphology as co-primary reads, and keep CD14 as a stratum descriptor.\n- The screen uses pyrimidine-poor medium with uridine below 1 micromolar, so a positive result can depend on uridine starvation that marrow does not share, and the single day-21 xenograft leaves human CD45 burden outside the falsifiers. Add a physiological-uridine arm at a verified plasma or marrow concentration, and make loss of maturation at that concentration in at least two xenografts a translational falsifier.\n- Teriflunomide is the canonical approved DHODH inhibitor implied by the differentiation study, and the AHR and kinase alternatives are unnamed reagent classes, so mechanistic assignment and novelty stay thin. Name the antagonist and kinase probe with selectivity-window concentrations and engagement assays, and list the exact leflunomide or teriflunomide experiments that would retire the claim before testing.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

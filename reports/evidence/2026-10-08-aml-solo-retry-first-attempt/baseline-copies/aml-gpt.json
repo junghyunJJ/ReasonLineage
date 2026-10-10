@@ -1,0 +1,78 @@
+{
+  "header": {
+    "case": "aml",
+    "method": "gpt",
+    "evidence_sha256": "d9bab71313cb1353df5bcad031c8a442618dab8d2e7ab2bc512c0fd26e68aff8",
+    "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+    "protocol_version": "co-scientist-rerun-0.3",
+    "models": [
+      {
+        "name": "gpt",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  "status": "failed",
+  "reason": "mutate c008 by gpt failed: model timeout at remaining budget",
+  "initial": {
+    "id": "c003",
+    "author": "gpt",
+    "fitness": 0.8650000000000001,
+    "scores": {
+      "evidenceCoverage": 0.9,
+      "specificity": 0.93,
+      "novelty": 0.69,
+      "actionability": 0.89
+    },
+    "answer": {
+      "answer": "Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML\n\nHypothesis. In cytarabine-persistent AML blasts that retain high oxidative metabolism and depend predominantly on de novo pyrimidine synthesis under physiological uridine conditions, atovaquone at clinically attainable unbound exposure will inhibit mitochondrial complex III, constrain DHODH flux, and induce sustained myeloid differentiation. This will reduce leukemia-propagating capacity without comparable injury to normal hematopoietic progenitors. The predicted benefit is differentiation, not simply mitochondrial poisoning.\n\nSupported premises. Cytarabine-resistant cells in the studied models displayed oxidative-metabolism-associated features but were not consistently enriched for immature, quiescent leukemia stem cells [S2]. Separately, BCL-2 inhibition impaired oxidative phosphorylation in studied ROS-low leukemia-stem-cell populations; this does not establish a therapeutic window for arbitrary mitochondrial inhibitors [S1]. DHODH inhibition promoted differentiation in experimental AML systems [S4]. Venetoclax–azacitidine provides an established metabolism-linked comparator, not the proposed repurposing discovery [S3]. None of these sources establishes atovaquone efficacy in AML.\n\nUnverified prior knowledge requiring confirmation. Atovaquone is recalled as an approved treatment for Pneumocystis pneumonia, its original non-AML indication. Its recalled pharmacology includes complex-III inhibition. Mammalian DHODH is recalled to use oxidized ubiquinone, while extracellular uridine can potentially replenish pyrimidines through salvage. These outside-packet premises require verification, particularly potency against human complex III, protein binding, achievable unbound exposure, and marrow distribution. Antiparasitic activity alone cannot establish human AML target engagement.\n\nSpeculative bridges and alternatives. The proposal assumes that partial complex-III inhibition can restrict DHODH-supported pyrimidine production before catastrophic energy failure, and that the selected residual blasts retain differentiation competence. Neither assumption follows directly from the packet. Dependence on de novo synthesis is a proposed enrichment feature, not an established response biomarker. Alternative explanations include ATP-depletion cytotoxicity, unrelated drug targets, selective survival of pre-existing mature cells, or effective compensation through pyrimidine salvage. Oxidative metabolism alone may therefore be insufficient to predict response.\n\nDiscriminating preclinical strategy. Use paired primary AML samples before and after ex vivo cytarabine exposure, with confirmation in cytarabine-treated patient-derived xenografts. Prospectively classify residual cells using respiration normalized to viable-cell number and independently measured isotope-traced de novo-versus-salvage pyrimidine flux. Include oxidative-low residual samples rather than studying only predicted responders. Do not infer stem-cell identity from persistence or respiratory phenotype. Verify the recalled pharmacology before interpreting efficacy, and restrict translational claims to concentrations justified by subsequently verified human unbound-exposure data. Measure free medium and intracellular drug under physiological albumin and uridine conditions.\n\nEstablish temporal ordering through complex-III activity, ubiquinone redox state, dihydroorotate/orotate ratios, pyrimidine pools, respiration, ATP, apoptosis, and differentiation measurements. Require maturation of initially immature viable cells, supported by morphology, appropriate myeloid markers, functional maturation, and persistence after drug washout. Lineage tracking should distinguish genuine maturation from selective killing. Include vehicle, a selective DHODH inhibitor, and DHODH suppression as mechanistic controls; use venetoclax–azacitidine as the established metabolic comparator [S3]. Assay direct DHODH inhibition separately to distinguish an upstream respiratory mechanism from direct enzyme inhibition. Uridine rescue is interpretable only after demonstrating intracellular pyrimidine restoration: it should prevent differentiation and preserve leukemia-propagating activity while respiratory inhibition remains. Quantify propagation by limiting-dilution transplantation after washout using equal numbers of viable cells, separating this endpoint from bulk-cell survival. Test healthy-donor CD34-positive progenitors under both resting and proliferative conditions for colony formation and engraftment at identical exposure.\n\nFalsification and limitations. Confirmed restoration of pyrimidine pools that fails to prevent differentiation and loss of propagation would falsify the proposed pyrimidine-depletion mechanism. Death without sustained viable-cell maturation would fail the differentiation prediction. Failure to engage the proposed pathway within verified attainable exposure would defeat the translational premise, even if high-dose activity occurred. Comparable normal-progenitor injury would defeat the proposed selectivity. AML heterogeneity, treatment-dependent metabolic states, salvage capacity, differentiation competence, and uncertain human marrow exposure may sharply restrict applicability. Reduced xenograft propagation would not itself establish clinical efficacy or definitive leukemia-stem-cell eradication.",
+      "ranking": [
+        {
+          "item": "Atovaquone-induced DHODH-linked differentiation in oxidative, cytarabine-persistent AML",
+          "promisingness": 0.55,
+          "confidence": 0.33,
+          "pmids": [
+            "23333149",
+            "28416471",
+            "30420752",
+            "27641501"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 20,
+    "reported_input_tokens": 132626,
+    "reported_output_tokens": 66820,
+    "reported_tokens": 199446,
+    "unknown_usage_calls": 2,
+    "elapsed_seconds": 1222.409,
+    "remaining_seconds": 1477.591,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  }
+}

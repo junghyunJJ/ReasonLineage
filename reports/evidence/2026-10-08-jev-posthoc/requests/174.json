@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty remains unresolved: DHODH-driven differentiation and salvage bypass are established premises, while teriflunomide/leflunomide AML prior art is unchecked. Review that literature and identify the distinct contribution of adaptive, demand-adjusted prediction.\n- Despite exceptionally precise biological context, rescue timing, reciprocal perturbations, and lineage-resolved endpoints, R(t) lacks a reproducible estimation protocol. Specify isotope mass balance, recycling corrections, and sampling windows; compare predictive value against pool depletion alone.\n- Translational feasibility remains a proposed gate rather than quantified evidence. Verify the human unbound exposure–potency margin and define a feasible post-cytarabine schedule that reproduces marrow exposure, including the duration needed for maturation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty rests mainly on salvage-based selection, since DHODH-driven differentiation follows directly from S4. Check prior teriflunomide/leflunomide AML studies and identify the genuinely new context-specific prediction.\n- “Salvage-low” and the proposed therapeutic window lack operational thresholds. Prespecify the tracer-based classification, verified unbound-exposure ceiling, and minimum leukemia-versus-normal functional separation.\n- Uridine rescue tests pyrimidine dependence but does not establish that baseline salvage causes selective sensitivity. Add bidirectional salvage-pathway perturbations and test whether they shift differentiation responses independently of proliferation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

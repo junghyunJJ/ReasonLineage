@@ -1,0 +1,37 @@
+{
+  "source": {
+    "api": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/statewide/time-series/{state}/{measure}/1/{month}/2026-2026.json?base_prd=true&begbaseyear=1901&endbaseyear=2000",
+    "months": [
+      7,
+      8
+    ],
+    "measures": [
+      "tavg",
+      "pcp"
+    ],
+    "pool_sha256": "0843cbd9a5f6e302ec401fc64ade67fe4f48c9136ece60578d90d2643447a41f",
+    "exclude_sets": [],
+    "set": "weather-calib-easy",
+    "band": "easy"
+  },
+  "tasks": {
+    "weather-calib-easy-01": {
+      "approved": [
+        "North Dakota"
+      ],
+      "failed": [
+        "Louisiana",
+        "South Carolina"
+      ]
+    },
+    "weather-calib-easy-02": {
+      "approved": [
+        "Connecticut"
+      ],
+      "failed": [
+        "Idaho",
+        "West Virginia"
+      ]
+    }
+  }
+}

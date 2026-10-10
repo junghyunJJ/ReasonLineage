@@ -1,0 +1,16 @@
+{
+  "state": "- The causal-chain paragraph states persistent cytoplasmic TDP-43 de-mixing as the initiating event, but S3 only shows that stress-granule-independent assemblies can accompany import failure, nuclear TDP-43 loss, and death. Restate assembly-to-kinase recruitment as a speculative bridge and add a proximity or recruitment readout that must link intact assemblies to the kinase before phosphorylation is treated as the required intermediate.\n- Nup98, the kinase, the included sites, the occupancy-by-precedence rank equation, and the fold-change and stoichiometry gates are all deferred, so the writeup is a discovery protocol that can rewrite its own target. Pre-register numeric inclusion cutoffs, the weighting formula, and a site cap, and keep any non-Nup98 winner as a separate secondary hypothesis rather than a silent replacement.\n- The context-specificity rule (arm-4 NLS-import gain greater than 0.25 times the arm-1 gain) is an unjustified point threshold with no variance or interval model, and arm 3 never names the import-neutral G3BP1 intervention. Replace 0.25 with a pre-registered phospho-null-by-genotype interaction contrast and interval, and name the granule block plus the numeric import-null window that validates it.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

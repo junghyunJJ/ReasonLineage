@@ -1,0 +1,16 @@
+{
+  "state": "- The primary maturation assay is run in pyrimidine-starved medium (measured uridine below 1 micromolar) while passage still treats 100 micromolar uridine rescue as proof of on-target DHODH dependence, so a pass can reflect a condition that physiologic uridine would reverse. Make maturation at a verified human plasma or marrow uridine concentration, with free teriflunomide at or below the documented unbound approved-dose ceiling, the primary efficacy readout, and keep the depleted medium as a mechanism-only arm.\n- The DHODH positive control, AHR antagonist, and kinase tool are unnamed and unconcentrated, and the OXPHOS or TCA falsifier is assigned to ROS-low and cytarabine-residual side cultures rather than to the same primary blasts that must mature. Name those three reagents, match them to the dihydroorotate and pyrimidine-nucleotide engagement window, and require oxygen-consumption and TCA-intermediate measurements on the primary cultures at 6–24 hours.\n- The drug–target pair is the direct approved-inhibitor extension of the S4 DHODH differentiation premise, and the pre-fixed monocytic gates (low CD11b and CD14, forms past the promonocyte) can score a genuine myeloid differentiation response as failure when maturation is granulocytic. Pre-commit to a prior-art retirement check against exposure-matched leflunomide or teriflunomide AML data, and add a parallel granulocytic score so lineage mismatch is reported separately from mechanism failure.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}
