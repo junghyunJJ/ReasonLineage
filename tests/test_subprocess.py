@@ -44,6 +44,58 @@ def test_a_cancelled_call_kills_its_process(tmp_path):
 GRANDCHILD = "sleep 30 & echo $! > {pidfile}; wait"  # like codex: a wrapper whose child holds stdout
 
 
+@pytest.mark.parametrize('cancel_requests', [1, 2])
+def test_cancellation_during_process_start_kills_wrapper_and_children(tmp_path, monkeypatch, cancel_requests):
+    pidfile = tmp_path/'pid'
+    backend = SubprocessBackend('x', 'sh', max_concurrency=1, retries=0)
+    native_create = asyncio.create_subprocess_exec
+
+    async def stop_during_start():
+        created = asyncio.Event()
+        release = asyncio.Event()
+        processes = []
+
+        async def delayed_create(*args, **kwargs):
+            proc = await native_create(*args, **kwargs)
+            processes.append(proc)
+            created.set()
+            await release.wait()  # cancellation before the backend receives the process handle
+            return proc
+
+        monkeypatch.setattr(asyncio, 'create_subprocess_exec', delayed_create)
+        call = asyncio.create_task(backend._exec(['sh', '-c', GRANDCHILD.format(pidfile=pidfile)], timeout_s=60))
+        try:
+            await asyncio.wait_for(created.wait(), 5)
+            for _ in range(500):
+                if pidfile.exists() and pidfile.read_text().strip():
+                    break
+                await asyncio.sleep(.001)
+            child = int(pidfile.read_text())
+            for _ in range(cancel_requests):
+                call.cancel()
+                await asyncio.sleep(0)
+            release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await call
+            for _ in range(25):
+                if not alive(child):
+                    break
+                await asyncio.sleep(.01)
+            assert not alive(child), 'cancellation during launch left the CLI child running'
+            assert processes[0].returncode is not None
+        finally:
+            release.set()
+            call.cancel()
+            for proc in processes:
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                await proc.wait()
+
+    asyncio.run(stop_during_start())
+
+
 @pytest.mark.parametrize("stop", ["timeout", "cancel"])
 def test_a_stopped_call_kills_the_cli_and_its_children_at_once(tmp_path, stop):
     # Killing only the wrapper left its child holding stdout, so the call waited until that child finished:
