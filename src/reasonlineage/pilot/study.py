@@ -15,6 +15,8 @@ from ..engine.calls import CallRecorder
 from ..engine.config import Member, build_backend, load_setup
 from ..engine.events import EventLog
 from ..protocol import load_protocol
+from ..checks.calibration import validate_certificate
+from .checker import live_checker, CheckerVersionMismatch
 from .budget import Budget, MeteredBackend, safe_error
 from .review import citation_audit, comparable, export_expert, review_schema, validate_review
 from .run import run_case, save_json
@@ -50,34 +52,48 @@ def _prior_attempt(directory):
     return {'directory': str(directory), 'usage': usage, 'clock': clock}
 
 
-def dry_plan(root, *, relaxed=False, prior_run_directory=None):
+def dry_plan(root, *, relaxed=False, three_initial=False, prior_run_directory=None, jev=False, combined=False, control=False):
     root = Path(root)
+    if control and (jev or combined):
+        raise ValueError('jev control and enabled modes are mutually exclusive')
+    jev = jev or combined
+    three_initial = three_initial or jev or control
+    relaxed = relaxed or three_initial
     config = root / ('configs/co-scientist-rerun.json' if relaxed else 'configs/co-scientist-pilot.json')
     setup = load_setup(config)
     schedule = [{'case': c, 'method': m} for m in ('reasonlineage', *(member.name for member in setup.panel))
                 for c in ('als', 'aml')]
     prior = _prior_attempt(prior_run_directory) if prior_run_directory is not None else None
     carried_calls = prior['usage']['backend_calls'] if prior else (4 if relaxed else 0)
-    total_calls = carried_calls + len(schedule) * 40 + 4
-    if total_calls > 404:
+    protocol_directory = ('protocol-jev-control' if control else 'protocol-jev-combined' if combined else 'protocol-three-initial-jev' if jev else 'protocol-three-initial' if three_initial else
+                          'protocol-relaxed' if relaxed else 'protocol')
+    protocol = load_protocol(root / 'research/co-scientist-pilot' / protocol_directory)
+    checker_limit = protocol.data.get('pilot', {}).get('checker_call_limit', 0) if jev else 0
+    independent = not jev and protocol.data.get('pilot', {}).get('independent_evaluation', True)
+    total_calls = carried_calls + len(schedule) * (40 + checker_limit) + (4 if independent else 0)
+    if not jev and total_calls > 404:
         raise ValueError('planned backend call ceiling exceeds original 404-call authorization')
-    protocol_directory = 'protocol-relaxed' if relaxed else 'protocol'
+    if jev:
+        validate_certificate(protocol)
     digest = hashlib.sha256()
     for path in sorted((root / 'src/reasonlineage').rglob('*.py')):
         digest.update(path.relative_to(root).as_posix().encode() + b'\0' + path.read_bytes())
     revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
     dirty = subprocess.run(['git', 'diff', '--quiet', 'HEAD'], cwd=root).returncode != 0
     plan = {'schedule': schedule, 'code_commit': revision, 'tracked_changes': dirty, 'relaxed': relaxed,
+            'three_initial': three_initial, 'jev': jev, 'combined': combined, 'control': control,
             'scheduling': 'sequential multi-model, concurrent independent provider chains' if relaxed else 'sequential',
             'protocol_directory': protocol_directory,
             'code_sha256': digest.hexdigest(), 'config_sha256': hashlib.sha256(config.read_bytes()).hexdigest(),
             'evidence_sha256': {case: hashlib.sha256((root / f'research/co-scientist-pilot/{case}-evidence.md').read_bytes()).hexdigest()
                                 for case in ('als', 'aml')},
-            'protocol_sha256': load_protocol(root / 'research/co-scientist-pilot' / protocol_directory).hash,
+            'protocol_sha256': protocol.hash,
             'models': [{'name': m.name, 'model': m.model, 'effort': m.effort, 'backend': m.backend} for m in setup.panel],
-            'independent_model': INDEPENDENT_MODEL, 'independent_effort': 'high',
+            'independent_model': INDEPENDENT_MODEL if independent else None, 'independent_effort': 'high' if independent else None,
             'limits': {'total_seconds': 14400, 'generation_seconds': 12000, 'run_seconds': 2700 if relaxed else 1200,
-                       'run_tokens': 800000 if relaxed else 400000, 'run_calls': 30 if relaxed else 40,
+                       'run_tokens': 800000 if relaxed else 400000,
+                       'run_calls': protocol.data.get('pilot', {}).get('nominal_call_count', 30 if relaxed else 40),
+                       'max_checker_calls': checker_limit,
                        'max_run_calls': 40, 'total_calls': total_calls, 'controller_retries': 0},
             'usage_caveat': 'reported input+output tokens, cache-inclusive; not measured FLOPs or billed cost'}
     if prior is not None:
@@ -159,15 +175,21 @@ def cost_summary(destination):
 
 async def run_study(destination, root, *, setup=None, services=None, evaluator=None,
                     generation_seconds=12000, total_seconds=14400, relaxed=False, preflight_directory=None,
-                    prior_run_directory=None):
+                    prior_run_directory=None, three_initial=False, jev=False, checker=None, combined=False, control=False):
     destination, root = Path(destination), Path(root)
+    if control and (jev or combined):
+        raise ValueError('jev control and enabled modes are mutually exclusive')
+    jev = jev or combined
+    three_initial = three_initial or jev or control
+    relaxed = relaxed or three_initial
     if destination.exists():
         raise FileExistsError(destination)
     if prior_run_directory is not None and preflight_directory is not None:
         raise ValueError('prior run and preflight directories are mutually exclusive')
     if prior_run_directory is not None and destination.resolve().is_relative_to(Path(prior_run_directory).resolve()):
         raise ValueError('new output cannot be inside prior run directory')
-    plan = dry_plan(root, relaxed=relaxed, prior_run_directory=prior_run_directory)
+    plan = dry_plan(root, relaxed=relaxed, three_initial=three_initial, prior_run_directory=prior_run_directory, jev=jev, combined=combined, control=control)
+    independent = plan['independent_model'] is not None
     if prior_run_directory is not None:
         generation_seconds = min(generation_seconds, plan['limits']['generation_seconds'])
         total_seconds = min(total_seconds, plan['limits']['total_seconds'])
@@ -217,7 +239,10 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
     cancelled, study_error = False, None
     try:
         services = services if services is not None else {m.name: build_backend(m, setup.concurrency) for m in setup.panel}
-        evaluator = evaluator if evaluator is not None else build_backend(evaluator_member(setup), 1)
+        if jev:
+            checker = checker if checker is not None else live_checker(root)
+        elif independent:
+            evaluator = evaluator if evaluator is not None else build_backend(evaluator_member(setup), 1)
         async def execute_slot(slot):
             if shared.remaining <= 0:
                 statuses.append({'header': slot, 'status': 'unstarted', 'reason': 'generation deadline'})
@@ -226,7 +251,7 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
             outcome = await run_case(destination / 'runs' / f"{slot['case']}-{slot['method']}",
                                      slot['case'], slot['method'], setup, services, shared, root=frozen,
                                      seconds=plan['limits']['run_seconds'], tokens=plan['limits']['run_tokens'],
-                                     protocol_directory=protocol_directory)
+                                     protocol_directory=protocol_directory, checker=checker if jev else None)
             statuses.append(outcome)
             save_json(destination / 'generation-status.json', statuses)
             print(f"{slot['case']} / {slot['method']}: {outcome['status']}; "
@@ -246,7 +271,7 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
     except asyncio.CancelledError:
         cancelled = True
     except Exception as error:
-        study_error = safe_error(error)
+        study_error = 'jev pinned version changed; study stopped' if isinstance(error, CheckerVersionMismatch) else safe_error(error)
     finally:
         # Recover a cancelled slot's durable status; retain all planned missing slots.
         existing = {(s['header']['case'], s['header']['method']) for s in statuses}
@@ -268,12 +293,12 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
             audits.append({'id': proposal['id'], 'case': proposal['case'],
                            **citation_audit(proposal['text'], original['ranking'][0]['pmids'], evidence[proposal['case']])})
         save_json(destination / 'citation-audit.json', audits)
-        if not cancelled and study_error is None and shared.remaining > 0:
+        if independent and not cancelled and study_error is None and shared.remaining > 0:
             try:
                 evaluations = await independent_reviews(destination / 'independent', packet, evidence, evaluator, shared)
             except asyncio.CancelledError:
                 cancelled = True
-        if not evaluations:
+        if independent and not evaluations:
             durable = destination / 'independent/status.json'
             evaluations = json.loads(durable.read_text())['evaluations'] if durable.exists() else [
                 {'case': c, 'order': o, 'status': 'unstarted', 'reason': study_error or 'study cancelled before review'}
@@ -283,7 +308,8 @@ async def run_study(destination, root, *, setup=None, services=None, evaluator=N
             for method in (member.name for member in setup.panel):
                 comparisons.append({'case': case, 'solo': method,
                                     **comparable(ordered[case, 'reasonlineage'], ordered[case, method])})
-        result = {'runs': statuses, 'independent_evaluations': evaluations, 'expert_status': 'pending',
+        result = {'runs': statuses, 'independent_evaluations': evaluations,
+                  'independent_status': 'requested' if independent else 'disabled_by_config', 'expert_status': 'pending',
                   'comparisons': comparisons, 'usage': shared.snapshot(), 'cost': cost_summary(destination),
                   'study_error': study_error, 'cancelled': cancelled, 'frozen_plan': plan,
                   'expert_packet': 'review-materials/expert', 'analyst_mapping': 'review-materials/analyst/mapping.json'}

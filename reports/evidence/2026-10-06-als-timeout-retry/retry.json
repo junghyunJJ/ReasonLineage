@@ -1,0 +1,52 @@
+{
+  "status": "blocked_environment",
+  "phase": "preflight",
+  "reason": "Required model endpoint connectivity failed before model dispatch.",
+  "usage": {
+    "backend_calls": 0,
+    "reported_tokens": 0,
+    "unknown_usage_calls": 0
+  },
+  "generation": {
+    "status": "unstarted"
+  },
+  "frozen_plan": {
+    "scope": "ALS/reasonlineage only; retain three existing ALS solos",
+    "profile": "co-scientist-rerun-0.4",
+    "protocol_sha256": "f54bcbc58fbcc32dcd9054a39eb707d06c240b898af959ee4e1ca0f9b87a21ad",
+    "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+    "models": [
+      {
+        "name": "gpt",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      },
+      {
+        "name": "grok",
+        "model": "grok-4.7",
+        "effort": "xhigh"
+      },
+      {
+        "name": "glm",
+        "model": "glm-5.3-flash",
+        "effort": "max"
+      }
+    ],
+    "generation_seconds": 2700,
+    "total_seconds": 3600,
+    "generation_tokens": 800000,
+    "nominal_generation_calls": 30,
+    "max_generation_calls": 40,
+    "max_review_calls": 2,
+    "max_total_calls": 42,
+    "driver_sha256": "83b6a6daeffa30ed584c9f81e593a64f26b1ea593915a8647bf8cafbc847ee5d",
+    "code_commit": "cb4bb7c2fd5624d5eecdf7801d95186179333cfd",
+    "control_profiles": {
+      "gpt": "co-scientist-rerun-0.3",
+      "grok": "co-scientist-rerun-0.3",
+      "glm": "co-scientist-rerun-0.3"
+    },
+    "clock_policy": "Fresh clock for this newly authorized retry; old results and clocks remain unchanged.",
+    "execution_mode": "live"
+  }
+}

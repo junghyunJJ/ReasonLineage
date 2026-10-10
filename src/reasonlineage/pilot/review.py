@@ -59,11 +59,16 @@ def export_expert(destination, statuses, evidence):
                              'first': first, 'second': second})
 
     for case in cases:
-        multi = lookup.get((case, 'reasonlineage', 'final'))
-        for method in ('gpt', 'opus', 'grok', 'glm'):
-            add_pair(case, multi, lookup.get((case, method, 'final')), 'primary', method)
-        for method in ('reasonlineage', 'gpt', 'opus', 'grok', 'glm'):
-            add_pair(case, lookup.get((case, method, 'initial')), lookup.get((case, method, 'final')), 'secondary', method)
+        prefixes = sorted({method.rpartition('/')[0]+'/' if '/' in method else ''
+                           for item_case, method, _ in lookup if item_case == case})
+        for prefix in prefixes:
+            multi = lookup.get((case, prefix+'reasonlineage', 'final'))
+            for name in ('gpt', 'opus', 'grok', 'glm'):
+                method = prefix+name
+                add_pair(case, multi, lookup.get((case, method, 'final')), 'primary', method)
+            for name in ('reasonlineage', 'gpt', 'opus', 'grok', 'glm'):
+                method = prefix+name
+                add_pair(case, lookup.get((case, method, 'initial')), lookup.get((case, method, 'final')), 'secondary', method)
     random.SystemRandom().shuffle(proposals)
     random.SystemRandom().shuffle(pairs)
     # The complete comparison graph has an identifiable multi-model hub.

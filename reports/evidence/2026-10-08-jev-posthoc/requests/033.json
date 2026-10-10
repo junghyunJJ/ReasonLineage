@@ -1,0 +1,16 @@
+{
+  "state": "- The program's central premise (A5: GLFG phosphorylation reduces TNPO1/importin docking) is a declared biophysical bridge with zero in-packet or cited support, yet the design front-loads expensive Phase 0 site-mapping phospho-proteomics before any phosphorylation-vs-binding measurement; A5 is only tested after the MS map exists. Fix: add a cheap early kill-test — bulk in vitro phosphorylation of a recombinant Nup98 GLFG fragment followed by SPR against TNPO1 — that can falsify A5 in weeks before committing the program to the proteomics screen.\n- The falsifiers F1/F2 hinge on 'MS-verified occupancy suppression' and 'validated reagent threshold,' but no operational detection limit is defined; sub-threshold residual phosphorylation, or compensating sites below MS detection (acknowledged in Limitations but not bounded in the decision logic), could rescue import and spuriously falsify or confirm. Fix: quantify the assay's minimal detectable phospho-occupancy (spike-in phosphopeptide standards) and restate F1's 'nil phosphorylation-attributable component' conditional on that bound.\n- The 'selective TNPO1-cargo decline' prediction lacks a pre-defined quantitative threshold for what counts as preferential versus generic import slowdown, and TNPO1 docks at multiple FG-nucleoporins (Nup153, Nup50), so partial overlap of cargos and dock sites could blunt the readout; fix: pre-register a selectivity ratio (PY-NLS cargo vs importin-α/β cargo decline) and specify that a null selectivity result constitutes a failure of the A5 bridge, not neutral evidence for the hypothesis.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

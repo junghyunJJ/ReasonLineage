@@ -66,6 +66,19 @@ def test_results_are_reused_on_resume_and_from_source_runs(tmp_path):
     assert read_events(tmp_path / "b" / "checks.jsonl")[0]["replayed"] is True
 
 
+def test_identical_rewrite_reuses_judgment_but_records_both_attempts(tmp_path):
+    checker = FakeChecker(argued=.1)
+    gate = Gate(tmp_path, checker, ENFORCED, 'Q?', 'experiment')
+    assert ask(gate).rewrite
+    ask(gate, attempt=1)
+    records = read_events(tmp_path / 'checks.jsonl')
+    assert len(checker.asked) == 1
+    assert [r['attempt'] for r in records] == [0, 1]
+    assert records[1]['would_rewrite']
+    ask(Gate(tmp_path, checker, ENFORCED, 'Q?', 'experiment'), attempt=1)
+    assert len(read_events(tmp_path / 'checks.jsonl')) == 2
+
+
 def test_a_different_checker_version_stops_experiments_and_warns_in_exploration(tmp_path):
     moved = FakeChecker(model="jev-1.14.0", pinned="jev-1.13.0")
     with pytest.raises(RunStopped, match="not the pinned jev-1.13.0"):

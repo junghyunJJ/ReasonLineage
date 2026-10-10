@@ -1,0 +1,27 @@
+[
+  {
+    "directory": "2026-10-07-als-timeout-retry",
+    "files_checked": 77,
+    "mismatches": 0
+  },
+  {
+    "directory": "2026-10-08-aml-solo-retry",
+    "files_checked": 155,
+    "mismatches": 0
+  },
+  {
+    "directory": "2026-10-08-jev-posthoc",
+    "files_checked": 494,
+    "mismatches": 0
+  },
+  {
+    "directory": "2026-10-08-jev-gate",
+    "files_checked": 116,
+    "mismatches": 0
+  },
+  {
+    "directory": "2026-10-09-jev-combined",
+    "files_checked": 368,
+    "mismatches": 0
+  }
+]

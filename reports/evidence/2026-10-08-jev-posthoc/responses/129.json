@@ -1,0 +1,20 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "critique_severity": {
+      "type": "choice",
+      "choice": "critical",
+      "confidence": 0.47,
+      "probabilities": {
+        "critical": 0.6,
+        "minor": 0.0,
+        "major": 0.4,
+        "none": 0.0
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 837,
+    "output_tokens": 49
+  }
+}

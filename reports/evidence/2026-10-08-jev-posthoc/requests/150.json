@@ -1,0 +1,16 @@
+{
+  "state": "- The pivotal translational bridge B1 (free steady-state trough of 0.1–1 µM exceeding the blast DHODH differentiation IC50) rests entirely on flagged-unverified label recall with an order-of-magnitude uncertainty range, so the go/no-go exposure comparison has an unverified denominator and could collapse on routine checking. Fix: anchor B1 to published verified A77 1726 steady-state PK plus an in-human DHODH-engagement pharmacodynamic surrogate measured in teriflunomide-treated patients, and narrow the exposure range before any laboratory work.\n- The core mechanism (DHODH inhibition driving AML differentiation) is already established by S4 using brequinar and by clinical-stage DHODH inhibitors in AML, so the drug-specific novel content reduces to exposure feasibility, which is unverified, plus two untested claims (salvage-dependence responder scoring, orthogonality to the BCL-2/OXPHOS axis). Fix: execute the pre-specified precedent search up front and, as the gate already anticipates, foreground only the salvage-responder rule and combination-orthogonality hypotheses as the falsifiable contributions rather than crediting feasibility logic as discovery.\n- The biomarker-defined subset is under-operationalized: no numeric cutoffs for uridine-rescue EC50, SLC29A1/ENT1 expression, Ki-67 fraction, or a weighting rule across the four score components, so responder assignment is not reproducible; the optional venetoclax-azacitidine combination arm also lacks a design element to detect antagonism (e.g., tumor-cell uridine release or salvage upregulation blunting DHODH inhibition). Fix: lock numeric thresholds and a pre-specified scoring algorithm with a training/validation split, add LC-MS uridine kinetics during combination exposure in the PDX arm.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

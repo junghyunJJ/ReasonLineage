@@ -1,0 +1,16 @@
+{
+  "state": "- Nup98 is the ranked hypothesis in the title, but any other phosphoproteomic leader replaces it and sites plus kinase stay unassigned, so the claim is a discovery screen rather than one causal target. Lock one assumed nucleoporin, site region, and kinase, each marked speculative, and drop rank-based substitution.\n- The falsifiers depend on a preregistered occupancy cutoff, an equivalence margin, and pre-death precedence, yet the numeric cutoffs, death marker, NLS reporter, and TDP-43 construct that yields stress-granule-negative assemblies are never defined. Write those parameters and the induction method into the protocol so order and Arm 3 validity can actually be failed.\n- Assemblies directing a kinase that changes NPC composition is not supported by S1–S4, which show nucleoporin mislocalization and transport-factor sequestration without a phosphorylation step. Pre-specify a second phosphorylation mechanism, such as altered FG-repeat–importin binding, and a readout that separates it from composition or localization change if the composition step is retired.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence coverage is exceptionally disciplined: all four sources are accurately bounded, and TDP-43 phosphorylation is distinguished from nucleoporin phosphorylation. However, p38α–NUP62 prioritization and novelty lack supporting comparison. Add a kinase–substrate/site-accessibility rationale and focused prior-art assessment.\n- The specified genotype, kinase, nucleoporin, retention mechanism and quantitative falsifiers provide exceptional specificity, but the import→nuclear TDP-43 depletion→neuronal dysfunction bridge remains under-tested. Prespecify functional rescue endpoints and independently restore import or nuclear TDP-43 to test downstream mediation.\n- Execution depends on phosphosite discovery, a structurally benign tether and an unvalidated selective degrader; six-hour matched-culture measurements also weaken temporal ordering. Establish staged feasibility gates and backup perturbations, and use finer temporal or single-cell measurements before interpreting initiation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

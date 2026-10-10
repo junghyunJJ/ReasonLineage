@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence handling is excellent: S1/S2 populations remain distinct, S3 is only a comparator, and drug-specific bridges are explicitly speculative. However, novelty largely extends S4 to a selected context; check prior teriflunomide/leflunomide AML work and identify the genuinely distinguishing prediction.\n- The proposed subgroup and exposure gate remain underspecified. Prespecify respiration and salvage cutoffs, verify numerical human unbound-exposure bounds, and define efficacy versus normal-progenitor injury thresholds.\n- The 'neither differentiation nor reduced propagation' falsifier is weaker than the conjunctive hypothesis: failure of either endpoint rejects the full claim. Normalize transplantation inputs to viable leukemic cells to distinguish cell depletion from reduced leukemia-propagating frequency.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "status": "partial",
+  "started_utc": "2026-10-09T11:37:57.161959+00:00",
+  "arms": {
+    "jev-on": {
+      "status": "recorded",
+      "exit_code": 1,
+      "generated": 6,
+      "study_error": null
+    },
+    "jev-off": {
+      "status": "recorded",
+      "exit_code": 1,
+      "generated": 7,
+      "study_error": null
+    }
+  },
+  "active_arm": null,
+  "finished_utc": "2026-10-09T16:14:46.895704+00:00",
+  "generation_completed": 13,
+  "verified_pairs": 5
+}

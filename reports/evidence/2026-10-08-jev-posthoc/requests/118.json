@@ -1,0 +1,16 @@
+{
+  "state": "- The causal chain is built almost entirely from explicitly unverified prior knowledge (TDP-43 controlling a WEE1 cassette exon, WEE1 loss activating CDK1 in postmitotic neurons, interphase CDK1 phosphorylating NUP98 FG/GFLG enough to raise passive permeability in an assembled pore), so the hypothesis has almost no supported content beyond the 'TDP-43 disrupts pores' premise; to strengthen it, attach at least one external line of evidence (e.g., any published TDP-43 splicing-target screen, neuronal cyclin B/CDK1 expression data, or in vitro NUP98 FG phosphorylation data) to each bridge, and rank the bridges by weakness, testing the weakest first.\n- The central quantitative readout is not actually executable as specified: phospho-site mapping and stoichiometry of repetitive FG/GLFG peptides on endogenous NUP98 by PRM/SRM is unreliable because low-complexity repeated peptides identify and quantify poorly, and the same-cell 'FG-NUP98 phospho-signal' presumes an antibody that does not exist for a hypothetical site; the plan should state an alternative (e.g., knock-in epitope- or phospho-mutant-tagged NUP98 alleles, enrichment with engineered probes, or permeability readouts on phospho-null knock-ins) before making sub-LOD 'stop engineering' decisions the binding outcome.\n- The experimental program is overpacked with no prioritization: epistatic knock-in alleles, analog-sensitive CDK1 knock-in, NUP98-directed phosphatase recruitment, inducible CDK1 recruitment to endogenous NUP98, and roughly a dozen readouts per 24-h window exceed realistic single-lab scope; the fix is to define a minimal single experiment that alone can kill or advance the hypothesis (t0-anchored time course of WEE1 junction, CDK1-Tyr15, and one permeability readout with phospho-site mapping only if a signal appears), deferring the sufficiency-engineering arms until that screen is passed.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

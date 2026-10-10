@@ -1,0 +1,16 @@
+{
+  "state": "- Drug-specific support remains missing. The packet supports DHODH-mediated differentiation, not teriflunomide activity at licensed exposure or low salvage in cytarabine-residual AML. Add verified pharmacology, unbound pharmacokinetics and preliminary salvage measurements; correctly labeling speculation does not establish these premises.\n- Novelty remains unresolved because prior teriflunomide/leflunomide–AML and salvage-resistance work has not been checked. Audit that literature and distinguish the adaptive-ratio contribution from established salvage mechanisms, including comparison against direct nucleotide-depletion predictors.\n- The drug–target–context definition and onset-versus-delayed rescue falsifiers are exceptionally specific, but maximal sustainable salvage capacity is not operationally defined. Flux and mass balance may conflate capacity with adaptive demand. Specify independent capacity calibration, measurement timing and uncertainty, plus quantitative exposure/engagement go/no-go thresholds.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+Use case: infographic-diagram edit.
+Input image is the edit target: an accurate ReasonLineage lineage diagram with a newly detailed jev footer.
+Primary request: Faithfully polish this figure for a paper. Preserve the ENTIRE upper lineage graph, its 4-model reviewer matrix, all exact illustrative fitness scores, all arrows, every parent ID, every model/provider name, and final response M3 fitness 0.72. Preserve the added jev footer and its formulas EXACTLY. Improve only typographic crispness and consistent spacing. Use an opaque white background, restrained scientific infographic styling, and high resolution around the input's 3328×2048 aspect ratio. Do not simplify away requested detail.
+
+Footer accuracy is critical:
+- Header: "jev · Typed structural checks".
+- Subtitle: "Check new responses · Separate from fitness scoring".
+- Typed outputs are PARALLEL named judgments, composed with conditional rules. Do not draw a sequential Noul -> Choice -> Score pipeline or multiply their probabilities.
+- Input: "Response text + task-specific questions" -> typed probabilities.
+- Noul / presence: "Substantive response?", P(yes)=0.96, P(no)=0.04; P(yes)<0.5 requests full rewrite.
+- Choice / priority: gap "validation"; P(top category)=0.78, other categories=0.22; argmax P(gap) identifies priority. Do NOT apply a 0.5 cutoff to Choice.
+- Score / per task criterion: one illustrative validation-completeness distribution. Four bars labelled levels 0 absent, 1 vague, 2 adequate, 3 clear, with probabilities EXACTLY 0.10, 0.70, 0.15, 0.05. They sum to 1.
+  Mean = sum k·P(k) = 1.15 (out of 3; record).
+  P(adequate) = P(2)+P(3) = 0.20 < 0.50.
+  The mean is RECORDED; adequacy probability is used for the rewrite rule. Do not confuse these values or change the level order.
+- Conditional rules:
+  P(yes)<0.5 -> rewrite whole response.
+  Choice agrees with weak Score -> targeted rewrite.
+  Mismatch -> recheck once; unresolved -> flag.
+  Same author: at most 1 rewrite -> recheck.
+  All adequate + no gap -> pass.
+  Residual gaps are recorded; no endless rewrite loop.
+- Lower footer example: validation adequacy 0.20 -> one same-author revision -> recheck 0.90 (pass). This is an illustrative structural example, not a measured result.
+- Keep visible note that fitness and jev probabilities are illustrative, and structural judgments are not factual correctness estimates.
+
+Keep jev UNDER the main lineage; no large jev block inserted into the upper evolution graph. Keep all original layout relationships and subdued colored panels. Exact scientific content and legibility outrank decoration. No new experimental claims, new scores, or logos.

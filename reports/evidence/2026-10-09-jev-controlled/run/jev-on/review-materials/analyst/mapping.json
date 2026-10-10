@@ -1,0 +1,183 @@
+{
+  "proposals": [
+    {
+      "id": "Pbf58ab1171",
+      "case": "als",
+      "method": "reasonlineage",
+      "stage": "initial",
+      "candidate": "c002",
+      "content_sha256": "e3211b197cdb373d0187990a2abf6dc43098651f357694578c8e5eb2cd768b37"
+    },
+    {
+      "id": "P8050c49140",
+      "case": "als",
+      "method": "reasonlineage",
+      "stage": "final",
+      "candidate": "c006",
+      "content_sha256": "0f11bdb4259d04142455a15cad8c3d1920d13be979bab949dbb0abab3bb198fa"
+    },
+    {
+      "id": "P121ef661ba",
+      "case": "aml",
+      "method": "reasonlineage",
+      "stage": "initial",
+      "candidate": "c003",
+      "content_sha256": "27f26e28c56fda3334df7ff48590ecc4f8cbce7c03bc69805665e4f5d53b0f52"
+    },
+    {
+      "id": "P97cd135acf",
+      "case": "aml",
+      "method": "reasonlineage",
+      "stage": "final",
+      "candidate": "c004",
+      "content_sha256": "56f952adb63f8e24f0df27dffe6e3deca1ac784d2061dbc682778a4cb8fddfbe"
+    },
+    {
+      "id": "P2b67f0f74d",
+      "case": "aml",
+      "method": "gpt",
+      "stage": "initial",
+      "candidate": "c001",
+      "content_sha256": "74187be6a8aac549157b18c861ea05af3689ee2f060d2877ec9773ce00171c25"
+    },
+    {
+      "id": "P65721ee42a",
+      "case": "aml",
+      "method": "gpt",
+      "stage": "final",
+      "candidate": "c008",
+      "content_sha256": "963443a44be12bbfe5a80a8a2a959aea76bba9b5bf2429aba339e312985df92e"
+    },
+    {
+      "id": "Pb92e4d5c2e",
+      "case": "als",
+      "method": "grok",
+      "stage": "initial",
+      "candidate": "c002",
+      "content_sha256": "7a3ae8b15172297131fd829ca991cf6d16fca88695c6183125c6ff197fe65041"
+    },
+    {
+      "id": "Pd78535cb30",
+      "case": "als",
+      "method": "grok",
+      "stage": "final",
+      "candidate": "c004",
+      "content_sha256": "4b7a328f8232ccbe1a5a8d2a0537460b792178f490225cc87e7c390685018475"
+    },
+    {
+      "id": "P60f6ce60a8",
+      "case": "als",
+      "method": "glm",
+      "stage": "initial",
+      "candidate": "c002",
+      "content_sha256": "90c3ea30d3d168c59ed6cd9b06107e2932eed1e16b3d913dd6c63c3d5fce406c"
+    },
+    {
+      "id": "P274519fef5",
+      "case": "als",
+      "method": "glm",
+      "stage": "final",
+      "candidate": "c008",
+      "content_sha256": "b8d2081a1d2f33f8c226bf94084883061615abeb62c49bba7eab2dcc641c3cfe"
+    },
+    {
+      "id": "P1602ab5a12",
+      "case": "aml",
+      "method": "glm",
+      "stage": "initial",
+      "candidate": "c003",
+      "content_sha256": "1cc0e924d44827d95260af1e685cfbf0326fd77b237d6762b7bb5cec16b9e0fc"
+    },
+    {
+      "id": "Pab54b2f993",
+      "case": "aml",
+      "method": "glm",
+      "stage": "final",
+      "candidate": "c005",
+      "content_sha256": "c7a5035c30e8dcae7771aeb1ef7b2db907c131682c179b1d90ae1e4bc685ad2b"
+    }
+  ],
+  "pairs": [
+    {
+      "id": "C75719ab404",
+      "case": "als",
+      "kind": "primary",
+      "method": "grok",
+      "first": "P8050c49140",
+      "second": "Pd78535cb30"
+    },
+    {
+      "id": "C76f6d19dc5",
+      "case": "als",
+      "kind": "primary",
+      "method": "glm",
+      "first": "P8050c49140",
+      "second": "P274519fef5"
+    },
+    {
+      "id": "C0fa7219ece",
+      "case": "als",
+      "kind": "secondary",
+      "method": "reasonlineage",
+      "first": "Pbf58ab1171",
+      "second": "P8050c49140"
+    },
+    {
+      "id": "Cbebd692ad5",
+      "case": "als",
+      "kind": "secondary",
+      "method": "grok",
+      "first": "Pb92e4d5c2e",
+      "second": "Pd78535cb30"
+    },
+    {
+      "id": "C2262c968c8",
+      "case": "als",
+      "kind": "secondary",
+      "method": "glm",
+      "first": "P60f6ce60a8",
+      "second": "P274519fef5"
+    },
+    {
+      "id": "Cd7b9e4e08d",
+      "case": "aml",
+      "kind": "primary",
+      "method": "gpt",
+      "first": "P97cd135acf",
+      "second": "P65721ee42a"
+    },
+    {
+      "id": "C61be2b73be",
+      "case": "aml",
+      "kind": "primary",
+      "method": "glm",
+      "first": "P97cd135acf",
+      "second": "Pab54b2f993"
+    },
+    {
+      "id": "C7d3f09aaf0",
+      "case": "aml",
+      "kind": "secondary",
+      "method": "reasonlineage",
+      "first": "P121ef661ba",
+      "second": "P97cd135acf"
+    },
+    {
+      "id": "Cc0198dc945",
+      "case": "aml",
+      "kind": "secondary",
+      "method": "gpt",
+      "first": "P2b67f0f74d",
+      "second": "P65721ee42a"
+    },
+    {
+      "id": "Cc44dfee88a",
+      "case": "aml",
+      "kind": "secondary",
+      "method": "glm",
+      "first": "P1602ab5a12",
+      "second": "Pab54b2f993"
+    }
+  ],
+  "excluded": []
+}

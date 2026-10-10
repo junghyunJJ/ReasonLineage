@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "original_engine_and_inputs_unchanged": true,
+  "candidate_fitness_recomputed": 144,
+  "completed_runs": 16,
+  "original_completed_runs": 13,
+  "supplemented_runs": 3,
+  "on_off_comparison_pairs": 8,
+  "call_caps_verified": true,
+  "exact_token_cap_verified_for_all_cases": false,
+  "last_execution_event_utc": "2026-10-09T17:13:50+00:00",
+  "execution_elapsed_seconds": 20152.838041,
+  "viewer": {
+    "combinations_checked": 16,
+    "stages_per_run": 4,
+    "population_cards_per_run": 15,
+    "dom_render_logic": "passed",
+    "full_browser_screenshot": "not performed"
+  },
+  "scientific_plot_visually_inspected": true,
+  "expert_review": "pending",
+  "read_only_final_review": {
+    "critical": 0,
+    "important": 0,
+    "independently_checked": "original/supplemental statuses, accounting, population trajectories, CSV, expert references",
+    "scientific_validity_and_cost": "not independently verified"
+  }
+}

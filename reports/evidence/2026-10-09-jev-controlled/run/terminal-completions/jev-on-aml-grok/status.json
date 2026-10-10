@@ -1,0 +1,156 @@
+{
+  "status": "evaluation_complete",
+  "kind": "post_cutoff_terminal_evaluation",
+  "original_status": "failed",
+  "source": "jev-on/runs/aml-grok",
+  "plan": {
+    "source": "/common/jungj2/project/ReasonLineage/.worktrees/co-scientist-pilot/runs/jev-controlled-2026-10-09/jev-on/runs/aml-grok",
+    "case": "aml",
+    "method": "grok",
+    "expected": [
+      "g3/judge/c008/grok-r0",
+      "g3/judge/c008/grok-r1",
+      "g3/judge/c009/grok-r0",
+      "g3/judge/c009/grok-r1"
+    ],
+    "missing": [
+      "g3/judge/c009/grok-r0"
+    ],
+    "population": [
+      "c002",
+      "c004",
+      "c008",
+      "c009"
+    ],
+    "generation_calls_allowed": 0,
+    "original_model_calls": 27,
+    "original_unknown_usage_calls": 1,
+    "source_status_sha256": "0f887bdf6f92a316c3fd6f12074ee3959c038cdd2ddcb2e0a189d6fc5d3263a4"
+  },
+  "generation_calls": 0,
+  "initial": {
+    "id": "c002",
+    "author": "grok",
+    "fitness": 0.783,
+    "scores": {
+      "evidenceCoverage": 0.83,
+      "specificity": 0.85,
+      "novelty": 0.645,
+      "actionability": 0.75
+    },
+    "answer": {
+      "answer": "Hypothesis title: Teriflunomide, the active metabolite of rheumatoid-arthritis drug leflunomide, induces uridine-rescuable myeloid differentiation of cytarabine-residual human AML at exposures used in its approved non-AML indications, while normal CD34-positive progenitors retain greater clonogenicity than the leukemic residual cells.\n\nBiological context. The setting is primary human AML after cytarabine, focused on residual blasts with oxidative-metabolism features. The primary endpoint is myeloid differentiation together with reduced leukemic engraftment. Bulk killing, acute loss of oxidative phosphorylation, and clearance of ROS-low leukemia stem cells are recorded separately.\n\nSupported premises. In the models covered by [S2], cytarabine-resistant human AML cells were not consistently enriched for immature quiescent leukemia stem cells. They showed mitochondrial and fatty-acid-oxidation-related oxidative metabolism, and altering that state changed response in those settings. [S2] does not establish clinical efficacy of a new drug. [S4] shows that DHODH inhibition promoted myeloid differentiation in experimental AML and affected disease-related endpoints in the systems tested. [S4] does not show that every approved drug acting on this pathway reproduces the result or achieves selective exposure. [S1] shows that functionally defined leukemia stem cells in the studied specimens often had low reactive oxygen species and high BCL-2, and that BCL-2 inhibition reduced oxidative phosphorylation and affected quiescent leukemia stem cells. This defines a stem-cell state and a selectivity constraint for mitochondrial disruption. [S3] links venetoclax plus azacitidine, an established AML regimen, to TCA-cycle and oxidative-phosphorylation effects in leukemia stem cells. That combination is a comparator. The proposal uses a drug from a different indication and a differentiation endpoint.\n\nUnverified prior knowledge, which needs checking before the experiment is treated as informed: leflunomide is approved for rheumatoid arthritis; teriflunomide, its active metabolite, is approved for multiple sclerosis; teriflunomide inhibits DHODH and de novo pyrimidine synthesis; mitochondrial DHODH passes electrons to coenzyme Q, coupling pyrimidine synthesis to respiration; steady-state plasma levels for approved schedules are published in pharmacology sources. The packet never names these drugs, an AML approval, or an inhibitory concentration in AML.\n\nSpeculative bridges. Bridge one: teriflunomide at steady-state exposure from approved non-AML dosing will inhibit DHODH in primary AML and reproduce differentiation reported for experimental DHODH inhibition [S4]. Bridge two: cytarabine-residual cells that maintain oxidative metabolism [S2] will support DHODH turnover because respiration regenerates ubiquinone; that electron-acceptor link is unverified prior knowledge and is not a finding of [S2]. Bridge three: differentiation and loss of engraftment will occur in residual blasts outside the ROS-low, BCL-2-high state in [S1] and will separate from the venetoclax–azacitidine metabolic pattern in [S3]. Bridge four: at that same exposure, normal CD34-positive progenitors will preserve more clonogenic output than leukemic residual cells.\n\nAlternative explanations. Off-target kinase or aryl-hydrocarbon-receptor effects, recorded only as unverified prior knowledge, could drive the phenotype. Pyrimidine depletion could kill cycling bulk blasts and leave both residual oxidative cells and ROS-low stem cells in place. In vivo uridine salvage could erase an on-target effect that appears in low-uridine medium. Shared DHODH dependence in normal progenitors would close the window. Respiratory shutdown without a differentiation program would copy the metabolic vulnerability described across [S1] and [S2].\n\nDiscriminating preclinical test. Pair primary AML with normal CD34-positive cells and prepare a cytarabine-residual fraction in culture or a patient-derived xenograft, following the residual-disease logic of [S2]. Apply teriflunomide across concentrations that include verified human steady-state levels. Arms are vehicle, teriflunomide, teriflunomide plus uridine, venetoclax as the [S3] comparator, and DHODH disruption where feasible as an on-target benchmark of the [S4] class. Readouts are myeloid morphology and CD11b, CD14, and CD15; engraftment or serial colony formation by the residual fraction; oxygen-consumption rate relative to the BCL-2 result in [S1]; and normal CD34-positive colony formation. Split samples by ROS level. Record genotype as a covariate, not as a claimed biomarker.\n\nFalsifying observation. The claim is falsified if clinical-range exposure yields no rise in myeloid differentiation and no selective drop in engraftment of cytarabine-residual AML. Failure of uridine to rescue the phenotype places the effect outside DHODH. Equal or greater loss of normal CD34-positive clonogenicity removes selectivity. Death driven by an acute fall in oxygen consumption without differentiation matches BCL-2-linked suppression in [S1] and falsifies the differentiation mechanism.\n\nLimitations. [S4] and [S2] support a differentiation mechanism class and a residual oxidative phenotype only inside the studies summarized. [S1] and [S3] supply the stem-cell and venetoclax comparators that keep this proposal from being restated as an established AML regimen. Drug approval, original indications, plasma levels, AML potency, and off-target binding are unverified prior knowledge. Culture nucleosides can misrepresent patient salvage. Short assays can miss relapse from an unsampled stem-cell fraction. Hepatic and teratogenic risks attributed to this class remain unverified prior knowledge and would still constrain translation after a positive laboratory result.",
+      "ranking": [
+        {
+          "item": "Teriflunomide, the active metabolite of rheumatoid-arthritis drug leflunomide, induces uridine-rescuable myeloid differentiation of cytarabine-residual human AML at exposures used in its approved non-AML indications, while normal CD34-positive progenitors retain greater clonogenicity than the leukemic residual cells.",
+          "promisingness": 0.55,
+          "confidence": 0.43,
+          "pmids": [
+            "27641501",
+            "28416471"
+          ]
+        }
+      ]
+    }
+  },
+  "j1": {
+    "status": "completed",
+    "unique_checks": 9,
+    "failed_checks": 0,
+    "needs_review": 0,
+    "remaining_defects": 0
+  },
+  "cumulative_token_cap_verified": false,
+  "final": {
+    "id": "c002",
+    "author": "grok",
+    "fitness": 0.783,
+    "scores": {
+      "evidenceCoverage": 0.83,
+      "specificity": 0.85,
+      "novelty": 0.645,
+      "actionability": 0.75
+    },
+    "answer": {
+      "answer": "Hypothesis title: Teriflunomide, the active metabolite of rheumatoid-arthritis drug leflunomide, induces uridine-rescuable myeloid differentiation of cytarabine-residual human AML at exposures used in its approved non-AML indications, while normal CD34-positive progenitors retain greater clonogenicity than the leukemic residual cells.\n\nBiological context. The setting is primary human AML after cytarabine, focused on residual blasts with oxidative-metabolism features. The primary endpoint is myeloid differentiation together with reduced leukemic engraftment. Bulk killing, acute loss of oxidative phosphorylation, and clearance of ROS-low leukemia stem cells are recorded separately.\n\nSupported premises. In the models covered by [S2], cytarabine-resistant human AML cells were not consistently enriched for immature quiescent leukemia stem cells. They showed mitochondrial and fatty-acid-oxidation-related oxidative metabolism, and altering that state changed response in those settings. [S2] does not establish clinical efficacy of a new drug. [S4] shows that DHODH inhibition promoted myeloid differentiation in experimental AML and affected disease-related endpoints in the systems tested. [S4] does not show that every approved drug acting on this pathway reproduces the result or achieves selective exposure. [S1] shows that functionally defined leukemia stem cells in the studied specimens often had low reactive oxygen species and high BCL-2, and that BCL-2 inhibition reduced oxidative phosphorylation and affected quiescent leukemia stem cells. This defines a stem-cell state and a selectivity constraint for mitochondrial disruption. [S3] links venetoclax plus azacitidine, an established AML regimen, to TCA-cycle and oxidative-phosphorylation effects in leukemia stem cells. That combination is a comparator. The proposal uses a drug from a different indication and a differentiation endpoint.\n\nUnverified prior knowledge, which needs checking before the experiment is treated as informed: leflunomide is approved for rheumatoid arthritis; teriflunomide, its active metabolite, is approved for multiple sclerosis; teriflunomide inhibits DHODH and de novo pyrimidine synthesis; mitochondrial DHODH passes electrons to coenzyme Q, coupling pyrimidine synthesis to respiration; steady-state plasma levels for approved schedules are published in pharmacology sources. The packet never names these drugs, an AML approval, or an inhibitory concentration in AML.\n\nSpeculative bridges. Bridge one: teriflunomide at steady-state exposure from approved non-AML dosing will inhibit DHODH in primary AML and reproduce differentiation reported for experimental DHODH inhibition [S4]. Bridge two: cytarabine-residual cells that maintain oxidative metabolism [S2] will support DHODH turnover because respiration regenerates ubiquinone; that electron-acceptor link is unverified prior knowledge and is not a finding of [S2]. Bridge three: differentiation and loss of engraftment will occur in residual blasts outside the ROS-low, BCL-2-high state in [S1] and will separate from the venetoclax–azacitidine metabolic pattern in [S3]. Bridge four: at that same exposure, normal CD34-positive progenitors will preserve more clonogenic output than leukemic residual cells.\n\nAlternative explanations. Off-target kinase or aryl-hydrocarbon-receptor effects, recorded only as unverified prior knowledge, could drive the phenotype. Pyrimidine depletion could kill cycling bulk blasts and leave both residual oxidative cells and ROS-low stem cells in place. In vivo uridine salvage could erase an on-target effect that appears in low-uridine medium. Shared DHODH dependence in normal progenitors would close the window. Respiratory shutdown without a differentiation program would copy the metabolic vulnerability described across [S1] and [S2].\n\nDiscriminating preclinical test. Pair primary AML with normal CD34-positive cells and prepare a cytarabine-residual fraction in culture or a patient-derived xenograft, following the residual-disease logic of [S2]. Apply teriflunomide across concentrations that include verified human steady-state levels. Arms are vehicle, teriflunomide, teriflunomide plus uridine, venetoclax as the [S3] comparator, and DHODH disruption where feasible as an on-target benchmark of the [S4] class. Readouts are myeloid morphology and CD11b, CD14, and CD15; engraftment or serial colony formation by the residual fraction; oxygen-consumption rate relative to the BCL-2 result in [S1]; and normal CD34-positive colony formation. Split samples by ROS level. Record genotype as a covariate, not as a claimed biomarker.\n\nFalsifying observation. The claim is falsified if clinical-range exposure yields no rise in myeloid differentiation and no selective drop in engraftment of cytarabine-residual AML. Failure of uridine to rescue the phenotype places the effect outside DHODH. Equal or greater loss of normal CD34-positive clonogenicity removes selectivity. Death driven by an acute fall in oxygen consumption without differentiation matches BCL-2-linked suppression in [S1] and falsifies the differentiation mechanism.\n\nLimitations. [S4] and [S2] support a differentiation mechanism class and a residual oxidative phenotype only inside the studies summarized. [S1] and [S3] supply the stem-cell and venetoclax comparators that keep this proposal from being restated as an established AML regimen. Drug approval, original indications, plasma levels, AML potency, and off-target binding are unverified prior knowledge. Culture nucleosides can misrepresent patient salvage. Short assays can miss relapse from an unsampled stem-cell fraction. Hepatic and teratogenic risks attributed to this class remain unverified prior knowledge and would still constrain translation after a positive laboratory result.",
+      "ranking": [
+        {
+          "item": "Teriflunomide, the active metabolite of rheumatoid-arthritis drug leflunomide, induces uridine-rescuable myeloid differentiation of cytarabine-residual human AML at exposures used in its approved non-AML indications, while normal CD34-positive progenitors retain greater clonogenicity than the leukemic residual cells.",
+          "promisingness": 0.55,
+          "confidence": 0.43,
+          "pmids": [
+            "27641501",
+            "28416471"
+          ]
+        }
+      ]
+    }
+  },
+  "diagnostics": {
+    "status": "completed",
+    "records": 27
+  },
+  "new_model_usage": {
+    "backend_calls": 1,
+    "reported_input_tokens": 4785,
+    "reported_output_tokens": 5682,
+    "reported_tokens": 10467,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 104.421,
+    "remaining_seconds": 795.579,
+    "token_limit": 260004,
+    "call_limit": 2,
+    "seconds_limit": 900
+  },
+  "new_checker_usage": {
+    "backend_calls": 27,
+    "reported_input_tokens": 28241,
+    "reported_output_tokens": 1062,
+    "reported_tokens": 29303,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 104.421,
+    "remaining_seconds": 795.579,
+    "token_limit": null,
+    "call_limit": 61,
+    "seconds_limit": 900
+  },
+  "new_total_usage": {
+    "backend_calls": 28,
+    "reported_input_tokens": 33026,
+    "reported_output_tokens": 6744,
+    "reported_tokens": 39770,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 104.421,
+    "remaining_seconds": 795.579,
+    "token_limit": null,
+    "call_limit": 63,
+    "seconds_limit": 900
+  },
+  "original_model_usage": {
+    "backend_calls": 27,
+    "reported_input_tokens": 179614,
+    "reported_output_tokens": 360382,
+    "reported_tokens": 539996,
+    "unknown_usage_calls": 1,
+    "elapsed_seconds": 2700.016,
+    "remaining_seconds": 0.0,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  },
+  "original_checker_usage": {
+    "backend_calls": 9,
+    "reported_input_tokens": 40024,
+    "reported_output_tokens": 1395,
+    "reported_tokens": 41419,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 2700.021,
+    "remaining_seconds": 0.0,
+    "token_limit": null,
+    "call_limit": 70,
+    "seconds_limit": 2700
+  },
+  "original_timeout_retained": true,
+  "cumulative_unknown_model_usage_calls": 1,
+  "reported_token_usage_complete": false
+}

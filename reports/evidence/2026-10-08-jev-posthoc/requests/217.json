@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty rests on approved-prodrug status rather than demonstrated separation from prior work. Check existing leflunomide/teriflunomide AML studies and identify the genuinely new residual-state hypothesis.\n- ROS-high is not synonymous with oxidative-metabolism dependence, and the design lacks a clear test of preferential residual-state sensitivity. Measure respiration/dependency directly and compare matched pretreatment and post-cytarabine populations while controlling for proliferation.\n- Failed uridine rescue and wild-type DHODH overexpression do not conclusively establish off-target action. Validate uridine salvage competence and a resistance-conferring DHODH rescue construct before treating these outcomes as mechanistic falsifiers.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -83,6 +83,28 @@ def test_public_packet_does_not_reveal_the_comparison_graph(tmp_path):
     assert len(json.loads((tmp_path / 'analyst/mapping.json').read_text())['pairs']) == 3
 
 
+def test_paired_jev_exports_keep_planned_comparisons_within_each_arm(tmp_path):
+    data = []
+    for arm in ('jev-on', 'jev-off'):
+        for method in ('reasonlineage', 'gpt'):
+            number = len(data)*2
+            data.append({'header': {'case': 'als', 'method': arm+'/'+method}, 'status': 'completed',
+                         'initial': proposal(f'Target {number} has a testable mechanism.'),
+                         'final': proposal(f'Target {number+1} has a testable mechanism.')})
+    packet = export_expert(tmp_path, data, {'als': 'Evidence'})
+    mapping = json.loads((tmp_path/'analyst/mapping.json').read_text())
+    assert {(pair['kind'], pair['method']) for pair in mapping['pairs']} == {
+        ('primary', 'jev-on/gpt'), ('secondary', 'jev-on/reasonlineage'), ('secondary', 'jev-on/gpt'),
+        ('primary', 'jev-off/gpt'), ('secondary', 'jev-off/reasonlineage'), ('secondary', 'jev-off/gpt'),
+    }
+    methods = {entry['id']: entry['method'] for entry in mapping['proposals']}
+    for pair in mapping['pairs']:
+        assert methods[pair['first']].split('/')[0] == methods[pair['second']].split('/')[0]
+    assert len(packet['proposals']) == 8 and packet['pairs'] == []
+    public = ''.join(p.read_text() for p in (tmp_path/'expert').rglob('*') if p.is_file())
+    assert 'jev-on' not in public and 'jev-off' not in public
+
+
 @pytest.mark.parametrize('text', ['As GPT, I propose this.', 'As Claude I propose this.',
                                   'This final revision improves my initial proposal.'])
 def test_explicit_model_alias_or_stage_disclosure_is_quarantined(tmp_path, text):

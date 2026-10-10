@@ -1,0 +1,16 @@
+{
+  "state": "- The causal object is unnamed Nup98 phosphorylation somewhere in or beside the FG repeats, so the phospho-null and phosphomimetic tests cannot start until an open phosphoproteomic search succeeds. Pre-register a short FG-adjacent proline-directed site list and one kinase-perturbation arm, and keep unguided site discovery as a secondary analysis.\n- Selective import failure is measured with a single NLS reporter inside an already stress-granule-independent TDP-43 model, leaving export, passive leak, scaffold disassembly, and a competent S4 sequestration control untested. Add an NES reporter, a passive diffusion probe, a scaffold nucleoporin marker, and a parallel stress-granule model in which the same blockade is expected to restore import.\n- The timing claim does not separate demixing-driven Nup98 phosphorylation from the induction stress itself or from the phospho-TDP-43 signal already described in S3. Require uninduced and demixing-blocked sister cultures, a numeric Nup98 occupancy threshold, and a matched phospho-TDP-43 time course before calling the modification initiating.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

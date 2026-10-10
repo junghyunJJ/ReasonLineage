@@ -1,0 +1,16 @@
+{
+  "state": "- The pivotal exposure gate (B1) is anchored to a single recalled IC50 'cluster' (1-3 uM) and a recalled free-fraction estimate without citations or bounds; published A77 1726 DHODH potencies span orders of magnitude depending on assay format, electron-acceptor conditions, and protein content, so the decision rule could be miscalibrated by more than 10-fold. Fix: express the gate as a verified range (apply the decision rule under worst- and best-case IC50 and free-fraction bounds) and name the specific label PK section and two to three primary potency papers to be checked, rather than one recalled point estimate.\n- The exposure-matched in-vitro plan ignores drug protein binding: teriflunomide/A77 1726 is >99% albumin-bound, so total uM concentrations in serum-containing culture media correspond to unbound levels far below the free plasma peak (or vice versa), making potency, differentiation thresholds, and falsifier (d) (the <30% CFU-GM margin) uninterpretable across conditions. Fix: pre-specify media protein conditions (serum-free, charcoal-stripped, or albumin-matched) and report all in-vitro potency and differentiation data at unbound concentration so blast-vs-progenitor comparisons are internally consistent.\n- The novelty resolution understates how crowded DHODH-directed AML differentiation already is — brequinar has human PK and exposure data, a clinical-stage investigational DHODH-inhibitor field exists with published differentiation activity, and A77 1726's differentiation effects outside AML are documented prior art — which collapses the incremental claim almost entirely onto approval status plus the DHO:orotate/uridine-salvage stratification biomarker, whose diagnostic deployability (LC-MS turnaround, blood vs. blast sampling at diagnosis) is never assessed. Fix: in the step-0 gate, benchmark teriflunomide directly against brequinar's clinical PK/tolerability limits and state which stratification assay is realistically orderable at AML diagnosis; otherwise the 'patient-selection' novelty remains speculative rather than operational.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

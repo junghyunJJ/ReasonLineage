@@ -1,0 +1,164 @@
+[
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "세대별 점수",
+    "target": "figures/2026-10-09-jev-controlled-evolution.png",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "별도 보고서",
+    "target": "2026-10-09-jev-combined.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "한눈에 보는 진화 뷰어",
+    "target": "../runs/jev-controlled-2026-10-09/evolution-viewer.html",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "144개 가설 점수 CSV",
+    "target": "../runs/jev-controlled-2026-10-09/candidate-scores.csv",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "64개 세대 점수 CSV",
+    "target": "../runs/jev-controlled-2026-10-09/generation-scores.csv",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "보완을 구분한 전체 결과 JSON",
+    "target": "../runs/jev-controlled-2026-10-09/completed-summary.json",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "원본 비교",
+    "target": "../runs/jev-controlled-2026-10-09/report.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "전문가용 패킷",
+    "target": "../runs/jev-controlled-2026-10-09/completed-review-materials/expert/README.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "목적·방법 문서",
+    "target": "2026-10-09-reasonlineage-purpose-and-method.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "검증 기록",
+    "target": "evidence/2026-10-09-jev-controlled/verification.json",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "보안 확인",
+    "target": "evidence/2026-10-09-jev-controlled/security-check.json",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-jev-controlled.md",
+    "label": "증거 보관 폴더",
+    "target": "evidence/2026-10-09-jev-controlled/README.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "검증 보고서",
+    "target": "2026-10-09-jev-combined.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "전체 비교 보고서",
+    "target": "2026-10-09-jev-controlled.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "진화 뷰어",
+    "target": "../runs/jev-controlled-2026-10-09/evolution-viewer.html",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "현재 jev 조합 프로필",
+    "target": "../research/co-scientist-pilot/protocol-jev-combined/protocol.json",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "재작성 결정 코드",
+    "target": "../src/reasonlineage/checks/combined.py",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "J1 점검 및 재확인 코드",
+    "target": "../src/reasonlineage/checks/gate.py",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "실행 코드",
+    "target": "../src/reasonlineage/pilot/run.py",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "이전 jev 관문 검증 보고서",
+    "target": "2026-10-08-jev-gate.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "이전 ALS 결과",
+    "target": "2026-10-07-als-timeout-retry.md",
+    "exists": true
+  },
+  {
+    "document": "reports/2026-10-09-reasonlineage-purpose-and-method.md",
+    "label": "이전 AML 결과",
+    "target": "2026-10-08-aml-solo-retry.md",
+    "exists": true
+  },
+  {
+    "document": "runs/jev-controlled-2026-10-09/README.md",
+    "label": "pair-status.json",
+    "target": "pair-status.json",
+    "exists": true
+  },
+  {
+    "document": "runs/jev-controlled-2026-10-09/README.md",
+    "label": "completed-summary.json",
+    "target": "completed-summary.json",
+    "exists": true
+  },
+  {
+    "document": "runs/jev-controlled-2026-10-09/README.md",
+    "label": "비교 보고서",
+    "target": "../../reports/2026-10-09-jev-controlled.md",
+    "exists": true
+  },
+  {
+    "document": "runs/jev-controlled-2026-10-09/README.md",
+    "label": "진화 뷰어",
+    "target": "evolution-viewer.html",
+    "exists": true
+  },
+  {
+    "document": "runs/jev-controlled-2026-10-09/README.md",
+    "label": "pair-plan.json",
+    "target": "pair-plan.json",
+    "exists": true
+  }
+]

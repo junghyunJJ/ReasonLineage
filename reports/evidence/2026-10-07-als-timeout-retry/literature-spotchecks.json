@@ -1,0 +1,25 @@
+{
+  "checked_utc_date": "2026-10-07",
+  "scope": "Post-generation literature spot-checks of new ALS seed premises; not exhaustive novelty or claim validation",
+  "not_sent_to_models": true,
+  "evidence_packet_unchanged": true,
+  "checks": [
+    {
+      "topic": "NUP98 Ser606",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27097363/",
+      "pmid": "27097363",
+      "verified": "The primary study reports S606 in a PEST sequence and phosphorylation-dependent modulation of NUP98–APC/C(Cdc20) interaction in cell-cycle experiments.",
+      "not_established": "This study does not establish an ALS motor-neuron initiation mechanism or an S606-dependent nuclear-pore-retention lesion.",
+      "candidate_context": "New GPT seeds c001/c004 explicitly label Ser606 selection and neuronal relevance as unverified prior knowledge or assumptions. Do not classify the residue itself as fabricated."
+    },
+    {
+      "topic": "NUP98/CDK1 nuclear-pore disassembly",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21335236/",
+      "pmid": "21335236",
+      "verified": "The primary study supports mitotic NUP98 phosphorylation by multiple kinases including CDK1/NEKs and delayed nuclear-pore/envelope disassembly in phosphorylation-deficient mutants.",
+      "not_established": "It does not establish CDK1-dependent NUP98 phosphorylation as the initiating lesion in post-mitotic ALS motor neurons.",
+      "interpretation": "A transfer from mitotic cell-cycle biology to ALS neurons remains a speculative bridge."
+    }
+  ],
+  "expert_review_status": "pending"
+}

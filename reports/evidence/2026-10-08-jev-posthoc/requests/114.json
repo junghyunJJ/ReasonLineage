@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence coverage is unusually careful: all four sources are used with their boundaries intact, and phosphorylation assumptions are explicitly separated from supported findings. However, the upstream splice regulator/phosphatase remains unnamed; specify a candidate transcript, splice event, and isoform-rescue test.\n- CDK consensus, kinase occupancy, and CDK1 loss-of-function cannot establish direct CDK1 phosphorylation or exclude indirect stress effects. Validate exact sites with purified kinase, then combine acute CDK1 perturbation with NUP98-site epistasis.\n- The site gate permits phosphorylation 'at' t0, whereas the falsifier requires precedence; bulk sampling also obscures cell-wise ordering. Define temporal resolution and detection limits consistently, and measure Ran/NTF2 flux alongside permeability to distinguish increased leakage from impaired active transport.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

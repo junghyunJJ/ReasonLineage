@@ -1,0 +1,16 @@
+{
+  "state": "- Calling NUP98 a placeholder while leaving residues and kinase undefined weakens specificity. Add site-resolved phosphoproteomics in postmitotic motor neurons, then nominate the sites and kinase for causal testing.\n- The novelty rests mainly on assigning phosphorylation a downstream-amplifier role; 'stabilizes pore disruption' lacks a distinctive molecular mechanism. Specify and test a change in NPC residence, partner binding, or permeability that distinguishes pore modification from continuing sequestration.\n- The mutant comparisons are not decisive falsifiers without validation: phosphomimetics may not reproduce phosphorylation, and NUP98 replacement may independently disturb pores. Verify wild-type phosphorylation, matched expression, normal baseline transport, and comparable upstream assembly burden; add wild-type rescue and an orthogonal acute perturbation.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

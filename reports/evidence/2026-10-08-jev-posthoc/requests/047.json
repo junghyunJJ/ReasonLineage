@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence coverage is exceptional in distinguishing S1–S4 and labeling the phosphorylation mechanism speculative. However, p38α/NUP62 selection lacks mechanistic rationale, and novelty beyond the packet is unestablished. Justify this pairing against plausible alternatives and relevant prior work.\n- The TARDBP allele, import reporter, assembly-disrupting interventions, and decision thresholds remain unspecified. Define these, including temporal and rescue criteria, to make the proposed discrimination reproducible.\n- Normalization after nuclear permeabilization need not indicate soluble-factor sequestration: preparation could erase phosphorylation or alter pore composition. Verify retained phosphosite occupancy and NUP62 localization, and use controlled factor add-back before interpreting this assay.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

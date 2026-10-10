@@ -1,0 +1,16 @@
+{
+  "state": "- Alternative-explanation list omits the most direct competitor: stress-driven phosphorylation of other FG-nucleoporins (e.g., Nup62/Nup153/Nup214) or a global NPC phospho-shift as initiator. The phospho-null Nup98 knock-in could yield inconclusive results from compensatory phosphorylation at other FG-Nups (which the limitations note only as hypomorphism), not just from the wrong residue panel. Fix: add a time-course, unbiased phosphoproteomic survey of purified nuclear-envelope fractions as a declared arm, and treat 'another nucleoporin is the phospho-initiator' as an enumerated alternative with its own discriminating readout.\n- The falsifier leans heavily on pulse-washout temporal ordering, but time-resolved Nup98 phospho-occupancy nuclear-envelope targeted MS in iPSC motor neurons may lack sensitivity for low-abundance, transient occupancy, and stress-granule assembly (minutes) may keep pace with import decline, collapsing the 'least SG-confounded early window' assumption. Because falsification requires BOTH (i) and (ii), plausible measurement failure converts falsification into 'inconclusive'. Fix: predefine minimum detectable occupancy change with phosphopeptide spike-in validation, and add an orthogonal initiation test (acute candidate-kinase inhibition restoring early import without altering SG burden) so the hypothesis is falsifiable even if the timing assay is underpowered.\n- The core biophysical premise (2-3 GLFG Ser/Thr phosphorylations raise passive permeability and lower facilitated import selectivity) is borrowed by analogy from wholesale mitotic NPC disassembly and rests on a contested FG-gel selectivity model; the 'highest-occupancy mitotic sites' logic conflates occupancy with functional relevance, so a clean knock-in null could reflect inert residues rather than a disproved mechanism for the permeability claim. Fix: move mechanistic attribution earlier — the permeabilized-cell reconstitution comparing graded phosphorylation of recombinant Nup98 should be used to first establish that the specific pre-nominated residues produce the claimed permeability/selectivity effect before committing to the intact-neuron phospho-edits, and report an effect-size threshold in advance.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

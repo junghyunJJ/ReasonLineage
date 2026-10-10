@@ -1,0 +1,16 @@
+{
+  "state": "- Drug-specific feasibility remains unquantified despite careful labeling of uncertainty. Verify teriflunomide’s cellular DHODH potency, protein binding, and human unbound exposure to anchor the proposed exposure-bounded mechanism.\n- “Low salvage” lacks an operational cutoff, and low isotope flux could reflect low nucleotide demand rather than inadequate salvage capacity. Normalize flux to demand, prespecify classification thresholds, and perturb salvage directly to test the drug-by-salvage relationship.\n- Novelty rests mainly on salvage-based stratification; DHODH-induced differentiation already follows from S4. Check prior teriflunomide/leflunomide AML studies and identify the distinct predictive claim beyond applying an approved inhibitor to that established pathway.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

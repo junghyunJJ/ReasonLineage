@@ -1,0 +1,16 @@
+{
+  "state": "- The phosphorylation claim is limited to the NUP98 FG/GLFG region, and the upstream bridge is an open disjunction (WEE1, CDC25A/C, or any splice-regulated CDK transcript), so both arms can be redefined after the data arrive. Pre-register a short primary list of NUP98 FG-domain CDK1 residues and one primary mis-spliced exon, and treat every other site or transcript as exploratory.\n- S1 and S3 link nucleoporin and import defects to TDP-43 aggregates or cytoplasmic demixing, yet those papers are still used as the backdrop for a pre-assembly initiating lesion. State that S1–S4 give no temporal support for that order, and require same-cell evidence that FG-region phosphorylation and the Ran lesion precede cytoplasmic assemblies.\n- Partial CDK1 activity in postmitotic neurons is not separated from abortive cell-cycle re-entry, which would hit many mitotic substrates and favor pore disassembly rather than selective FG weakening. Add a pre-registered negative panel (cyclin B1 localization, phospho-lamin, phospho-Rb, non-FG nucleoporin sites) and require FG-restricted, sub-disassembly stoichiometry at t0.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- The initiating claim names CDK5 and Nup98 but leaves every modified residue to a post-hoc occupancy gate, so the molecular event is not fixed before testing and an empty gate only retires the kinase. Pre-register one Nup98 site or a short candidate list, and falsify kinase assignment separately from barrier initiation.\n- The assumed order cites S3 after a chain that includes CDK5 activation and Nup98 phosphorylation, while S3 supports cytoplasmic TDP-43 assemblies, transport-factor mislocalization, nuclear TDP-43 loss, and cell death. Attach S3 only to those events and mark each earlier arrow as an uncited assumption.\n- Falsification hinges on a ≥30% NLS nuclear-to-cytoplasmic drop, whereas the stated FG-barrier mechanism also predicts NES-export loss and a shift between ~20 kDa and ~70 kDa passive leak. Require the size-step leak to move in the same interval, derive cutoffs from assay variance, and specify how S/T-to-A or S/T-to-D Nup98 reaches ≥70% of NPC-resident Nup98 in these neurons.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence attribution and speculation labeling are exceptionally careful; drug, subgroup and endpoint definitions are exceptionally specific. However, the salvage discriminator is tested mainly correlationally. Add salvage-pathway gain/loss perturbations and proliferation-matched controls to establish whether salvage capacity drives selective sensitivity.\n- Novelty remains unresolved because the drug–pathway connection is inherited and relevant teriflunomide/leflunomide AML literature is unchecked. Verify that literature and identify the distinct residual-state prediction. Numerical human unbound-exposure bounds are also needed to operationalize the proposed exposure gate.\n- Equal viable-cell transplantation after washout can still reflect lingering drug, delayed proliferation or impaired homing rather than durable differentiation-linked loss of propagation. Confirm intracellular drug clearance and add recovery, homing and serial-transplantation controls.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

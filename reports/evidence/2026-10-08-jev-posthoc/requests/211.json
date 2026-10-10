@@ -1,0 +1,16 @@
+{
+  "state": "- The repurposing claim is exposure-defined, but no unbound concentration, free fraction, or half-life is stated even as a labeled unverified recollection, so the test dose is a placeholder. State a recalled unbound Css or Cmax range, mark it unverified, and lock the assay concentration to that ceiling before accrual.\n- The load-bearing bridge—that on-target DHODH blockade still depletes pyrimidines and matures blasts when salvage uridine is already at plasma or marrow levels—is asserted without a salvage-capacity mechanism (UCK activity, uridine Km, or AML-versus-normal difference) that would make depletion possible. Specify that assumption and treat nucleotide repletion at the verified physiologic uridine level as an immediate falsifier of the efficacy arm.\n- Go/no-go cutoffs (15 percentage points, 1.0 log2, 30 percent nucleotide loss, annexin-V within 10 points, 100 micromolar rescue) and the in vivo arm are unanchored: no tie to S4 effect sizes or assay variance, and no PDX dose, route, or schedule that holds free teriflunomide at the ceiling. Calibrate thresholds on a brequinar pilot and pre-specify the dosing regimen; put a normal CFU reduction limit inside the selectivity falsifier rather than outside it.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

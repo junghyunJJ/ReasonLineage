@@ -1,0 +1,16 @@
+{
+  "state": "- All four sources are exceptionally carefully bounded, including the distinction between TDP-43 and nucleoporin phosphorylation. However, the p38α–NUP62–M337V pairing lacks a site-level or allele-linked rationale. Add discriminating motif/domain and upstream-pathway predictions, and check relevant prior work to establish novelty.\n- Purified-kinase activity plus broad p38α perturbations would not establish direct phosphorylation inside neurons. Require acute p38α-dependent changes at endogenous NUP62 sites and an orthogonal cellular kinase–substrate assay.\n- Six-hour sampling of pore-bound phosphorylation could miss a transient modification that rapidly ejects NUP62. Measure both pore-bound and soluble pools with onset-focused sampling; validate selective assembly removal before interpreting the proposed degrader experiments.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

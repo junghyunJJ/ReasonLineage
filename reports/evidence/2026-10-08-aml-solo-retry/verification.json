@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "latest_completed_methods": [
+    "reasonlineage",
+    "gpt",
+    "grok",
+    "glm"
+  ],
+  "latest_scored_hypotheses": 40,
+  "latest_accepted_critic_responses": 80,
+  "latest_public_response_records": 92,
+  "previous_cutoff_public_responses": 25,
+  "all_current_work_public_responses": 117,
+  "cumulative_admissions": 118,
+  "cumulative_reported_tokens": 1658948,
+  "cumulative_unknown_usage_calls": 1,
+  "cumulative_call_limit": 122,
+  "first_attempt_preserved": true,
+  "all_old_source_hashes_unchanged": true,
+  "private_fields_or_credentials_in_response_records": 0,
+  "expert_unique_proposals": 7,
+  "expert_stage_mappings": 8,
+  "independent_reviews": 2,
+  "expert_review": "pending",
+  "comparable_resource_pairs": 0,
+  "provider_reported_cost_subset_usd": 1.5000834,
+  "responses_without_cost": 62,
+  "actual_total_billed_cost": "unknown"
+}

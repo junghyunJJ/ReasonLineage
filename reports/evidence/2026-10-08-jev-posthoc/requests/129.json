@@ -1,0 +1,16 @@
+{
+  "state": "- Novelty is not established and is likely low: DHODH inhibition driving myeloid differentiation in AML is exactly the mechanism demonstrated by the cited S4 (Sykes 2016, brequinar), and teriflunomide's DHODH-inhibiting active metabolite is textbook pharmacology (already known from leflunomide). Repurposing an approved DHODH inhibitor to AML is a near-linear extension of the packet with plausible prior art in hematologic malignancy and other tumors. The answer only defers prior-art checking. Fix: verify prior art as a first step and state explicitly what is incremental beyond S4 — e.g., the cytarabine-resistant OxPhos-residual and ROS-low LSC contexts — rather than implying the drug-mechanism pair itself is new.\n- A pharmacological imprecision undermines the experimental plan: teriflunomide is itself the active DHODH inhibitor; it is the active metabolite of leflunomide, not a prodrug with its own separate active metabolite. The exposure section's 'dose-response of teriflunomide and its active metabolite' is therefore ill-defined as written. Fix: define the test article correctly (teriflunomide as test compound, leflunomide only if parent-to-metabolite conversion is being modeled) and name the reference unbound-fraction/IC50 values to be measured.\n- The pivotal exposure premise lacks even labeled supporting prior knowledge, and the falsifier set misses the LSC arm: (i) available prior pharmacology (very long half-life, high protein binding, RRMS dosing already achieving DHODH-dependent lymphocyte suppression in humans) would partially de-risk or refute the exposure bridge and is omitted; (ii) falsifiers (a)-(d) cover bulk, mechanism, context, and window, but there is no pre-specified discriminator for the S1 claim — differentiation plus bulk activity without a reduction in LSC repopulating frequency by limiting-dilution xenograft would refute targeting of quiescent LSCs and should be listed as a falsifying outcome. Fix: add labeled PK prior knowledge and a quiescent-LSC-specific falsifier with separate success criteria per population.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

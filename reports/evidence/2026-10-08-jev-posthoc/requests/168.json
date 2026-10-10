@@ -1,0 +1,16 @@
+{
+  "state": "- Evidence handling is exceptional in distinguishing S1/S2 populations and supported premises from speculation, but teriflunomide-specific approval, pharmacology and exposure remain unverified. Supply verified drug-specific evidence to strengthen the translational rationale.\n- The flux-defined biomarker, reciprocal perturbations and lineage-resolved endpoints provide exceptional specificity, but persistence after pyrimidine restoration is not necessarily falsifying: differentiation may become irreversible. Separate rescue before differentiation commitment from delayed rescue.\n- Novelty remains unresolved because DHODH-driven AML differentiation is established and salvage bypass is expected pathway biology. Check prior teriflunomide/leflunomide AML studies and establish what the demand-adjusted biomarker adds beyond existing salvage and proliferation predictors.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

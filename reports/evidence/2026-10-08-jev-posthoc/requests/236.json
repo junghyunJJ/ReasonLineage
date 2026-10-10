@@ -1,0 +1,16 @@
+{
+  "state": "- The ubiquinone–DHODH timing, genotype-tracked differentiation and orthogonal rescues provide exceptional specificity, but salvage eligibility is ambiguous: uridine must fail to restore UTP yet reverse teriflunomide. Specify physiological versus supraphysiological rescue concentrations and operationally distinguish inadequate physiological salvage from defective salvage machinery.\n- A biochemical EC50 below unbound Cmax does not establish sustained marrow exposure sufficient for differentiation or clonogenic suppression. Compare concentration–duration requirements with unbound marrow pharmacokinetics; distinguish exposure infeasibility from falsification of the biological mechanism.\n- Novelty remains unverified, and selecting only FAO-enriched, DHODH-inhibitor-responsive specimens cannot establish that the proposed residual-state context predicts response. Check prior atovaquone/ETC–DHODH studies and include matched salvage-high/low and FAO-high/low residual-cell comparisons to test the claimed contextual specificity.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- The series rule (at least 8 of 12 metabolite suppressors and at least 8 day-7 passes, with non-suppressors kept in the denominator) conflicts with the falsifier that treats any missed day-7 metric or cell-cycle criterion after suppression as failure, and a sample that both matures and loses oxygen consumption has no assigned class. Use one per-sample success predicate and one series fraction, and pre-register differentiation plus oxidative-phosphorylation loss as either a pass or a reassignment to the S1/S3 comparator.\n- The exposure stop rule asks unbound Cmax and marrow free level to exceed by at least threefold a dihydroorotate and UTP shift, which mixes a concentration with a metabolite delta, while Cmax, free fraction, brequinar concentration, the ROS dye, and the S2 cytarabine schedule stay unlocked inside numeric gates. Define EC as the lowest albumin-matched concentration that meets a pre-registered dihydroorotate rise and UTP fall, require both free levels to be at least 3 times that EC, and lock the external constants before any differentiation call.\n- The mechanistic core places the approved DHODH inhibitor teriflunomide onto the S4 differentiation result; NPM1, FLT3-ITD, and TP53 strata have no premise linking genotype to that dependency, and the day-7 bar (mean plus 3 SD, with a 15-point morphologic rise and a twofold immunophenotype rise only after clearing that bar, plus at least half the matched brequinar change) can pass on a low-variance pilot or a barely thresholded brequinar effect. Keep genotype as annotation, require the absolute morphologic and immunophenotype deltas together with the variance bar, and tie the brequinar-relative minimum to a pre-specified maturation delta.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

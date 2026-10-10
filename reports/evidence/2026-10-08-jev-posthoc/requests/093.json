@@ -1,0 +1,16 @@
+{
+  "state": "- The composition-versus-permeability retirement rule assigns the wrong observation to the favored step: normalized NPC stoichiometry without import rescue still leaves an FG-barrier defect viable. Replace it so the FG-permeability claim fails only when included-site blockade leaves the excess-Ran/transport-factor initial import rate unchanged while subunit stoichiometry stays disease-matched.\n- Nup98 is locked in the title and ranking yet discarded whenever phosphoproteomics ranks another FG-nucleoporin first, so the hypothesis identity changes after the data arrive. Commit either to Nup98 with a pre-specified miss outcome, or to whichever FG-nucleoporin meets the three inclusion rules, and use that same object in the falsifiers.\n- Discriminators called pre-registered are not executable: occupancy fold-change, stoichiometry cutoff, temporal rank weights, the Arm 3 granule-blocking reagent, the TDP-43 de-mixing construct, the NLS cargo, and the minimum Arm 1 import gain that makes the 0.25 Arm 4 ratio meaningful are all unspecified. Publish those values and the analysis population with the hypothesis so another lab can falsify the same claim.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

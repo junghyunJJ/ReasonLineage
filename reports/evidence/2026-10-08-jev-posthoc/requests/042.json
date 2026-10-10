@@ -1,0 +1,16 @@
+{
+  "state": "- The core mechanistic premise rests on a mitotic analogy: in mitosis, Nup98 GLFG phosphorylation drives its dissociation from the NPC, and no interphase precedent is cited for in-place GLFG phosphorylation producing graded permeability/selectivity changes in adult neurons. The answer flags this as an assumption but still builds the intact-cell prediction on it. Fix: explicitly define whether the predicted initial lesion is in-place barrier tuning versus partial Nup98 release, and run the permeabilized-cell reconstitution (or stress-time-course NE phospho-proteomics) before interpreting intact-cell import data.\n- The falsification logic is weakened by conjunction and under-specified metrics: requiring both (i) and (ii) lets a false hypothesis survive if either readout is noisy, and 'SG-stratified import component' (a regression residual) plus 'early-phase import' have no pre-registered time windows or effect-size thresholds and are vulnerable to collinearity between SG burden and soluble importin levels. Fix: pre-register time windows, residual-model specifications, and thresholds, and treat (ii) alone — occupancy never rising before import decline — as sufficient for falsification.\n- The in vivo tissue arm assumes phospho-Nup98 epitopes survive post-mortem intervals, but phosphorylation signals are notoriously labile after death, so the discriminating prediction (signal in inclusion-negative neurons) may be untestable on standard autopsy tissue. Fix: use rapid-autopsy cohorts with ex vivo phosphatase-inhibition protocols, or move confirmation to staged disease-relevant mouse tissue harvested at defined timepoints.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

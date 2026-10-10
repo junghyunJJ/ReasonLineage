@@ -1,0 +1,16 @@
+{
+  "state": "- The upstream WEE1-splice bridge is doubly unverified: no supplied or cited source connects TDP-43 dysfunction to WEE1 splicing or to CDK1 reactivation in TARDBP-mutant neurons, and the 'pre-registered splice event' is defined only by a future selection rule with a CDC25B fallback that would swap the regulatory logic (loss of inhibitor versus gain of activator). Fix by committing to a named exon (or releveling the registered hypothesis to CDK1 reactivation from any upstream cause) before the timecourse is fixed, and state the CLIP-support threshold quantitatively.\n- The hard falsifier 'CDK1 inhibition still rescues transport on phospho-resistant NUP98' can wrongly kill a true hypothesis if multiple CDK1-consensus sites on NUP98 (or another CDK1 substrate within the pore/transport machinery) contribute to the lesion; the limitations concede hidden extra sites and kinases, but the decision rule does not require a multi-site resistance panel before firing. Fix: make single-site non-suppression non-decisive and trigger the falsifier only after a pre-specified combinatorial phospho-resistant allele test.\n- The 'initiator' claim that permeability and Ran/NTF2 defects precede cytoplasmic TDP-43 demixing rests on an unpowered null: early sub-microscopic demixing or stress granules could occur between the 12-hour bins, since detection floors are pre-registered only for phosphorylation and not for assembly readouts. Fix: add a high-sensitivity early TDP-43-mobility or oligomerization assay (e.g., FLIP/FRAP or single-molecule imaging) with its own pre-registered detection floor so 'before assemblies' becomes an informative absence rather than an insensitive one.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

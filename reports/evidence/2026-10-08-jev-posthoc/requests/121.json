@@ -1,0 +1,16 @@
+{
+  "state": "- The opening causal chain is written as an occurring mechanism (mis-splicing, NUP98 phosphorylation, Ran-gradient collapse, then demixing) even though the packet supports only TDP-43-linked transport and pore defects. Recast every non-packet link as a conditional prediction and keep S1–S4 claims inside the supported-premise list.\n- WEE1 loss and CDC25C loss push CDK1 in opposite directions, and no FG residue or splice isoform is fixed before the phosphoproteomic grid, so a post-hoc “qualifying” site can be fit to t0. Pre-register the net CDK1-pY15 direction, the WEE1 and CDC25C isoforms, and one primary CDK-consensus NUP98 FG residue, with extra sites as a multiplicity-controlled secondary set.\n- FG leak, Ran/NTF2 gradient loss, and active import failure are treated as one initiating lesion, yet RanGAP mislocalization and transport-factor sequestration can collapse import with an intact FG barrier. Make the decisive falsifier a dissociation on the same clock: phosphorylation blocked and size-selective permeability preserved while Ran flux and NLS import still fail.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

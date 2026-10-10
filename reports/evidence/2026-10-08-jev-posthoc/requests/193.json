@@ -1,0 +1,16 @@
+{
+  "state": "- The biological context is only “differentiation-arrested AML” with an assumed dependence on de novo pyrimidine synthesis, so genotype, differentiation-block driver, and salvage status stay undefined. Restrict testing to a prespecified molecular subset and a measured pyrimidine-salvage feature assayed before drug exposure.\n- Human exposure, protein-binding or free-drug correction, the orthogonal DHODH inhibitor, and numeric pass/fail cutoffs are unspecified, so the stated falsifiers cannot be applied as written. Lock plasma-derived concentrations, name the comparator inhibitor, and set thresholds for CD11b/CD14 or morphology, viability, normal-to-AML colony ratio, uridine rescue, and dihydroorotate accumulation.\n- Packet support covers DHODH inhibition as a differentiation mechanism and includes no teriflunomide experiment, and the write-up has no prior-art gate for published leflunomide or teriflunomide AML results. Make documented target engagement plus that literature check a go/no-go, and treat uridine non-rescue as mechanism-falsifying only after exogenous uridine is shown to restore pyrimidine pools.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

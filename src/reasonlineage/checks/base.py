@@ -34,6 +34,7 @@ class CheckAnswer:
 class CheckResult:
     model: str
     answers: Mapping[str, CheckAnswer]
+    usage: Mapping[str, int] | None = None
 
 
 class Checker(Protocol):

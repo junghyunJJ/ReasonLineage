@@ -1,0 +1,16 @@
+{
+  "state": "- The arrest stratum is labeled monocytic but the gates mix granulocytic and monocytic criteria (CD11b, promyelocyte or promonocyte, CD14), and the subset falsifier refers to one genetic class outside the stratum without naming the three genotype classes, so a failed or restricted result is not interpretable. Pre-specify a single lineage gate and name the genotype classes before any sample is run.\n- Maturation is required at the earliest time point that shows target engagement, with no pyrimidine-defined medium and no pathway-matched DHODH tool-compound arm, so exogenous uridine can block engagement and a slower genuine differentiation effect is scored as falsified. State medium pyrimidine content, add a brequinar-class positive control in the same medium, and separate an early engagement window from a later pre-specified maturation window.\n- Selectivity is decided by comparing percent loss of normal versus AML myeloid colonies, which treats differentiation-associated loss of clonogenicity as cytotoxicity, and the 1.5-fold myeloid-maturation transcriptional score has no gene set. Define the signature and score selectivity on normal-progenitor apoptosis and unwanted maturation at the same free concentration, using colony loss only after maturation is confirmed.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

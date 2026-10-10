@@ -1,0 +1,16 @@
+{
+  "state": "- The pivotal kinetic claim — DHODH restriction precedes meaningful ATP loss — is asserted, not evidenced: partial complex III inhibition sufficient to shrink the oxidized ubiquinone pool will simultaneously curtail OXPHOS, and no quantitative basis is given that a separable window exists. Fix: run an upfront titration in a reference AML line measuring DHODH flux, Q-pool redox state, and ATP rate as a function of free atovaquone concentration, and commit to the 'pyrimidine-before-ATP' design only if those curves demonstrably separate.\n- The selectivity rationale is underdeveloped: cycling normal CD34+ progenitors also depend on complex III and de novo pyrimidines, so nothing stated explains why residual AML cells should show a wider therapeutic margin than normal marrow; the 'within threefold' pass criterion implicitly assumes a margin exists. Fix: add a comparative measurement/premise of DHODH flux and salvage capacity in matched normal CD34+ cells and report the observed therapeutic index as an outcome rather than gating on an assumed threefold window.\n- The translational viability hinges entirely on numbers the answer itself marks unverified (mammalian complex III potency, >99.9% binding and the resulting free Cmax); with binding that high, free atovaquone plausibly sits far below any DHODH-restrictive free EC50, making exposure-limited failure the most likely outcome. Fix: present the order-of-magnitude free-Cmax vs. required-EC50 arithmetic as an explicit pre-specimen feasibility screen before any gating campaign, and pre-specify what the project does if the unbound window is absent rather than discovering it at the final gate.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- The differentiation gate and success rule leave marker logic and timing undefined: 'any of CD11b, CD14, or CD15' and 'myelocytes, metamyelocytes, or monocytes' can be scored as a union, any single marker, or each lineage, with no assay day or denominator. Fix: lock one viable-cell composite immunophenotype, one combined morphologic myeloid fraction, the counting denominator, and the culture day so each sample has a single pass/fail.\n- ROS-low and cytarabine-residual arms, brequinar concentration, and 'matched pathway suppression' lack an isolation method, drug schedule, metabolite-matching tolerance, donor number, and genotype strata, so reassignment to the S1–S3 comparators cannot be run as written. Fix: prespecify the ROS probe and gate, cytarabine concentration and timing, brequinar concentration, the dihydroorotate and UTP delta that counts as matched, and a minimum primary-donor set with stated genotypes.\n- Pathway non-suppression is both a falsifier of the exposure bridge and a reason to set samples outside the on-target claim, which allows the hypothesis to be kept by analyzing only blasts that already engage DHODH. Fix: require a prespecified minimum fraction of gated samples to suppress dihydroorotate and UTP at or below the locked free Cmax, and add a teriflunomide-specific prior that places that free Cmax against the differentiation EC50 under its protein binding.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

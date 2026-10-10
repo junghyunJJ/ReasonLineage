@@ -1,0 +1,16 @@
+{
+  "state": "- Supported premises bundle S1–S3 with the S4 differentiation result, so background constraints read as if they underwrite teriflunomide. Separate the single supporting premise (DHODH inhibition can induce myeloid maturation in the models of PMID 27641501) from non-supporting constraints, and cite PMIDs 23333149, 28416471, and 30420752 only in that constraining role.\n- The stated context, immature blasts with a granulocytic or monocytic maturation failure, covers nearly all primary AML and does not name a genotype, lineage, or maturation-score stratum. Predeclare a quantitative arrest threshold and a biological subset, and add a subset-interaction falsifier if the effect is confined to an unspecified genetic class.\n- The validation plan is mechanism-linked but not fully executable: the non-rescuing control nucleoside is unnamed, the single PDX has no maturation or disease-burden readout, and falsifiers lack timing and effect-size cutoffs. Name the control nucleoside, the in vivo endpoints, and predeclared criteria for maturation preceding annexin-V loss and for equal-or-greater injury to normal CD34-positive progenitors at the same free-drug level.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

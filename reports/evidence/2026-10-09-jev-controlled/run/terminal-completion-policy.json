@@ -1,0 +1,14 @@
+{
+  "kind": "post_cutoff_terminal_evaluation",
+  "applies_equally_to": ["jev-on", "jev-off"],
+  "eligibility": "Only timeout cases with all nine hypotheses created, all fourteen preterminal judgments complete, and up to four missing final-generation judgments.",
+  "new_generation_calls": 0,
+  "new_judgments": "Only missing call names; same frozen prompts/models/effort/seed. Existing judgments reused by exact call name and request hash.",
+  "when": "After both original arms finish, avoiding extra provider concurrency.",
+  "additional_seconds_per_eligible_case": 900,
+  "overall_pair_seconds_including_supplement": 28800,
+  "cumulative_model_call_limit_per_case": 40,
+  "cumulative_checker_call_limit_per_case": 70,
+  "usage": "Preserve original unknown consumption; exact cumulative token cap and cost comparability remain unverified where original usage is unknown.",
+  "reporting": "Keep original timeout/failed records unchanged. Report supplemental completion separately; do not classify it as completion within the original 45-minute cap."
+}

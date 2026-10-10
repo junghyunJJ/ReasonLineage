@@ -1,0 +1,16 @@
+{
+  "state": "- The quantitative exposure anchor is internally incoherent: total plasma of 10-30 uM with '≥99% protein binding' yields ~0.1-0.3 uM free (at exactly 99% binding), not the stated 0.01-0.1 uM; the claimed range implicitly assumes ~99.7-99.9% binding and may also understate teriflunomide's real steady-state levels. Fix: recompute and verify the actual free-fraction and total level assumptions transparently before using the free window as a pre-specified go/no-go gate.\n- The salvage-pathway biomarker panel lists uracil phosphoribosyltransferase (UPRT), which is generally considered absent or negligible in human/mammalian cells (free-uracil salvage is minimal; the relevant human salvage nodes are UMPS/OPRT, uridine-cytidine kinase, and nucleoside transporters). Fix: replace UPRT with UMPS/OPRT and UCK expression plus functional nucleoside-uptake assays, and flag the enzyme list as needing verification like the other prior-knowledge claims.\n- The claimed 'pharmacodynamic uniqueness' (continuous oral dosing sustains exposure in a way investigational DHODH inhibitors 'requiring pulsed dosing' cannot) is unsupported and likely false, since DHODH inhibitors can also be dosed continuously; combined with the mechanism being taken essentially wholesale from S4, the genuine increment reduces to subset stratification plus exposure gating. Fix: delete or substantiate the dosing-uniqueness claim and explicitly position the proposal as a refinement contingent on the promised-but-unexecuted literature/trials precedent check for A77 1726/leflunomide in AML.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

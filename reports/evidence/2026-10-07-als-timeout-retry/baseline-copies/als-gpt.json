@@ -1,0 +1,104 @@
+{
+  "header": {
+    "case": "als",
+    "method": "gpt",
+    "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+    "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+    "protocol_version": "co-scientist-rerun-0.3",
+    "models": [
+      {
+        "name": "gpt",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  "status": "completed",
+  "final": {
+    "id": "c002",
+    "author": "gpt",
+    "fitness": 0.8610000000000001,
+    "scores": {
+      "evidenceCoverage": 0.925,
+      "specificity": 0.865,
+      "novelty": 0.75,
+      "actionability": 0.87
+    },
+    "answer": {
+      "answer": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons\n\nHypothesis. In human TARDBP-mutant motor neurons, increased p38α-dependent phosphorylation of pore-associated NUP62 reduces its retention at nuclear pores, initiating nuclear-import failure before persistent cytoplasmic TDP-43 assemblies appear. Reduced import then promotes nuclear TDP-43 depletion, cytoplasmic accumulation, and neuronal dysfunction. This proposes an initiating event for transport failure within a defined ALS context, not the earliest cause of ALS or a universal mechanism across subtypes.\n\nSupported premises. Disease-linked TDP-43 can disrupt nucleoporin localization and nuclear transport, and relevant pore pathology occurs in ALS tissue [S1]. Persistent cytoplasmic TDP-43 assemblies can recruit or mislocalize transport-associated proteins, accompany nuclear TDP-43 depletion, and cause transport failure independently of conventional stress granules [S3]. Stress-granule-associated sequestration provides another route to transport impairment [S4]. C9orf72-repeat-associated RanGAP abnormalities establish a distinct, genetic-context-specific route [S2]. None of these observations establishes NUP62 phosphorylation as an initiating event; phosphorylated TDP-43 in [S3] is not evidence of phosphorylated NUP62.\n\nSpeculative bridges. The choice of p38α, its direct phosphorylation of NUP62, and phosphorylation-dependent loss of pore retention are explicit assumptions. The proposed sequence is phosphorylation, altered pore composition, impaired import, TDP-43 redistribution, and neuronal dysfunction. Upstream cellular stress could activate the proposed event without making it merely a downstream consequence of transport failure. Exact NUP62 residues are not established by the packet and must be identified experimentally rather than asserted.\n\nPreclinical strategy. Compare patient-derived TARDBP-mutant induced-pluripotent-stem-cell motor neurons with isogenic corrected controls, using independent clones and differentiations. Combine longitudinal imaging of import kinetics and TDP-43 localization with matched-culture measurements of pore-associated NUP62 phosphorylation, pore occupancy, conventional stress granules, persistent nongranular TDP-43 assemblies, electrophysiological function, and survival. Monitor cellular energy status and viability to identify import defects occurring before broad physiological collapse. Targeted mass spectrometry should identify increased NUP62 phosphorylation; purified-protein kinase experiments with inactive-kinase controls should test whether p38α can directly generate those modifications. Fix the candidate phosphosite set before subsequent causal comparisons. The hypothesis predicts increased phosphorylation and reduced pore occupancy before import impairment, followed by TDP-43 redistribution and functional decline.\n\nCausal perturbation. Introduce phosphorylation-resistant substitutions at the mapped endogenous NUP62 sites, alongside wild-type revertant controls. Confirm that these substitutions block the candidate modification without changing basal NUP62 abundance, pore occupancy, or import. Complement this substrate-specific intervention with genetic p38α suppression. Protection by phosphorylation-resistant NUP62 despite persistent upstream stress would support a causal pore modification rather than a nonspecific benefit of kinase inhibition. Acute p38α activation in corrected neurons should produce early import impairment only when NUP62 remains phosphorylatable. Because kinase activation affects other substrates, that experiment is persuasive only together with NUP62-site dependence, direct biochemical phosphorylation, and the predicted pore-occupancy change.\n\nDiscriminating alternatives. The principal alternative is that TDP-43 assemblies or stress granules sequester soluble transport machinery first, while NUP62 phosphorylation follows as a stress response [S3, S4]. Independently perturb conventional stress-granule assembly and persistent TDP-43 assemblies, verifying which structures are affected rather than treating them as equivalent. Test import in washed, permeabilized nuclei supplied with identical soluble transport components: persistence of a phosphosite-dependent defect would support a pore-intrinsic contribution, whereas normalization would favor deficient soluble-factor availability. This assay is supportive rather than conclusive because retained assemblies could still affect isolated nuclei. Rescue confined to assembly suppression, with no protection from phosphorylation-resistant NUP62, would favor sequestration over the proposed initiating mechanism.\n\nFalsification and limitations. The hypothesis would be falsified in this context if verified elimination of the candidate NUP62 phosphorylation, with normal baseline pore function, leaves early import failure and subsequent neuronal dysfunction unchanged. A reproducible sequence in which import failure precedes phosphorylation would also contradict its initiating role. Limitations include imperfect temporal resolution, possible structural effects of site substitutions, difficulty separating pore-bound from soluble NUP62, and incomplete maturation of cultured neurons. Even a positive result would establish a mechanism in the tested TARDBP context, not validate a treatment or explain all ALS.",
+      "ranking": [
+        {
+          "item": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons",
+          "promisingness": 0.65,
+          "confidence": 0.3,
+          "pmids": [
+            "29311743",
+            "26308891",
+            "30853299",
+            "29628143"
+          ]
+        }
+      ]
+    }
+  },
+  "initial": {
+    "id": "c002",
+    "author": "gpt",
+    "fitness": 0.8610000000000001,
+    "scores": {
+      "evidenceCoverage": 0.925,
+      "specificity": 0.865,
+      "novelty": 0.75,
+      "actionability": 0.87
+    },
+    "answer": {
+      "answer": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons\n\nHypothesis. In human TARDBP-mutant motor neurons, increased p38α-dependent phosphorylation of pore-associated NUP62 reduces its retention at nuclear pores, initiating nuclear-import failure before persistent cytoplasmic TDP-43 assemblies appear. Reduced import then promotes nuclear TDP-43 depletion, cytoplasmic accumulation, and neuronal dysfunction. This proposes an initiating event for transport failure within a defined ALS context, not the earliest cause of ALS or a universal mechanism across subtypes.\n\nSupported premises. Disease-linked TDP-43 can disrupt nucleoporin localization and nuclear transport, and relevant pore pathology occurs in ALS tissue [S1]. Persistent cytoplasmic TDP-43 assemblies can recruit or mislocalize transport-associated proteins, accompany nuclear TDP-43 depletion, and cause transport failure independently of conventional stress granules [S3]. Stress-granule-associated sequestration provides another route to transport impairment [S4]. C9orf72-repeat-associated RanGAP abnormalities establish a distinct, genetic-context-specific route [S2]. None of these observations establishes NUP62 phosphorylation as an initiating event; phosphorylated TDP-43 in [S3] is not evidence of phosphorylated NUP62.\n\nSpeculative bridges. The choice of p38α, its direct phosphorylation of NUP62, and phosphorylation-dependent loss of pore retention are explicit assumptions. The proposed sequence is phosphorylation, altered pore composition, impaired import, TDP-43 redistribution, and neuronal dysfunction. Upstream cellular stress could activate the proposed event without making it merely a downstream consequence of transport failure. Exact NUP62 residues are not established by the packet and must be identified experimentally rather than asserted.\n\nPreclinical strategy. Compare patient-derived TARDBP-mutant induced-pluripotent-stem-cell motor neurons with isogenic corrected controls, using independent clones and differentiations. Combine longitudinal imaging of import kinetics and TDP-43 localization with matched-culture measurements of pore-associated NUP62 phosphorylation, pore occupancy, conventional stress granules, persistent nongranular TDP-43 assemblies, electrophysiological function, and survival. Monitor cellular energy status and viability to identify import defects occurring before broad physiological collapse. Targeted mass spectrometry should identify increased NUP62 phosphorylation; purified-protein kinase experiments with inactive-kinase controls should test whether p38α can directly generate those modifications. Fix the candidate phosphosite set before subsequent causal comparisons. The hypothesis predicts increased phosphorylation and reduced pore occupancy before import impairment, followed by TDP-43 redistribution and functional decline.\n\nCausal perturbation. Introduce phosphorylation-resistant substitutions at the mapped endogenous NUP62 sites, alongside wild-type revertant controls. Confirm that these substitutions block the candidate modification without changing basal NUP62 abundance, pore occupancy, or import. Complement this substrate-specific intervention with genetic p38α suppression. Protection by phosphorylation-resistant NUP62 despite persistent upstream stress would support a causal pore modification rather than a nonspecific benefit of kinase inhibition. Acute p38α activation in corrected neurons should produce early import impairment only when NUP62 remains phosphorylatable. Because kinase activation affects other substrates, that experiment is persuasive only together with NUP62-site dependence, direct biochemical phosphorylation, and the predicted pore-occupancy change.\n\nDiscriminating alternatives. The principal alternative is that TDP-43 assemblies or stress granules sequester soluble transport machinery first, while NUP62 phosphorylation follows as a stress response [S3, S4]. Independently perturb conventional stress-granule assembly and persistent TDP-43 assemblies, verifying which structures are affected rather than treating them as equivalent. Test import in washed, permeabilized nuclei supplied with identical soluble transport components: persistence of a phosphosite-dependent defect would support a pore-intrinsic contribution, whereas normalization would favor deficient soluble-factor availability. This assay is supportive rather than conclusive because retained assemblies could still affect isolated nuclei. Rescue confined to assembly suppression, with no protection from phosphorylation-resistant NUP62, would favor sequestration over the proposed initiating mechanism.\n\nFalsification and limitations. The hypothesis would be falsified in this context if verified elimination of the candidate NUP62 phosphorylation, with normal baseline pore function, leaves early import failure and subsequent neuronal dysfunction unchanged. A reproducible sequence in which import failure precedes phosphorylation would also contradict its initiating role. Limitations include imperfect temporal resolution, possible structural effects of site substitutions, difficulty separating pore-bound from soluble NUP62, and incomplete maturation of cultured neurons. Even a positive result would establish a mechanism in the tested TARDBP context, not validate a treatment or explain all ALS.",
+      "ranking": [
+        {
+          "item": "p38α-Dependent NUP62 Phosphorylation as an Initiator of Nuclear-Import Failure in TARDBP-Mutant Motor Neurons",
+          "promisingness": 0.65,
+          "confidence": 0.3,
+          "pmids": [
+            "29311743",
+            "26308891",
+            "30853299",
+            "29628143"
+          ]
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 30,
+    "reported_input_tokens": 225283,
+    "reported_output_tokens": 125521,
+    "reported_tokens": 350804,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 2361.727,
+    "remaining_seconds": 338.273,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  }
+}

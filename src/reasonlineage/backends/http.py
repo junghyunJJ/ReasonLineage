@@ -16,7 +16,7 @@ import urllib.request
 from typing import Any, Mapping
 
 from ._subprocess import response, structured_data
-from .base import BackendError, ModelRequest, ModelResponse
+from .base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 
 _THINK = re.compile(r"^\s*<think>.*?</think>\s*", re.S)
 _FENCE = re.compile(r"^\s*```(?:json)?\s*(.*?)\s*```\s*$", re.S)
@@ -94,6 +94,8 @@ class HttpBackend:
             except asyncio.CancelledError:
                 self._cancelled_requests.add(operation)
                 raise
+            except ProviderRefusal:
+                raise
             except BackendError as exc:
                 errors.append(str(exc))
         raise BackendError(f"{self.name}/{request.model} failed after {len(errors)} attempt(s): {errors}")
@@ -140,6 +142,8 @@ class HttpBackend:
             message = choice["message"]
         except (KeyError, IndexError, TypeError):
             raise BackendError(f"unexpected response: {str(payload)[:300]!r}") from None
+        if choice.get("finish_reason") == "content_filter" or message.get("refusal"):
+            raise ProviderRefusal("provider refused request")
         if choice.get("finish_reason") == "length":
             raise BackendError("output was cut off at max_tokens")
         text = clean_content(message.get("content") or "")

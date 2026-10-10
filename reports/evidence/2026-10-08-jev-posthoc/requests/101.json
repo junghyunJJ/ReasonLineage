@@ -1,0 +1,16 @@
+{
+  "state": "- CDK1 is a mitotic kinase, and the write-up leaves its activation in post-mitotic motor neurons unspecified. Add a pore-localized CDK1 activity time course plus cell-cycle-entry markers, or substitute a kinase the same assays can show is active in these neurons.\n- The ranked target is only partly specified: the TDP-43 variant is unnamed and Ser606 is explicitly unverified on the expressed isoform. Commit to a defined ALS allele, an isoform accession, and a sequence check that Ser606 is present and matches a CDK1 consensus before treating the site as the hypothesis.\n- The falsifier and the stress-granule arm lack operational decision rules. Predefine the timepoints, the minimum loss of Ser606 occupancy, the import-rate margin that counts as unchanged, and a neuron-validated stress-granule perturbation together with the nongranular TDP-43-assembly measurements.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

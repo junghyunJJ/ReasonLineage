@@ -1,0 +1,99 @@
+{
+  "header": {
+    "case": "als",
+    "method": "grok",
+    "evidence_sha256": "db2a5d04fd04aad9aff544336a3cfa3fc712256c4bd44ad540aee36b8b0eedd8",
+    "protocol_sha256": "a890ecc85a4ab4cb977674a7f0e40c7316e1f6e07734aefa0db84a294040eba3",
+    "protocol_version": "co-scientist-rerun-0.3",
+    "models": [
+      {
+        "name": "grok",
+        "model": "grok-4.7",
+        "effort": "xhigh"
+      }
+    ],
+    "options": {
+      "mode": "experiment",
+      "judges": "recuse",
+      "context": "isolated",
+      "generations": 3,
+      "seed": 0,
+      "replay_from": null,
+      "gen0_from": null
+    },
+    "budgets": {
+      "backend_calls": 0,
+      "reported_input_tokens": 0,
+      "reported_output_tokens": 0,
+      "reported_tokens": 0,
+      "unknown_usage_calls": 0,
+      "elapsed_seconds": 0.0,
+      "remaining_seconds": 2700,
+      "token_limit": 800000,
+      "call_limit": 40,
+      "seconds_limit": 2700
+    }
+  },
+  "status": "completed",
+  "final": {
+    "id": "c009",
+    "author": "grok",
+    "fitness": 0.7905,
+    "scores": {
+      "evidenceCoverage": 0.855,
+      "specificity": 0.8200000000000001,
+      "novelty": 0.7,
+      "actionability": 0.74
+    },
+    "answer": {
+      "answer": "Nup98 phosphorylation by pre-registered CDK5 initiates selective nuclear-pore barrier failure in a TDP-43 proteinopathy model of ALS\n\nHypothesis. In doxycycline-inducible primary mouse cortical neurons expressing cytoplasmic human TDP-43, a model of ALS and ALS/FTD with TDP-43 proteinopathy, CDK5 phosphorylation of Nup98 is the proposed initiating, pore-intrinsic cause of selective nucleocytoplasmic-transport failure. Nup98 is an FG-nucleoporin by unverified prior knowledge. Impaired NLS import, altered NES export, loss of nuclear TDP-43, growth of cytoplasmic TDP-43 assemblies, and later neuronal dysfunction are the proposed downstream responses. The CDK5–Nup98 step is an uncited assumption and remains an untested candidate cause.\n\nSupported premises. Nuclear-pore and transport components associate with insoluble TDP-43, and disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport in cell systems, with related pore pathology in ALS tissue [S1]. Those findings support a TDP-43–pore connection while the initiating biochemical event and cross-subtype generality stay unresolved [S1]. In a separate genetic context, expanded C9orf72 repeat RNA is linked to altered RanGAP localization and impaired nuclear import, and transport or repeat-RNA manipulations modify model phenotypes [S2]. Persistent cytoplasmic TDP-43 assemblies can form independently of conventional stress granules, mislocalize transport-associated proteins, and accompany import failure, nuclear TDP-43 depletion, and cell death; phosphorylated TDP-43 accumulates in the assemblies [S3]. That mark is on TDP-43 [S3]. Cellular stress recruits transport factors into stress granules and impairs transport, and changing stress-granule assembly modifies transport defects and disease-model phenotypes [S4].\n\nSpeculative bridges. CDK5, the residue list, and causal order are assumptions. Unverified prior knowledge, outside this packet and given no citation identifier, is that Nup98 phosphorylation during mitotic or stress signaling can relax pore selectivity, and that passive exclusion is size-dependent in the tens-of-kilodaltons range. The pre-registered sequence is CDK5 activation, phosphorylation of Nup98 at proline-directed sites locked by the mass-spectrometry gate, altered NPC barrier function, and only then transport-factor enrichment in separately scored compartments plus loss of nuclear TDP-43. Import failure and cell death are downstream responses of the kind reported with cytoplasmic TDP-43 assemblies [S3]. Scope is this TDP-43 model. C9orf72-ALS retains RanGAP mislocalization as a separate entry point [S2]. ERK2 is a specificity control. Failure of the CDK5 gate rejects this hypothesis rather than licensing a substitute kinase.\n\nAlternative explanations. Sequestration of transport receptors and Ran regulators into stress granules [S4], or into stress-granule-independent TDP-43 assemblies [S3], can impair import while nucleoporins remain unmodified. Nucleoporin mislocalization can follow binding to insoluble TDP-43 [S1]. Broad cellular stress can degrade transport in the absence of a Nup98 phospho-event. Repeat RNA and RanGAP pathology can account for transport failure in C9orf72 models [S2].\n\nDiscriminating preclinical test. Primary system: primary mouse cortical neurons with doxycycline-inducible cytoplasmic human TDP-43, sampled at 0, 8, 16, 24, and 48 h. A C9orf72 repeat-RNA neuronal culture is only a context comparator. NPC-fraction phosphoproteomics first locks Nup98 sites whose occupancy rises on this time course. CDK5 is assigned only if CDK5 genetic loss reduces occupancy of those sites by at least half while ERK2 genetic loss leaves occupancy within 10% of the CDK5-intact course. S/T-to-A and S/T-to-D alleles are built only at those mapped residues. Import data are interpreted only after imaging or fractionation shows NPC incorporation of at least 70% of wild-type Nup98. Probes, recorded separately: NLS-reporter nuclear/cytoplasmic ratio, NES-reporter nuclear/cytoplasmic ratio, and nuclear equilibration of inert probes at three sizes spanning the unverified size-dependent barrier. Compartments, recorded separately: NPC Nup98 occupancy and localization; G3BP1-positive stress granules; G3BP1-negative cytoplasmic TDP-43 assemblies. The prespecified lead is a mapped-site increase of at least 2-fold and at least 0.20 absolute occupancy, occurring at least one 8 h interval before the NLS ratio falls by at least 30% from baseline, and before transport-factor intensity rises in granules and, on a separate score, in G3BP1-negative TDP-43 assemblies. Necessity is tested only on this TDP-43 time course: NPC-incorporated non-phosphorylatable Nup98 should keep the NLS ratio within 10% of baseline through 48 h. Stress-granule induction is the alternative arm. Granule blockade should return the NLS ratio to within 10% of baseline when Nup98 is wild-type [S4]. The same blockade, or blockade of early TDP-43 de-mixing [S3], should leave a residual NLS drop of at least 30% when phosphomimetic Nup98 is already NPC-incorporated. CDK5 inhibition should match the non-phosphorylatable result only while the mapped sites remain intact.\n\nFalsifying observation. Initiation is rejected in this model if the NLS ratio falls by at least 30% while mapped NPC-fraction Nup98 occupancy stays below 1.25-fold and below a 0.20 absolute change at every sample. It is rejected if NPC-incorporated non-phosphorylatable Nup98 leaves the first interval meeting the 30% NLS criterion, and the size of that drop, within 10% of wild-type Nup98, while granule blockade or TDP-43-assembly blockade restores the NLS ratio to within 10% of baseline. It is rejected if phosphomimetic Nup98 produces a 30% NLS drop only while transport factors are enriched in granules or TDP-43 assemblies and that drop resolves when those compartments are cleared. A rise meeting the 2-fold criterion in the C9orf72 comparator, with the TDP-43 model inside the flat-course bounds, rejects the proposed disease context.\n\nLimitations. CDK5 and the sites stay assumed until the gate passes, and phosphorylation may be a later mark of pore injury. Cultures omit glia, aging, and circuits. Partial replacement is withheld from import claims by the 70% incorporation rule. Phospho-reagents can cross-react with phosphorylated TDP-43 or other FG-nucleoporins, so mass spectrometry is the occupancy source. Preserved import after non-phosphorylatable Nup98 would still leave other nucleoporins and the RanGAP axis [S2] open. The experiment tests a mechanism and does not validate a treatment.\n\nScores. Promisingness 0.37 equals 0.40 for the packet-supported TDP-43–pore and transport connection [S1, S3], minus 0.15 because [S3] and [S4] already supply sequestration routes to the same late phenotypes, plus 0.12 for the uncited CDK5–Nup98 initiation step. Confidence 0.48 equals 0.40 because the premises map to PMIDs 29311743, 26308891, 30853299, and 29628143, plus 0.20 because the model, intervals, occupancy change, and 30% import boundary are pre-specified, minus 0.12 because the kinase and residues remain gated assumptions.",
+      "ranking": [
+        {
+          "item": "Nup98 phosphorylation by pre-registered CDK5 initiates selective nuclear-pore barrier failure in a TDP-43 proteinopathy model of ALS",
+          "promisingness": 0.37,
+          "confidence": 0.48,
+          "pmids": [
+            "29311743",
+            "26308891",
+            "30853299",
+            "29628143"
+          ]
+        }
+      ]
+    }
+  },
+  "initial": {
+    "id": "c003",
+    "author": "grok",
+    "fitness": 0.789,
+    "scores": {
+      "evidenceCoverage": 0.865,
+      "specificity": 0.775,
+      "novelty": 0.715,
+      "actionability": 0.77
+    },
+    "answer": {
+      "answer": "Nup98 phosphorylation by a stress-responsive proline-directed kinase initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS\n\nHypothesis. In neuronal models of TDP-43 proteinopathy, a setting relevant to ALS and ALS/FTD cases that accumulate cytoplasmic TDP-43, phosphorylation of Nup98, an FG-nucleoporin by unverified prior knowledge, is proposed as the initiating, pore-intrinsic cause of selective nucleocytoplasmic-transport failure. Impaired nuclear import, loss of nuclear TDP-43, growth of cytoplasmic TDP-43 assemblies, and later neuronal dysfunction are the proposed downstream responses. Nucleoporin phosphorylation remains an untested candidate cause.\n\nSupported premises. Nuclear-pore and transport components associate with insoluble TDP-43, and disease-linked TDP-43 disrupts nucleoporin localization and nuclear transport in cell systems, with related pore pathology in ALS tissue [S1]. Those findings support a TDP-43-pore connection while leaving the initiating biochemical event and cross-subtype generality unresolved [S1]. In a separate genetic context, expanded C9orf72 repeat RNA is linked to altered RanGAP localization and impaired nuclear import in models and patient-derived neurons, and transport or repeat-RNA manipulations modify model phenotypes [S2]. This is a C9orf72-specific route and leaves both sporadic ALS and any nucleoporin phosphorylation step unresolved [S2]. Persistent cytoplasmic TDP-43 assemblies can form independently of conventional stress granules, mislocalize transport-associated proteins, and accompany import failure, nuclear TDP-43 depletion, and cell death; phosphorylated TDP-43 accumulates in the assemblies [S3]. That phosphorylation mark is on TDP-43, and the experiments leave open other physiological trajectories [S3]. Cellular stress recruits transport factors into stress granules and impairs transport, and changing stress-granule assembly modifies transport defects and disease-model phenotypes [S4].\n\nSpeculative bridges. The kinase, the residues, and the causal order are assumptions. Unverified prior knowledge, held outside this packet and given no citation identifier, is that Nup98 phosphorylation during mitotic or stress signaling can relax nuclear-pore selectivity. The working assumption is that a proline-directed stress-responsive kinase, provisionally CDK5 or ERK1/2, phosphorylates Nup98 FG-repeat or C-terminal residues in post-mitotic neurons expressing pathogenic TDP-43. The proposed sequence is kinase activation, Nup98 phosphorylation, altered NPC barrier function, and only then sequestration of transport factors plus loss of nuclear TDP-43. Nup98 phosphorylation is the initiating pore event. Import failure, nuclear TDP-43 depletion, and cell death are downstream responses of the kind reported with cytoplasmic TDP-43 assemblies [S3]. Scope is limited to TDP-43 proteinopathy models. C9orf72-ALS retains RanGAP mislocalization as a separate entry point [S2].\n\nAlternative explanations. Sequestration of transport receptors and Ran regulators into stress granules [S4], or into stress-granule-independent TDP-43 assemblies [S3], can impair import while nucleoporins themselves remain unmodified. Nucleoporin mislocalization can follow binding to insoluble TDP-43 [S1]. Broad cellular stress can degrade transport without a Nup98 phospho-event. Repeat RNA and RanGAP pathology can account for transport failure in C9orf72 models [S2]. Shared late phenotypes, reduced import and nuclear TDP-43 loss, therefore fail to identify which event came first.\n\nDiscriminating preclinical test. Use a neuronal TDP-43 proteinopathy model that develops transport defects, and run a C9orf72 repeat model only as a context comparator. On a time course, measure Nup98 phosphorylation in nuclear-pore fractions by mass spectrometry and phospho-specific blot, Nup98 localization at NPCs, nuclear import of a reporter and of endogenous TDP-43, stress-granule markers, and stress-granule-independent cytoplasmic TDP-43 assemblies. The prediction is that Nup98 phosphorylation rises before import falls and before transport factors accumulate in either compartment. A non-phosphorylatable Nup98 that incorporates into NPCs should preserve import when stress granules are induced [S4] and when early cytoplasmic TDP-43 de-mixing is present [S3]. A phosphomimetic Nup98 in otherwise unstressed neurons should impair import without stress granules and before large TDP-43 aggregates. Kinase inhibition should copy the non-phosphorylatable Nup98 result only while those Nup98 sites are intact. If phosphomimetic Nup98 is already installed, blocking stress-granule assembly or TDP-43 de-mixing should leave a residual import defect. The sequestration alternatives predict the complementary pattern: phosphomimetic Nup98 is inert when transport factors remain free, and blocking granules or TDP-43 assemblies restores import regardless of the Nup98 phospho-state.\n\nFalsifying observation. Reject the hypothesis in this model if import failure and nuclear TDP-43 loss occur with a flat Nup98 phosphorylation time course. Reject it if NPC-incorporated non-phosphorylatable Nup98 leaves the onset and size of the transport defect unchanged while stress-granule or TDP-43-assembly interventions fully account for that defect. Reject it if phosphomimetic Nup98 impairs import only when transport factors are sequestered. A phospho-Nup98 rise confined to the C9orf72 comparator, with no rise in the TDP-43 model, rejects the proposed disease context.\n\nLimitations. Sites and kinase identity are assumed, and phosphorylation may be a later mark of pore injury rather than its start. Neuronal cultures omit glia, aging, and circuit context, and partial Nup98 replacement can mask an effect. Phospho-specific reagents can cross-react with phosphorylated TDP-43 or other FG-nucleoporins. Preservation of import by non-phosphorylatable Nup98 would still leave other nucleoporins and the RanGAP axis [S2] open. The experiment tests a mechanism and does not validate a treatment.",
+      "ranking": [
+        {
+          "item": "Nup98 phosphorylation by a stress-responsive proline-directed kinase initiates nuclear-pore barrier failure in TDP-43 proteinopathy models of ALS",
+          "promisingness": 0.37,
+          "confidence": 0.48,
+          "pmids": []
+        }
+      ]
+    }
+  },
+  "usage": {
+    "backend_calls": 30,
+    "reported_input_tokens": 204167,
+    "reported_output_tokens": 335289,
+    "reported_tokens": 539456,
+    "unknown_usage_calls": 0,
+    "elapsed_seconds": 2425.52,
+    "remaining_seconds": 274.48,
+    "token_limit": 800000,
+    "call_limit": 40,
+    "seconds_limit": 2700
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "state": "- S1–S4 are accurately distinguished and speculative phosphorylation claims explicitly labeled, supporting excellent evidence coverage. However, target prioritization and novelty remain weakly justified; compare prior nucleoporin-phosphorylation mechanisms and explain the M337V-specific rationale for p38α–NUP62.\n- The genotype, molecular targets, assay and decision rules are exceptionally specific, but six-hourly population measurements cannot establish temporal precedence within individual neurons. Add finer sampling and validated same-cell phosphorylation/retention measurements aligned with import trajectories.\n- Import rescue does not establish the full import→TDP-43 depletion→neuronal dysfunction chain. Prespecify quantitative electrophysiology/survival rescue endpoints and downstream epistasis, such as testing whether restoring nuclear TDP-43 rescues function despite persistent pore dysfunction.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

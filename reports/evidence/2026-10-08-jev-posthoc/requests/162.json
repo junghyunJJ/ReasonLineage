@@ -1,0 +1,16 @@
+{
+  "state": "- Drug-specific feasibility remains unevidenced: S4 supports DHODH inhibition, not teriflunomide at tolerated exposure. Add verified pharmacology sources and compare achievable unbound exposure with cellular target-engagement requirements.\n- Low basal uridine incorporation need not indicate limited compensatory salvage capacity. Define functional classification thresholds, prespecify a low-versus-high salvage treatment interaction, and manipulate salvage to test its causal role.\n- Novelty rests mainly on salvage stratification rather than DHODH-driven AML differentiation. Check prior teriflunomide/leflunomide AML literature and identify the incremental, falsifiable prediction.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

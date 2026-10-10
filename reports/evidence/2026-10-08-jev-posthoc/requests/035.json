@@ -1,0 +1,16 @@
+{
+  "state": "- The initiating kinase remains an unresolved two-way hedge ('p38/JNK or ectopic mitotic-like activity'), yet step 4's gain-of-function experiment requires delivering an 'active candidate kinase' — the plan cannot be executed as written without first collapsing the disjunction. Fix: add an upstream kinase-identification stage (stress-induced Nup98 phosphopeptide motif/mass-spec fingerprinting plus a kinase inhibitor panel) as a gate before allele design and the GOF arm.\n- The falsifying observation is defined as a conjunction of multiple independent failures (occupancy-verified import failure AND transport-factor depletion preceding dephosphorylation AND washout recovery tracking SG disassembly). If only one discriminant fails in the predicted direction, the hypothesis is already seriously undermined, so requiring the full conjunction invites unfalsifiable retreat. Fix: pre-specify graded evidence weights per arm, declaring which single-arm outcomes alone trigger revision of the initiating-lesion claim.\n- Step 5's recombinant Nup98 add-back assumes functional exchange of a phosphorylated Nup98 mutant into intact NPCs in permeabilized cells — a reconstitution feasibility assumption not acknowledged, and a known failure mode given stable NPC incorporation. Fix: state exchange/reconstitution success criteria (e.g., tagged-Nup incorporation rates) upfront and treat the isolated knock-in nuclei arm as the primary attribution method; separately, the S3 caveat that phosphorylated TDP-43 accumulates in assemblies is never explicitly invoked as a potential confounder for phospho-occupancy interpretation, despite being flagged in the packet.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

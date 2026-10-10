@@ -1,0 +1,16 @@
+{
+  "state": "- Supported premises bundle S1–S3 with S4, but only S4 supplies positive evidence for DHODH-linked differentiation, and that evidence is model-bound and does not name teriflunomide, uridine rescue, or an exposure. Relabel S1–S3 as contrastive boundaries and state explicitly that the drug–dose–rescue chain is unverified prior knowledge.\n- Bridge three (maturation with preserved ROS-low, BCL-2-high leukemia stem cells) and the S2 residual-cell contrast are not in the assay: there is no BCL-2 measure, no leukemia-initiating readout, and the cytarabine arm is deferred until an unverified schedule is recovered. Add those readouts or remove bridge three and the S2 claim from what the study can confirm or falsify.\n- The twofold dihydroorotate rise, 40 percent UTP drop, 3-SD pilot bar from six samples, six-of-eight joint rule, and EC50 at one-third of free Cmax are not anchored to a verified S4 effect size or a power calculation, so a real moderate on-target effect can be uncallable. Pre-register an effect size from a checked S4 bound and a stable variance estimate, and define a marrow-free-level method or drop that gate if no primary source exists.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

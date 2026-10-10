@@ -1,0 +1,16 @@
+{
+  "state": "- Exceptionally careful separation of S1/S2 populations and S2/S4 premises does not establish the drug-specific bridge. Novelty remains concentrated in the salvage-defined residual subgroup; complete the teriflunomide/leflunomide precedent and exposure audits before claiming a new repurposing opportunity.\n- Genotype-tracked differentiation and carryover/homing-controlled transplantation are unusually specific, but the central salvage interventions remain unnamed. Specify transport/phosphorylation genes, perturbation magnitude and timing, and flux normalization to distinguish inadequate salvage from increased nucleotide demand.\n- Retaining paired untreated and low-respiration samples is insufficiently operationalized. Prespecify whether residual status and respiration predict response beyond salvage capacity; otherwise positive results could demonstrate generic salvage-dependent DHODH sensitivity rather than the proposed context-specific relationship.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

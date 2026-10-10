@@ -1,0 +1,16 @@
+{
+  "state": "- The pre-registered exposure gate is internally inconsistent: the go threshold (whole-cell EC50 ≤1 µM, described as '≥2-fold below predicted free trough') conflicts with the quoted 1–2 µM trough range, and the abandon threshold (>3 µM) is described as 'above predicted free Cmax' although the stated free Cmax range is 2–4 µM; EC50 outcomes between 1 and 3 µM are simply undefined. Fix: anchor both thresholds to a single verified point-estimate free Cmax/trough and explicitly pre-register the rule for intermediate (1–3 µM) whole-cell EC50 values.\n- The central therapeutic-window argument rests entirely on unverified pharmacology: free fraction, total Cmax, whole-cell IC50, and brequinar's prior clinical myelosuppression (which itself calibrates the ≤25% CFU-GM selectivity falsifier) are all flagged unverified, making the selectivity gate circular until those numbers are retrieved. Fix: verify the teriflunomide label/EPAR exposure values and the brequinar AML trial records before ranking, then re-derive the gate; note that if whole-cell engagement EC50 is realistically ~3 µM for this class, the pre-registered gate may make the hypothesis self-abandoning, which should be stated openly as a structural risk rather than discovered post hoc.\n- The a priori responder nomination (myeloid-primed in NPM1-mutant and biallelic CEBPA-mutant blasts, cytostasis-only in TP53-mutant/KMT2A-rearranged) is unlabeled prior knowledge, unlike the carefully flagged exposure numbers, and the novelty claim remains unresolved because possible existing teriflunomide/leflunomide AML data is acknowledged but not checked. Fix: label the genotype-outcome nominations as to-be-verified associations, and make the pre-rank prior-art literature check a hard prerequisite for the promised 'novelty confined to drug identity' scoping rather than a contingent future step.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

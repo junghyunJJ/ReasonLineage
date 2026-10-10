@@ -1,0 +1,16 @@
+{
+  "state": "- The ranked claim states that multiple-sclerosis–relevant exposure induces differentiation, while dose, protein binding, and unbound exposure remain unverified prior knowledge. Make DHODH engagement and maturation the experimental claim, and treat overlap with verified unbound MS exposure as a separate translational gate that must be checked before any achievability statement.\n- Cytarabine-residual oxidative cells are written into the core biological context, but S2 supports mitochondrial and fatty-acid-oxidation features and S4 supports pyrimidine-synthesis-linked differentiation, with no packet evidence joining those dependencies. Restrict the primary population to differentiation-arrested bulk blasts, and keep residual disease as an explicit extension already set to fail if maturation or added cytarabine sensitivity is absent after confirmed DHODH blockade.\n- Disease context stays at differentiation-blocked AML, which is nearly the whole disease, and teriflunomide is the direct approved substitute for the S4 mechanism, so subset and drug choice add little resolution. Name a maturation panel (morphology plus defined myeloid markers), require the reference DHODH inhibitor to differentiate the same samples, and prespecify reference-inhibitor failure as an invalid assay rather than evidence about teriflunomide.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

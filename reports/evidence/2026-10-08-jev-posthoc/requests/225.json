@@ -1,0 +1,16 @@
+{
+  "state": "- The ATP-sparing window is in tension with the packet: S2 defines the target residuals by elevated oxidative metabolism, and S1 withholds any therapeutic-window claim from mitochondrial inhibition. Prespecify a same-cell CoQ-reduction titration relating dihydroorotate:orotate rise to ATP, and treat pyrimidine suppression only at energetic collapse as falsifying the selective window.\n- S2 fatty-acid oxidation and approved direct DHODH inhibitors (leflunomide/teriflunomide; approval and exposure still need verification) are missing as competing arms, so an atovaquone effect can be mis-assigned to indirect DHODH restriction. Run both at unbound clinical exposure and abandon atovaquone if either accounts for maturation or if atovaquone fails to separate pool loss from ATP loss.\n- Stacked gates (OCR fold-change, ≤25% salvage, immaturity, brequinar response) plus inducible Ura1 in primary residuals let the claim survive by sample exclusion, and primary residual cells rarely support that genetic rescue. Set a minimum qualification rate whose breach falsifies translational relevance, confine Ura1 rescue to an engineered AML model, and keep uridine rescue as the primary-specimen discriminator.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

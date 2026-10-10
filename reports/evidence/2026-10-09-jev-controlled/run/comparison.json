@@ -1,0 +1,663 @@
+{
+  "directory": "runs/jev-controlled-2026-10-09",
+  "comparisons": [
+    {
+      "case": "als",
+      "method": "reasonlineage",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.7945000000000001,
+        "final_fitness": 0.8355,
+        "evolution_gain": 0.040999999999999925,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 158952,
+          "reported_output_tokens": 197853,
+          "reported_tokens": 356805,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 1594.963,
+          "remaining_seconds": 1105.037,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 65337,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 67794,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 1597.903,
+          "remaining_seconds": 1102.097,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.8325,
+        "final_fitness": 0.8420000000000001,
+        "evolution_gain": 0.009500000000000064,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 160556,
+          "reported_output_tokens": 279502,
+          "reported_tokens": 440058,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2085.606,
+          "remaining_seconds": 614.394,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": true,
+      "fully_verified": true,
+      "final_fitness_on_minus_off": -0.006500000000000061
+    },
+    {
+      "case": "als",
+      "method": "gpt",
+      "on": {
+        "status": "failed",
+        "initial_fitness": 0.8650000000000001,
+        "final_fitness": null,
+        "evolution_gain": null,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "unstarted",
+          "outcome_mention": "skipped: no gold outcome list supplied"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 188598,
+          "reported_output_tokens": 113543,
+          "reported_tokens": 302141,
+          "unknown_usage_calls": 2,
+          "elapsed_seconds": 2700.021,
+          "remaining_seconds": 0.0,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 9,
+          "reported_input_tokens": 37338,
+          "reported_output_tokens": 1395,
+          "reported_tokens": 38733,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2700.025,
+          "remaining_seconds": 0.0,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": "judge gpt-r0 on c009 failed: model timeout at remaining budget",
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.8620000000000001,
+        "final_fitness": 0.8735,
+        "evolution_gain": 0.011499999999999955,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 203305,
+          "reported_output_tokens": 113769,
+          "reported_tokens": 317074,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2578.023,
+          "remaining_seconds": 121.977,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": false,
+      "fully_verified": false,
+      "final_fitness_on_minus_off": null
+    },
+    {
+      "case": "als",
+      "method": "grok",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.768,
+        "final_fitness": 0.8215000000000001,
+        "evolution_gain": 0.0535000000000001,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 185144,
+          "reported_output_tokens": 341024,
+          "reported_tokens": 526168,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2251.253,
+          "remaining_seconds": 448.747,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 67570,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 70027,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2269.621,
+          "remaining_seconds": 430.379,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.7665,
+        "final_fitness": 0.7965000000000001,
+        "evolution_gain": 0.030000000000000138,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 184223,
+          "reported_output_tokens": 364974,
+          "reported_tokens": 549197,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2283.493,
+          "remaining_seconds": 416.507,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": true,
+      "fully_verified": true,
+      "final_fitness_on_minus_off": 0.025000000000000022
+    },
+    {
+      "case": "als",
+      "method": "glm",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.8485000000000001,
+        "final_fitness": 0.8615000000000002,
+        "evolution_gain": 0.013000000000000012,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 28,
+          "reported_input_tokens": 87165,
+          "reported_output_tokens": 182975,
+          "reported_tokens": 270140,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 633.489,
+          "remaining_seconds": 2066.511,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 73411,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 75868,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 636.376,
+          "remaining_seconds": 2063.624,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "failed",
+        "initial_fitness": 0.8430000000000001,
+        "final_fitness": null,
+        "evolution_gain": null,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 23,
+          "reported_input_tokens": 68251,
+          "reported_output_tokens": 146117,
+          "reported_tokens": 214368,
+          "unknown_usage_calls": 1,
+          "elapsed_seconds": 769.937,
+          "remaining_seconds": 1930.063,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": "mutate c009 by glm failed: invalid or truncated structured response",
+        "rewrites": 0
+      },
+      "both_generated": false,
+      "fully_verified": false,
+      "final_fitness_on_minus_off": null
+    },
+    {
+      "case": "aml",
+      "method": "reasonlineage",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.8015000000000001,
+        "final_fitness": 0.8210000000000001,
+        "evolution_gain": 0.019499999999999962,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 161185,
+          "reported_output_tokens": 172930,
+          "reported_tokens": 334115,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 1606.768,
+          "remaining_seconds": 1093.232,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 63859,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 66316,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 1609.569,
+          "remaining_seconds": 1090.431,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.808,
+        "final_fitness": 0.8175000000000001,
+        "evolution_gain": 0.009500000000000064,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 160231,
+          "reported_output_tokens": 152000,
+          "reported_tokens": 312231,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 1665.045,
+          "remaining_seconds": 1034.955,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": true,
+      "fully_verified": true,
+      "final_fitness_on_minus_off": 0.0034999999999999476
+    },
+    {
+      "case": "aml",
+      "method": "gpt",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.8610000000000001,
+        "final_fitness": 0.8730000000000001,
+        "evolution_gain": 0.01200000000000001,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 202990,
+          "reported_output_tokens": 94759,
+          "reported_tokens": 297749,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2235.617,
+          "remaining_seconds": 464.383,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 58457,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 60914,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2238.662,
+          "remaining_seconds": 461.338,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.8585,
+        "final_fitness": 0.8585,
+        "evolution_gain": 0.0,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 207371,
+          "reported_output_tokens": 89617,
+          "reported_tokens": 296988,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2017.081,
+          "remaining_seconds": 682.919,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": true,
+      "fully_verified": true,
+      "final_fitness_on_minus_off": 0.014500000000000068
+    },
+    {
+      "case": "aml",
+      "method": "grok",
+      "on": {
+        "status": "failed",
+        "initial_fitness": 0.783,
+        "final_fitness": null,
+        "evolution_gain": null,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "unstarted",
+          "outcome_mention": "skipped: no gold outcome list supplied"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 179614,
+          "reported_output_tokens": 360382,
+          "reported_tokens": 539996,
+          "unknown_usage_calls": 1,
+          "elapsed_seconds": 2700.016,
+          "remaining_seconds": 0.0,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 9,
+          "reported_input_tokens": 40024,
+          "reported_output_tokens": 1395,
+          "reported_tokens": 41419,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2700.021,
+          "remaining_seconds": 0.0,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": "judge grok-r0 on c009 failed: model timeout at remaining budget",
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.788,
+        "final_fitness": 0.7915,
+        "evolution_gain": 0.0034999999999999476,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 186164,
+          "reported_output_tokens": 337900,
+          "reported_tokens": 524064,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 2394.778,
+          "remaining_seconds": 305.222,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": false,
+      "fully_verified": false,
+      "final_fitness_on_minus_off": null
+    },
+    {
+      "case": "aml",
+      "method": "glm",
+      "on": {
+        "status": "completed",
+        "initial_fitness": 0.812,
+        "final_fitness": 0.8380000000000001,
+        "evolution_gain": 0.026000000000000023,
+        "j1": {
+          "status": "completed",
+          "unique_checks": 9,
+          "failed_checks": 0,
+          "needs_review": 0,
+          "remaining_defects": 0
+        },
+        "diagnostics": {
+          "status": "completed",
+          "outcome_mention": "skipped: no gold outcome list supplied",
+          "records": 27
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 83108,
+          "reported_output_tokens": 166441,
+          "reported_tokens": 249549,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 586.596,
+          "remaining_seconds": 2113.404,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {
+          "backend_calls": 36,
+          "reported_input_tokens": 71520,
+          "reported_output_tokens": 2457,
+          "reported_tokens": 73977,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 589.631,
+          "remaining_seconds": 2110.369,
+          "token_limit": null,
+          "call_limit": 70,
+          "seconds_limit": 2700
+        },
+        "reason": null,
+        "rewrites": 0
+      },
+      "off": {
+        "status": "completed",
+        "initial_fitness": 0.784,
+        "final_fitness": 0.8155,
+        "evolution_gain": 0.03149999999999997,
+        "j1": {
+          "status": "disabled"
+        },
+        "diagnostics": {
+          "status": "disabled"
+        },
+        "model_usage": {
+          "backend_calls": 27,
+          "reported_input_tokens": 80255,
+          "reported_output_tokens": 180968,
+          "reported_tokens": 261223,
+          "unknown_usage_calls": 0,
+          "elapsed_seconds": 679.772,
+          "remaining_seconds": 2020.228,
+          "token_limit": 800000,
+          "call_limit": 40,
+          "seconds_limit": 2700
+        },
+        "checker_usage": {},
+        "reason": null,
+        "rewrites": 0
+      },
+      "both_generated": true,
+      "fully_verified": true,
+      "final_fitness_on_minus_off": 0.022500000000000075
+    }
+  ],
+  "generation_completed": 13,
+  "verified_pairs": 5,
+  "usage": {
+    "jev-on": {
+      "backend_calls": 451,
+      "reported_input_tokens": 1724272,
+      "reported_output_tokens": 1647439,
+      "reported_tokens": 3371711,
+      "unknown_usage_calls": 3,
+      "elapsed_seconds": 8177.279,
+      "remaining_seconds": 6222.721,
+      "token_limit": null,
+      "call_limit": 884,
+      "seconds_limit": 14400
+    },
+    "jev-off": {
+      "backend_calls": 212,
+      "reported_input_tokens": 1250356,
+      "reported_output_tokens": 1664847,
+      "reported_tokens": 2915203,
+      "unknown_usage_calls": 1,
+      "elapsed_seconds": 8429.089,
+      "remaining_seconds": 5970.911,
+      "token_limit": null,
+      "call_limit": 324,
+      "seconds_limit": 14400
+    }
+  },
+  "complete": false,
+  "single_replicate": true,
+  "deepseek_calls": 0,
+  "expert_status": "pending",
+  "arm_order": [
+    "jev-on",
+    "jev-off"
+  ]
+}

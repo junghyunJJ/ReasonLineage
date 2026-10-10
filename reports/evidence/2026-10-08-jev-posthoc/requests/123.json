@@ -1,0 +1,16 @@
+{
+  "state": "- The supposedly preregistered WEE1 exon and NUP98 phosphosite remain unidentified; CLIP support does not establish an inhibitory splice isoform, and the CDC25B fallback changes the mechanism. Separate target discovery from confirmation, then lock one functionally validated isoform–site hypothesis.\n- CDK1 recruitment or analog-sensitive CDK1 cannot establish site-specific sufficiency because other substrates may be phosphorylated. Lack of additional inhibitor benefit can also reflect a ceiling effect. Require the phospho-resistant NUP98 allele itself to prevent the lesion and block recruitment-induced defects, with preserved baseline pore function and collateral-phosphorylation controls.\n- NTF2 nuclear accumulation conflates influx with passive leakage, and neuronal dysfunction lacks a defined endpoint. Measure directional transport kinetics and Ran nucleotide states, then test whether site-specific rescue preserves motor-neuron function or survival independently of general stress.",
+  "model": "jev-1.13.0",
+  "questions": {
+    "critique_severity": {
+      "type": "choice",
+      "instructions": "How serious is the most serious problem that the critique describes?",
+      "criteria": {
+        "none": "No problem",
+        "minor": "A minor problem",
+        "major": "A major problem",
+        "critical": "A critical problem"
+      }
+    }
+  }
+}

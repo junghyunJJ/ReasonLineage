@@ -1,0 +1,35 @@
+{
+  "system": "You are a machine-learning researcher proposing a testable computational hypothesis. Return only the requested JSON, with about 150 to 250 words total. Distinguish known observations from assumptions. Provide a substantive mechanism, a controlled computational comparison, a falsifying observation, and limitations. Do not use tools or reveal private internal reasoning.",
+  "prompt": "A small transformer trained on modular addition can fit its training set while test accuracy remains near chance, then generalize much later. Propose one mechanistic hypothesis for this delay, distinguishing genuinely causal mechanisms from correlated changes such as weight norms. Give a computational perturbation with controls that could distinguish your explanation from one plausible alternative. Do not claim new discoveries or a universal explanation.",
+  "model": "claude-opus-5-5",
+  "effort": "xhigh",
+  "json_schema": {
+    "type": "object",
+    "properties": {
+      "hypothesis": {
+        "type": "string"
+      },
+      "prediction": {
+        "type": "string"
+      },
+      "computational_test": {
+        "type": "string"
+      },
+      "falsifier": {
+        "type": "string"
+      },
+      "limitations": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "hypothesis",
+      "prediction",
+      "computational_test",
+      "falsifier",
+      "limitations"
+    ],
+    "additionalProperties": false
+  },
+  "timeout_s": 300
+}
