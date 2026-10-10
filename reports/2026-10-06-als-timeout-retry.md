@@ -11,8 +11,8 @@
 - [실제 접속 확인](evidence/2026-10-06-als-timeout-retry/preflight.json)
 - [실제 재시도 상태](evidence/2026-10-06-als-timeout-retry/retry.json)
 - [새 시간·호출 범위](evidence/2026-10-06-als-timeout-retry/frozen-plan.json)
-- [실행 도우미](../.superpowers/sdd/2026-10-06-als-timeout-retry/run_retry.py)
-- [실행 명령](../.superpowers/sdd/2026-10-06-als-timeout-retry/run-command.txt)
+- [실행 도우미](evidence/2026-10-06-als-timeout-retry/audit-scripts/run_retry.py)
+- [실행 명령](evidence/2026-10-06-als-timeout-retry/audit-scripts/run-command.txt)
 
 보조 실행 코드의 새 테스트3개와 관련기존검증을 합쳐53개가 통과했다. 전체검증은 기존 `test_one_retry_recovers_a_flaky_call` 구간에서 오래 멈춰 중단했고, 그 테스트의 별도확인도15초 상한에 도달했다. 현재 환경에서 전체검증이 통과했다고 주장하지 않는다. 기존CLI 구현은 수정하지 않았다. Git메타데이터가 읽기전용인 환경이므로 새 보조파일은 로컬에 남겨두었다.
 

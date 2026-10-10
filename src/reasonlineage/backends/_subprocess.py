@@ -45,7 +45,7 @@ class SubprocessBackend:
         check: bool = True,
     ) -> tuple[int, bytes, bytes, float]:
         started = time.monotonic()
-        proc = await asyncio.create_subprocess_exec(
+        creation = asyncio.create_task(asyncio.create_subprocess_exec(
             *argv,
             stdin=asyncio.subprocess.PIPE if stdin is not None else asyncio.subprocess.DEVNULL,
             stdout=asyncio.subprocess.PIPE,
@@ -53,7 +53,27 @@ class SubprocessBackend:
             cwd=cwd,
             env=dict(env) if env is not None else None,
             start_new_session=True,  # its own process group, so a stop reaches the CLI's children too
-        )
+        ))
+        try:
+            proc = await asyncio.shield(creation)
+        except asyncio.CancelledError as cancelled:
+            # A child can start before create_subprocess_exec returns its handle.
+            # Finish that handshake so cancellation can stop its entire group.
+            async def stop_created_process():
+                proc = await creation
+                await _kill_group(proc)
+
+            cleanup = asyncio.create_task(stop_created_process())
+            try:
+                while not cleanup.done():
+                    try:
+                        await asyncio.shield(cleanup)
+                    except asyncio.CancelledError:
+                        continue  # repeated signals must not cancel the cleanup
+                cleanup.result()
+            except Exception as error:
+                raise cancelled from error
+            raise cancelled
         try:
             stdout, stderr = await asyncio.wait_for(proc.communicate(stdin), timeout_s)
         except asyncio.TimeoutError:
