@@ -19,10 +19,9 @@ ReasonLineage improves responses through repeated generation, critique, selectio
    - [6.3 Diagnose a finished run](#63-diagnose-a-finished-run)
    - [6.4 Score runs against a gold file](#64-score-runs-against-a-gold-file)
    - [6.5 Scripts](#65-scripts)
-7. [ALS / AML pilot results](#7-als--aml-pilot-results)
-8. [Environment variables and credentials](#8-environment-variables-and-credentials)
-9. [Testing](#9-testing)
-10. [License](#10-license)
+7. [Environment variables and credentials](#7-environment-variables-and-credentials)
+8. [Testing](#8-testing)
+9. [License](#9-license)
 
 ---
 
@@ -175,7 +174,7 @@ run folder              header.json · events.jsonl · calls/ · checks.jsonl ·
   - `codex`: the Codex CLI, logged in with ChatGPT
   - `grok`: the grok CLI, logged in (`grok login`)
   - `http`: an OpenAI-compatible endpoint, and a key file if it needs a key
-- For the jev checker: a jev API key ([§8](#8-environment-variables-and-credentials)).
+- For the jev checker: a jev API key ([§7](#7-environment-variables-and-credentials)).
 
 ### 5.2 Install and run the offline checks
 
@@ -344,26 +343,7 @@ The other scripts build gold sets (`build_*.py`), calibrate judges and jev (`cal
 
 ---
 
-## 7. ALS / AML pilot results
-
-The [2026-10-09 jev ON/OFF study](reports/2026-10-09-jev-controlled.md) (Korean) covers ALS and AML across multi-model, GPT solo, Grok solo, and GLM Flash solo conditions: **16 final results**, including 13 original completions and 3 separately archived supplementary completions.
-
-That empirical study used **three models: GPT-6.1 sol, Grok 4.7, and GLM-5.3-flash**. Opus was excluded after provider refusal, and DeepSeek and Laya were not called. The four-model overview above illustrates the method rather than that study's actual roster.
-
-jev inspected 72 generated proposals through J1 and performed 216 J2 diagnostic assessments. **No actual J1 rewrites occurred**, so ON/OFF fitness differences do not demonstrate that jev improved results by repairing defects. The conditions also did not share identical initial proposals. Expert assessment is pending; internal fitness values are not calibrated scientific correctness probabilities or scores directly comparable with the Google co-scientist paper.
-
-- [Purpose and methods](reports/2026-10-09-reasonlineage-purpose-and-method.md) (Korean)
-- [Full self-contained evolution viewer](reports/evidence/2026-10-09-jev-controlled/run/evolution-viewer.html)
-- [Candidate scores](reports/evidence/2026-10-09-jev-controlled/run/candidate-scores.csv)
-- [Completed result summary](reports/evidence/2026-10-09-jev-controlled/run/completed-summary.json)
-- [Anonymous expert review packet](reports/evidence/2026-10-09-jev-controlled/run/completed-review-materials/expert/README.md)
-- [Evidence archive index](reports/evidence/README.md)
-
-Download the evolution viewer HTML to browse complete responses, parent links, critiques, fitness, and jev records. When sharing the expert packet, share only the `expert` directory; the analyst mapping is stored separately.
-
----
-
-## 8. Environment variables and credentials
+## 7. Environment variables and credentials
 
 | Variable | Read by | Purpose |
 |---|---|---|
@@ -377,7 +357,7 @@ No other environment variable is read. Other credentials live in files:
 
 ---
 
-## 9. Testing
+## 8. Testing
 
 ```bash
 # Offline suite; tests marked `live` are deselected by default
@@ -394,7 +374,7 @@ python -m pytest -q -m live
 
 ---
 
-## 10. License
+## 9. License
 
 MIT — see [LICENSE](LICENSE).
 
@@ -402,6 +382,5 @@ The MIT license covers the code. Files under `gold/` derived from outside source
 
 ### References
 
-- Google co-scientist paper: the ALS and AML research questions start from the problems it addressed. The study compares hypothesis content and approach, not scores ([purpose and methods](reports/2026-10-09-reasonlineage-purpose-and-method.md), Korean).
 - Design specs (Korean): [engine design](specs/2026-09-29-engine-design.md), [co-scientist pilot design](specs/2026-10-05-co-scientist-pilot-design.md), and the other dated designs in [`specs/`](specs).
-- Reports and evidence: see [§3.2](#32-how-the-gate-works) and [§7](#7-als--aml-pilot-results).
+- Reports: see [§3.2](#32-how-the-gate-works).
