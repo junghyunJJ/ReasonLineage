@@ -16,7 +16,7 @@
 - [SVG](overview.svg), [고해상도 PNG](overview-native.png): 애니메이션과 같은 계보 데이터와 렌더러.
 - [HTML 애니메이션](animation.html): 재생·정지, 단계 이동, 탐색, 속도·반복 설정.
 - [MP4](animation.mp4): 1664×900, H.264, 15fps, 무음, 28초.
-- [GIF](animation.gif): 1248×675, 28초 반복.
+- [GIF](animation.gif): 1248×675, 42초 반복 (HTML·MP4보다 1.5배 느림).
 - [계보 데이터](lineage.json), [검증 기록](verification.json), [제작 프롬프트](imagegen-prompt.txt).
 
 ## Suggested caption
