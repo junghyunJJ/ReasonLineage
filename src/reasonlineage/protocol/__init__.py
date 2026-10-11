@@ -82,3 +82,37 @@ def load_protocol(root: Path | None = None) -> ProtocolSpec:
     root = Path(root) if root else ROOT
     data = json.loads((root / "protocol.json").read_text(encoding="utf-8"))
     return ProtocolSpec(root=root, hash=protocol_hash(root), data=data)
+
+
+PROFILES = ROOT / "profiles"
+
+
+def available_profiles() -> list[str]:
+    """Packaged profile names accepted by --protocol besides "default"."""
+    if not PROFILES.is_dir():
+        return []
+    return sorted(p.name for p in PROFILES.iterdir() if (p / "protocol.json").is_file())
+
+
+def resolve_protocol(value: str | None) -> tuple[Path, dict[str, str]]:
+    """Folder for --protocol VALUE and the source recorded in header.json."""
+    if value is None or value == "default":
+        return ROOT, {"profile": "default"}
+    if value in available_profiles():
+        return PROFILES / value, {"profile": value}
+    folder = Path(value).expanduser()
+    if (folder / "protocol.json").is_file():
+        folder = folder.resolve()
+        return folder, {"path": str(folder)}
+    names = ", ".join(["default", *available_profiles()])
+    raise ValueError(f"--protocol {value!r} is neither a packaged profile ({names}) nor a folder with protocol.json")
+
+
+def protocol_root_from_source(source: Mapping[str, str] | None) -> Path:
+    """Folder of the protocol a run header names; headers written before --protocol existed mean the default."""
+    if not source or source.get("profile") == "default":
+        return ROOT
+    root = PROFILES / source["profile"] if "profile" in source else Path(source["path"])
+    if not (root / "protocol.json").is_file():
+        raise ValueError(f"the protocol recorded in header.json is missing: {root}")
+    return root

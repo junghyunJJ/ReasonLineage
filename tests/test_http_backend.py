@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import threading
 
 import pytest
 
@@ -110,3 +111,44 @@ def test_unreachable_server_raises_backend_error():
 
 def test_served_models(server):
     assert HttpBackend("qwen", server.url).served_models() == ["Qwen/Qwen3.8-Flash-Next-FP8"]
+
+
+def test_a_cancelled_request_keeps_its_slot_until_the_thread_finishes():
+    started, release = threading.Event(), threading.Event()
+
+    class BlockingHTTP(HttpBackend):
+        def __init__(self):
+            super().__init__("http", "http://unused", max_concurrency=1)
+            self.calls = self.active = self.peak = 0
+
+        def _send(self, path, body, timeout_s):
+            self.calls += 1
+            self.active += 1
+            self.peak = max(self.peak, self.active)
+            try:
+                if self.calls == 1:
+                    started.set()
+                    release.wait(2)
+                return {"choices": [{"message": {"content": "{}"}, "finish_reason": "stop"}],
+                        "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2}}
+            finally:
+                self.active -= 1
+
+    service = BlockingHTTP()
+
+    async def exercise():
+        first = asyncio.create_task(service.complete(ModelRequest("s", "p", "fake")))
+        assert await asyncio.to_thread(started.wait, 10), "the worker thread never started"
+        first.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await first
+        second = asyncio.create_task(service.complete(ModelRequest("s", "p", "fake")))
+        try:
+            await asyncio.sleep(.03)
+            assert service.calls == 1          # the cancelled thread still holds the only slot
+        finally:
+            release.set()
+            await second
+        assert service.peak == 1 and service.calls == 2
+
+    asyncio.run(exercise())

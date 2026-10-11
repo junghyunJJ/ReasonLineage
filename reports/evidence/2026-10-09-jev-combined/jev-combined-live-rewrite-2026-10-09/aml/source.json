@@ -1,8 +1,0 @@
-{
-  "path": "reports/evidence/2026-10-08-aml-solo-retry/runs/aml-glm/status.json",
-  "sha256": "299838bdaa806b3a1e48a9124b219ba404df19d5a0fb1ae0a627a480f9d23fa7",
-  "original_id": "c003",
-  "author": "glm",
-  "removed": "validation and falsification tail",
-  "cut_before": "DISCRIMINATING PRECLINICAL STRATEGY."
-}

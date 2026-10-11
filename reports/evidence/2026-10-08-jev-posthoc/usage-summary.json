@@ -1,9 +1,0 @@
-{
-  "backend_calls": 240,
-  "reported_input_tokens": 370020,
-  "reported_output_tokens": 16758,
-  "unknown_usage_calls": 0,
-  "cost_reported_calls": 0,
-  "generation_calls": 0,
-  "reported_tokens": 386778
-}

@@ -1,5 +1,2 @@
-# Frozen evidence must retain exact bytes and recorded response whitespace.
-reports/evidence/** -text -whitespace
-
 # Preserve published figure and playback files without line-ending normalization.
-reports/figures/** -text -whitespace
+assets/figures/** -text -whitespace

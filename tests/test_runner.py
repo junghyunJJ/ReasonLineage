@@ -1,6 +1,7 @@
 """The runner's main flow with four deterministic fake models."""
 
 import asyncio
+import dataclasses
 import json
 from collections import Counter
 
@@ -115,3 +116,23 @@ def test_generations_zero_writes_and_judges_generation_zero_only(tmp_path):
     assert [c["generation"] for c in events_of(run_dir, "candidate.created")] == [0, 0, 0, 0]
     assert events_of(run_dir, "selection") == []
     assert summary["termination"] == "generation_limit" and summary["generations"] == 0
+
+
+@pytest.mark.parametrize("data, reason", [
+    ({"a": 1.5, "critique": ["x"]}, "no valid score for a"),
+    ({"a": True, "critique": ["x"]}, "no valid score for a"),
+    ({"a": 0.5, "critique": []}, "1-3 critique strings"),
+    ({"a": 0.5, "critique": ["1", "2", "3", "4"]}, "1-3 critique strings"),
+    ({"a": 0.5, "critique": "one string"}, "1-3 critique strings"),
+])
+def test_unusable_judge_output_is_rejected_with_its_reason(data, reason):
+    from reasonlineage.engine.runner import parse_judge
+    with pytest.raises(ValueError, match=reason):
+        parse_judge("grok", data, ["a"])
+
+
+def test_an_open_question_lets_the_author_choose_the_items(tmp_path):
+    runner, _ = make_runner(tmp_path)
+    runner.task = dataclasses.replace(runner.task, candidates=None)
+    few, many = runner.protocol.open_items
+    assert runner._item_rule() == f"Choose the items to rank yourself: between {few} and {many} items."

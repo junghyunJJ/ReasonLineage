@@ -1,8 +1,0 @@
-{
-  "path": "reports/evidence/2026-10-06-co-scientist-rerun/public-candidates/als-glm/status.json",
-  "sha256": "76d1de89c864943c24ccc545b98cd68412d38b85d77ee1df9b8ea03b7194d070",
-  "original_id": "c005",
-  "author": "glm",
-  "removed": "validation and falsification tail",
-  "cut_before": "Discriminating strategy."
-}

@@ -37,11 +37,13 @@ def engine_commit(repo: Path) -> str:
 
 
 def build_header(*, run_id: str, task: Task, setup: Setup, options: RunOptions, protocol: ProtocolSpec,
-                 versions: Mapping[str, str], commit: str, checker: str | None, checker_note: str | None) -> dict[str, Any]:
+                 versions: Mapping[str, str], commit: str, checker: str | None, checker_note: str | None,
+                 protocol_source: Mapping[str, str] | None = None) -> dict[str, Any]:
     return {
         "run_id": run_id,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "protocol": {"version": protocol.version, "hash": protocol.hash},
+        "protocol": {"version": protocol.version, "hash": protocol.hash,
+                     "source": dict(protocol_source or {"profile": "default"})},
         "options": options.to_dict(),
         "task": task.to_dict(),
         "setup": setup.to_dict(),

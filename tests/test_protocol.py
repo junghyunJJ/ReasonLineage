@@ -64,3 +64,46 @@ def test_authors_are_told_they_have_no_tools():
 
 def test_candidate_prompt_is_unchanged():
     assert candidate_prompt("Q?", "A.") == "Question:\nQ?\n\nCandidate answer to evaluate:\nA."
+
+
+from reasonlineage.protocol import (PROFILES, available_profiles, protocol_files, protocol_root_from_source,
+                                    resolve_protocol)
+
+
+def test_resolve_protocol_defaults_to_the_packaged_protocol():
+    assert resolve_protocol(None) == (ROOT, {"profile": "default"})
+    assert resolve_protocol("default") == (ROOT, {"profile": "default"})
+
+
+def test_the_jev_combined_profile_is_packaged_and_turns_the_gate_on():
+    root, source = resolve_protocol("jev-combined")
+    assert root == PROFILES / "jev-combined" and source == {"profile": "jev-combined"}
+    assert "jev-combined" in available_profiles()
+    protocol = load_protocol(root)
+    assert protocol.j1["enforce"] is True
+    assert protocol.hash != load_protocol().hash
+    assert protocol_root_from_source(source) == root
+
+
+def test_resolve_protocol_accepts_a_protocol_folder(tmp_path):
+    folder = tmp_path / "custom"
+    shutil.copytree(ROOT / "prompts", folder / "prompts")
+    shutil.copy(ROOT / "protocol.json", folder / "protocol.json")
+    root, source = resolve_protocol(str(folder))
+    assert root == folder.resolve() and source == {"path": str(folder.resolve())}
+    assert protocol_root_from_source(source) == root
+
+
+def test_an_unknown_protocol_names_the_available_profiles(tmp_path):
+    with pytest.raises(ValueError, match="jev-combined"):
+        resolve_protocol("no-such-profile")
+    with pytest.raises(ValueError, match="jev-combined"):
+        resolve_protocol("../profiles")          # a path-like name is not a profile
+    with pytest.raises(ValueError, match="missing"):
+        protocol_root_from_source({"path": str(tmp_path / "gone")})
+
+
+def test_profiles_do_not_change_the_default_protocol():
+    assert all(PROFILES not in path.parents for path in protocol_files(ROOT))
+    assert protocol_root_from_source(None) == ROOT
+    assert protocol_root_from_source({"profile": "default"}) == ROOT

@@ -40,7 +40,7 @@ def test_main_config_holds_the_final_panel_and_checkers():
 
 
 def test_example_task_loads():
-    loaded = load_task(REPO / "tasks" / "example-ipf.json")
+    loaded = load_task(REPO / "examples" / "example-ipf.json")
     assert loaded.candidates == ("metformin", "imatinib", "sildenafil")
     assert task_from_dict(loaded.to_dict()) == loaded
 

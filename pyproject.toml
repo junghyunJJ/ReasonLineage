@@ -15,14 +15,13 @@ reasonlineage = "reasonlineage.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
-# Building the synthetic gold set only (gold synth design 3); the engine needs none.
-gold = ["numpy>=1.26", "scipy>=1.11"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-reasonlineage = ["protocol/protocol.json", "protocol/prompts/*.md"]
+reasonlineage = ["protocol/protocol.json", "protocol/prompts/*.md",
+                 "protocol/profiles/*/protocol.json", "protocol/profiles/*/prompts/*.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

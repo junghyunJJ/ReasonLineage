@@ -1,6 +1,7 @@
 """The command line with fake models, fake servers, and fake PubMed (no network)."""
 
 import json
+import shutil
 import os
 import subprocess
 import sys
@@ -322,3 +323,139 @@ def test_gold_writes_the_level1_analysis(tmp_path):
 def test_gold_needs_a_readable_gold_file(tmp_path, capsys):
     assert main(["gold", "--gold", str(tmp_path / "missing.json"), str(tmp_path)], World().services) == 1
     assert "gold file" in capsys.readouterr().err
+
+
+def custom_protocol(tmp_path):
+    """A copy of the packaged protocol with a different hash and the same behaviour."""
+    root = load_protocol().root
+    folder = tmp_path / "custom-protocol"
+    shutil.copytree(root / "prompts", folder / "prompts")
+    shutil.copy(root / "protocol.json", folder / "protocol.json")
+    seed = folder / "prompts" / "seed.md"
+    seed.write_text(seed.read_text(encoding="utf-8") + "\n", encoding="utf-8")   # rendered prompts are stripped
+    return folder
+
+
+def test_run_records_the_default_protocol_source(tmp_path):
+    task, setup = write_files(tmp_path)
+    assert main(["run", task, "--config", setup, "--generations", "1", "--out", str(tmp_path / "runs")],
+                World().services) == 0
+    (run_dir,) = run_dirs(tmp_path)
+    header = json.loads((run_dir / "header.json").read_text())
+    assert header["protocol"]["source"] == {"profile": "default"}
+    assert header["protocol"]["hash"] == load_protocol().hash
+
+
+def test_run_with_an_unknown_protocol_stops_before_any_call(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    world = World()
+    assert main(["run", task, "--config", setup, "--protocol", "no-such-profile", "--out", str(tmp_path / "runs")],
+                world.services) == 1
+    assert "jev-combined" in capsys.readouterr().err
+    assert all(m.seen == [] for m in world.models.values())
+    assert not (tmp_path / "runs").exists()
+
+
+def test_run_with_the_jev_combined_profile_turns_the_gate_on(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    assert main(["run", task, "--config", setup, "--protocol", "jev-combined", "--out", str(tmp_path / "runs")],
+                World().services) == 1
+    assert "turns the J1 gate on" in capsys.readouterr().err
+
+
+def test_resume_reloads_the_protocol_recorded_in_the_header(tmp_path):
+    task, setup = write_files(tmp_path)
+    folder = custom_protocol(tmp_path)
+    args = ["run", task, "--config", setup, "--protocol", str(folder), "--seed", "7", "--generations", "1",
+            "--out", str(tmp_path / "runs")]
+    assert main(args, World(judge_fails=True).services) == 2
+    (run_dir,) = run_dirs(tmp_path)
+    header = json.loads((run_dir / "header.json").read_text())
+    assert header["protocol"]["source"] == {"path": str(folder.resolve())}
+    assert header["protocol"]["hash"] == load_protocol(folder).hash != load_protocol().hash
+    assert main(["resume", str(run_dir)], World().services) == 0
+
+
+def test_resume_of_a_header_without_a_protocol_source_uses_the_default(tmp_path):
+    task, setup = write_files(tmp_path)
+    args = ["run", task, "--config", setup, "--seed", "7", "--generations", "1", "--out", str(tmp_path / "runs")]
+    assert main(args, World(judge_fails=True).services) == 2
+    (run_dir,) = run_dirs(tmp_path)
+    header = json.loads((run_dir / "header.json").read_text())
+    header["protocol"].pop("source", None)
+    (run_dir / "header.json").write_text(json.dumps(header))
+    assert main(["resume", str(run_dir)], World().services) == 0
+
+
+def test_diagnose_needs_the_protocol_recorded_in_the_header(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    folder = custom_protocol(tmp_path)
+    assert main(["run", task, "--config", setup, "--protocol", str(folder), "--generations", "1",
+                 "--out", str(tmp_path / "runs")], World().services) == 0
+    (run_dir,) = run_dirs(tmp_path)
+    shutil.rmtree(folder)
+    assert main(["diagnose", str(run_dir)], World().services) == 1
+    assert "protocol recorded in header.json is missing" in capsys.readouterr().err
+
+
+def test_gen0_from_a_run_of_another_protocol_is_refused(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    folder = custom_protocol(tmp_path)
+    assert main(["run", task, "--config", setup, "--protocol", str(folder), "--generations", "0",
+                 "--out", str(tmp_path / "first")], World().services) == 0
+    (source,) = sorted(p for p in (tmp_path / "first").iterdir() if p.is_dir())
+    assert main(["run", task, "--config", setup, "--gen0-from", str(source), "--generations", "1",
+                 "--out", str(tmp_path / "runs")], World().services) == 1
+    assert "hash differs" in capsys.readouterr().err
+
+
+def changed_protocol(tmp_path):
+    """A copy of the packaged protocol whose mutation prompt really differs after rendering."""
+    folder = custom_protocol(tmp_path)
+    mutate = folder / "prompts" / "mutate.md"
+    mutate.write_text(mutate.read_text(encoding="utf-8").rstrip() + "\nKeep the revision short.\n", encoding="utf-8")
+    return folder
+
+
+def test_replay_inherits_the_protocol_of_the_replayed_run(tmp_path):
+    task, setup = write_files(tmp_path)
+    folder = changed_protocol(tmp_path)
+    assert main(["run", task, "--config", setup, "--protocol", str(folder), "--seed", "11", "--generations", "1",
+                 "--out", str(tmp_path / "runs")], World().services) == 0
+    (first,) = run_dirs(tmp_path)
+    dead = World()
+    dead.models = {n: FakeModel(n, fail_roles={"author", "judge"}) for n in NAMES}
+    assert main(["run", task, "--config", setup, "--replay", str(first), "--out", str(tmp_path / "runs")], dead.services) == 0
+    second = [p for p in run_dirs(tmp_path) if p != first][0]
+    header = json.loads((second / "header.json").read_text())
+    assert header["protocol"]["source"] == {"path": str(folder.resolve())}
+    assert header["protocol"]["hash"] == load_protocol(folder).hash
+
+
+def test_replay_with_other_protocol_files_is_refused(tmp_path, capsys):
+    task, setup = write_files(tmp_path)
+    folder = changed_protocol(tmp_path)
+    assert main(["run", task, "--config", setup, "--protocol", str(folder), "--generations", "1",
+                 "--out", str(tmp_path / "runs")], World().services) == 0
+    (first,) = run_dirs(tmp_path)
+    world = World()
+    assert main(["run", task, "--config", setup, "--replay", str(first), "--protocol", "default",
+                 "--out", str(tmp_path / "runs")], world.services) == 1
+    err = capsys.readouterr().err
+    assert "--replay" in err and "hash differs" in err
+    assert all(m.seen == [] for m in world.models.values())
+
+
+def test_the_jev_combined_profile_runs_resumes_and_diagnoses(tmp_path):
+    task, setup = write_files(tmp_path)
+    data = json.loads(open(task).read())
+    data.pop("candidates")                                   # the profile checks open questions
+    open(task, "w").write(json.dumps(data))
+    assert main(["run", task, "--config", setup, "--protocol", "jev-combined", "--generations", "1",
+                 "--out", str(tmp_path / "runs")], World(checker=FakeChecker()).services) == 0
+    (run_dir,) = run_dirs(tmp_path)
+    header = json.loads((run_dir / "header.json").read_text())
+    assert header["protocol"]["source"] == {"profile": "jev-combined"} and header["j1_enforce"] is True
+    assert read_events(run_dir / "checks.jsonl")
+    assert main(["resume", str(run_dir)], World(checker=FakeChecker()).services) == 0
+    assert main(["diagnose", str(run_dir)], World(checker=FakeChecker()).services) == 0

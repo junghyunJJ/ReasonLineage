@@ -37,12 +37,12 @@ ReasonLineage improves responses through repeated generation, critique, selectio
 Entry points:
 
 - **CLI**: `reasonlineage run | resume | diagnose | gold` (also `python -m reasonlineage`)
-- **Scripts**: study runners, gold-set builders, and calibration tools in [`scripts/`](scripts)
+- **Scripts**: judge calibration and backend checks in [`scripts/`](scripts)
 - **Workflow**: the [detailed workflow](SKILL.md), written as an agent skill
 
-![ReasonLineage overview: model-diverse response evolution with non-author reviewers and compact jev checks](reports/figures/reasonlineage-jev-simple-types/overview.png)
+![ReasonLineage overview: model-diverse response evolution with non-author reviewers and compact jev checks](assets/figures/reasonlineage-jev-simple-types/overview.png)
 
-The figure illustrates a four-model configuration: **Opus 5.5 (Anthropic), GPT-6.1 sol (OpenAI), Grok 4.7 (xAI), and GLM-5.3-flash (Z.ai)**. Model availability and the active reviewer panel are set by the execution profile. All displayed fitness values are illustrative.
+The figure illustrates a four-model configuration: **Opus 5.5 (Anthropic), GPT-6.1 sol (OpenAI), Grok 4.7 (xAI), and GLM-5.3-flash (Z.ai)**. Model availability and the active reviewer panel are set by the setup file. All displayed fitness values are illustrative.
 
 ---
 
@@ -50,17 +50,17 @@ The figure illustrates a four-model configuration: **Opus 5.5 (Anthropic), GPT-6
 
 ### 2.1 The problem: models judging their own work
 
-The engine was built to test one question. When a model scores its own answers, or judges share the scoring record, does fitness keep rising across generations while correctness stays flat? And does removing the author from scoring, and judging each response in isolation, prevent it? To compare those conditions fairly, the code fixes who writes, who judges, and what is checked, so every condition runs the same procedure ([engine design](specs/2026-09-29-engine-design.md), Korean).
+The engine was built to test one question. When a model scores its own answers, or judges share the scoring record, does fitness keep rising across generations while correctness stays flat? And does removing the author from scoring, and judging each response in isolation, prevent it? To compare those conditions fairly, the code fixes who writes, who judges, and what is checked, so every condition runs the same procedure.
 
 ### 2.2 How ReasonLineage handles it
 
-1. Each active model writes one initial response in the multi-model pilot. Other active models review that response; its author is excluded.
+1. With N active models, each writes ⌈4 / N⌉ initial responses, so the population holds P = N × ⌈4 / N⌉ responses (two each with three models, one each with four). Every active model except the author reviews each response; with a single model, it reviews its own responses in separate, fresh calls.
 2. Reviews are aggregated by the median for each criterion and combined using the task's weights to obtain fitness.
-3. Two responses survive selection. Retained responses reuse their scores.
-4. The next generation adds one mutation by the parent response's author and one crossover by a model that authored neither parent.
+3. P − 2 responses survive selection. Retained responses reuse their scores.
+4. Each later generation adds one mutation, written by the parent response's author, and one crossover, written by a model that authored neither parent. If every active model wrote one of the parents, one of them writes the crossover and the run records a `synthesizer_fallback` anomaly.
 5. New responses are checked and reviewed before the next selection. The best evaluated response is returned with its lineage.
 
-Survivors are **responses**; selecting two does not permanently reduce the available model roster to two. In the single-model pilot, two isolated self-review calls replace the non-author panel, and two mutations replace mutation plus crossover.
+Survivors are **responses**; keeping P − 2 of them does not shrink the roster, and every active model keeps writing and reviewing.
 
 ### 2.3 Key design decision: code decides, models write and judge
 
@@ -93,7 +93,7 @@ Two run options vary the judging, for experiments on judging bias. The defaults 
 
 ### 3.1 The problem: fitness does not check structure
 
-Peer fitness and structural completeness measure different things. A response can be complete in form and still cite papers that do not support it. An interesting idea can lack the validation strategy that would make it a comparable research proposal. The J1 gate targets the second kind of gap: it decides when to send a response back and what to fix ([purpose and methods](reports/2026-10-09-reasonlineage-purpose-and-method.md), Korean).
+Peer fitness and structural completeness measure different things. A response can be complete in form and still cite papers that do not support it. An interesting idea can lack the validation strategy that would make it a comparable research proposal. The J1 gate targets the second kind of gap: it decides when to send a response back and what to fix.
 
 ### 3.2 How the gate works
 
@@ -107,19 +107,19 @@ The combined jev gate uses three parallel typed assessments:
 
 Confirmed gaps can trigger **one revision by the original author**, followed by reinspection. Responses without confirmed gaps proceed directly to peer scoring. Unclear judgments can be rechecked once, and unresolved issues are recorded.
 
-In the combined profile, Score's adequacy threshold is applied to **P(level 2) + P(level 3) < 0.5**. Choice selects the highest-probability priority gap, and a targeted revision requires agreement with the insufficient component scores. See the [combined-gate report](reports/2026-10-09-jev-combined.md) (Korean) for the complete decision rules and calibration.
+In the combined profile, Score's adequacy threshold is applied to **P(level 2) + P(level 3) < 0.5**. Choice selects the highest-probability priority gap, and a targeted revision requires agreement with the insufficient component scores.
 
 ### 3.3 Key design decision: jev checks, reviewers score
 
 The structural gate does not directly add jev values to fitness; fitness remains the responsibility of the LLM reviewers. J2 diagnostics are recorded separately and do not drive survival or revision. In the code, checker results go to the run's `checks.jsonl`, never to the engine's event log, and J1's revision decision is the only way a check affects the run.
 
-The rules above belong to the combined profile, [`research/co-scientist-pilot/protocol-jev-combined`](research/co-scientist-pilot/protocol-jev-combined), which sets `j1.enforce` to `true`. The packaged protocol that `reasonlineage run` loads, [`src/reasonlineage/protocol/protocol.json`](src/reasonlineage/protocol/protocol.json), has its own question set and sets `j1.enforce` to `false`: the gate records what it would revise without requesting the revision.
+The rules above belong to the combined profile, [`src/reasonlineage/protocol/profiles/jev-combined`](src/reasonlineage/protocol/profiles/jev-combined), which sets `j1.enforce` to `true`; select it with `reasonlineage run TASK --protocol jev-combined`. The default protocol that `reasonlineage run` loads, [`src/reasonlineage/protocol/protocol.json`](src/reasonlineage/protocol/protocol.json), has its own question set and sets `j1.enforce` to `false`: the gate records what it would revise without requesting the revision.
 
 ### 3.4 Evolution in motion
 
-![Animated ReasonLineage lineage, non-author fitness review, and Noul/Score/Choice structural checks](reports/figures/reasonlineage-jev-simple-types/animation.gif)
+![Animated ReasonLineage lineage, non-author fitness review, and Noul/Score/Choice structural checks](assets/figures/reasonlineage-jev-simple-types/animation.gif)
 
-[Interactive animation](reports/figures/reasonlineage-jev-simple-types/animation.html) · [MP4](reports/figures/reasonlineage-jev-simple-types/animation.mp4) · [SVG](reports/figures/reasonlineage-jev-simple-types/overview.svg) · [High-resolution PNG](reports/figures/reasonlineage-jev-simple-types/overview-native.png) · [Figure caption and production notes](reports/figures/reasonlineage-jev-simple-types/README.md)
+[Interactive animation](assets/figures/reasonlineage-jev-simple-types/animation.html) · [MP4](assets/figures/reasonlineage-jev-simple-types/animation.mp4) · [SVG](assets/figures/reasonlineage-jev-simple-types/overview.svg) · [High-resolution PNG](assets/figures/reasonlineage-jev-simple-types/overview-native.png) · [Figure caption and production notes](assets/figures/reasonlineage-jev-simple-types/README.md)
 
 Download the HTML animation and open it locally to use its playback controls; GitHub displays its source. The animation is 28 seconds long and demonstrates both the optional revision path and the direct path to peer scoring.
 
@@ -128,7 +128,7 @@ Download the HTML animation and open it locally to use its playback controls; Gi
 ## 4. Architecture
 
 ```
-task (tasks/*.json)  +  setup (configs/*.json)  +  protocol (protocol.json, prompts/)
+task (*.json)  +  setup (configs/main.json)  +  protocol (default or --protocol profile)
                                      │
                                      ▼
 cli.py                  checks pinned versions and the judging condition, writes header.json
@@ -155,12 +155,8 @@ run folder              header.json · events.jsonl · calls/ · checks.jsonl ·
 | Model backends: `claude`, `codex`, `grok` CLIs and OpenAI-compatible `http` | `src/reasonlineage/backends/` |
 | J1 gate, jev client, local LLM checker, combined jev rules | `src/reasonlineage/checks/` |
 | J2 diagnostics, PMID check, gold scoring | `src/reasonlineage/diagnose/` |
-| Packaged protocol (generations, timeouts, token caps, J1/J2 questions) and prompts | [`src/reasonlineage/protocol/`](src/reasonlineage/protocol) |
-| Gold-set builders (repoDB, CT Open, synthetic, basket, bioRxiv, climate departure) | `src/reasonlineage/gold/` |
-| Co-scientist pilot runner (budgets, paired ON/OFF study, expert packet export) | `src/reasonlineage/pilot/` |
-| Setups, tasks, gold files | [`configs/`](configs), [`tasks/`](tasks), [`gold/`](gold) |
-| Pilot protocol profiles and evidence packets | [`research/co-scientist-pilot/`](research/co-scientist-pilot) |
-| Design specs, reports, archived evidence | [`specs/`](specs), [`reports/`](reports) |
+| Packaged protocol (generations, timeouts, token caps, J1/J2 questions), prompts, and selectable profiles (`profiles/`) | [`src/reasonlineage/protocol/`](src/reasonlineage/protocol) |
+| Default setup and example task | [`configs/main.json`](configs/main.json), [`examples/example-ipf.json`](examples/example-ipf.json) |
 
 ---
 
@@ -184,17 +180,15 @@ reasonlineage --help
 python -m pytest -q
 ```
 
-Tests exclude live model/service calls by default. The `gold` extra (`python -m pip install -e '.[gold]'`) adds numpy and scipy, which only the synthetic gold-set builder needs.
+Tests exclude live model/service calls by default.
 
 ### 5.3 Choose a setup
 
-A setup file names the panel and the checkers. See the [configuration examples](configs):
+A setup file names the panel and the checkers. The default is [`configs/main.json`](configs/main.json):
 
 | File | Panel | Checker for public / private tasks |
 |---|---|---|
 | `configs/main.json` (default) | opus, gpt, grok, glm (`glm-5.3`) | jev / a local DeepSeek endpoint |
-| `configs/co-scientist-pilot.json` | opus, gpt, grok, glm (`glm-5.3-flash`) | jev / a local DeepSeek endpoint |
-| `configs/co-scientist-rerun.json` | gpt, grok, glm (`glm-5.3-flash`) | none |
 
 A three-model setup with jev for public tasks looks like this:
 
@@ -220,7 +214,7 @@ A three-model setup with jev for public tasks looks like this:
 
 ### 5.4 Write a task
 
-See the [task files](tasks). [`tasks/example-ipf.json`](tasks/example-ipf.json):
+[`examples/example-ipf.json`](examples/example-ipf.json):
 
 ```json
 {
@@ -239,6 +233,8 @@ See the [task files](tasks). [`tasks/example-ipf.json`](tasks/example-ipf.json):
 | `category` | no (default `biomedical`) | picks the fitness weights: `general`, `math`, `science`, `creative`, `ethical`, `coding`, `analytical`, `biomedical` |
 | `data_sensitivity` | yes | `public` or `private`; picks the checker through `checker_for` |
 
+Leave out `candidates` for an open question, the kind of task the `jev-combined` profile checks.
+
 Then start a run as shown in [§6.1](#61-start-a-run).
 
 ---
@@ -250,13 +246,17 @@ Then start a run as shown in [§6.1](#61-start-a-run).
 ```bash
 # Defaults: configs/main.json, experiment mode, recuse + isolated, generations from protocol.json (3)
 # Calls the models in the setup; ends with a "Done:" line naming the run folder under runs/ (ignored by Git)
-reasonlineage run tasks/example-ipf.json
+reasonlineage run examples/example-ipf.json
 
-# Another setup, a fixed seed, another output folder
-reasonlineage run tasks/example-ipf.json --config configs/co-scientist-rerun.json --seed 1 --out runs/demo
+# A fixed seed and another output folder
+reasonlineage run examples/example-ipf.json --seed 1 --out runs/demo
 
-# Generation 0 only, as scripts/run_gold.sh does
-reasonlineage run tasks/repodb-dev/repodb-acute-myeloid-leukemia.json --generations 0 --seed 1
+# Generation 0 only
+reasonlineage run examples/example-ipf.json --generations 0 --seed 1
+
+# The combined jev profile (§3) for an open question with an embedded evidence packet; needs a jev checker
+# (see src/reasonlineage/protocol/profiles/jev-combined/README.md)
+reasonlineage run my-question.json --protocol jev-combined
 
 # Judge the generation 0 of an earlier run under another condition
 reasonlineage run TASK --gen0-from runs/RUN_FOLDER --judges self --context isolated
@@ -268,11 +268,12 @@ reasonlineage run TASK --replay runs/RUN_FOLDER --generations 3
 | Option | Default | Meaning |
 |---|---|---|
 | `--config` | `configs/main.json` | setup file with the panel and checkers |
+| `--protocol` | `default` | `default`, a packaged profile (`jev-combined`), or a folder with `protocol.json` and `prompts/`; recorded in `header.json` and reused by `resume` and `diagnose` |
 | `--mode` | `experiment` | `experiment` will not start unless model and jev versions are pinned, the generation count is fixed, the panel can serve the judging condition, and a checker exists when the protocol turns the J1 gate on. `exploration` checks only the judging condition. |
 | `--judges`, `--context` | `recuse`, `isolated` | the judging condition ([§2.3](#23-key-design-decision-code-decides-models-write-and-judge)) |
 | `--generations` | `protocol.json` (3) | with `--replay`, the replayed run's count |
 | `--seed` | random | recorded in `header.json` |
-| `--replay RUN_DIR` | | reuse every recorded answer, with that run's seed and conditions |
+| `--replay RUN_DIR` | | reuse every recorded answer, with that run's seed, conditions and protocol; refused if the protocol files differ |
 | `--gen0-from RUN_DIR` | | reuse generation 0 of a run of the same task and protocol |
 | `--out` | `runs` | folder for run folders |
 
@@ -280,7 +281,7 @@ A run folder holds:
 
 | Path | Contents |
 |---|---|
-| `header.json` | task, setup, options, protocol version and hash, CLI versions, engine commit |
+| `header.json` | task, setup, options, protocol version, hash and source, CLI versions, engine commit |
 | `events.jsonl` | the engine's event log |
 | `calls/` | one record per model call, reused by `resume` and `--replay` |
 | `checks.jsonl` | J1 checker results, when a checker runs |
@@ -296,7 +297,7 @@ Exit codes for `run` and `resume`: `0` done, `1` cannot start or continue, `2` s
 reasonlineage resume runs/RUN_FOLDER
 ```
 
-`resume` rebuilds the run from `header.json` and the recorded calls. It stops if the protocol files changed since the run started, and it warns if a CLI version changed.
+`resume` rebuilds the run from `header.json` and the recorded calls. It reloads the protocol recorded in `header.json` and stops if those files changed since the run started, and it warns if a CLI version changed.
 
 ### 6.3 Diagnose a finished run
 
@@ -314,32 +315,23 @@ reasonlineage diagnose runs/RUN_FOLDER --gold-items items.json   # {"items": [{"
 ### 6.4 Score runs against a gold file
 
 ```bash
-# SET is a folder under tasks/ and gold/, e.g. repodb-dev
-reasonlineage gold --gold gold/SET/gold.json runs/gold-SET/*/ \
-  --out runs/gold-SET/report.json --analysis runs/gold-SET/analysis.md
+reasonlineage gold --gold my-gold.json runs/RUN_A runs/RUN_B \
+  --out report.json --analysis analysis.md
 ```
 
 `gold` makes no model calls. It prints a summary, writes `diagnostics/gold.jsonl` in each run folder, and, with `--out` and `--analysis`, saves the summary as JSON and the level-1 analysis as Markdown. The gold file has the form `{"tasks": {task id: {"approved": [...], "failed": [...]}}}`. A folder that is not a run, whose task is not in the gold file, whose candidates differ from the gold drugs, or whose run did not finish is left out with a warning.
 
 ### 6.5 Scripts
 
-The jev controlled-pilot script is a dry run by default:
-
-```bash
-python scripts/run_jev_controlled_pilot.py
-```
-
-Its `--run` option executes the model/service calls described in the plan. The pilot reads `JEV_API_KEY` from the local `.env` via its credential loader; that file is ignored by Git. Provider endpoints and model names come from [`configs/co-scientist-rerun.json`](configs/co-scientist-rerun.json); protocol settings and evidence packets come from the [pilot research profiles](research/co-scientist-pilot).
-
 | Script | What it does | Calls models |
 |---|---|---|
-| `scripts/run_jev_controlled_pilot.py [--run] [--out OUT]` | the 16-slot jev ON/OFF study | only with `--run` |
-| `scripts/run_co_scientist_pilot.py [--run] [PROFILE FLAG]` | the bounded co-scientist pilot; profile flags: `--relaxed`, `--three-initial`, `--jev`, `--jev-combined`, `--jev-control` | only with `--run` |
-| `scripts/run_gold.sh SET [OUT]` | level 1: generation 0 for every task in `tasks/SET`, then `gold` | yes |
-| `scripts/run_gold_evolve.sh OUT GOLD GENERATIONS SET...` | level 2: replays finished generation-0 runs with evolution, then `gold` | yes |
-| `scripts/run_gold_condition.sh OUT GOLD JUDGES CONTEXT SET...` | level 3: judges finished generation-0 runs again under one condition, then `gold` | yes |
+| `scripts/make_candidates.py` | every roster model writes one strong and one deliberately flawed answer to the same question, for judge calibration | yes |
+| `scripts/calibrate_judges.py` | every judge scores every candidate `--repeats` times in isolated calls; reports leniency, noise, and recusal bias | yes |
+| `scripts/calibrate_panel.py` | every roster judge scores every candidate, its own included; reports leniency and self- and family preference | yes |
+| `scripts/check_backends.py` | one isolated scoring call per backend/model; reports context size and latency | yes |
+| `scripts/smoke_claude_cli.py` | repeats a Strict Evaluator request concurrently through the Claude CLI; reports latency and score noise | yes |
 
-The other scripts build gold sets (`build_*.py`), calibrate judges and jev (`calibrate_*.py`, `check_jev_combined.py`, `make_candidates.py`), compare judging conditions (`compare_conditions.py`), and check live backends (`check_backends.py`, `smoke_claude_cli.py`). The first line of each file says what it does.
+The first line of each file says what it does.
 
 ---
 
@@ -352,7 +344,6 @@ The other scripts build gold sets (`build_*.py`), calibrate judges and jev (`cal
 No other environment variable is read. Other credentials live in files:
 
 - **`api_key_file`** on an `http` panel member or local checker: a file outside the repo that holds only the key. The program reads it and never prints it. An `http` member without one sends a placeholder key.
-- **`.env`** at the root of the main checkout (shared by its worktrees): the pilot scripts read `JEV_API_KEY` from it, and the loader reads only that entry without evaluating shell code. `calibrate_jev.py --env` points to another file. Git ignores `.env`.
 - **CLI logins**: the `claude`, `codex`, and `grok` backends use each CLI's own login. The grok backend runs with a temporary home that holds only the grok login, so no user configuration loads.
 
 ---
@@ -377,10 +368,3 @@ python -m pytest -q -m live
 ## 9. License
 
 MIT — see [LICENSE](LICENSE).
-
-The MIT license covers the code. Files under `gold/` derived from outside sources (repoDB, bioRxiv, NOAA weather data) remain under their sources' terms.
-
-### References
-
-- Design specs (Korean): [engine design](specs/2026-09-29-engine-design.md), [co-scientist pilot design](specs/2026-10-05-co-scientist-pilot-design.md), and the other dated designs in [`specs/`](specs).
-- Reports: see [§3.2](#32-how-the-gate-works).

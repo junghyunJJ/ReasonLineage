@@ -75,13 +75,11 @@ def test_distribution_decides_even_when_expected_score_order_is_reversed():
     assert module().verdict(high_mean, config())['would_rewrite']
 
 
-def test_calibration_and_policy_hashes_bind_choice_option_order():
-    from reasonlineage.checks.calibration import questions_hash
+def test_policy_hash_binds_choice_option_order():
     first = protocol()
     second = protocol()
     criteria = second.j1['questions']['primary_gap']['criteria']
     second.j1['questions']['primary_gap']['criteria'] = dict(reversed(list(criteria.items())))
-    assert questions_hash(first) != questions_hash(second)
     assert module().policy_hash(first.j1) != module().policy_hash(second.j1)
 
 
@@ -145,16 +143,3 @@ def test_recheck_removes_obsolete_component_verdict_when_proposal_is_absent(tmp_
     assert record['initial_verdict']['weak'] == ['validation']
 
 
-def test_holdout_answer_bodies_are_disjoint_from_development_cases():
-    from pathlib import Path
-    from reasonlineage.checks.combined_calibration import build_cases
-    root = Path(__file__).resolve().parents[1]
-    development = {c['answer']['answer'] for c in build_cases(root)}
-    held = build_cases(root, holdout=True)
-    assert len(held) == 48
-    assert development.isdisjoint(c['answer']['answer'] for c in held)
-    for case in ('als', 'aml'):
-        for kind in ('refusal', 'meta', 'grader'):
-            first = next(c for c in build_cases(root) if c['case'] == case and c['kind'] == kind)
-            assert all(first['answer']['answer'] not in c['answer']['answer'] for c in held
-                       if c['case'] == case and c['kind'] == kind)

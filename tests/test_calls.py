@@ -1,8 +1,9 @@
 import asyncio
+import json
 
 import pytest
 
-from reasonlineage.backends.base import BackendError, ModelRequest, ModelResponse
+from reasonlineage.backends.base import BackendError, ModelRequest, ModelResponse, ProviderRefusal
 from reasonlineage.engine.calls import CallRecorder, ReplaySource, cache_key, call_file, call_role, derive_seed, gen0_writing
 from reasonlineage.engine.errors import RunCorrupted
 from reasonlineage.engine.events import EventLog, read_events
@@ -137,3 +138,47 @@ def test_a_resumed_call_retries_with_new_seeds(tmp_path):
     backend = Counter()
     asyncio.run(again.call("g0/write/c001/opus", "opus", backend, request()))
     assert [r.seed for r in backend.requests] == [derive_seed(7, "g0/write/c001/opus", 2)]
+
+
+class Scripted:
+    """Answers with the given data objects in order."""
+
+    def __init__(self, *answers, raw=None):
+        self.answers, self.raw, self.requests = list(answers), raw or {}, []
+
+    async def complete(self, request):
+        self.requests.append(request)
+        data = self.answers[len(self.requests) - 1]
+        return ModelResponse("m", request.model, json.dumps(data), data, 0.1, None, request.prompt_sha256, dict(self.raw))
+
+
+def test_an_unusable_output_is_audited_through_the_sanitizer(tmp_path):
+    def check(response):
+        if response.data.get("ok") is not True:
+            raise ValueError("no ok flag")
+
+    def sanitize(record):
+        record["request"]["prompt"] = "[REDACTED]"
+        return record
+
+    backend = Scripted({"ok": False, "detail": "first try"}, {"ok": True})
+    rec, _ = recorder(tmp_path, unusable_sanitizer=sanitize)
+    response = asyncio.run(rec.call("g0/write/c001/m", "m", backend, request("private prompt"), check=check))
+    assert response.data == {"ok": True}
+    (audit,) = (tmp_path / "unusable").rglob("*.json")
+    saved = json.loads(audit.read_text())
+    assert saved["attempt"] == 0 and saved["error"] == "unusable output: no ok flag"
+    assert saved["request"]["prompt"] == "[REDACTED]" and saved["request"]["member"] == "m"
+    assert saved["response"]["data"] == {"ok": False, "detail": "first try"}
+    failed = [e for e in read_events(tmp_path / "events.jsonl") if e["event"] == "call.failed"]
+    assert failed[0]["file"] == audit.relative_to(tmp_path).as_posix()
+
+
+@pytest.mark.parametrize("data, raw", [({"refusal": "cannot help"}, {}), ({"answer": "x"}, {"finish_reason": "content_filter"})])
+def test_an_explicit_refusal_in_the_answer_is_never_retried(tmp_path, data, raw):
+    backend = Scripted(data, {"ok": True}, raw=raw)
+    rec, _ = recorder(tmp_path, attempts=3)
+    with pytest.raises(ProviderRefusal, match="provider refused request"):
+        asyncio.run(rec.call("g0/write/c001/m", "m", backend, request()))
+    assert len(backend.requests) == 1
+    assert [e["event"] for e in read_events(tmp_path / "events.jsonl")] == ["call.failed", "call.gave_up"]

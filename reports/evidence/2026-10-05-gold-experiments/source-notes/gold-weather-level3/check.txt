@@ -1,9 +1,0 @@
-runs/gold-weather-l3-self: 37 finished, stopped none, duplicates none
-   37 run(s): --judges self --context isolated, 4 judge calls (4 live)
-runs/gold-weather-l3-shared_trace: 37 finished, stopped none, duplicates none
-   37 run(s): --judges recuse --context shared_trace, 12 judge calls (12 live)
-runs/gold-weather-l3-all: 37 finished, stopped none, duplicates none
-   37 run(s): --judges all --context isolated, 16 judge calls (16 live)
-runs/gold-weather-l3-author_label: 37 finished, stopped none, duplicates none
-   37 run(s): --judges recuse --context author_label, 12 judge calls (12 live)
-problems: none

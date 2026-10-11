@@ -35,7 +35,7 @@ from .engine.events import EventLog
 from .engine.header import build_header, cli_versions, engine_commit, experiment_problems, resume_problems
 from .engine.policies import FixedPolicies
 from .engine.runner import Runner, evolution_config
-from .protocol import ProtocolSpec, load_protocol
+from .protocol import ProtocolSpec, load_protocol, protocol_root_from_source, resolve_protocol
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -82,6 +82,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = sub.add_parser("run", help="start a run")
     run.add_argument("task", help="task file (JSON)")
     run.add_argument("--config", default=str(REPO / "configs" / "main.json"), help="setup file with the panel and checkers")
+    run.add_argument("--protocol", help="'default', a packaged profile (e.g. jev-combined), or a folder with protocol.json and prompts/")
     run.add_argument("--mode", choices=["experiment", "exploration"], default="experiment")
     run.add_argument("--judges", choices=JUDGE_AXIS, default="recuse")
     run.add_argument("--context", choices=CONTEXT_AXIS, default="isolated")
@@ -131,11 +132,31 @@ def _new_run_dir(out: Path, task_id: str) -> Path:
     return run_dir
 
 
+def _protocol_for_run(value: str | None) -> tuple[ProtocolSpec, dict[str, str]]:
+    try:
+        root, source = resolve_protocol(value)
+    except ValueError as exc:
+        raise ConfigError(str(exc)) from None
+    return load_protocol(root), source
+
+
+def _protocol_of(header: Mapping[str, Any]) -> ProtocolSpec:
+    try:
+        return load_protocol(protocol_root_from_source(header["protocol"].get("source")))
+    except ValueError as exc:
+        raise ConfigError(str(exc)) from None
+
+
 def cmd_run(args: argparse.Namespace, services: Services) -> int:
-    protocol = load_protocol()
+    replay_header = _read_header(Path(args.replay)) if args.replay else None
+    if replay_header is not None and args.protocol is None:
+        # --replay reuses the replayed run's protocol, as it reuses its seed and conditions
+        protocol = _protocol_of(replay_header)
+        protocol_source = dict(replay_header["protocol"].get("source") or {"profile": "default"})
+    else:
+        protocol, protocol_source = _protocol_for_run(args.protocol)
     task = load_task(args.task)
     setup = load_setup(args.config)
-    replay_header = _read_header(Path(args.replay)) if args.replay else None
     if replay_header is not None:
         source = replay_header["options"]
         generations = args.generations if args.generations is not None else source["generations"]
@@ -153,6 +174,8 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
     problems = verify_http_members(servers(setup, task), services.list_models)
     if replay_header is not None and task_from_dict(replay_header["task"]) != task:
         problems.append(f"--replay: {args.replay} ran a different task")
+    if replay_header is not None and replay_header["protocol"]["hash"] != protocol.hash:
+        problems.append(f"--replay: {args.replay} used different protocol files (the hash differs)")
     if options.gen0_from:
         problems += gen0_source_problems(Path(options.gen0_from), task, protocol)
     try:
@@ -175,7 +198,8 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
     run_dir.mkdir(parents=True)
     header = build_header(run_id=run_dir.name, task=task, setup=setup, options=options, protocol=protocol,
                           versions=services.versions(setup.panel), commit=engine_commit(REPO),
-                          checker=checker.name if checker else None, checker_note=why)
+                          checker=checker.name if checker else None, checker_note=why,
+                          protocol_source=protocol_source)
     (run_dir / "header.json").write_text(json.dumps(header, ensure_ascii=False, indent=2), encoding="utf-8")
     if checker is None:
         print(f"J1 is skipped for this run: {why}")
@@ -185,7 +209,7 @@ def cmd_run(args: argparse.Namespace, services: Services) -> int:
 def cmd_resume(args: argparse.Namespace, services: Services) -> int:
     run_dir = Path(args.run_dir)
     header = _read_header(run_dir)
-    protocol = load_protocol()
+    protocol = _protocol_of(header)
     task = task_from_dict(header["task"])
     setup = setup_from_dict(header["setup"])
     options = RunOptions(**header["options"])
@@ -262,7 +286,7 @@ def _execute(run_dir: Path, header: Mapping[str, Any], task: Task, setup: Setup,
 def cmd_diagnose(args: argparse.Namespace, services: Services) -> int:
     run_dir = Path(args.run_dir)
     header = _read_header(run_dir)
-    protocol = load_protocol()
+    protocol = _protocol_of(header)
     task = task_from_dict(header["task"])
     setup = setup_from_dict(header["setup"])
     gold = load_gold_items(args.gold_items) if args.gold_items else []

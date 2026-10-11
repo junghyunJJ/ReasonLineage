@@ -25,7 +25,7 @@ def imports_checks(path: Path) -> bool:
     return False
 
 
-GOLD_MODULES = ("reasonlineage.gold", "reasonlineage.diagnose.gold")
+GOLD_MODULES = ("reasonlineage.diagnose.gold",)
 
 
 def imports_gold(path: Path) -> bool:
@@ -38,7 +38,7 @@ def imports_gold(path: Path) -> bool:
             module, names = node.module or "", {a.name for a in node.names}
             if module.startswith(GOLD_MODULES) or (module == "reasonlineage.diagnose" and "gold" in names):
                 return True
-            if node.level and (module.split(".")[0] == "gold" or module == "diagnose.gold" or (module == "diagnose" and "gold" in names)):
+            if node.level and (module == "diagnose.gold" or (module == "diagnose" and "gold" in names)):
                 return True
     return False
 
@@ -72,8 +72,7 @@ def test_core_engine_and_checks_never_import_the_gold_tools():
 
 
 @pytest.mark.parametrize("line", [
-    "from ..gold import build\n", "from ..diagnose.gold import score_run\n", "from ..diagnose import gold\n",
-    "import reasonlineage.gold.repodb\n", "from reasonlineage.diagnose import gold\n",
+    "from ..diagnose.gold import score_run\n", "from ..diagnose import gold\n", "from reasonlineage.diagnose import gold\n",
 ])
 def test_the_gold_import_check_catches_real_imports(tmp_path, line):
     bad = tmp_path / "bad.py"
